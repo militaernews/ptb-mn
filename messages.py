@@ -9,6 +9,7 @@ def add_footer_meme(update: Update, context: CallbackContext):
 
     update.channel_post.forward("MNChat")
 
-def test(update: Update, context: CallbackContext):
+
+def testt(update: Update, context: CallbackContext):
     print("-------------------------")
     print(update.message.chat_id)

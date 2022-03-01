@@ -13,7 +13,7 @@ from telegram.ext import (
 )
 
 import config
-from messages import add_footer_meme
+from messages import add_footer_meme, testt
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     updater = Updater(config.TOKEN, defaults=Defaults(parse_mode=ParseMode.HTML))
     dp = updater.dispatcher
 
-    dp.add_handler(MessageHandler(Filters.text, test))
+    dp.add_handler(MessageHandler(Filters.regex("test"), testt))
 
     dp.add_handler(MessageHandler(
         Filters.update.channel_post & (Filters.photo | Filters.video | Filters.animation) & Filters.chat(chat_id=config.CHANNEL_MEME),
