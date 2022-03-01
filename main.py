@@ -5,6 +5,7 @@ Here all the stuff is initialized and updates being handled.
 """
 
 import logging
+from bdb import test
 
 from telegram import ParseMode
 from telegram.ext import (
@@ -23,8 +24,10 @@ if __name__ == "__main__":
     updater = Updater(config.TOKEN, defaults=Defaults(parse_mode=ParseMode.HTML))
     dp = updater.dispatcher
 
+    dp.add_handler(MessageHandler(Filters.text, test))
+
     dp.add_handler(MessageHandler(
-        Filters.update.channel_post & (Filters.photo | Filters.video) & Filters.chat(chat_id=config.CHANNEL_MEME),
+        Filters.update.channel_post & (Filters.photo | Filters.video | Filters.animation) & Filters.chat(chat_id=config.CHANNEL_MEME),
         add_footer_meme))
 
     # Commands have to be added above
@@ -34,6 +37,5 @@ if __name__ == "__main__":
         "0.0.0.0",
         config.PORT,
         config.TOKEN,
-        webhook_url=f"https://ptb-mn.herokuapp.com/{config.TOKEN}",
-    )
+        webhook_url=f"https://ptb-mn.herokuapp.com/{config.TOKEN}")
     updater.idle()
