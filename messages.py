@@ -1,3 +1,5 @@
+import re
+
 from telegram import Update
 from telegram.ext import CallbackContext
 
@@ -15,4 +17,4 @@ def add_footer_meme(update: Update, context: CallbackContext):
 
 
 def flag_to_hashtag(update: Update, context: CallbackContext):
-    print(update.message.text.find(r"(#+[a-zA-Z0-9(_)]{1,})"))
+    print(re.findall(r"(#+[a-zA-Z\d(_)]+)", update.message.text))
