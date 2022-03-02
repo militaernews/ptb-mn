@@ -7,11 +7,12 @@ from config import GROUP_MAIN
 def add_footer_meme(update: Update, context: CallbackContext):
     print(update)
 
-    if update.channel_post.caption is not None:
-        original_caption = update.channel_post.caption
-    else:
-        original_caption = ''
+    original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
 
-    update.channel_post.edit_caption(original_caption + "\n\n🔰 Subscribe to @MilitaerMemes for more!")
+    update.channel_post.edit_caption(f"{original_caption}\n\n🔰 Subscribe to @MilitaerMemes for more!")
 
     update.channel_post.forward(chat_id=GROUP_MAIN)
+
+
+def flag_to_hashtag(update: Update, context: CallbackContext):
+    print(update.message.text.find(r"(#+[a-zA-Z0-9(_)]{1,})"))
