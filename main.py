@@ -5,7 +5,6 @@ Here all the stuff is initialized and updates being handled.
 """
 
 import logging
-from bdb import test
 
 from telegram import ParseMode
 from telegram.ext import (

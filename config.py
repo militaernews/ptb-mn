@@ -10,9 +10,9 @@ GROUP_MAIN = -1001526741474
 
 NYX = 703453307
 ADMINS = (NYX,
-          525147382, #melik
-           466451473 #maxe
-           )
+          525147382,  # melik
+          466451473  # maxe
+          )
 VERIFIED_USERS = set(
     ADMINS + ()
 )
