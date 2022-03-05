@@ -19,17 +19,17 @@ def add_footer_meme(update: Update, context: CallbackContext):
 
     print("Media-Group::::::::::::::::::::::::::: ", update)
 
-    if update.channel_post.media_group_id not in context.chat_data:
-        context.chat_data[update.channel_post.media_group_id] = {"text": None, "file-ids": []}
+    if update.channel_post.media_group_id not in context.bot_data:
+        context.bot_data[update.channel_post.media_group_id] = {"text": None, "file-ids": []}
 
-    if update.channel_post.caption is not None and context.chat_data[update.channel_post.media_group_id][
+    if update.channel_post.caption is not None and context.bot_data[update.channel_post.media_group_id][
         "text"] is None:
-        context.chat_data[update.channel_post.media_group_id]["text"] = update.channel_post.caption
+        context.bot_data[update.channel_post.media_group_id]["text"] = update.channel_post.caption
 
     if update.channel_post.video is not None:
-        context.chat_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.video.file_id)
+        context.bot_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.video.file_id)
     elif update.channel_post.photo is not None:
-        context.chat_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.photo[-1].file_id)
+        context.bot_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.photo[-1].file_id)
 
     context.job_queue.run_once(
         send_channel, 20, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
@@ -55,12 +55,12 @@ def translate_message(text: str):
 
 def send_channel(context: CallbackContext):
     print("CTX ::::: ", context.job.context)
-    print("ChatDAta :::::::::::::::::::::::::::::::::::: ",  context.chat_data)
-    print( "CTX-ChatData :::::::::::::", context.chat_data[int(context.job.context)])
+    print("ChatDAta :::::::::::::::::::::::::::::::::::: ",  context.bot_data)
+    print( "CTX-ChatData :::::::::::::", context.bot_data[int(context.job.context)])
     context.bot.send_media_group(
         chat_id=GROUP_MAIN,
         media=list(
-            context.bot.get_file(context.chat_data[context.job.context]["file-id"][0])
+            context.bot.get_file(context.bot_data[context.job.context]["file-id"][0])
         )
     )
     context.bot.delete_message(str(context.job.context), context.job.name)
