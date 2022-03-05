@@ -19,7 +19,10 @@ def add_footer_meme(update: Update, context: CallbackContext):
 
     print("Media-Group::::::::::::::::::::::::::: ", update)
 
-    if update.channel_post.media_group_id not in context.bot_data:
+    if update.channel_post.media_group_id in context.bot_data:
+        for job in context.job_queue.get_jobs_by_name(update.channel_post.media_group_id):
+            job.schedule_removal()
+    else:
         context.bot_data[update.channel_post.media_group_id] = {"text": None, "files": []}
 
     if update.channel_post.caption is not None and context.bot_data[update.channel_post.media_group_id][
@@ -31,10 +34,10 @@ def add_footer_meme(update: Update, context: CallbackContext):
             InputMediaVideo(media=update.channel_post.video.file_id).to_json())
     elif update.channel_post.photo is not None:
         print("id :::::::::::::::::::: ", update.channel_post.photo[-1].file_id)
-        print("media ::::::::::::::::: ",InputMediaPhoto(media=update.channel_post.photo[-1].file_id))
+        print("media ::::::::::::::::: ", InputMediaPhoto(media=update.channel_post.photo[-1].file_id))
 
         context.bot_data[update.channel_post.media_group_id]["files"].append(
-            InputMediaPhoto(media=update.channel_post.photo[-1].file_id,parse_mode=ParseMode.HTML) )
+            InputMediaPhoto(media=update.channel_post.photo[-1].file_id, parse_mode=ParseMode.HTML))
 
     context.job_queue.run_once(
         send_channel, 20, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
@@ -71,3 +74,5 @@ def send_channel(context: CallbackContext):
     files[0].caption = context.bot_data[context.job.context]["text"]
 
     context.bot.send_media_group(chat_id=GROUP_MAIN, media=files)
+
+    del context.bot_data[context.job.context]
