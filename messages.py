@@ -56,7 +56,7 @@ def translate_message(text: str):
 def send_channel(context: CallbackContext):
     print("CTX ::::: ", context.job.context)
     print("ChatDAta :::::::::::::::::::::::::::::::::::: ",  context.bot_data)
-    print( "CTX-ChatData :::::::::::::", context.bot_data[int(context.job.context)])
+    print( "CTX-ChatData :::::::::::::", context.bot_data[str(context.job.context)])
     context.bot.send_media_group(
         chat_id=GROUP_MAIN,
         media=list(
