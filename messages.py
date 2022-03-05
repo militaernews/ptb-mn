@@ -7,47 +7,27 @@ from telegram.ext import CallbackContext
 from config import GROUP_MAIN, CHANNEL_EN
 
 
-def add_footer_meme(update: Update, context: CallbackContext):
+def post_channel_meme(update: Update, context: CallbackContext):
     if update.channel_post.media_group_id is None:
-        original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
-        update.channel_post.edit_caption(f"{original_caption}\n\n🔰 Subscribe to @MilitaerMemes for more!")
-
-        update.channel_post.forward(chat_id=GROUP_MAIN)
+        add_footer_meme(update)
         return
 
-    if update.channel_post.media_group_id in context.bot_data:
-        for job in context.job_queue.get_jobs_by_name(update.channel_post.media_group_id):
-            job.schedule_removal()
-    else:
-        context.bot_data[update.channel_post.media_group_id] = []
+    if update.channel_post.media_group_id not in context.bot_data:
+        add_footer_meme(update)
 
-    if update.channel_post.photo is not None:
-        context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaPhoto(media=update.channel_post.photo[-1].file_id, parse_mode=ParseMode.HTML))
-    elif update.channel_post.video is not None:
-        context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaVideo(media=update.channel_post.video.file_id, parse_mode=ParseMode.HTML))
-    elif update.channel_post.animation is not None:
-        context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaAnimation(media=update.channel_post.animation.file_id, parse_mode=ParseMode.HTML))
-
-    if update.channel_post.caption is not None:
-        context.bot_data[update.channel_post.media_group_id][
-            -1].caption = f"{update.channel_post.caption}\n\n🔰 Subscribe to @MilitaerMemes for more!"
-
-    context.job_queue.run_once(
-        share_in_main_group, 30, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
-    )
+        context.job_queue.run_once(
+            remove_media_group_id, 20, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
+        )
 
 
-def share_in_main_group(context: CallbackContext):
-    files: [InputMedia] = []
+def add_footer_meme(update: Update):
+    original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
+    update.channel_post.edit_caption(f"{original_caption}\n\n🔰 Subscribe to @MilitaerMemes for more!")
 
-    for file in context.bot_data[context.job.context]:
-        files.append(file)
+    update.channel_post.forward(chat_id=GROUP_MAIN)
 
-    context.bot.send_media_group(chat_id=GROUP_MAIN, media=files)
 
+def remove_media_group_id(context: CallbackContext):
     del context.bot_data[context.job.context]
 
 
@@ -88,7 +68,8 @@ def post_channel_english(update: Update, context: CallbackContext):
             InputMediaAnimation(media=update.channel_post.animation.file_id, parse_mode=ParseMode.HTML))
 
     if update.channel_post.caption is not None:
-        context.bot_data[update.channel_post.media_group_id][-1].caption = f"{translate_message(update.channel_post.caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
+        context.bot_data[update.channel_post.media_group_id][
+            -1].caption = f"{translate_message(update.channel_post.caption) if update.channel_post.caption is not None else ''}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
 
     context.job_queue.run_once(
         share_in_english_channel, 30, update.channel_post.media_group_id, str(update.channel_post.media_group_id)

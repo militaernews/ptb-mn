@@ -12,7 +12,7 @@ from telegram.ext import (
 )
 
 import config
-from messages import add_footer_meme, flag_to_hashtag, post_channel_english
+from messages import add_footer_meme, flag_to_hashtag, post_channel_english, post_channel_meme
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     dp.add_handler(MessageHandler(
         Filters.update.channel_post & (Filters.photo | Filters.video | Filters.animation) & Filters.chat(chat_id=config.CHANNEL_MEME),
-        add_footer_meme))
+        post_channel_meme))
 
     dp.add_handler(MessageHandler(
         Filters.update.channel_post & (Filters.photo | Filters.video | Filters.animation) & Filters.chat(
