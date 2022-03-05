@@ -52,13 +52,11 @@ def translate_message(text: str):
 
 
 def send_channel(context: CallbackContext):
-    print(context.job.context)
-    print(context.chat_data[context.job.context])
-    """Delete given message from job."""
+    print("CTX ::::: ", context.job.context, "CTX-ChatData :::::::::::::", context.chat_data[context.job.context])
     context.bot.send_media_group(
         chat_id=GROUP_MAIN,
         media=list(
-            context.bot.get_file(context.chat_data[context.job.context]["files"][0])
+            context.bot.get_file(context.chat_data[context.job.context]["file-id"][0])
         )
     )
     context.bot.delete_message(str(context.job.context), context.job.name)
