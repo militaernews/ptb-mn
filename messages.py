@@ -1,7 +1,7 @@
 import re
 
 from deep_translator import DeepL
-from telegram import Update
+from telegram import Update, File
 from telegram.ext import CallbackContext
 
 from config import GROUP_MAIN
@@ -55,12 +55,12 @@ def translate_message(text: str):
 
 def send_channel(context: CallbackContext):
     print("CTX ::::: ", context.job.context)
-    print("ChatDAta :::::::::::::::::::::::::::::::::::: ",  context.bot_data)
-    print( "CTX-ChatData :::::::::::::", context.bot_data[str(context.job.context)])
-    context.bot.send_media_group(
-        chat_id=GROUP_MAIN,
-        media=list(
-            context.bot.get_file(context.bot_data[context.job.context]["file-id"][0])
-        )
-    )
-    context.bot.delete_message(str(context.job.context), context.job.name)
+    print("ChatDAta :::::::::::::::::::::::::::::::::::: ", context.bot_data)
+    print("CTX-ChatData :::::::::::::", context.bot_data[str(context.job.context)])
+
+    files: [File] = []
+
+    for file_id in context.bot_data[context.job.context]["file-ids"]:
+        files.append(context.bot.get_file(file_id))
+
+    context.bot.send_media_group(chat_id=GROUP_MAIN, media=files)
