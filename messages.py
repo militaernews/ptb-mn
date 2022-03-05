@@ -19,10 +19,12 @@ def add_footer_meme(update: Update, context: CallbackContext):
 
     print("Media-Group::::::::::::::::::::::::::: ", update)
 
-    if update.channel_post.caption is not None and (
-            update.channel_post.media_group_id not in context.chat_data or "text" not in context.chat_data[
-        update.channel_post.media_group_id]):
-        context.chat_data[update.channel_post.media_group_id] = {"text": update.channel_post.caption, "file-ids": []}
+    if update.channel_post.media_group_id not in context.chat_data:
+        context.chat_data[update.channel_post.media_group_id] = {"text": None, "file-ids": []}
+
+    if update.channel_post.caption is not None and context.chat_data[update.channel_post.media_group_id][
+        "text"] is None:
+        context.chat_data[update.channel_post.media_group_id]["text"] = update.channel_post.caption
 
     if update.channel_post.video is not None:
         context.chat_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.video.file_id)
