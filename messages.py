@@ -1,7 +1,7 @@
 import re
 
 from deep_translator import DeepL
-from telegram import Update, File
+from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia
 from telegram.ext import CallbackContext
 
 from config import GROUP_MAIN
@@ -20,16 +20,18 @@ def add_footer_meme(update: Update, context: CallbackContext):
     print("Media-Group::::::::::::::::::::::::::: ", update)
 
     if update.channel_post.media_group_id not in context.bot_data:
-        context.bot_data[update.channel_post.media_group_id] = {"text": None, "file-ids": []}
+        context.bot_data[update.channel_post.media_group_id] = {"text": None, "files": []}
 
     if update.channel_post.caption is not None and context.bot_data[update.channel_post.media_group_id][
         "text"] is None:
         context.bot_data[update.channel_post.media_group_id]["text"] = update.channel_post.caption
 
     if update.channel_post.video is not None:
-        context.bot_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.video.file_id)
+        context.bot_data[update.channel_post.media_group_id]["files"].append(
+            InputMediaVideo(media=update.channel_post.video.file_id))
     elif update.channel_post.photo is not None:
-        context.bot_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.photo[-1].file_id)
+        context.bot_data[update.channel_post.media_group_id]["files"].append(
+            InputMediaPhoto(media=update.channel_post.photo[-1].file_id))
 
     context.job_queue.run_once(
         send_channel, 20, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
@@ -58,9 +60,11 @@ def send_channel(context: CallbackContext):
     print("ChatDAta :::::::::::::::::::::::::::::::::::: ", context.bot_data)
     print("CTX-ChatData :::::::::::::", context.bot_data[str(context.job.context)])
 
-    files: [File] = []
+    files: [InputMedia] = []
 
-    for file_id in context.bot_data[context.job.context]["file-ids"]:
+    for file_id in context.bot_data[context.job.context]["files"]:
         files.append(context.bot.get_file(file_id))
+
+    files[0].set_caption(context.bot_data[context.job.context]["text"])
 
     context.bot.send_media_group(chat_id=GROUP_MAIN, media=files)
