@@ -1,6 +1,6 @@
 import re
 
-from deep_translator import DeepL
+from deep_translator import DeepL, GoogleTranslator
 from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, ParseMode, InputMediaAnimation
 from telegram.ext import CallbackContext
 
@@ -39,7 +39,7 @@ def flag_to_hashtag(update: Update, context: CallbackContext):
 
 
 def translate_message(text: str) -> str:
-    return DeepL(source='de', target='en').translate(text)
+    return GoogleTranslator(source='de', target='en').translate(text)
 
 
 def post_channel_english(update: Update, context: CallbackContext):
