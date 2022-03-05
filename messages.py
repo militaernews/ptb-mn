@@ -8,14 +8,12 @@ from config import GROUP_MAIN
 
 
 def add_footer_meme(update: Update, context: CallbackContext):
-
-
-    original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
-
-    update.channel_post.edit_caption(f"{original_caption}\n\n🔰 Subscribe to @MilitaerMemes for more!")
-
     if update.channel_post.media_group_id is None:
         print("Update::::: ", update)
+
+        original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
+        update.channel_post.edit_caption(f"{original_caption}\n\n🔰 Subscribe to @MilitaerMemes for more!")
+
         update.channel_post.forward(chat_id=GROUP_MAIN)
         return
 
