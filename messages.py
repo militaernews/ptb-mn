@@ -30,6 +30,9 @@ def add_footer_meme(update: Update, context: CallbackContext):
         context.bot_data[update.channel_post.media_group_id]["files"].append(
             InputMediaVideo(media=update.channel_post.video.file_id).to_json())
     elif update.channel_post.photo is not None:
+        print("id :::::::::::::::::::: ", update.channel_post.photo[-1].file_id)
+        print("media ::::::::::::::::: ",InputMediaPhoto(media=update.channel_post.photo[-1].file_id))
+
         context.bot_data[update.channel_post.media_group_id]["files"].append(
             InputMediaPhoto(media=update.channel_post.photo[-1].file_id).to_json())
 
