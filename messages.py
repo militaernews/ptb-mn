@@ -43,10 +43,14 @@ def translate_message(text: str) -> str:
 
 
 def post_channel_english(update: Update, context: CallbackContext):
+    print("Update::: ",update)
+
     if update.channel_post.media_group_id is None:
         original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
         update.channel_post.edit_caption(
             f"{translate_message(original_caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!")
+
+        print("trans---SINGLE ::: ", translate_message(original_caption))
 
         update.channel_post.forward(chat_id=CHANNEL_EN)
         return
@@ -55,11 +59,13 @@ def post_channel_english(update: Update, context: CallbackContext):
         for job in context.job_queue.get_jobs_by_name(update.channel_post.media_group_id):
             job.schedule_removal()
     else:
+        print("--- NEW MG ------------------------")
         context.bot_data[update.channel_post.media_group_id] = []
 
     if update.channel_post.photo is not None:
         context.bot_data[update.channel_post.media_group_id].append(
             InputMediaPhoto(media=update.channel_post.photo[-1].file_id, parse_mode=ParseMode.HTML))
+        print("--- PHOTO ----------------------------------------------------------------")
     elif update.channel_post.video is not None:
         context.bot_data[update.channel_post.media_group_id].append(
             InputMediaVideo(media=update.channel_post.video.file_id, parse_mode=ParseMode.HTML))
@@ -79,9 +85,14 @@ def post_channel_english(update: Update, context: CallbackContext):
 def share_in_english_channel(context: CallbackContext):
     files: [InputMedia] = []
 
+    print("JOB ::::::::::::: ", context.job.context)
+    print("bot-data :::::::::::::::::::::::::::", context.bot_data[context.job.context])
+
     for file in context.bot_data[context.job.context]:
         files.append(file)
 
     context.bot.send_media_group(chat_id=CHANNEL_EN, media=files)
+
+    print("-- done --")
 
     del context.bot_data[context.job.context]
