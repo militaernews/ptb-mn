@@ -46,13 +46,12 @@ def post_channel_english(update: Update, context: CallbackContext):
     print("Update::: ",update)
 
     if update.channel_post.media_group_id is None:
+
+        original_post = update.channel_post
         original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
-        update.channel_post.edit_caption(
-            f"{translate_message(original_caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!")
+        original_post.caption = f"{translate_message(original_caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
 
-        print("trans---SINGLE ::: ", translate_message(original_caption))
-
-        update.channel_post.forward(chat_id=CHANNEL_EN)
+        original_post.copy(CHANNEL_EN)
         return
 
     if update.channel_post.media_group_id in context.bot_data:
@@ -76,8 +75,9 @@ def post_channel_english(update: Update, context: CallbackContext):
 
     if update.channel_post.caption is not None:
         print("trans---SINGLE ::: ", translate_message(update.channel_post.caption))
+        original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
         context.bot_data[update.channel_post.media_group_id][
-            -1].caption = f"{translate_message(update.channel_post.caption) if update.channel_post.caption is not None else ''}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
+            -1].caption = f"{translate_message(original_caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
 
     context.job_queue.run_once(
         share_in_english_channel, 30, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
