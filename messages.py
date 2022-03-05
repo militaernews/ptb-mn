@@ -48,9 +48,8 @@ def post_channel_english(update: Update, context: CallbackContext):
     if update.channel_post.media_group_id is None:
         original_post = update.channel_post
         original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
-        original_post.edit_caption(f"{translate_message(original_caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!")
-
-        original_post.copy(CHANNEL_EN)
+        original_post.copy(chat_id=CHANNEL_EN,
+                           caption=f"{translate_message(original_caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!")
         return
 
     if update.channel_post.media_group_id in context.bot_data:
