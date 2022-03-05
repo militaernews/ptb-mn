@@ -1,6 +1,6 @@
 import re
 
-from deep_translator import DeepL, GoogleTranslator
+from deep_translator import GoogleTranslator
 from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, ParseMode, InputMediaAnimation
 from telegram.ext import CallbackContext
 
@@ -43,10 +43,9 @@ def translate_message(text: str) -> str:
 
 
 def post_channel_english(update: Update, context: CallbackContext):
-    print("Update::: ",update)
+    print("Update::: ", update)
 
     if update.channel_post.media_group_id is None:
-
         original_post = update.channel_post
         original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
         original_post.caption = f"{translate_message(original_caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
@@ -75,9 +74,11 @@ def post_channel_english(update: Update, context: CallbackContext):
 
     if update.channel_post.caption is not None:
         print("trans---SINGLE ::: ", translate_message(update.channel_post.caption))
-        original_caption = update.channel_post.caption if update.channel_post.caption is not None else ''
         context.bot_data[update.channel_post.media_group_id][
-            -1].caption = f"{translate_message(original_caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
+            -1].caption = f"{translate_message(update.channel_post.caption)}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
+
+        update.channel_post.edit_caption(
+            f"{update.channel_post.caption}\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat")
 
     context.job_queue.run_once(
         share_in_english_channel, 30, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
