@@ -34,7 +34,7 @@ def add_footer_meme(update: Update, context: CallbackContext):
         print("media ::::::::::::::::: ",InputMediaPhoto(media=update.channel_post.photo[-1].file_id))
 
         context.bot_data[update.channel_post.media_group_id]["files"].append(
-            InputMediaPhoto(media=update.channel_post.photo[-1].file_id), parse_mode=ParseMode.HTML)
+            InputMediaPhoto(media=update.channel_post.photo[-1].file_id,parse_mode=ParseMode.HTML) )
 
     context.job_queue.run_once(
         send_channel, 20, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
