@@ -68,6 +68,6 @@ def send_channel(context: CallbackContext):
     for file_id in context.bot_data[context.job.context]["files"]:
         files.append(file_id)
 
-    files[0].set_caption(context.bot_data[context.job.context]["text"])
+    files[0].caption = context.bot_data[context.job.context]["text"]
 
     context.bot.send_media_group(chat_id=GROUP_MAIN, media=files)
