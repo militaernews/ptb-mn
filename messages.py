@@ -58,6 +58,7 @@ def post_channel_english(update: Update, context: CallbackContext):
     if update.channel_post.media_group_id in context.bot_data:
         for job in context.job_queue.get_jobs_by_name(update.channel_post.media_group_id):
             job.schedule_removal()
+        print("--- job gone ::::::::")
     else:
         print("--- NEW MG ------------------------")
         context.bot_data[update.channel_post.media_group_id] = []
@@ -74,6 +75,7 @@ def post_channel_english(update: Update, context: CallbackContext):
             InputMediaAnimation(media=update.channel_post.animation.file_id, parse_mode=ParseMode.HTML))
 
     if update.channel_post.caption is not None:
+        print("trans---SINGLE ::: ", translate_message(update.channel_post.caption))
         context.bot_data[update.channel_post.media_group_id][
             -1].caption = f"{translate_message(update.channel_post.caption) if update.channel_post.caption is not None else ''}\n\n🔰 Subscribe to @MilitaryNewsEN for more!"
 
