@@ -27,7 +27,7 @@ def add_footer_meme(update: Update, context: CallbackContext):
     if update.channel_post.video is not None:
         context.chat_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.video.file_id)
     elif update.channel_post.photo is not None:
-        context.chat_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.photo.file_id)
+        context.chat_data[update.channel_post.media_group_id]["file-ids"].append(update.channel_post.photo[-1].file_id)
 
     context.job_queue.run_once(
         send_channel, 20, update.channel_post.media_group_id, str(update.channel_post.media_group_id)
