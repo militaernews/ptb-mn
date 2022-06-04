@@ -1,8 +1,6 @@
-"""Contains variables used throughout the project."""
 import os
 
-PORT = int(os.environ.get("PORT", 5000))
-TOKEN = os.environ["TOKEN"]
+TOKEN = os.getenv("TOKEN")
 
 CHANNEL_MEME = -1001486678205
 CHANNEL_DE = -1001240262412
