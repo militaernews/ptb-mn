@@ -1,11 +1,11 @@
 # ptb-mn
-This Telegram-Bot aims to help Admins of [@MilitaerNews](channel-de) publishing for multiple languages.
+This Telegram-Bot aims to help Admins of [@MilitaerNews][channel-de] publishing for multiple languages.
 
-You can find it [here](bot).
+You can find it [here][bot].
 
 ## Usage
 
-### 🔰 German Channel ([@MilitaerNews](channel-de))
+### 🔰 German Channel ([@MilitaerNews][channel-de])
 
 * if photo, animation or video (can also be a media group) is posted:
   * translates caption of each photo, image or animation - or the first entry of a media group
@@ -24,13 +24,13 @@ You can find it [here](bot).
   * prepends the language's ```announce``` attribute to given text
   * reposts in all News channels and pins them
 
-### 🔰 Memes Channel ([@MilitaerMemes](memes))
+### 🔰 Memes Channel ([@MilitaerMemes][channel_meme])
 
 * default behavior:
   * appends English footer the each photo, animation or video posted in this channel
 * if the caption of a posted photo, animation or video contains ```#de```:
   * the appended footer will be in German
-* channel posts are forwarded to the [German](chat-de) and [English](chat-en) discussion groups
+* channel posts are forwarded to the [German][chat-de] and [English][chat-en] discussion groups
 
 
 ## Languages
@@ -55,7 +55,7 @@ Feel free to open up an issue in which you clearly define what should be added o
 
 
 [bot]: https://t.me/militaernews_posting_bot
-[memes]: https://t.me/MilitaerMemes
+[channel_meme]: https://t.me/MilitaerMemes
 [chat-de]: https://t.me/MNChat
 [chat-en]: https://t.me/MilitaryChatEN
 [channel-de]: https://t.me/MilitaerNews
