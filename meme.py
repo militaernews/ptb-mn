@@ -2,7 +2,7 @@ from deep_translator import GoogleTranslator
 from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, ParseMode, InputMediaAnimation  #upm package(python-telegram-bot)
 from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
 import re
-from config import GROUP_MAIN, CHANNEL_EN
+import config
 
 
 def post_channel_meme(update: Update, context: CallbackContext):
@@ -29,7 +29,8 @@ def add_footer_meme(update: Update):
 
     update.channel_post.edit_caption(f"{original_caption}\n\n🔰 {footer}")
 
-    update.channel_post.forward(chat_id=GROUP_MAIN)
+    update.channel_post.forward(chat_id=config.CHAT_DE)
+    update.channel_post.forward(chat_id=config.CHAT_EN)
 
 
 def remove_media_group_id(context: CallbackContext):

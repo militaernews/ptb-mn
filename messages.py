@@ -114,6 +114,25 @@ def breaking_news(update: Update, context: CallbackContext):
             caption="#" + lang.breaking +
             translate_message(lang.lang_key, text) + "\n" + lang.footer)
 
+def announcement(update: Update, context: CallbackContext):
+    update.channel_post.delete()
+    
+    text =  "📢\n\n" + re.sub(re.compile(r"#eilmeldung", re.IGNORECASE), "",
+                  update.channel_post.text_html)
+
+    context.bot.send_photo(
+        chat_id=config.CHANNEL_DE,
+        photo=open("res/mn-announce-de.png", "rb"),
+        caption= "#MITTEILUNG" + text
+    )
+
+    for lang in languages:
+        context.bot.send_photo(
+            chat_id=lang.channel_id,
+            photo=open(f"res/mn-announce-{lang.lang_key}.png", "rb"),
+            caption="#" + lang.announce +
+            translate_message(lang.lang_key, text) + "\n" + lang.footer)
+
 
 def is_flag_emoji(c):
     return "\U0001F1E6\U0001F1E8" <= c <= "\U0001F1FF\U0001F1FC" or c in [
@@ -145,3 +164,4 @@ def share_in_other_channels(context: CallbackContext):
     print("-- done --")
 
     del context.bot_data[context.job.context]
+
