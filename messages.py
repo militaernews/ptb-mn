@@ -124,14 +124,15 @@ def announcement(update: Update, context: CallbackContext):
         chat_id=config.CHANNEL_DE,
         photo=open("res/announce/mn-announce-de.png", "rb"),
         caption= "#MITTEILUNG" + text
-    )
+    ).pin()
 
     for lang in languages:
-        context.bot.send_photo(
+        msg = context.bot.send_photo(
             chat_id=lang.channel_id,
             photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
             caption="#" + lang.announce +
             translate_message(lang.lang_key, text) + "\n" + lang.footer)
+        msg.pin()
 
 
 def is_flag_emoji(c):

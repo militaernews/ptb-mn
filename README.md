@@ -22,7 +22,7 @@ You can find it [here](bot).
   * send [German Announcement photo](/res/announce/mn-announce-de.png) with caption being the text of the initial channel post
   * translates to all given languages
   * prepends the language's ```announce``` attribute to given text
-  * reposts in all News channels
+  * reposts in all News channels and pins them
 
 ### 🔰 Memes Channel ([@MilitaerMemes](memes))
 
