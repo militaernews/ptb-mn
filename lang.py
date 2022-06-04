@@ -39,7 +39,7 @@ languages: [Language] = [
      -1001330302325, # https://t.me/MilitaryNewsRU
      "🔰 Подписывайтесь на @MilitaryNewsRU",
       "СРОЧНЫЕ_НОВОСТИ",
-      "СООБЩЕНИЕ"
+      "ОБЪЯВЛЕНИЕ"
   ),
 
     Language(
@@ -55,7 +55,7 @@ languages: [Language] = [
      -1001715032604, # https://t.me/MilitaryNewsES
      "🔰 Suscríbete a @MilitaryNewsES",
       "ÚLTIMA_HORA",
-      "NOTIFICACIÓN"
+      "ANUNCIO"
     )
 
 ]
