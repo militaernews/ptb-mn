@@ -99,7 +99,7 @@ def breaking_news(update: Update, context: CallbackContext):
     update.channel_post.delete()
     context.bot.send_photo(
         chat_id=config.CHANNEL_DE,
-        photo=open("res/mn-breaking-de.png", "rb"),
+        photo=open("res/breaking/mn-breaking-de.png", "rb"),
         caption=
         f"{update.channel_post.text}\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
     )
@@ -110,7 +110,7 @@ def breaking_news(update: Update, context: CallbackContext):
     for lang in languages:
         context.bot.send_photo(
             chat_id=lang.channel_id,
-            photo=open(f"res/mn-breaking-{lang.lang_key}.png", "rb"),
+            photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
             caption="#" + lang.breaking +
             translate_message(lang.lang_key, text) + "\n" + lang.footer)
 
@@ -122,14 +122,14 @@ def announcement(update: Update, context: CallbackContext):
 
     context.bot.send_photo(
         chat_id=config.CHANNEL_DE,
-        photo=open("res/mn-announce-de.png", "rb"),
+        photo=open("res/announce/mn-announce-de.png", "rb"),
         caption= "#MITTEILUNG" + text
     )
 
     for lang in languages:
         context.bot.send_photo(
             chat_id=lang.channel_id,
-            photo=open(f"res/mn-announce-{lang.lang_key}.png", "rb"),
+            photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
             caption="#" + lang.announce +
             translate_message(lang.lang_key, text) + "\n" + lang.footer)
 
