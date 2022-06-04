@@ -111,7 +111,7 @@ def breaking_news(update: Update, context: CallbackContext):
         context.bot.send_photo(
             chat_id=lang.channel_id,
             photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
-            caption="#" + lang.breaking +
+            caption="#" + lang.breaking + "\n\n" +
             translate_message(lang.lang_key, text) + "\n" + lang.footer)
 
 def announcement(update: Update, context: CallbackContext):

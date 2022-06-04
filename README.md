@@ -1,5 +1,5 @@
 # ptb-mn
-This Telegram-Bot aims to help Admins of @MilitaerNews publishing for multiple languages and content management.
+This Telegram-Bot aims to help Admins of [@MilitaerNews](channel-de) publishing for multiple languages.
 
 You can find it [here](bot).
 

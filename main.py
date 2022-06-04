@@ -4,7 +4,7 @@ from telegram import ParseMode  #upm package(python-telegram-bot)
 from telegram.ext import Updater, MessageHandler, Filters, Defaults  #upm package(python-telegram-bot)
 
 import config
-from messages import flag_to_hashtag, post_channel_english, breaking_news
+from messages import flag_to_hashtag, post_channel_english, breaking_news,announcement
 from meme import post_channel_meme
 import re
 
@@ -35,6 +35,12 @@ if __name__ == "__main__":
             Filters.update.channel_post & Filters.text
             & Filters.regex(re.compile(r"#eilmeldung", re.IGNORECASE)),
             breaking_news))
+
+    dp.add_handler(
+        MessageHandler(
+            Filters.update.channel_post & Filters.text
+            & Filters.regex(re.compile(r"#mitteilung", re.IGNORECASE)),
+            announcement))
 
     dp.add_handler(MessageHandler(Filters.chat(config.ADMINS),
                                   flag_to_hashtag))

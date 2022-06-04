@@ -14,7 +14,7 @@ languages: [Language] = [
     "en", # English
     config.CHANNEL_EN, # https://t.me/MilitaryNewsEN
     "🔰 Subscribe to @MilitaryNewsEN\n🔰 Join us @MilitaryChatEN",
-    "BREAKING_NEWS",
+    "BREAKING",
     "ANNOUNCEMENT"
   ),
   
