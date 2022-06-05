@@ -4,7 +4,7 @@ from telegram import ParseMode  #upm package(python-telegram-bot)
 from telegram.ext import Updater, MessageHandler, Filters, Defaults  #upm package(python-telegram-bot)
 
 import config
-from messages import flag_to_hashtag, post_channel_english, breaking_news,announcement
+from messages import flag_to_hashtag_test, post_channel_english, breaking_news,announcement
 from meme import post_channel_meme
 import re
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
             announcement))
 
     dp.add_handler(MessageHandler(Filters.chat(config.ADMINS),
-                                  flag_to_hashtag))
+                                  flag_to_hashtag_test))
 
     # Commands have to be added above
     # dp.add_error_handler(error)  # comment this one out for full stacktrace

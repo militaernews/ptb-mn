@@ -20,10 +20,9 @@ def post_channel_meme(update: Update, context: CallbackContext):
 
 def add_footer_meme(update: Update):
     original_caption = update.channel_post.caption_html_urled if update.channel_post.caption is not None else ''
-    if re.search(r"\sde$",
-                 original_caption) is not None or original_caption == "de":
-        footer = footer = "Abonniere @MilitaerMemes für mehr!"
-        original_caption = original_caption[:-2]
+    if "#de" in original_caption:
+        footer = "Abonniere @MilitaerMemes für mehr!"
+        original_caption.replace("#de","")
     else:
         footer = "Subscribe to @MilitaerMemes for more"
 

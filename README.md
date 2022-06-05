@@ -9,6 +9,7 @@ You can find it [here][bot].
 
 * if photo, animation or video (can also be a media group) is posted:
   * translates caption of each photo, image or animation - or the first entry of a media group
+  * appends Hashtags for each [flag](/flag.py) to the caption
   * appends the language's ```footer``` attribute to the caption
   * reposts in all News channels after 20 seconds
 * if a posted text (i.e. no photo, animation, video etc.) contains ```#eilmeldung```:
