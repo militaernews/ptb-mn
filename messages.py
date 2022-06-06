@@ -3,8 +3,6 @@ import re
 from deep_translator import GoogleTranslator
 from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, ParseMode, InputMediaAnimation  #upm package(python-telegram-bot)
 from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
-import pycountry  #upm package(pycountry)
-import emoji  #upm package(emoji)
 from lang import languages
 import config
 
@@ -16,17 +14,19 @@ def flag_to_hashtag_test(update: Update, context: CallbackContext):
 
 def flag_to_hashtag(text: str, language: str) -> str:
 
-    last = None
+    if not re.compile(r'#\w+').search(text):
 
-    text+="\n\n"
+      last = None
 
-    for c in text:
+      text+="\n\n"
+
+      for c in text:
 
         if is_flag_emoji(c):
             if last is not None:
                 key = last + c
                 if key in flags:        
-                  text  += "#" + GoogleTranslator(source='en', target=language).translate(flags.get(key)).replace(" ", "") + " "
+                  text  += "#" + GoogleTranslator(source='de', target=language).translate(flags.get(key)).replace(" ", "") + " "
 
                 last = None
 
@@ -52,9 +52,9 @@ def post_channel_english(update: Update, context: CallbackContext):
                 chat_id=lang.channel_id,
                 caption=translate_message(lang.lang_key, original_caption) +
                 "\n" + lang.footer)
-
+ 
         update.channel_post.edit_caption(
-            f"{update.channel_post.caption_html_urled}\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
+           flag_to_hashtag(original_caption, "de") +  "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
         )
         return
 
@@ -91,7 +91,7 @@ def post_channel_english(update: Update, context: CallbackContext):
             -1].caption = f"{update.channel_post.caption_html_urled}"
 
         update.channel_post.edit_caption(
-            f"{update.channel_post.caption_html_urled}\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
+             flag_to_hashtag(update.channel_post.caption_html_urled, "de") +"\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
         )
 
     context.job_queue.run_once(share_in_other_channels, 20,
@@ -105,7 +105,7 @@ def breaking_news(update: Update, context: CallbackContext):
         chat_id=config.CHANNEL_DE,
         photo=open("res/breaking/mn-breaking-de.png", "rb"),
         caption=
-        f"{update.channel_post.text}\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
+         flag_to_hashtag(update.channel_post.text, "de")+ "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
     )
 
     text = re.sub(re.compile(r"#eilmeldung", re.IGNORECASE), "",
@@ -142,13 +142,8 @@ def announcement(update: Update, context: CallbackContext):
 
 
 def is_flag_emoji(c):
-    return "🇦" <= c <= "🇿"
-  
-  #  return "\U0001F1E6\U0001F1E8" <= c <= "\U0001F1FF\U0001F1FC" or c in [
-   #     "\U0001F3F4\U000e0067\U000e0062\U000e0065\U000e006e\U000e0067\U000e007f",
-   #     "\U0001F3F4\U000e0067\U000e0062\U000e0073\U000e0063\U000e0074\U000e007f",
-    #    "\U0001F3F4\U000e0067\U000e0062\U000e0077\U000e006c\U000e0073\U000e007f"
-   # ]
+    return "🇦" <= c <= "🇿" or c in [ "🏴" ]
+
 
 
 def share_in_other_channels(context: CallbackContext):
