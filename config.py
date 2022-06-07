@@ -10,7 +10,8 @@ CHAT_DE = -1001526741474
 CHAT_EN = -1001382962633
 
 NYX = 703453307
-ADMINS = (NYX,
-          525147382,  # melik
-          466451473  # maxe
-          )
+ADMINS = (
+    NYX,
+    525147382,  # melik
+    466451473  # maxe
+)

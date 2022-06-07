@@ -1,4 +1,3 @@
-from deep_translator import GoogleTranslator
 from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, ParseMode, InputMediaAnimation  #upm package(python-telegram-bot)
 from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
 import re
@@ -22,7 +21,7 @@ def add_footer_meme(update: Update):
     original_caption = update.channel_post.caption_html_urled if update.channel_post.caption is not None else ''
     if "#de" in original_caption:
         footer = "Abonniere @MilitaerMemes für mehr!"
-        original_caption = original_caption.replace(r"#de","")
+        original_caption = original_caption.replace(r"#de", "")
     else:
         footer = "Subscribe to @MilitaerMemes for more"
 

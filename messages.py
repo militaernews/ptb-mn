@@ -1,7 +1,7 @@
 import re
 
 from deep_translator import GoogleTranslator
-from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, ParseMode, InputMediaAnimation  #upm package(python-telegram-bot)
+from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation  #upm package(python-telegram-bot)
 from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
 from lang import languages
 import config
@@ -14,7 +14,7 @@ def flag_to_hashtag_test(update: Update, context: CallbackContext):
     update.message.reply_text(flag_to_hashtag(update.message.text, "tr"))
 
 
-def flag_to_hashtag(text: str, language:  Union[str,None] = None) -> str:
+def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
 
     if not re.compile(r'#\w+').search(text):
 
@@ -25,22 +25,23 @@ def flag_to_hashtag(text: str, language:  Union[str,None] = None) -> str:
         for c in text:
 
             if not is_flag_emoji(c):
-              continue
-              
+                continue
+
             if last is None:
                 last = c
                 continue
-              
+
             key = last + c
-                    
+
             if key in flags:
 
-              hashtag = flags.get(key)
+                hashtag = flags.get(key)
 
-              if language is not None:
-                  hashtag =  GoogleTranslator(source='de',target=language).translate(hashtag)
+                if language is not None:
+                    hashtag = GoogleTranslator(
+                        source='de', target=language).translate(hashtag)
 
-              text += "#" + hashtag.replace(" ", "") + " "
+                text += "#" + hashtag.replace(" ", "") + " "
 
             last = None
 
@@ -114,7 +115,8 @@ def breaking_news(update: Update, context: CallbackContext):
     context.bot.send_photo(
         chat_id=config.CHANNEL_DE,
         photo=open("res/breaking/mn-breaking-de.png", "rb"),
-        caption=flag_to_hashtag(update.text_html_urled) + "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat")
+        caption=flag_to_hashtag(update.text_html_urled) +
+        "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat")
 
     text = re.sub(re.compile(r"#eilmeldung", re.IGNORECASE), "",
                   update.channel_post.text_html_urled)
