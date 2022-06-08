@@ -90,6 +90,17 @@ beautifulsoup4 = ">=4.9.1,<5.0.0"
 requests = ">=2.23.0,<3.0.0"
 
 [[package]]
+name = "deepl"
+version = "1.7.0"
+description = "Python library for the DeepL API."
+category = "main"
+optional = false
+python-versions = ">=3.6.2,<4"
+
+[package.dependencies]
+requests = ">=2,<3"
+
+[[package]]
 name = "emoji"
 version = "1.7.0"
 description = "Emoji for Python"
@@ -239,7 +250,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "6a857f7079ed0fc9ac9dd5f8dbfae97c328ae7993dc410b4fbbba2012d6c2c99"
+content-hash = "0a4a3ab85f2b737d1042cd69d553fd30fbb4f82d6042d5e533c5d3320fc17791"
 
 [metadata.files]
 apscheduler = [
@@ -283,6 +294,10 @@ charset-normalizer = [
 deep-translator = [
     {file = "deep-translator-1.8.1.tar.gz", hash = "sha256:3a2e5dceb0b5f4f9e513108e82ef9b4f99f7fd7c202640e2af397cadaf30ecdc"},
     {file = "deep_translator-1.8.1-py3-none-any.whl", hash = "sha256:7d498bff075c785687fdcc7d0c9d20ecc96d9102858f6a5e70a39ff3e569c45c"},
+]
+deepl = [
+    {file = "deepl-1.7.0-py3-none-any.whl", hash = "sha256:0a59b99326523867a526a6b5ad0d95d63afdeacb689be25855da5c65ecc7077d"},
+    {file = "deepl-1.7.0.tar.gz", hash = "sha256:32e4b9d6fbd8825c4a7e96841b2722dd200b6bf4afa6d0679987b8fb34f7b3f5"},
 ]
 emoji = [
     {file = "emoji-1.7.0.tar.gz", hash = "sha256:65c54533ea3c78f30d0729288998715f418d7467de89ec258a31c0ce8660a1d1"},

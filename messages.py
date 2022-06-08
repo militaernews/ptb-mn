@@ -1,58 +1,25 @@
 import re
 
-from deep_translator import GoogleTranslator
 from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation  #upm package(python-telegram-bot)
 from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
 from lang import languages
 import config
-from typing import Union
-
-from flag import flags
+from translation import translate_message, flag_to_hashtag
 
 
 def flag_to_hashtag_test(update: Update, context: CallbackContext):
-    update.message.reply_text(flag_to_hashtag(update.message.text, "tr"))
 
+    update.message.reply_text("flag to hashtag -- TR")
+    update.message.reply_text(
+        flag_to_hashtag(update.message.text_html_urled, "tr"))
 
-def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
+    update.message.reply_text("deepl -- de -- formality more")
+    update.message.reply_text(
+        translate_message(update.message.text_html_urled, "de"))
 
-    if not re.compile(r'#\w+').search(text):
-
-        last = None
-
-        text += "\n\n"
-
-        for c in text:
-
-            if not is_flag_emoji(c):
-                continue
-
-            if last is None:
-                last = c
-                continue
-
-            key = last + c
-
-            if key in flags:
-
-                hashtag = flags.get(key)
-
-                if language is not None:
-                    hashtag = GoogleTranslator(
-                        source='de', target=language).translate(hashtag)
-
-                text += "#" + hashtag.replace(" ", "") + " "
-
-            last = None
-
-    return text
-
-
-def translate_message(target_lang: str, text: str) -> str:
-    translated_text = GoogleTranslator(source='de',
-                                       target=target_lang).translate(text)
-
-    return flag_to_hashtag(translated_text, target_lang)
+    update.message.reply_text("deepl -- en-us")
+    update.message.reply_text(
+        translate_message(update.message.text_html_urled, "en-us"))
 
 
 def post_channel_english(update: Update, context: CallbackContext):
@@ -102,7 +69,7 @@ def post_channel_english(update: Update, context: CallbackContext):
             -1].caption = f"{update.channel_post.caption_html_urled}"
 
         update.channel_post.edit_caption(
-            flag_to_hashtag(update.channel_post.caption_html_urled, "de") +
+            flag_to_hashtag(update.channel_post.caption_html_urled, None) +
             "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat")
 
     context.job_queue.run_once(share_in_other_channels, 20,
@@ -149,10 +116,6 @@ def announcement(update: Update, context: CallbackContext):
             caption="#" + lang.announce +
             translate_message(lang.lang_key, text) + "\n" + lang.footer)
         msg.pin()
-
-
-def is_flag_emoji(c):
-    return "🇦" <= c <= "🇿" or c in ["🏴"]
 
 
 def share_in_other_channels(context: CallbackContext):

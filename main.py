@@ -1,6 +1,6 @@
 from telegram import ParseMode  #upm package(python-telegram-bot)
 from telegram.ext import Updater, MessageHandler, Filters, Defaults  #upm package(python-telegram-bot)
-
+import os
 from messages import flag_to_hashtag_test, post_channel_english, breaking_news, announcement
 from meme import post_channel_meme
 from admin import join_member
@@ -9,7 +9,7 @@ import config
 from log import report_error
 
 if __name__ == "__main__":
-    updater = Updater(config.TOKEN,
+    updater = Updater(os.environ["TELEGRAM"],
                       defaults=Defaults(parse_mode=ParseMode.HTML))
     dp = updater.dispatcher
 
