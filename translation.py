@@ -35,7 +35,7 @@ def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
 
 
 def translate_message(target_lang: str, text: str) -> str:
-    translated_text = translator.translate_text(text, target_lang=target_lang)
+    translated_text = translator.translate_text(text, target_lang=target_lang).text
 
     return flag_to_hashtag(translated_text, target_lang)
 

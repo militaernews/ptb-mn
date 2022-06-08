@@ -10,7 +10,8 @@ from log import report_error
 
 if __name__ == "__main__":
     updater = Updater(os.environ["TELEGRAM"],
-                      defaults=Defaults(parse_mode=ParseMode.HTML))
+                      defaults=Defaults(parse_mode=ParseMode.HTML,
+                                        disable_web_page_preview=True))
     dp = updater.dispatcher
 
     dp.add_handler(
