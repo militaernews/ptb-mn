@@ -3,6 +3,7 @@ from typing import Union
 import re
 import os
 from flag import flags
+from deep_translator import GoogleTranslator
 
 translator = deepl.Translator(os.environ['DEEPL'])
 
@@ -35,7 +36,7 @@ def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
 
 
 def translate_message(target_lang: str, text: str) -> str:
-    translated_text = translator.translate_text(text, target_lang=target_lang).text
+    translated_text =  translate(target_lang, text)
 
     return flag_to_hashtag(translated_text, target_lang)
 
@@ -44,10 +45,17 @@ def is_flag_emoji(c):
     return "🇦" <= c <= "🇿" or c in ["🏴"]
 
 
-def get_hashtag(key: str, language: Union[str, None] = None):
+def get_hashtag(key: str, language: Union[str, None] = None) -> str:
     hashtag = flags.get(key)
 
     if language is None:
         return hashtag
 
-    return translator.translate_text(hashtag, target_lang=language)
+    return translate(language, hashtag)
+
+
+def translate(target_lang: str, text: str) -> str:
+    if target_lang == "fa":
+        return GoogleTranslator(source='de',
+                                target=target_lang).translate(text=text)
+    return translator.translate_text(text, target_lang=target_lang).text

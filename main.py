@@ -48,8 +48,8 @@ if __name__ == "__main__":
         MessageHandler(Filters.chat(config.ADMINS), flag_to_hashtag_test))
 
     # Commands have to be added above
-    dp.add_error_handler(
-        report_error)  # comment this one out for full stacktrace
+  #  dp.add_error_handler(
+ #       report_error)  # comment this one out for full stacktrace
 
     updater.start_polling()
     updater.idle()

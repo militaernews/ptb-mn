@@ -13,7 +13,7 @@ class Language:
 
 languages: [Language] = [
     Language(
-        "en",  # English
+        "en-us",  # English
         config.CHANNEL_EN,  # https://t.me/MilitaryNewsEN
         "🔰 Subscribe to @MilitaryNewsEN\n🔰 Join us @MilitaryChatEN",
         "BREAKING",
@@ -37,7 +37,7 @@ languages: [Language] = [
         "СРОЧНЫЕ_НОВОСТИ",
         "ОБЪЯВЛЕНИЕ"),
     Language(
-        "pt",  # Portugese
+        "pt-br",  # Portugese
         -1001614849485,  # https://t.me/MilitaryNewsBR
         "🔰 Se inscreva no @militaryNewsBR",
         "NOTÍCIAS_URGENTES",
