@@ -6,9 +6,11 @@ from dataclasses import dataclass
 class Language:
     lang_key: str
     channel_id: int
+  #  chat_id: int
     footer: str
     breaking: str
     announce: str
+   # captcha:str
 
 
 languages: [Language] = [

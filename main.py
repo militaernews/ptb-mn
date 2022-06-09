@@ -17,7 +17,7 @@ if __name__ == "__main__":
     dp.add_handler(
         MessageHandler(
             Filters.status_update.new_chat_members
-            & Filters.chat(chat_id=[config.CHAT_DE, config.CHAT_DE]),
+            & Filters.chat(chat_id=[config.LOG_GROUP]), #config.CHAT_DE, config.CHAT_DE
             join_member))
 
     dp.add_handler(
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         MessageHandler(Filters.chat(config.ADMINS), flag_to_hashtag_test))
 
     # Commands have to be added above
-  #  dp.add_error_handler(
+ #   dp.add_error_handler(
  #       report_error)  # comment this one out for full stacktrace
 
     updater.start_polling()

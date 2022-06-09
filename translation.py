@@ -31,7 +31,8 @@ def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
                 text += "#" + get_hashtag(key, language).replace(" ", "") + " "
 
             last = None
-
+    print("--- Translated Text ---")
+    print(text)
     return text
 
 
