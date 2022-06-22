@@ -6,12 +6,13 @@ from dataclasses import dataclass
 class Language:
     lang_key: str
     channel_id: int
-  #  chat_id: int
+    #  chat_id: int
     footer: str
     breaking: str
     announce: str
-   # captcha:str
 
+
+# captcha:str
 
 languages: [Language] = [
     Language(
@@ -49,5 +50,17 @@ languages: [Language] = [
         -1001715032604,  # https://t.me/MilitaryNewsES
         "🔰 Suscríbete a @MilitaryNewsES",
         "ÚLTIMA_HORA",
-        "ANUNCIO")
+        "ANUNCIO"),
+    Language(
+        "fr",
+     -1001337262241 ,  # French
+        "🔰 Abonnez-vous à @MilitaryNewsFR\n🔰 Rejoignez notre tchat anglophone: @MilitaryChatEN",
+        "BREAKING_NEWS",
+        "ANNONCE"),
+    # Language("it",
+    #            -1001632091535, # Italian
+    #          "🔰 iscriviti a @MilitaryNewsITA",
+    #              "ULTIME_NOTIZIE",
+    #          "ANNUNCIO"
+    #          )
 ]

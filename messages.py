@@ -5,7 +5,7 @@ from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
 from lang import languages
 import config
 from translation import translate_message, flag_to_hashtag
-
+from log import report_error
 
 
 
@@ -16,10 +16,14 @@ def post_channel_english(update: Update, context: CallbackContext):
         original_caption = update.channel_post.caption_html_urled if update.channel_post.caption is not None else ''
 
         for lang in languages:
-            original_post.copy(
+            try:
+              original_post.copy(
                 chat_id=lang.channel_id,
                 caption=translate_message(lang.lang_key, original_caption) +
                 "\n" + lang.footer)
+            except Exception:
+              report_error(update,context, Exception)
+              pass
 
         update.channel_post.edit_caption(
             flag_to_hashtag(original_caption) +
@@ -70,18 +74,22 @@ def breaking_news(update: Update, context: CallbackContext):
     context.bot.send_photo(
         chat_id=config.CHANNEL_DE,
         photo=open("res/breaking/mn-breaking-de.png", "rb"),
-        caption=flag_to_hashtag(update.text_html_urled) +
+        caption=flag_to_hashtag(update.channel_post.text_html_urled) +
         "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat")
 
-    text = re.sub(re.compile(r"#eilmeldung", re.IGNORECASE), "",
+    text = re.sub(re.compile(r"#eilmeldung[\r\n]*", re.IGNORECASE), "",
                   update.channel_post.text_html_urled)
 
     for lang in languages:
-        context.bot.send_photo(
+        try:
+          context.bot.send_photo(
             chat_id=lang.channel_id,
             photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
             caption="#" + lang.breaking + "\n\n" +
             translate_message(lang.lang_key, text) + "\n" + lang.footer)
+        except Exception:
+              report_error(update,context, Exception)
+              pass
 
 
 def announcement(update: Update, context: CallbackContext):

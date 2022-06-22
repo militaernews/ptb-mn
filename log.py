@@ -14,9 +14,11 @@ def log(update: Update, context: CallbackContext, message: str):
     context.bot.send_message(config.LOG_GROUP, message)
 
 
-def report_error(update: Update, context: CallbackContext):
+def report_error(update: Update, context: CallbackContext, exception: Exception=None):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
     context.bot.send_message(
         config.LOG_GROUP,
-        f"<b>⚠️ Error</b>\n<code>{context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+        f"<b>⚠️ Error</b>\n<code>{exception}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
     )
+
+
