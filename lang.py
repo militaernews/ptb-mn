@@ -57,10 +57,10 @@ languages: [Language] = [
         "🔰 Abonnez-vous à @MilitaryNewsFR\n🔰 Rejoignez notre tchat anglophone: @MilitaryChatEN",
         "BREAKING_NEWS",
         "ANNONCE"),
-    # Language("it",
-    #            -1001632091535, # Italian
-    #          "🔰 iscriviti a @MilitaryNewsITA",
-    #              "ULTIME_NOTIZIE",
-    #          "ANNUNCIO"
-    #          )
+     Language("it",
+                -1001632091535, # Italian
+              "🔰 iscriviti a @MilitaryNewsITA",
+                  "ULTIME_NOTIZIE",
+              "ANNUNCIO"
+              )
 ]

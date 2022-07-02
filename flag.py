@@ -232,7 +232,7 @@ flags = {
     '🇺🇦': 'Ukraine',
     '🇺🇬': 'Uganda',
     '🇺🇲': 'United States Minor Outlying Islands',
-    '🇺🇸': 'Vereinigte Staaten',
+    '🇺🇸': 'USA',
     '🇺🇾': 'Uruguay',
     '🇺🇿': 'Usbekistan',
     '🇻🇦': 'Vatikan',
