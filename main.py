@@ -73,5 +73,10 @@ if __name__ == "__main__":
     #   dp.add_error_handler(
     #       report_error)  # comment this one out for full stacktrace
 
-    updater.start_polling()
+    updater.start_webhook(
+        "0.0.0.0",
+        int(os.environ["PORT"]),
+        os.environ["TELEGRAM"],
+        webhook_url=f"https://ptb-mn.herokuapp.com/{os.environ['TELEGRAM']}",
+    )
     updater.idle()
