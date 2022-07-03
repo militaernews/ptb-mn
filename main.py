@@ -30,8 +30,8 @@ if __name__ == "__main__":
     session = start_session()
 
     updater = Updater(os.environ["TELEGRAM"],
+                      persistence=PostgresPersistence(session),
                       defaults=Defaults(parse_mode=ParseMode.HTML,
-                                        persistence=PostgresPersistence(session),
                                         disable_web_page_preview=True))
     dp = updater.dispatcher
 
