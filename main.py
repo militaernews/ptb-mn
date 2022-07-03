@@ -1,5 +1,5 @@
-from telegram import ParseMode  #upm package(python-telegram-bot)
-from telegram.ext import Updater, MessageHandler, Filters, Defaults  #upm package(python-telegram-bot)
+from telegram import ParseMode
+from telegram.ext import Updater, MessageHandler, Filters, Defaults
 import os
 from messages import post_channel_english, breaking_news, announcement
 from meme import post_channel_meme
