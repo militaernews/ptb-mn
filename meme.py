@@ -1,5 +1,6 @@
-from telegram import Update #upm package(python-telegram-bot)
-from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
+from telegram import Update
+from telegram.ext import CallbackContext
+
 import config
 
 

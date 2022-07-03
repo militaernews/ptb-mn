@@ -1,15 +1,16 @@
-import deepl  #upm package(deepl)
-from typing import Union
-import re
 import os
-from flag import flags
+import re
+from typing import Union
+
+import deepl
 from deep_translator import GoogleTranslator
+
+from flag import flags
 
 translator = deepl.Translator(os.environ['DEEPL'])
 
 
 def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
-
     if not re.compile(r'#\w+').search(text):
 
         last = None
@@ -37,7 +38,7 @@ def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
 
 
 def translate_message(target_lang: str, text: str) -> str:
-    translated_text =  translate(target_lang, text)
+    translated_text = translate(target_lang, text)
 
     return flag_to_hashtag(translated_text, target_lang)
 
@@ -56,7 +57,7 @@ def get_hashtag(key: str, language: Union[str, None] = None) -> str:
 
 
 def translate(target_lang: str, text: str) -> str:
-    if target_lang == "fa": # or "ru"?
+    if target_lang == "fa":  # or "ru"?
         return GoogleTranslator(source='de',
                                 target=target_lang).translate(text=text)
     return translator.translate_text(text, target_lang=target_lang).text

@@ -1,13 +1,12 @@
 import re
 
-from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation  #upm package(python-telegram-bot)
-from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
-from lang import languages
+from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation
+from telegram.ext import CallbackContext
+
 import config
-from translation import translate_message, flag_to_hashtag
+from lang import languages
 from log import report_error
-
-
+from translation import translate_message, flag_to_hashtag
 
 
 def post_channel_english(update: Update, context: CallbackContext):
@@ -17,13 +16,13 @@ def post_channel_english(update: Update, context: CallbackContext):
 
         for lang in languages:
             try:
-              original_post.copy(
-                chat_id=lang.channel_id,
-                caption=translate_message(lang.lang_key, original_caption) +
-                "\n" + lang.footer)
+                original_post.copy(
+                    chat_id=lang.channel_id,
+                    caption=translate_message(lang.lang_key, original_caption) +
+                            "\n" + lang.footer)
             except Exception:
-              report_error(update,context, Exception)
-              pass
+                report_error(update, context, Exception)
+                pass
 
         update.channel_post.edit_caption(
             flag_to_hashtag(original_caption) +
@@ -75,21 +74,21 @@ def breaking_news(update: Update, context: CallbackContext):
         chat_id=config.CHANNEL_DE,
         photo=open("res/breaking/mn-breaking-de.png", "rb"),
         caption=flag_to_hashtag(update.channel_post.text_html_urled) +
-        "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat")
+                "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat")
 
     text = re.sub(re.compile(r"#eilmeldung[\r\n]*", re.IGNORECASE), "",
                   update.channel_post.text_html_urled)
 
     for lang in languages:
         try:
-          context.bot.send_photo(
-            chat_id=lang.channel_id,
-            photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
-            caption="#" + lang.breaking + "\n\n" +
-            translate_message(lang.lang_key, text) + "\n" + lang.footer)
+            context.bot.send_photo(
+                chat_id=lang.channel_id,
+                photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
+                caption="#" + lang.breaking + "\n\n" +
+                        translate_message(lang.lang_key, text) + "\n" + lang.footer)
         except Exception:
-              report_error(update,context, Exception)
-              pass
+            report_error(update, context, Exception)
+            pass
 
 
 def announcement(update: Update, context: CallbackContext):
@@ -110,7 +109,7 @@ def announcement(update: Update, context: CallbackContext):
             chat_id=lang.channel_id,
             photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
             caption="#" + lang.announce +
-            translate_message(lang.lang_key, text) + "\n" + lang.footer)
+                    translate_message(lang.lang_key, text) + "\n" + lang.footer)
         msg.pin()
 
 
@@ -128,7 +127,6 @@ def share_in_other_channels(context: CallbackContext):
     original_caption = files[0].caption
 
     for lang in languages:
-
         files[0].caption = translate_message(
             lang.lang_key, original_caption) + "\n" + lang.footer
         context.bot.send_media_group(chat_id=lang.channel_id, media=files)

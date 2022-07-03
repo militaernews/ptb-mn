@@ -1,9 +1,11 @@
-from telegram import Update, Poll  #upm package(python-telegram-bot)
-from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
 import random
+
 import requests
-from log import log
+from telegram import Update, Poll
+from telegram.ext import CallbackContext
+
 from data import *
+from log import log
 
 
 def check_cas(user_id: int):
@@ -19,7 +21,7 @@ def join_member(update: Update, context: CallbackContext):
                                         update.message.from_user.id)
             log(
                 update, context,
-                f"User { member.name} [<code>{ member.id}</code>] was banned in chat <a href='https://t.me/username'>{update.message.chat.title}</a> due to CAS-ban (<a href='https://cas.chat/check?user_id={ member.id}'>reason</a>)."
+                f"User {member.name} [<code>{member.id}</code>] was banned in chat <a href='https://t.me/username'>{update.message.chat.title}</a> due to CAS-ban (<a href='https://cas.chat/check?user_id={member.id}'>reason</a>)."
             )
             ## todo: find out deeplink that works with chat_id
 
@@ -36,10 +38,10 @@ def join_member(update: Update, context: CallbackContext):
                 f"✌🏼 Herzlich willkommen im MNChat, {member.first_name}!\n\nUm zu verifizieren, dass Sie ein echter Nutzer sind beantworten Sie bitte folgende Frage:\n\nWas ergibt {x} + {y} ?",
                 [str(x) for x in options],
                 is_anonymous=False,
-              type=Poll.QUIZ,
-            correct_option_id=options.index(result),
-              explanation="To prevent this group from spam, answering this captcha incorrectly will get you kicked. If you believe this was an error, please contact @pentexnyx",
-              open_period=60
-              )
+                type=Poll.QUIZ,
+                correct_option_id=options.index(result),
+                explanation="To prevent this group from spam, answering this captcha incorrectly will get you kicked. If you believe this was an error, please contact @pentexnyx",
+                open_period=60
+            )
 
-          ## hier dann schedulen wo geschaut wird wer poll geantwortet hat??
+        ## hier dann schedulen wo geschaut wird wer poll geantwortet hat??

@@ -1,6 +1,8 @@
-from telegram import Update  #upm package(python-telegram-bot)
-from telegram.ext import CallbackContext  #upm package(python-telegram-bot)
 import logging
+
+from telegram import Update
+from telegram.ext import CallbackContext
+
 import config
 
 logging.basicConfig(
@@ -14,11 +16,9 @@ def log(update: Update, context: CallbackContext, message: str):
     context.bot.send_message(config.LOG_GROUP, message)
 
 
-def report_error(update: Update, context: CallbackContext, exception: Exception=None):
+def report_error(update: Update, context: CallbackContext, exception: Exception = None):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
     context.bot.send_message(
         config.LOG_GROUP,
         f"<b>⚠️ Error</b>\n<code>{exception}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
     )
-
-

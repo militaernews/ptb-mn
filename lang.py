@@ -1,5 +1,6 @@
-import config
 from dataclasses import dataclass
+
+import config
 
 
 @dataclass
@@ -10,9 +11,8 @@ class Language:
     footer: str
     breaking: str
     announce: str
+    # captcha:str
 
-
-# captcha:str
 
 languages: [Language] = [
     Language(
@@ -53,14 +53,14 @@ languages: [Language] = [
         "ANUNCIO"),
     Language(
         "fr",
-     -1001337262241 ,  # French
+        -1001337262241,  # French
         "🔰 Abonnez-vous à @MilitaryNewsFR\n🔰 Rejoignez notre tchat anglophone: @MilitaryChatEN",
         "BREAKING_NEWS",
         "ANNONCE"),
-     Language("it",
-                -1001632091535, # Italian
-              "🔰 iscriviti a @MilitaryNewsITA",
-                  "ULTIME_NOTIZIE",
-              "ANNUNCIO"
-              )
+    Language("it",
+             -1001632091535,  # Italian
+             "🔰 iscriviti a @MilitaryNewsITA",
+             "ULTIME_NOTIZIE",
+             "ANNUNCIO"
+             )
 ]

@@ -1,13 +1,14 @@
+import os
+import re
+
 from telegram import ParseMode
 from telegram.ext import Updater, MessageHandler, Filters, Defaults
-import os
-from messages import post_channel_english, breaking_news, announcement
-from meme import post_channel_meme
-from admin import join_member
-from testing import flag_to_hashtag_test
-import re
+
 import config
-from log import report_error
+from admin import join_member
+from meme import post_channel_meme
+from messages import post_channel_english, breaking_news, announcement
+from testing import flag_to_hashtag_test
 
 if __name__ == "__main__":
     updater = Updater(os.environ["TELEGRAM"],
@@ -19,7 +20,7 @@ if __name__ == "__main__":
         MessageHandler(
             Filters.status_update.new_chat_members
             & Filters.chat(
-                chat_id=[config.LOG_GROUP]),  #config.CHAT_DE, config.CHAT_DE
+                chat_id=[config.LOG_GROUP]),  # config.CHAT_DE, config.CHAT_DE
             join_member))
 
     dp.add_handler(

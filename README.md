@@ -1,4 +1,5 @@
 # ptb-mn
+
 This Telegram-Bot aims to help Admins of [@MilitaerNews][channel-de] publishing for multiple languages.
 
 You can find it [here][bot].
@@ -8,31 +9,32 @@ You can find it [here][bot].
 ### 🔰 German Channel ([@MilitaerNews][channel-de])
 
 * if photo, animation or video (can also be a media group) is posted:
-  * translates caption of each photo, image or animation - or the first entry of a media group
-  * if no hashtag is present: appends Hashtags for each [flag](/flag.py) to the caption
-  * appends the language's ```footer``` attribute to the caption
-  * reposts in all News channels after 20 seconds
+    * translates caption of each photo, image or animation - or the first entry of a media group
+    * if no hashtag is present: appends Hashtags for each [flag](/flag.py) to the caption
+    * appends the language's ```footer``` attribute to the caption
+    * reposts in all News channels after 20 seconds
 * if a posted text (i.e. no photo, animation, video etc.) contains ```#eilmeldung```:
-  * remove this message
-  * send [German Breaking News photo](/res/breaking/mn-breaking-de.png) with caption being the text of the initial channel post
-  * translates to all given languages
-  * prepends the language's ```breaking``` attribute to given text
-  * reposts in all News channels
+    * remove this message
+    * send [German Breaking News photo](/res/breaking/mn-breaking-de.png) with caption being the text of the initial
+      channel post
+    * translates to all given languages
+    * prepends the language's ```breaking``` attribute to given text
+    * reposts in all News channels
 * if a posted text (i.e. no photo, animation, video etc.) contains ```#mitteilung```:
-  * remove this message
-  * send [German Announcement photo](/res/announce/mn-announce-de.png) with caption being the text of the initial channel post
-  * translates to all given languages
-  * prepends the language's ```announce``` attribute to given text
-  * reposts in all News channels and pins them
+    * remove this message
+    * send [German Announcement photo](/res/announce/mn-announce-de.png) with caption being the text of the initial
+      channel post
+    * translates to all given languages
+    * prepends the language's ```announce``` attribute to given text
+    * reposts in all News channels and pins them
 
 ### 🔰 Memes Channel ([@MilitaerMemes][channel_meme])
 
 * default behavior:
-  * appends English footer the each photo, animation or video posted in this channel
+    * appends English footer the each photo, animation or video posted in this channel
 * if the caption of a posted photo, animation or video contains ```#de```:
-  * the appended footer will be in German
+    * the appended footer will be in German
 * channel posts are forwarded to the [German][chat-de] and [English][chat-en] discussion groups
-
 
 ## Languages
 
@@ -56,7 +58,11 @@ Feel free to open up an issue in which you clearly define what should be added o
 
 
 [bot]: https://t.me/militaernews_posting_bot
+
 [channel_meme]: https://t.me/MilitaerMemes
+
 [chat-de]: https://t.me/MNChat
+
 [chat-en]: https://t.me/MilitaryChatEN
+
 [channel-de]: https://t.me/MilitaerNews
