@@ -1,9 +1,9 @@
-def key_exists(key: int) -> bool:
-    #    return key in db.keys()
-    # ToDo: not implemented
-    return True
+from telegram.ext import CallbackContext
 
 
-def create_user(user_id: int):
-# db[user_id] = {"warnings": 0}
-# ToDo: not implemented
+def key_exists(context: CallbackContext, key: int) -> bool:
+    return key in context.bot_data().keys()
+
+
+def create_user(context: CallbackContext, user_id: int):
+    context.bot_data[user_id] = {"warnings": 0}

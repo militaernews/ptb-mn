@@ -1,6 +1,9 @@
+import logging
 import os
 import re
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
 from telegram import ParseMode
 from telegram.ext import Updater, MessageHandler, Filters, Defaults
 
@@ -8,11 +11,27 @@ import config
 from admin import join_member
 from meme import post_channel_meme
 from messages import post_channel_english, breaking_news, announcement
+from postgres import PostgresPersistence
 from testing import flag_to_hashtag_test
 
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+
+def start_session() -> scoped_session:
+    """Start the database session."""
+    engine = create_engine(os.environ["DATABASE"], client_encoding="utf8")
+    return scoped_session(sessionmaker(bind=engine, autoflush=False))
+
+
 if __name__ == "__main__":
+    session = start_session()
+
     updater = Updater(os.environ["TELEGRAM"],
                       defaults=Defaults(parse_mode=ParseMode.HTML,
+                                        persistence=PostgresPersistence(session),
                                         disable_web_page_preview=True))
     dp = updater.dispatcher
 
