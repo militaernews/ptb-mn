@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 
-from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message
+from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message, MessageId
 from telegram.ext import CallbackContext
 
 import config
@@ -28,12 +28,14 @@ def post_channel_single(update: Update, context: CallbackContext):
         print(lang.lang_key)
         print(replies[lang.lang_key])
         try:
-            msg_id = update.channel_post.copy(
+            msg_id:MessageId = update.channel_post.copy(
                 chat_id=lang.channel_id,
                 caption=translate_message(lang.lang_key, original_caption) +
                         "\n" + lang.footer, reply_to_message_id=replies[lang.lang_key] if replies is not None else None)
 
-            context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key] = msg_id
+            print(msg_id)
+
+            context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key] = msg_id.message_id
         except Exception:
             report_error(update, context, Exception)
             pass
