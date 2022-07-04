@@ -10,7 +10,7 @@ from telegram.ext import Updater, MessageHandler, Filters, Defaults
 import config
 from admin import join_member
 from meme import post_channel_meme
-from messages import post_channel_english, breaking_news, announcement
+from messages import post_channel_english, breaking_news, announcement, edit_channel
 from postgres import PostgresPersistence
 from testing import flag_to_hashtag_test
 
@@ -53,6 +53,12 @@ if __name__ == "__main__":
             Filters.update.channel_post &
             (Filters.photo | Filters.video | Filters.animation)
             & Filters.chat(chat_id=config.CHANNEL_DE), post_channel_english))
+
+    dp.add_handler(
+        MessageHandler(
+            Filters.update.edited_channel_post &
+            (Filters.photo | Filters.video | Filters.animation)
+            & Filters.chat(chat_id=config.CHANNEL_DE), edit_channel))
 
     dp.add_handler(
         MessageHandler(
