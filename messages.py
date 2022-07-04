@@ -24,9 +24,6 @@ def post_channel_single(update: Update, context: CallbackContext):
     for lang in languages:
         print(lang)
         print(context.bot_data[update.channel_post.message_id])
-        print(replies)
-        print(lang.lang_key)
-        print(replies[lang.lang_key])
         try:
             msg_id:MessageId = update.channel_post.copy(
                 chat_id=lang.channel_id,
