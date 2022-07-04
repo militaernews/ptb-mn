@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 
-from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation
+from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message
 from telegram.ext import CallbackContext
 
 import config
@@ -156,10 +156,11 @@ def share_in_other_channels(context: CallbackContext):
     for lang in languages:
         files[0].caption = translate_message(lang.lang_key, original_caption) + "\n" + lang.footer
 
-        mg = context.bot.send_media_group(chat_id=lang.channel_id, media=files,
-                                          reply_to_message_id=replies[lang.lang_key] if replies is not None else None)
+        msg: Message = context.bot.send_media_group(chat_id=lang.channel_id, media=files,
+                                                    reply_to_message_id=replies[
+                                                        lang.lang_key] if replies is not None else None)[0]
 
-        context.bot_data[job_context.message_id]["langs"][lang.lang_key].append(mg[0].message_id)
+        context.bot_data[job_context.message_id]["langs"].put(lang.lang_key, msg.message_id)
 
     print("-- done --")
 
