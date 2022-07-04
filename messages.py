@@ -17,7 +17,7 @@ def post_channel_single(update: Update, context: CallbackContext):
     original_caption = update.channel_post.caption_html_urled if update.channel_post.caption is not None else ''
 
     if "reply" in context.bot_data[update.channel_post.message_id]:
-        replies = context.bot_data[[context.bot_data[update.channel_post.message_id]["reply"]]]["langs"]
+        replies = context.bot_data[context.bot_data[update.channel_post.message_id]["reply"]]["langs"]
     else:
         replies = None
 
@@ -149,7 +149,7 @@ def share_in_other_channels(context: CallbackContext):
     original_caption = files[0].caption
 
     if "reply" in context.bot_data[job_context.message_id]:
-        replies = context.bot_data[[context.bot_data[job_context.message_id]["reply"]]]["langs"]
+        replies = context.bot_data[context.bot_data[job_context.message_id]["reply"]]["langs"]
     else:
         replies = None
 
