@@ -151,18 +151,17 @@ def edit_channel(update: Update, context: CallbackContext):
     # damn! just forgot that the bot can't edit posts, because it has no access to chat history :[
     # -- at this point i will only go for replies then xd
 
-    # for lang in context.bot_data[update.channel_post.message_id]:
-    #    try:
-    #       msg_id = update.channel_post.copy(
-    #          chat_id=lang.channel_id,
-    #         caption=translate_message(lang.lang_key, original_caption) +
-    #                "\n" + lang.footer)
-    #   context.bot_data[update.channel_post.message_id].put(lang, msg_id)
-    # except Exception:
-    #    report_error(update, context, Exception)
-    #   pass
+    for lang in languages:
+        try:
+            context.bot.edit_message_caption(
+                chat_id=lang.channel_id,
+                message_id=context.bot_data[update.channel_post.message_id][lang],
+                caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
+        except Exception:
+            report_error(update, context, Exception)
+            pass
 
-    update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
+    # update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
 
 
 @dataclass
