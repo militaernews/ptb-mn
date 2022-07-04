@@ -28,7 +28,7 @@ def post_channel_single(update: Update, context: CallbackContext):
                 caption=translate_message(lang.lang_key, original_caption) +
                         "\n" + lang.footer, reply_to_message_id=replies[lang.lang_key] if replies is not None else None)
 
-            context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key].append(msg_id)
+            context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key]= msg_id
         except Exception:
             report_error(update, context, Exception)
             pass
@@ -160,7 +160,7 @@ def share_in_other_channels(context: CallbackContext):
                                                     reply_to_message_id=replies[
                                                         lang.lang_key] if replies is not None else None)[0]
 
-        context.bot_data[job_context.message_id]["langs"].put(lang.lang_key, msg.message_id)
+        context.bot_data[job_context.message_id]["langs"][lang.lang_key] =  msg.message_id
 
     print("-- done --")
 
