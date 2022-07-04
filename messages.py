@@ -173,8 +173,9 @@ def share_in_other_channels(context: CallbackContext):
 
 
 def edit_channel(update: Update, context: CallbackContext):
-    if update.channel_post.caption is not None:
-        original_caption = update.channel_post.caption.replace(FOOTER_DE, "")
+    if update.edited_channel_post.caption is not None:
+        original_caption = re.sub(re.compile(r"#\w+", re.IGNORECASE), "", update.edited_channel_post.caption_html_urled.replace(FOOTER_DE, ""))
+
 
         # damn! just forgot that the bot can't edit posts, because it has no access to chat history :[
         # -- at this point i will only go for replies then xd
@@ -183,7 +184,7 @@ def edit_channel(update: Update, context: CallbackContext):
             try:
                 context.bot.edit_message_caption(
                     chat_id=lang.channel_id,
-                    message_id=context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key],
+                    message_id=context.bot_data[update.edited_channel_post.message_id]["langs"][lang.lang_key],
                     caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
             except Exception:
                 report_error(update, context, Exception)
