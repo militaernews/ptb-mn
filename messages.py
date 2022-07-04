@@ -26,9 +26,9 @@ def post_channel_single(update: Update, context: CallbackContext):
             msg_id = update.channel_post.copy(
                 chat_id=lang.channel_id,
                 caption=translate_message(lang.lang_key, original_caption) +
-                        "\n" + lang.footer, reply_to_message_id=replies[lang] if replies is not None else None)
+                        "\n" + lang.footer, reply_to_message_id=replies[lang.lang_key] if replies is not None else None)
 
-            context.bot_data[update.channel_post.message_id]["langs"][lang].append(msg_id)
+            context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key].append(msg_id)
         except Exception:
             report_error(update, context, Exception)
             pass
@@ -157,9 +157,9 @@ def share_in_other_channels(context: CallbackContext):
         files[0].caption = translate_message(lang.lang_key, original_caption) + "\n" + lang.footer
 
         mg = context.bot.send_media_group(chat_id=lang.channel_id, media=files,
-                                          reply_to_message_id=replies[lang] if replies is not None else None)
+                                          reply_to_message_id=replies[lang.lang_key] if replies is not None else None)
 
-        context.bot_data[job_context.message_id]["langs"].put(lang, mg[0].message_id)
+        context.bot_data[job_context.message_id]["langs"][lang.lang_key].append(mg[0].message_id)
 
     print("-- done --")
 
@@ -176,7 +176,7 @@ def edit_channel(update: Update, context: CallbackContext):
         try:
             context.bot.edit_message_caption(
                 chat_id=lang.channel_id,
-                message_id=context.bot_data[update.channel_post.message_id][lang],
+                message_id=context.bot_data[update.channel_post.message_id][lang.lang_key],
                 caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
         except Exception:
             report_error(update, context, Exception)
