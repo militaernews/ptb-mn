@@ -28,7 +28,7 @@ def post_channel_single(update: Update, context: CallbackContext):
                 caption=translate_message(lang.lang_key, original_caption) +
                         "\n" + lang.footer, reply_to_message_id=replies[lang] if replies is not None else None)
 
-            context.bot_data[update.channel_post.message_id]["langs"].put(lang, msg_id)
+            context.bot_data[update.channel_post.message_id]["langs"][lang].append(msg_id)
         except Exception:
             report_error(update, context, Exception)
             pass
