@@ -48,6 +48,7 @@ def post_channel_english(update: Update, context: CallbackContext):
 
     if update.channel_post.media_group_id is None:
         post_channel_single(update, context)
+        return
 
     if update.channel_post.media_group_id in context.bot_data:
         for job in context.job_queue.get_jobs_by_name(
