@@ -44,7 +44,7 @@ def post_channel_english(update: Update, context: CallbackContext):
 
     # only index 0 should have reply_to_message -- check this!
     if update.channel_post.reply_to_message is not None:
-        context.bot_data[update.channel_post.message_id].put("reply", update.channel_post.reply_to_message.message_id)
+        context.bot_data[update.channel_post.message_id]["reply"] = update.channel_post.reply_to_message.message_id
 
     if update.channel_post.media_group_id is None:
         post_channel_single(update, context)
