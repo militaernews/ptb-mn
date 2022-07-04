@@ -55,11 +55,11 @@ if __name__ == "__main__":
             (Filters.photo | Filters.video | Filters.animation)
             & Filters.chat(chat_id=config.CHANNEL_DE), post_channel_english))
 
-    dp.add_handler(
-        MessageHandler(
-            Filters.update.edited_channel_post &
-            (Filters.photo | Filters.video | Filters.animation)
-            & Filters.chat(chat_id=config.CHANNEL_DE), edit_channel))
+   # dp.add_handler(
+    #    MessageHandler(
+     #       Filters.update.edited_channel_post &
+      #      (Filters.photo | Filters.video | Filters.animation)
+       #     & Filters.chat(chat_id=config.CHANNEL_DE), edit_channel))
 
     dp.add_handler(
         MessageHandler(
