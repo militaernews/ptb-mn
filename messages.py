@@ -25,7 +25,7 @@ def post_channel_single(update: Update, context: CallbackContext):
         print(lang)
         print(context.bot_data[update.channel_post.message_id])
         try:
-            msg_id:MessageId = update.channel_post.copy(
+            msg_id: MessageId = update.channel_post.copy(
                 chat_id=lang.channel_id,
                 caption=translate_message(lang.lang_key, original_caption) +
                         "\n" + lang.footer, reply_to_message_id=replies[lang.lang_key] if replies is not None else None)
@@ -173,20 +173,21 @@ def share_in_other_channels(context: CallbackContext):
 
 
 def edit_channel(update: Update, context: CallbackContext):
-    original_caption = update.channel_post.caption.replace(FOOTER_DE, "")
+    if update.channel_post.caption is not None:
+        original_caption = update.channel_post.caption.replace(FOOTER_DE, "")
 
-    # damn! just forgot that the bot can't edit posts, because it has no access to chat history :[
-    # -- at this point i will only go for replies then xd
+        # damn! just forgot that the bot can't edit posts, because it has no access to chat history :[
+        # -- at this point i will only go for replies then xd
 
-    for lang in languages:
-        try:
-            context.bot.edit_message_caption(
-                chat_id=lang.channel_id,
-                message_id=context.bot_data[update.channel_post.message_id][lang.lang_key],
-                caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
-        except Exception:
-            report_error(update, context, Exception)
-            pass
+        for lang in languages:
+            try:
+                context.bot.edit_message_caption(
+                    chat_id=lang.channel_id,
+                    message_id=context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key],
+                    caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
+            except Exception:
+                report_error(update, context, Exception)
+                pass
 
     # update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
 
