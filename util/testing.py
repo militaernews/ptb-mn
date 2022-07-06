@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from translation import translate_message, flag_to_hashtag
+from util.translation import flag_to_hashtag, translate_message
 
 
 def flag_to_hashtag_test(update: Update, context: CallbackContext):
