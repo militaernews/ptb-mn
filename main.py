@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 def start_session() -> scoped_session:
     """Start the database session."""
-    engine = create_engine(os.environ["DATABASE"].replace("postgres", "postgresql", 1), client_encoding="utf8")
+    engine = create_engine(os.environ["DATABASE_URL"].replace("postgres", "postgresql", 1), client_encoding="utf8")
     return scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 
