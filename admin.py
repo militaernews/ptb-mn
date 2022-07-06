@@ -4,7 +4,7 @@ import requests
 from telegram import Update, Poll
 
 from data import *
-from log import log
+from util.log import log
 
 
 def check_cas(user_id: int):

@@ -7,8 +7,9 @@ from telegram.ext import CallbackContext
 
 import config
 from lang import languages
-from log import report_error
-from translation import translate_message, flag_to_hashtag
+from util.log import report_error
+from util.regex import HASHTAG, WHITESPACE
+from util.translation import translate_message, flag_to_hashtag
 
 FOOTER_DE = "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
 
@@ -27,7 +28,7 @@ def post_channel_single(update: Update, context: CallbackContext):
         try:
             msg_id: MessageId = update.channel_post.copy(
                 chat_id=lang.channel_id,
-                caption=translate_message(lang.lang_key, original_caption) + "\n"+ lang.footer,
+                caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer,
                 reply_to_message_id=replies[lang.lang_key] if replies is not None else None)
 
             print(msg_id)
@@ -159,7 +160,7 @@ def share_in_other_channels(context: CallbackContext):
         replies = None
 
     for lang in languages:
-        files[0].caption = translate_message(lang.lang_key, original_caption) + "\n"+lang.footer
+        files[0].caption = translate_message(lang.lang_key, original_caption) + "\n" + lang.footer
 
         msg: Message = context.bot.send_media_group(chat_id=lang.channel_id, media=files,
                                                     reply_to_message_id=replies[
@@ -174,9 +175,11 @@ def share_in_other_channels(context: CallbackContext):
 
 def edit_channel(update: Update, context: CallbackContext):
     if update.edited_channel_post.caption is not None:
-        original_caption = re.sub(re.compile(r"#\w+", re.IGNORECASE), "",
+        original_caption = re.sub(WHITESPACE, "",
+                                  re.sub(HASHTAG, "",
 
-                                  update.edited_channel_post.caption_html_urled.replace("\n"+FOOTER_DE, ""))
+                                         update.edited_channel_post.caption_html_urled.replace(
+                                             FOOTER_DE, "")))
 
         # damn! just forgot that the bot can't edit posts, because it has no access to chat history :[
         # -- at this point i will only go for replies then xd
@@ -186,7 +189,7 @@ def edit_channel(update: Update, context: CallbackContext):
                 context.bot.edit_message_caption(
                     chat_id=lang.channel_id,
                     message_id=context.bot_data[update.edited_channel_post.message_id]["langs"][lang.lang_key],
-                    caption=translate_message(lang.lang_key, original_caption) + "\n"+  lang.footer)
+                    caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
             except Exception:
                 report_error(update, context, Exception)
                 pass

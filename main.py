@@ -12,7 +12,7 @@ from admin import join_member
 from meme import post_channel_meme
 from messages import post_channel_english, breaking_news, announcement, edit_channel
 from postgres import PostgresPersistence
-from testing import flag_to_hashtag_test
+from util.testing import flag_to_hashtag_test
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO

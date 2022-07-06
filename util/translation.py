@@ -1,17 +1,17 @@
 import os
-import re
 from typing import Union
 
 import deepl
 from deep_translator import GoogleTranslator
 
 from flag import flags
+from util.regex import HASHTAG
 
 translator = deepl.Translator(os.environ['DEEPL'])
 
 
 def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
-    if not re.compile(r'#\w+').search(text):
+    if not HASHTAG.search(text):
 
         last = None
 
