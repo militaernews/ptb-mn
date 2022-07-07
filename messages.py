@@ -38,7 +38,7 @@ def post_channel_single(update: Update, context: CallbackContext):
             report_error(update, context, Exception)
             pass
 
-    handle_url(update,context) #TODO: maybe extend to breaking and media_group
+    handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
     update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
 
@@ -89,8 +89,6 @@ def post_channel_english(update: Update, context: CallbackContext):
 
         update.channel_post.edit_caption(
             flag_to_hashtag(update.channel_post.caption_html_urled) + FOOTER_DE)
-
-
 
     context.job_queue.run_once(share_in_other_channels, 30,
                                JobContext(
@@ -216,8 +214,8 @@ def handle_url(update: Update, context: CallbackContext):
     text = f"Öffnen Sie gerne {link}, wenn Sie mehr über die Geschehnisse in <a href='https://t.me/militaernews/{update.channel_post.message_id}'>diesem Post</a> erfahren wollen:"
 
     for quelle in entities:
-        text+= f"\n\n· {quelle}"
+        text += f"\n\n· {quelle}"
 
     text += "\n" + FOOTER_DE
 
-    context.bot.send_message(chat_id=config.CHANNEL_SOURCE, message=text)
+    context.bot.send_message(chat_id=config.CHANNEL_SOURCE, message=text, disable_web_page_preview=False)
