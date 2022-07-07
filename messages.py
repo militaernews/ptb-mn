@@ -227,6 +227,7 @@ def handle_url(update: Update, context: CallbackContext):
 
     print(text)
 
+    context.bot.send_message(chat_id=-1001372304339, text="maxe-bester-mann, aber nicht via api")
     context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
 
 
