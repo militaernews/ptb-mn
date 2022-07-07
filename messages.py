@@ -1,7 +1,8 @@
 import re
 from collections import defaultdict
 from dataclasses import dataclass
-from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message, MessageId
+from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message, MessageId, \
+    MessageEntity
 from telegram.ext import CallbackContext
 
 import config
@@ -219,4 +220,4 @@ def handle_url(update: Update, context: CallbackContext):
 
     text += "\n" + FOOTER_DE
 
-    context.bot.send_message(chat_id=CHANNEL_SOURCE, message=text)
+    context.bot.send_message(chat_id=config.CHANNEL_SOURCE, message=text)
