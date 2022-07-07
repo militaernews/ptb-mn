@@ -220,7 +220,12 @@ def handle_url(update: Update, context: CallbackContext):
     # fixme: change to channel_post
     text = f"Öffnen Sie gerne {link}, wenn Sie mehr über die Geschehnisse in <a href='https://t.me/militaernews/{update.message.message_id}'>diesem Post</a> erfahren wollen:"
 
-    for quelle in entities:
+    for entity in entities:
+        if entity.type is MessageEntity.TEXT_LINK:
+            quelle = entity.url
+        else:
+            quelle = update.message.text[entity.offset: entity.offset + entity.length]
+
         text += f"\n\n· {quelle}"
 
     text += "\n" + FOOTER_DE
