@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
 from dataclasses import dataclass
+
 from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message, MessageId, \
     MessageEntity
 from telegram.ext import CallbackContext
@@ -208,7 +209,7 @@ def handle_url(update: Update, context: CallbackContext):
 
     print(entities)
 
-    #TODO: maybe also remove the url/textlink from the intial message?
+    # TODO: maybe also remove the url/textlink from the intial message?
 
     if len(entities) == 0:
         return
@@ -223,3 +224,8 @@ def handle_url(update: Update, context: CallbackContext):
     text += "\n" + FOOTER_DE
 
     context.bot.send_message(chat_id=config.CHANNEL_SOURCE, message=text, disable_web_page_preview=False)
+
+
+def remove_posts(update: Update, context: CallbackContext):
+    return
+    # TODO: research if such an update even exists
