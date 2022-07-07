@@ -206,6 +206,10 @@ class JobContext:
 def handle_url(update: Update, context: CallbackContext):
     entities = update.channel_post.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
 
+    print(entities)
+
+    #TODO: maybe also remove the url/textlink from the intial message?
+
     if len(entities) == 0:
         return
 
