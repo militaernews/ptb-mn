@@ -6,6 +6,7 @@ from util.translation import flag_to_hashtag, translate_message
 
 
 def flag_to_hashtag_test(update: Update, context: CallbackContext):
+    print("-------\n\nTEST\n\n-------")
     update.message.reply_text("flag to hashtag -- TR")
 
     handle_url(update, context)

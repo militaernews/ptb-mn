@@ -225,7 +225,9 @@ def handle_url(update: Update, context: CallbackContext):
 
     text += "\n" + FOOTER_DE
 
-    context.bot.send_message(chat_id=config.CHANNEL_SOURCE, message=text, disable_web_page_preview=False)
+    print(text)
+
+    context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
 
 
 def remove_posts(update: Update, context: CallbackContext):
