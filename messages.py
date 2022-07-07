@@ -1,7 +1,6 @@
 import re
 from collections import defaultdict
 from dataclasses import dataclass
-
 from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message, MessageId
 from telegram.ext import CallbackContext
 
@@ -37,6 +36,8 @@ def post_channel_single(update: Update, context: CallbackContext):
         except Exception:
             report_error(update, context, Exception)
             pass
+
+    handle_url(update,context) #TODO: maybe extend to breaking and media_group
 
     update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
 
@@ -88,7 +89,9 @@ def post_channel_english(update: Update, context: CallbackContext):
         update.channel_post.edit_caption(
             flag_to_hashtag(update.channel_post.caption_html_urled) + FOOTER_DE)
 
-    context.job_queue.run_once(share_in_other_channels, 40,
+
+
+    context.job_queue.run_once(share_in_other_channels, 30,
                                JobContext(
                                    update.channel_post.media_group_id,
                                    update.channel_post.message_id
@@ -175,11 +178,9 @@ def share_in_other_channels(context: CallbackContext):
 
 def edit_channel(update: Update, context: CallbackContext):
     if update.edited_channel_post.caption is not None:
-        original_caption = re.sub(WHITESPACE, "",
-                                  re.sub(HASHTAG, "",
-
-                                         update.edited_channel_post.caption_html_urled.replace(
-                                             FOOTER_DE, "")))
+        original_caption = re.sub(WHITESPACE, "", re.sub(HASHTAG, "",
+                                                         update.edited_channel_post.caption_html_urled.replace(
+                                                             FOOTER_DE, "")))
 
         # damn! just forgot that the bot can't edit posts, because it has no access to chat history :[
         # -- at this point i will only go for replies then xd
@@ -201,3 +202,21 @@ def edit_channel(update: Update, context: CallbackContext):
 class JobContext:
     media_group_id: int
     message_id: int
+
+
+def handle_url(update: Update, context: CallbackContext):
+    entities = update.channel_post.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
+
+    if len(entities) == 0:
+        return
+
+    link = "folgenden Link" if len(entities) == 1 else "folgende Links"
+
+    text = f"Öffnen Sie gerne {link}, wenn Sie mehr über die Geschehnisse in <a href='https://t.me/militaernews/{update.channel_post.message_id}'>diesem Post</a> erfahren wollen:"
+
+    for quelle in entities:
+        text+= f"\n\n· {quelle}"
+
+    text += "\n" + FOOTER_DE
+
+    context.bot.send_message(chat_id=CHANNEL_SOURCE, message=text)
