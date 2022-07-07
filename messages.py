@@ -39,7 +39,7 @@ def post_channel_single(update: Update, context: CallbackContext):
             report_error(update, context, Exception)
             pass
 
-    handle_url(update, context)  # TODO: maybe extend to breaking and media_group
+   # handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
     update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
 
@@ -205,7 +205,7 @@ class JobContext:
 
 
 def handle_url(update: Update, context: CallbackContext):
-    entities = update.channel_post.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
+    entities =  update.message.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK]) # update.channel_post.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
 
     print(entities)
 
@@ -216,7 +216,8 @@ def handle_url(update: Update, context: CallbackContext):
 
     link = "folgenden Link" if len(entities) == 1 else "folgende Links"
 
-    text = f"Öffnen Sie gerne {link}, wenn Sie mehr über die Geschehnisse in <a href='https://t.me/militaernews/{update.channel_post.message_id}'>diesem Post</a> erfahren wollen:"
+# fixme: change to channel_post
+    text = f"Öffnen Sie gerne {link}, wenn Sie mehr über die Geschehnisse in <a href='https://t.me/militaernews/{update.message.message_id}'>diesem Post</a> erfahren wollen:"
 
     for quelle in entities:
         text += f"\n\n· {quelle}"
@@ -229,3 +230,5 @@ def handle_url(update: Update, context: CallbackContext):
 def remove_posts(update: Update, context: CallbackContext):
     return
     # TODO: research if such an update even exists
+
+

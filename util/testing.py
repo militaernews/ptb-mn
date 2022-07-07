@@ -1,11 +1,15 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 
+from messages import handle_url
 from util.translation import flag_to_hashtag, translate_message
 
 
 def flag_to_hashtag_test(update: Update, context: CallbackContext):
     update.message.reply_text("flag to hashtag -- TR")
+
+    handle_url(update, context)
+
     update.message.reply_text(
         flag_to_hashtag(update.message.text_html_urled, "tr"))
 
