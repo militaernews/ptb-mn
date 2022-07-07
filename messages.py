@@ -222,7 +222,7 @@ def handle_url(update: Update, context: CallbackContext):
 
     for entity,content in entities.items():
         print(entity)
-        if entity.type is MessageEntity.TEXT_LINK:
+        if entity.type == "text_link":
             quelle = entity.url
         else:
             quelle = content
