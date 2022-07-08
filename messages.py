@@ -205,8 +205,7 @@ class JobContext:
 
 
 def handle_url(update: Update, context: CallbackContext):
-    entities = update.message.parse_entities([MessageEntity.URL,
-                                              MessageEntity.TEXT_LINK])  # update.channel_post.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
+    entities = update.channel_post.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
 
     print(entities)
 
@@ -218,12 +217,12 @@ def handle_url(update: Update, context: CallbackContext):
     link = "folgenden Link" if len(entities) == 1 else "folgende Links"
 
     # fixme: change to channel_post
-    text = f"Öffnen Sie gerne {link}, wenn Sie mehr über die Geschehnisse in <a href='https://t.me/militaernews/{update.message.message_id}'>diesem Post</a> erfahren wollen:"
+    text = f"Öffnen Sie gerne {link}, wenn Sie mehr über die Geschehnisse in <a href='https://t.me/militaernews/{update.channel_post.message_id}'>diesem Post</a> erfahren wollen:"
 
-    for entity,content in entities.items():
+    for entity, content in entities.items():
         print(entity)
         if entity.type == "text_link":
-            quelle = entity.url
+            quelle = f"<a href='{entity.url}'>{content}</a>"
         else:
             quelle = content
 
@@ -233,7 +232,6 @@ def handle_url(update: Update, context: CallbackContext):
 
     print(text)
 
-    context.bot.send_message(chat_id=-1001372304339, text="maxe-bester-mann, aber nicht via api")
     context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
 
 
