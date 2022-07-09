@@ -205,7 +205,10 @@ class JobContext:
 
 
 def handle_url(update: Update, context: CallbackContext):
-    entities = update.channel_post.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
+    if update.channel_post.caption is None:
+        return
+
+    entities = update.channel_post.parse_caption_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
 
     print(entities)
 
