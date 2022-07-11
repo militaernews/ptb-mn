@@ -37,7 +37,7 @@ def post_channel_single(update: Update, context: CallbackContext):
         except Exception as e:
             context.bot.send_message(
                 config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send single post in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+                f"<b>⚠️ Error when trying to send single post in Channel {lang}</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
             )
             pass
 
@@ -112,7 +112,7 @@ def breaking_news(update: Update, context: CallbackContext):
     except Exception as e:
         context.bot.send_message(
             config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to send breaking news in channel DE</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+            f"<b>⚠️ Error when trying to send breaking news in channel DE</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
         )
     pass
 
@@ -129,7 +129,7 @@ def breaking_news(update: Update, context: CallbackContext):
         except Exception as e:
             context.bot.send_message(
                 config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send breaking news in channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+                f"<b>⚠️ Error when trying to send breaking news in channel {lang}</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
             )
             pass
 
@@ -150,7 +150,7 @@ def announcement(update: Update, context: CallbackContext):
     except Exception as e:
         context.bot.send_message(
             config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to send announcement in channel DE</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+            f"<b>⚠️ Error when trying to send announcement in channel DE</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
         )
         pass
 
@@ -165,7 +165,7 @@ def announcement(update: Update, context: CallbackContext):
         except Exception as e:
             context.bot.send_message(
                 config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send announcement in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+                f"<b>⚠️ Error when trying to send announcement in Channel {lang}</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
             )
             pass
 
@@ -201,7 +201,7 @@ def share_in_other_channels(context: CallbackContext):
         except Exception as e:
             context.bot.send_message(
                 config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send media group in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>"
+                f"<b>⚠️ Error when trying to send media group in Channel {lang}</b>\n\n{e}"
             )
             pass
 
@@ -225,7 +225,7 @@ def edit_channel(update: Update, context: CallbackContext):
             except Exception as e:
                 context.bot.send_message(
                     config.LOG_GROUP,
-                    f"<b>⚠️ Error when trying to edit post in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+                    f"<b>⚠️ Error when trying to edit post in Channel {lang}</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
                 )
                 pass
 
