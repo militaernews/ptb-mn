@@ -8,7 +8,6 @@ from telegram.ext import CallbackContext
 
 import config
 from lang import languages
-from util.log import report_error
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import translate_message, flag_to_hashtag
 
@@ -35,8 +34,11 @@ def post_channel_single(update: Update, context: CallbackContext):
             print(msg_id)
 
             context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key] = msg_id.message_id
-        except Exception:
-            report_error(update, context, Exception)
+        except Exception as e:
+            context.bot.send_message(
+                config.LOG_GROUP,
+                f"<b>⚠️ Error when trying to send single post in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+            )
             pass
 
     handle_url(update, context)  # TODO: maybe extend to breaking and media_group
@@ -101,10 +103,18 @@ def post_channel_english(update: Update, context: CallbackContext):
 
 def breaking_news(update: Update, context: CallbackContext):
     update.channel_post.delete()
-    context.bot.send_photo(
-        chat_id=config.CHANNEL_DE,
-        photo=open("res/breaking/mn-breaking-de.png", "rb"),
-        caption=flag_to_hashtag(update.channel_post.text_html_urled) + FOOTER_DE)
+
+    try:
+        context.bot.send_photo(
+            chat_id=config.CHANNEL_DE,
+            photo=open("res/breaking/mn-breaking-de.png", "rb"),
+            caption=flag_to_hashtag(update.channel_post.text_html_urled) + FOOTER_DE)
+    except Exception as e:
+        context.bot.send_message(
+            config.LOG_GROUP,
+            f"<b>⚠️ Error when trying to send breaking news in channel DE</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+        )
+    pass
 
     text = re.sub(re.compile(r"#eilmeldung[\r\n]*", re.IGNORECASE), "",
                   update.channel_post.text_html_urled)
@@ -116,8 +126,11 @@ def breaking_news(update: Update, context: CallbackContext):
                 photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
                 caption="#" + lang.breaking + "\n\n" +
                         translate_message(lang.lang_key, text) + "\n" + lang.footer)
-        except Exception:
-            report_error(update, context, Exception)
+        except Exception as e:
+            context.bot.send_message(
+                config.LOG_GROUP,
+                f"<b>⚠️ Error when trying to send breaking news in channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+            )
             pass
 
 
@@ -127,20 +140,34 @@ def announcement(update: Update, context: CallbackContext):
     text = " 📢\n\n" + re.sub(re.compile(r"#eilmeldung", re.IGNORECASE), "",
                              update.channel_post.text_html)
 
-    msg_de = context.bot.send_photo(chat_id=config.CHANNEL_DE,
-                                    photo=open(
-                                        "res/announce/mn-announce-de.png",
-                                        "rb"),
-                                    caption="#MITTEILUNG" + text)
-    msg_de.pin()
+    try:
+        msg_de = context.bot.send_photo(chat_id=config.CHANNEL_DE,
+                                        photo=open(
+                                            "res/announce/mn-announce-de.png",
+                                            "rb"),
+                                        caption="#MITTEILUNG" + text)
+        msg_de.pin()
+    except Exception as e:
+        context.bot.send_message(
+            config.LOG_GROUP,
+            f"<b>⚠️ Error when trying to send announcement in channel DE</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+        )
+        pass
 
     for lang in languages:
-        msg = context.bot.send_photo(
-            chat_id=lang.channel_id,
-            photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
-            caption="#" + lang.announce +
-                    translate_message(lang.lang_key, text) + "\n" + lang.footer)
-        msg.pin()
+        try:
+            msg = context.bot.send_photo(
+                chat_id=lang.channel_id,
+                photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
+                caption="#" + lang.announce +
+                        translate_message(lang.lang_key, text) + "\n" + lang.footer)
+            msg.pin()
+        except Exception as e:
+            context.bot.send_message(
+                config.LOG_GROUP,
+                f"<b>⚠️ Error when trying to send announcement in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+            )
+            pass
 
 
 def share_in_other_channels(context: CallbackContext):
@@ -165,11 +192,18 @@ def share_in_other_channels(context: CallbackContext):
     for lang in languages:
         files[0].caption = translate_message(lang.lang_key, original_caption) + "\n" + lang.footer
 
-        msg: Message = context.bot.send_media_group(chat_id=lang.channel_id, media=files,
-                                                    reply_to_message_id=replies[
-                                                        lang.lang_key] if replies is not None else None)[0]
+        try:
+            msg: Message = context.bot.send_media_group(chat_id=lang.channel_id, media=files,
+                                                        reply_to_message_id=replies[
+                                                            lang.lang_key] if replies is not None else None)[0]
 
-        context.bot_data[job_context.message_id]["langs"][lang.lang_key] = msg.message_id
+            context.bot_data[job_context.message_id]["langs"][lang.lang_key] = msg.message_id
+        except Exception as e:
+            context.bot.send_message(
+                config.LOG_GROUP,
+                f"<b>⚠️ Error when trying to send media group in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+            )
+            pass
 
     print("-- done --")
 
@@ -182,17 +216,17 @@ def edit_channel(update: Update, context: CallbackContext):
                                                          update.edited_channel_post.caption_html_urled.replace(
                                                              FOOTER_DE, "")))
 
-        # damn! just forgot that the bot can't edit posts, because it has no access to chat history :[
-        # -- at this point i will only go for replies then xd
-
         for lang in languages:
             try:
                 context.bot.edit_message_caption(
                     chat_id=lang.channel_id,
                     message_id=context.bot_data[update.edited_channel_post.message_id]["langs"][lang.lang_key],
                     caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
-            except Exception:
-                report_error(update, context, Exception)
+            except Exception as e:
+                context.bot.send_message(
+                    config.LOG_GROUP,
+                    f"<b>⚠️ Error when trying to edit post in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+                )
                 pass
 
     # update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
@@ -200,7 +234,7 @@ def edit_channel(update: Update, context: CallbackContext):
 
 @dataclass
 class JobContext:
-    media_group_id: int
+    media_group_id: str
     message_id: int
 
 
@@ -236,8 +270,3 @@ def handle_url(update: Update, context: CallbackContext):
     print(text)
 
     context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
-
-
-def remove_posts(update: Update, context: CallbackContext):
-    return
-    # TODO: research if such an update even exists
