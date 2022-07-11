@@ -39,7 +39,7 @@ def post_channel_single(update: Update, context: CallbackContext):
             report_error(update, context, Exception)
             pass
 
-    # handle_url(update, context)  # TODO: maybe extend to breaking and media_group
+    handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
     update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
 
