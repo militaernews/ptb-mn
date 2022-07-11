@@ -201,7 +201,7 @@ def share_in_other_channels(context: CallbackContext):
         except Exception as e:
             context.bot.send_message(
                 config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send media group in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+                f"<b>⚠️ Error when trying to send media group in Channel {lang}</b>\n<code>{e}</code>\n\nContext: {context.error}</code>"
             )
             pass
 

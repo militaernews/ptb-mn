@@ -60,5 +60,4 @@ def translate(target_lang: str, text: str) -> str:
     if target_lang == "fa":  # or "ru"?
         return GoogleTranslator(source='de',
                                 target=target_lang).translate(text=text)
-    return translator.translate_text(text, target_lang=target_lang, tag_handling="html",
-                                     split_sentences="nonewlines").text
+    return translator.translate_text(text, target_lang=target_lang, tag_handling="html").text
