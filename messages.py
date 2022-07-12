@@ -137,7 +137,7 @@ def breaking_news(update: Update, context: CallbackContext):
 def announcement(update: Update, context: CallbackContext):
     update.channel_post.delete()
 
-    text = " 📢\n\n" + re.sub(re.compile(r"#eilmeldung", re.IGNORECASE), "",
+    text = " 📢\n\n" + re.sub(re.compile(r"#mitteilung", re.IGNORECASE), "",
                              update.channel_post.text_html)
 
     try:
