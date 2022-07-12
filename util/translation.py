@@ -27,7 +27,9 @@ def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
                     last = c
                     continue
 
-            key = last + c
+                key = last + c
+            else:
+                key = c
 
             if key in flags:
                 text += "#" + get_hashtag(key, language).replace(" ", "") + " "
