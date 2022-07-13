@@ -222,7 +222,7 @@ def edit_channel(update: Update, context: CallbackContext):
                     message_id=context.bot_data[update.edited_channel_post.message_id]["langs"][lang.lang_key],
                     caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
             except Exception as e:
-                if e != "Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message":
+                if str(e) != "Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message":
                     context.bot.send_message(
                         config.LOG_GROUP,
                         f"<b>⚠️ Error when trying to edit post in Channel {lang.lang_key}</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
