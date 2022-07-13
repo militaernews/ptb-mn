@@ -1,7 +1,6 @@
+import config
 from telegram import Update
 from telegram.ext import CallbackContext
-
-import config
 
 
 def post_channel_meme(update: Update, context: CallbackContext):

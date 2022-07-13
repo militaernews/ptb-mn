@@ -1,9 +1,8 @@
 import random
 
 import requests
-from telegram import Update, Poll
-
 from data import *
+from telegram import Update, Poll
 from util.log import log
 
 

@@ -2,16 +2,15 @@ import logging
 import os
 import re
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from telegram import ParseMode
-from telegram.ext import Updater, MessageHandler, Filters, Defaults
-
 import config
 from admin import join_member
 from meme import post_channel_meme
 from messages import post_channel_english, breaking_news, announcement, edit_channel
 from postgres import PostgresPersistence
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from telegram import ParseMode
+from telegram.ext import Updater, MessageHandler, Filters, Defaults
 from util.testing import flag_to_hashtag_test
 
 logging.basicConfig(
@@ -58,7 +57,7 @@ if __name__ == "__main__":
         MessageHandler(
             Filters.update.edited_channel_post &
             (Filters.photo | Filters.video | Filters.animation)
-            & Filters.chat(chat_id=config.CHANNEL_DE) & Filters.user(config.ADMINS), edit_channel))
+            & Filters.chat(chat_id=config.CHANNEL_DE), edit_channel))
 
     dp.add_handler(
         MessageHandler(

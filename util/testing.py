@@ -2,7 +2,6 @@ import traceback
 
 from telegram import Update
 from telegram.ext import CallbackContext
-
 from util.translation import translate_message
 
 
