@@ -58,7 +58,7 @@ if __name__ == "__main__":
         MessageHandler(
             Filters.update.edited_channel_post &
             (Filters.photo | Filters.video | Filters.animation)
-            & Filters.chat(chat_id=config.CHANNEL_DE), edit_channel))
+            & Filters.chat(chat_id=config.CHANNEL_DE) & Filters.user(config.ADMINS), edit_channel))
 
     dp.add_handler(
         MessageHandler(
