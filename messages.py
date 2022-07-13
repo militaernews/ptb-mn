@@ -2,11 +2,12 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 
+from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message, MessageId, \
+    MessageEntity, TelegramError
+from telegram.ext import CallbackContext
+
 import config
 from lang import languages
-from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, InputMediaAnimation, Message, MessageId, \
-    MessageEntity
-from telegram.ext import CallbackContext
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import translate_message, flag_to_hashtag
 
@@ -221,8 +222,8 @@ def edit_channel(update: Update, context: CallbackContext):
                     chat_id=lang.channel_id,
                     message_id=context.bot_data[update.edited_channel_post.message_id]["langs"][lang.lang_key],
                     caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
-            except Exception as e:
-                if str(e) != "Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message":
+            except TelegramError as e:
+                if e.message != "Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message":
                     context.bot.send_message(
                         config.LOG_GROUP,
                         f"<b>⚠️ Error when trying to edit post in Channel {lang.lang_key}</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
