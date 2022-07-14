@@ -240,10 +240,12 @@ class JobContext:
 
 
 def handle_url(update: Update, context: CallbackContext):
-    if update.channel_post.caption is None:
+    if update.channel_post.caption is not None:
+        entities = update.channel_post.parse_caption_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
+    elif update.channel_post.text is not None:
+        entities = update.channel_post.parse_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
+    else:
         return
-
-    entities = update.channel_post.parse_caption_entities([MessageEntity.URL, MessageEntity.TEXT_LINK])
 
     print(entities)
 
@@ -271,3 +273,36 @@ def handle_url(update: Update, context: CallbackContext):
     print(text)
 
     context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
+
+
+def post_channel_text(update: Update, context: CallbackContext):
+    original_caption = update.channel_post.text_html_urled
+
+    if "reply" in context.bot_data[update.channel_post.message_id]:
+        replies = context.bot_data[context.bot_data[update.channel_post.message_id]["reply"]]["langs"]
+    else:
+        replies = None
+
+    for lang in languages:
+        print(lang)
+        print(context.bot_data[update.channel_post.message_id])
+        try:
+            msg_id: MessageId = context.bot.send_message(chat_id=lang.channel_id,
+                                                         text=translate_message(lang.lang_key,
+                                                                                original_caption) + "\n" + lang.footer,
+                                                         reply_to_message_id=replies[
+                                                             lang.lang_key] if replies is not None else None)
+
+            print(msg_id)
+
+            context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key] = msg_id.message_id
+        except Exception as e:
+            context.bot.send_message(
+                config.LOG_GROUP,
+                f"<b>⚠️ Error when trying to send text post in Channel {lang.lang_key}</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+            )
+            pass
+
+    handle_url(update, context)  # TODO: maybe extend to breaking and media_group
+
+    update.channel_post.edit_text(flag_to_hashtag(original_caption) + FOOTER_DE)

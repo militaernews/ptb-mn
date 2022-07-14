@@ -1,8 +1,9 @@
 import logging
 
-import config
 from telegram import Update
 from telegram.ext import CallbackContext
+
+import config
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",

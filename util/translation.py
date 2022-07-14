@@ -3,6 +3,7 @@ from typing import Union
 
 import deepl
 from deep_translator import GoogleTranslator
+
 from flag import flags
 from util.regex import HASHTAG
 
