@@ -315,3 +315,22 @@ def post_channel_text(update: Update, context: CallbackContext):
     handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
     update.channel_post.edit_text(flag_to_hashtag(original_caption) + FOOTER_DE)
+
+
+def edit_channel_text(update: Update, context: CallbackContext):
+    original_caption = re.sub(WHITESPACE, "",
+                              re.sub(HASHTAG, "", update.edited_channel_post.text_html_urled.replace(FOOTER_DE, "")))
+
+    for lang in languages:
+        try:
+            context.bot.edit_message_text(
+                text=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer,
+                chat_id=lang.channel_id,
+                message_id=context.bot_data[update.edited_channel_post.message_id]["langs"][lang.lang_key])
+        except Exception as e:
+            if type(e) is TelegramError and e.message != "Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message":
+                context.bot.send_message(
+                    config.LOG_GROUP,
+                    f"<b>⚠️ Error when trying to edit text post in Channel {lang.lang_key}</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+                )
+            pass
