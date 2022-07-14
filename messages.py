@@ -276,6 +276,15 @@ def handle_url(update: Update, context: CallbackContext):
 
 
 def post_channel_text(update: Update, context: CallbackContext):
+    if update.channel_post.message_id not in context.bot_data:
+        context.bot_data[update.channel_post.message_id] = {
+            "langs": defaultdict(str)
+        }
+
+    # only index 0 should have reply_to_message -- check this!
+    if update.channel_post.reply_to_message is not None:
+        context.bot_data[update.channel_post.message_id]["reply"] = update.channel_post.reply_to_message.message_id
+
     original_caption = update.channel_post.text_html_urled
 
     if "reply" in context.bot_data[update.channel_post.message_id]:
