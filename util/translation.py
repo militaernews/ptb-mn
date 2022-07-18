@@ -50,13 +50,16 @@ def is_flag_character(c):
     return "🇦" <= c <= "🇿"
 
 
+# could be replaced by using multiple txt-files for the different languages
 def get_hashtag(key: str, language: Union[str, None] = None) -> str:
     hashtag = flags.get(key)
 
     if language is None:
         return hashtag
 
-    return translate(language, hashtag)
+    # maybe just pass along the hashtag an let it translate in full?
+    # will not for for e.g. French where UK has hyphen
+    return translate(language, hashtag).replace("-", "")
 
 
 def translate(target_lang: str, text: str) -> str:
