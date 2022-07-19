@@ -221,7 +221,7 @@ def edit_channel(update: Update, context: CallbackContext):
             try:
                 context.bot.edit_message_caption(
                     chat_id=lang.channel_id,
-                    message_id=context.bot_data[update.edited_channel_post.message_id]["langs"][lang.lang_key],
+                    message_id=context.bot_data[str(update.edited_channel_post.message_id)]["langs"][lang.lang_key],
                     caption=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer)
             except Exception as e:
                 if type(e) is TelegramError and e.message != "Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message":
