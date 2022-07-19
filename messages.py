@@ -28,7 +28,7 @@ def post_channel_single(update: Update, context: CallbackContext):
 
     for lang in languages:
         print(lang)
-        print(context.bot_data[update.channel_post.message_id])
+        print(context.bot_data[str(update.channel_post.message_id)])
         try:
             msg_id: MessageId = update.channel_post.copy(
                 chat_id=lang.channel_id,
@@ -188,7 +188,7 @@ def share_in_other_channels(context: CallbackContext):
 
     original_caption = files[0].caption
 
-    replies = get_replies(context.bot_data, job_context.message_id)
+    replies = get_replies(context.bot_data, str(job_context.message_id))
 
     for lang in languages:
         files[0].caption = translate_message(lang.lang_key, original_caption) + "\n" + lang.footer
