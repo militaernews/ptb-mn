@@ -14,13 +14,17 @@ from util.translation import translate_message, flag_to_hashtag
 FOOTER_DE = "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
 
 
+def get_replies(bot_data: dict[str, any], msg_id: str):
+    if "reply" in bot_data[msg_id]:
+        return bot_data[bot_data[str(msg_id)]["reply"]]["langs"]
+
+    return None
+
+
 def post_channel_single(update: Update, context: CallbackContext):
     original_caption = update.channel_post.caption_html_urled if update.channel_post.caption is not None else ''
 
-    if "reply" in context.bot_data[update.channel_post.message_id]:
-        replies = context.bot_data[context.bot_data[update.channel_post.message_id]["reply"]]["langs"]
-    else:
-        replies = None
+    replies = get_replies(context.bot_data, str(update.channel_post.message_id))
 
     for lang in languages:
         print(lang)
@@ -33,7 +37,7 @@ def post_channel_single(update: Update, context: CallbackContext):
 
             print(msg_id)
 
-            context.bot_data[update.channel_post.message_id]["langs"][lang.lang_key] = msg_id.message_id
+            context.bot_data[str(update.channel_post.message_id)]["langs"][lang.lang_key] = msg_id.message_id
         except Exception as e:
             context.bot.send_message(
                 config.LOG_GROUP,
@@ -47,14 +51,14 @@ def post_channel_single(update: Update, context: CallbackContext):
 
 
 def post_channel_english(update: Update, context: CallbackContext):
-    if update.channel_post.message_id not in context.bot_data:
-        context.bot_data[update.channel_post.message_id] = {
+    if str(update.channel_post.message_id) not in context.bot_data:
+        context.bot_data[str(update.channel_post.message_id)] = {
             "langs": defaultdict(str)
         }
 
     # only index 0 should have reply_to_message -- check this!
     if update.channel_post.reply_to_message is not None:
-        context.bot_data[update.channel_post.message_id]["reply"] = update.channel_post.reply_to_message.message_id
+        context.bot_data[str(update.channel_post.message_id)]["reply"] = str(update.channel_post.reply_to_message.message_id)
 
     if update.channel_post.media_group_id is None:
         post_channel_single(update, context)
@@ -184,10 +188,7 @@ def share_in_other_channels(context: CallbackContext):
 
     original_caption = files[0].caption
 
-    if "reply" in context.bot_data[job_context.message_id]:
-        replies = context.bot_data[context.bot_data[job_context.message_id]["reply"]]["langs"]
-    else:
-        replies = None
+    replies = get_replies(context.bot_data, job_context.message_id)
 
     for lang in languages:
         files[0].caption = translate_message(lang.lang_key, original_caption) + "\n" + lang.footer

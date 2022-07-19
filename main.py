@@ -8,9 +8,9 @@ from telegram import ParseMode
 from telegram.ext import Updater, MessageHandler, Filters, Defaults
 
 import config
-from admin import join_member
 from meme import post_channel_meme
-from messages import post_channel_english, breaking_news, announcement, edit_channel, post_channel_text, edit_channel_text
+from messages import post_channel_english, breaking_news, announcement, edit_channel, post_channel_text, \
+    edit_channel_text
 from postgres import PostgresPersistence
 from util.testing import flag_to_hashtag_test
 
@@ -35,12 +35,12 @@ if __name__ == "__main__":
                                         disable_web_page_preview=True))
     dp = updater.dispatcher
 
-    dp.add_handler(
-        MessageHandler(
-            Filters.status_update.new_chat_members
-            & Filters.chat(
-                chat_id=[config.LOG_GROUP]),  # config.CHAT_DE, config.CHAT_DE
-            join_member))
+    #   dp.add_handler(
+    #  MessageHandler(
+    #       Filters.status_update.new_chat_members
+    #      & Filters.chat(
+    #         chat_id=[config.LOG_GROUP]),  # config.CHAT_DE, config.CHAT_DE
+    #    join_member))
 
     dp.add_handler(
         MessageHandler(
