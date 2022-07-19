@@ -198,7 +198,7 @@ def share_in_other_channels(context: CallbackContext):
                                                         reply_to_message_id=replies[
                                                             lang.lang_key] if replies is not None else None)[0]
 
-            context.bot_data[job_context.message_id]["langs"][lang.lang_key] = msg.message_id
+            context.bot_data[str(job_context.message_id)]["langs"][lang.lang_key] = msg.message_id
         except Exception as e:
             context.bot.send_message(
                 config.LOG_GROUP,
