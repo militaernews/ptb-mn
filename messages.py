@@ -14,9 +14,13 @@ from util.translation import translate_message, flag_to_hashtag
 FOOTER_DE = "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
 
 
-def get_replies(bot_data: dict[str, any], msg_id: str):
+def get_replies(bot_data, msg_id: str):
+    print("Trying to get bot_data ------------------")
+    print(bot_data)
+    print("-------------------------")
+    print(bot_data[bot_data[msg_id]["reply"]])
     if "reply" in bot_data[msg_id]:
-        return bot_data[bot_data[str(msg_id)]["reply"]]["langs"]
+        return bot_data[bot_data[msg_id]["reply"]]["langs"]
 
     return None
 
@@ -189,6 +193,8 @@ def share_in_other_channels(context: CallbackContext):
     original_caption = files[0].caption
 
     replies = get_replies(context.bot_data, str(job_context.message_id))
+    print("::::::::::: share in other ::::::::::")
+    print(replies)
 
     for lang in languages:
         files[0].caption = translate_message(lang.lang_key, original_caption) + "\n" + lang.footer
@@ -196,9 +202,11 @@ def share_in_other_channels(context: CallbackContext):
         try:
             msg: Message = context.bot.send_media_group(chat_id=lang.channel_id, media=files,
                                                         reply_to_message_id=replies[
-                                                            lang.lang_key] if replies is not None else None)[0]
+                                                            lang.lang_key] if replies is not None else None)
 
-            context.bot_data[str(job_context.message_id)]["langs"][lang.lang_key] = msg.message_id
+            print(msg)
+
+            context.bot_data[str(job_context.message_id)]["langs"][lang.lang_key] = msg[0].message_id
         except Exception as e:
             context.bot.send_message(
                 config.LOG_GROUP,
@@ -206,7 +214,7 @@ def share_in_other_channels(context: CallbackContext):
             )
             pass
 
-    print("-- done --")
+    print("----- done -----")
 
     del context.bot_data[job_context.media_group_id]
 
@@ -278,24 +286,23 @@ def handle_url(update: Update, context: CallbackContext):
 
 def post_channel_text(update: Update, context: CallbackContext):
     if update.channel_post.message_id not in context.bot_data:
+        print("::::: post channel text ::: new msg")
         context.bot_data[update.channel_post.message_id] = {
             "langs": defaultdict(str)
         }
 
     # only index 0 should have reply_to_message -- check this!
     if update.channel_post.reply_to_message is not None:
+        print("::::: post channel text ::: new reply")
         context.bot_data[update.channel_post.message_id]["reply"] = update.channel_post.reply_to_message.message_id
 
     original_caption = update.channel_post.text_html_urled
 
-    if "reply" in context.bot_data[update.channel_post.message_id]:
-        replies = context.bot_data[context.bot_data[update.channel_post.message_id]["reply"]]["langs"]
-    else:
-        replies = None
+    replies = get_replies(context.bot_data, str(update.channel_post.message_id))
 
     for lang in languages:
         print(lang)
-        print(context.bot_data[update.channel_post.message_id])
+        print(context.bot_data[str(update.channel_post.message_id)])
         try:
             msg_id: MessageId = context.bot.send_message(chat_id=lang.channel_id,
                                                          text=translate_message(lang.lang_key,
@@ -327,7 +334,7 @@ def edit_channel_text(update: Update, context: CallbackContext):
             context.bot.edit_message_text(
                 text=translate_message(lang.lang_key, original_caption) + "\n" + lang.footer,
                 chat_id=lang.channel_id,
-                message_id=context.bot_data[update.edited_channel_post.message_id]["langs"][lang.lang_key])
+                message_id=context.bot_data[str(update.edited_channel_post.message_id)]["langs"][lang.lang_key])
         except Exception as e:
             if type(e) is TelegramError and e.message != "Message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message":
                 context.bot.send_message(
