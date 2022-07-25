@@ -28,7 +28,7 @@ ENGLISH = Language(
     "BREAKING",
     "ANNOUNCEMENT",
     -1001382962633  # https://t.me/MilitaryChatEN
-),
+)
 
 languages: [Language] = [
     ENGLISH,
