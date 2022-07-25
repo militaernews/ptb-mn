@@ -54,7 +54,7 @@ def post_text_meme(update: Update, context: CallbackContext):
         footer = "Subscribe to @MilitaerMemes for more"
 
     try:
-        update.channel_post.edit_text(f"{original_text}\n\n🔰 {footer}")
+        update.channel_post.edit_text(f"{original_text}\n\n🔰 {footer}",disable_web_page_preview=False)
 
         update.channel_post.forward(chat_id=GERMAN.chat_id)
         update.channel_post.forward(chat_id=ENGLISH.chat_id)
