@@ -7,11 +7,9 @@ from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, Input
 from telegram.ext import CallbackContext
 
 import config
-from lang import languages
+from lang import languages, GERMAN
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import translate_message, flag_to_hashtag
-
-FOOTER_DE = "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat"
 
 
 def get_replies(bot_data, msg_id: str):
@@ -26,6 +24,7 @@ def get_replies(bot_data, msg_id: str):
     return None
 
 
+# TODO: make method more generic
 def post_channel_single(update: Update, context: CallbackContext):
     original_caption = update.channel_post.caption_html_urled if update.channel_post.caption is not None else ''
 
@@ -52,9 +51,10 @@ def post_channel_single(update: Update, context: CallbackContext):
 
     handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
-    update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
+    update.channel_post.edit_caption(flag_to_hashtag(original_caption) + GERMAN.footer)
 
 
+# TODO: make method more generic
 def post_channel_english(update: Update, context: CallbackContext):
     if str(update.channel_post.message_id) not in context.bot_data:
         context.bot_data[str(update.channel_post.message_id)] = {
@@ -65,7 +65,8 @@ def post_channel_english(update: Update, context: CallbackContext):
     if update.channel_post.reply_to_message is not None:
         print(":::::::::: reply exists! ::::::::::::::::::::::::")
         print(vars(update.channel_post))
-        context.bot_data[str(update.channel_post.message_id)]["reply"] = str(update.channel_post.reply_to_message.message_id)
+        context.bot_data[str(update.channel_post.message_id)]["reply"] = str(
+            update.channel_post.reply_to_message.message_id)
 
     if update.channel_post.media_group_id is None:
         post_channel_single(update, context)
@@ -102,7 +103,7 @@ def post_channel_english(update: Update, context: CallbackContext):
             -1].caption = f"{update.channel_post.caption_html_urled}"
 
         update.channel_post.edit_caption(
-            flag_to_hashtag(update.channel_post.caption_html_urled) + FOOTER_DE)
+            flag_to_hashtag(update.channel_post.caption_html_urled) + GERMAN.footer)
 
     context.job_queue.run_once(share_in_other_channels, 30,
                                JobContext(
@@ -119,7 +120,7 @@ def breaking_news(update: Update, context: CallbackContext):
         context.bot.send_photo(
             chat_id=config.CHANNEL_DE,
             photo=open("res/breaking/mn-breaking-de.png", "rb"),
-            caption=flag_to_hashtag(update.channel_post.text_html_urled) + FOOTER_DE)
+            caption=flag_to_hashtag(update.channel_post.text_html_urled) + GERMAN.footer)
     except Exception as e:
         context.bot.send_message(
             config.LOG_GROUP,
@@ -181,6 +182,7 @@ def announcement(update: Update, context: CallbackContext):
             pass
 
 
+# TODO: make method more generic
 def share_in_other_channels(context: CallbackContext):
     job_context: JobContext = context.job.context
     files: [InputMedia] = []
@@ -226,7 +228,7 @@ def edit_channel(update: Update, context: CallbackContext):
     if update.edited_channel_post.caption is not None:
         original_caption = re.sub(WHITESPACE, "", re.sub(HASHTAG, "",
                                                          update.edited_channel_post.caption_html_urled.replace(
-                                                             FOOTER_DE, "")))
+                                                             GERMAN.footer, "")))
 
         for lang in languages:
             try:
@@ -280,7 +282,7 @@ def handle_url(update: Update, context: CallbackContext):
 
         text += f"\n\n· {quelle}"
 
-    text += "\n" + FOOTER_DE
+    text += "\n" + GERMAN.footer
 
     print(text)
 
@@ -325,12 +327,13 @@ def post_channel_text(update: Update, context: CallbackContext):
 
     handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
-    update.channel_post.edit_text(flag_to_hashtag(original_caption) + FOOTER_DE)
+    update.channel_post.edit_text(flag_to_hashtag(original_caption) + GERMAN.footer)
 
 
 def edit_channel_text(update: Update, context: CallbackContext):
     original_caption = re.sub(WHITESPACE, "",
-                              re.sub(HASHTAG, "", update.edited_channel_post.text_html_urled.replace(FOOTER_DE, "")))
+                              re.sub(HASHTAG, "",
+                                     update.edited_channel_post.text_html_urled.replace(GERMAN.footer, "")))
 
     for lang in languages:
         try:

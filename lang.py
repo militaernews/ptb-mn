@@ -1,26 +1,37 @@
 from dataclasses import dataclass
 
-import config
-
 
 @dataclass
 class Language:
     lang_key: str
     channel_id: int
-    #  chat_id: int
     footer: str
     breaking: str
     announce: str
+    chat_id: int = None
     # captcha:str
 
 
+GERMAN = Language(
+    "de",  # German
+    -1001240262412,  # https://t.me/MilitaerNews
+    "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat",
+    "EILMELDUNG",
+    "MITTEILUNG",
+    -1001526741474  # https://t.me/MNChat
+)
+
+ENGLISH = Language(
+    "en-us",  # English
+    -1001258430463,  # https://t.me/MilitaryNewsEN
+    "🔰 Subscribe to @MilitaryNewsEN\n🔰 Join us @MilitaryChatEN",
+    "BREAKING",
+    "ANNOUNCEMENT",
+    -1001382962633  # https://t.me/MilitaryChatEN
+),
+
 languages: [Language] = [
-    Language(
-        "en-us",  # English
-        config.CHANNEL_EN,  # https://t.me/MilitaryNewsEN
-        "🔰 Subscribe to @MilitaryNewsEN\n🔰 Join us @MilitaryChatEN",
-        "BREAKING",
-        "ANNOUNCEMENT"),
+    ENGLISH,
     Language(
         "tr",  # Turkish
         -1001712502236,  # https://t.me/MilitaryNewsTR
