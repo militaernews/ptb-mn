@@ -97,14 +97,22 @@ def post_channel_english(update: Update, context: CallbackContext):
 
     if update.channel_post.caption is not None:
         context.bot_data[update.channel_post.message_id] = dict()
-        print("trans---SINGLE ::: ", translate_message("en-us", update.channel_post.caption_html_urled))
+        print("trans---SINGLE ::: ", translate_message(ENGLISH.lang_key, update.channel_post.caption_html_urled))
 
         context.bot_data[update.channel_post.media_group_id][
             -1].caption = f"{update.channel_post.caption_html_urled}"
+        
+        try:
+            update.channel_post.edit_caption(flag_to_hashtag(update.channel_post.caption_html_urled) + GERMAN.footer)
+        except Exception as e:
+            context.bot.send_message(
+            config.LOG_GROUP,
+            f"<b>⚠️ Error when trying to edit caption in channel DE</b>\n<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>"
+        )
+        pass
 
-        update.channel_post.edit_caption(
-            flag_to_hashtag(update.channel_post.caption_html_urled) + GERMAN.footer)
 
+     
     context.job_queue.run_once(share_in_other_channels, 30,
                                JobContext(
                                    update.channel_post.media_group_id,
