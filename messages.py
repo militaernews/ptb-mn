@@ -7,7 +7,7 @@ from telegram import Update, InputMediaVideo, InputMediaPhoto, InputMedia, Input
 from telegram.ext import CallbackContext
 
 import config
-from lang import languages, GERMAN
+from lang import languages, GERMAN, ENGLISH
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import translate_message, flag_to_hashtag
 
