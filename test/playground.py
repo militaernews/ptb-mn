@@ -1,12 +1,12 @@
 import traceback
 
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import ContextTypes
 
 from util.translation import translate_message
 
 
-async def flag_to_hashtag_test(update: Update, context: CallbackContext):
+async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("-------\n\nTEST\n\n-------")
     await update.message.reply_text("-------\n\nTEST\n\n-------")
     try:
