@@ -9,10 +9,10 @@ from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters
 from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, NYX
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
+from dev.playground import flag_to_hashtag_test
 from messages.meme import post_media_meme, post_text_meme
 from messages.news import edit_channel_text, announcement, breaking_news, edit_channel, post_channel_text, \
     post_channel_english
-from test.playground import flag_to_hashtag_test
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO

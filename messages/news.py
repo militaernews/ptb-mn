@@ -227,10 +227,10 @@ async def announcement(update: Update, context: CallbackContext):
 
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
-    job_context: JobContext = context.job.context
+    job_context: JobContext = context.job.data
     files: [InputMedia] = []
 
-    print("JOB ::::::::::::: ", context.job.context)
+    print("JOB ::::::::::::: ", context.job.data)
     print(
         "bot-data :::::::::::::::::::::::::::",
         context.bot_data[job_context.media_group_id],
@@ -430,9 +430,7 @@ async def edit_channel_text(update: Update, context: CallbackContext):
     for lang in languages:
         try:
             await context.bot.edit_message_text(
-                text=translate_message(lang.lang_key, original_caption)
-                     + "\n"
-                     + lang.footer,
+                text=f"{translate_message(lang.lang_key, original_caption)}\n{lang.footer}",
                 chat_id=lang.channel_id,
                 message_id=context.bot_data[str(update.edited_channel_post.message_id)][
                     "langs"
