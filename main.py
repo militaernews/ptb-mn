@@ -4,15 +4,15 @@ import re
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from telegram import ParseMode
-from telegram.ext import Updater, MessageHandler, Filters, Defaults
+from telegram.constants import ParseMode
+from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters
 
-import config
-from lang import GERMAN
-from meme import post_media_meme, post_text_meme
-from messages import post_channel_english, breaking_news, announcement, edit_channel, post_channel_text, \
-    edit_channel_text
-from postgres import PostgresPersistence
+from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS
+from data.lang import GERMAN
+from data.postgres import PostgresPersistence
+from messages.meme import post_media_meme, post_text_meme
+from messages.news import edit_channel_text, announcement, breaking_news, edit_channel, post_channel_text, \
+    post_channel_english
 from util.testing import flag_to_hashtag_test
 
 logging.basicConfig(
@@ -30,66 +30,64 @@ def start_session() -> scoped_session:
 if __name__ == "__main__":
     session = start_session()
 
-    updater = Updater(os.environ["TELEGRAM"],
-                      persistence=PostgresPersistence(session),
-                      defaults=Defaults(parse_mode=ParseMode.HTML,
-                                        disable_web_page_preview=True))
-    dp = updater.dispatcher
+    app = ApplicationBuilder().token(TOKEN).defaults(
+        Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True)).persistence(
+        PostgresPersistence(url=DATABASE_URL, session=session)).build()
 
     #   dp.add_handler(
     #  MessageHandler(
     #       Filters.status_update.new_chat_members
-    #      & Filters.chat(
+    #      & filters.Chat(
     #         chat_id=[config.LOG_GROUP]),  # config.CHAT_DE, config.CHAT_DE
     #    join_member))
 
-    dp.add_handler(
+    app.add_handler(
         MessageHandler(
-            Filters.update.channel_post &
-            (Filters.photo | Filters.video | Filters.animation)
-            & Filters.chat(chat_id=config.CHANNEL_MEME), post_media_meme))
+            filters.UpdateType.CHANNEL_POST &
+            (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+            & filters.Chat(chat_id=CHANNEL_MEME), post_media_meme))
 
-    dp.add_handler(
-        MessageHandler(Filters.update.channel_post & Filters.text & Filters.chat(chat_id=config.CHANNEL_MEME),
+    app.add_handler(
+        MessageHandler(filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=CHANNEL_MEME),
                        post_text_meme))
 
-    dp.add_handler(MessageHandler(
-        Filters.update.channel_post &
-        (Filters.photo | Filters.video | Filters.animation)
-        & Filters.chat(chat_id=GERMAN.channel_id), post_channel_english))
+    app.add_handler(MessageHandler(
+        filters.UpdateType.CHANNEL_POST &
+        (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+        & filters.Chat(chat_id=GERMAN.channel_id), post_channel_english))
 
-    dp.add_handler(MessageHandler(
-        Filters.update.edited_channel_post &
-        (Filters.photo | Filters.video | Filters.animation)
-        & Filters.chat(chat_id=GERMAN.channel_id), edit_channel))
+    app.add_handler(MessageHandler(
+        filters.UpdateType.EDITED_CHANNEL_POST &
+        (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+        & filters.Chat(chat_id=GERMAN.channel_id), edit_channel))
 
-    dp.add_handler(
+    app.add_handler(
         MessageHandler(
-            Filters.update.channel_post & Filters.text & Filters.regex(re.compile(r"#eilmeldung", re.IGNORECASE)),
+            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Regex(re.compile(r"#eilmeldung", re.IGNORECASE)),
             breaking_news))
 
-    dp.add_handler(
+    app.add_handler(
         MessageHandler(
-            Filters.update.channel_post & Filters.text & Filters.regex(re.compile(r"#mitteilung", re.IGNORECASE)),
+            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Regex(re.compile(r"#mitteilung", re.IGNORECASE)),
             announcement))
 
-    dp.add_handler(
+    app.add_handler(
         MessageHandler(
-            Filters.update.channel_post & Filters.text & Filters.chat(chat_id=GERMAN.channel_id), post_channel_text))
+            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
+            post_channel_text))
 
-    dp.add_handler(
-        MessageHandler(Filters.update.edited_channel_post & Filters.text & Filters.chat(chat_id=GERMAN.channel_id),
+    app.add_handler(
+        MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
                        edit_channel_text))
 
-    dp.add_handler(MessageHandler(Filters.chat(config.ADMINS), flag_to_hashtag_test))
+    app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     # Commands have to be added above
     #  dp.add_error_handler( report_error)  # comment this one out for full stacktrace
 
-    updater.start_webhook(
-        "0.0.0.0",
-        int(os.environ["PORT"]),
-        os.environ["TELEGRAM"],
-        webhook_url=f"https://ptb-mn.herokuapp.com/{os.environ['TELEGRAM']}",
-    )
-    updater.idle()
+    if TEST_MODE:
+        print("---testing---")
+        app.run_polling()
+    else:
+        app.run_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN,
+                        webhook_url=f"https://ptb-mn.herokuapp.com/{TOKEN}")

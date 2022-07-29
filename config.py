@@ -1,3 +1,13 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TOKEN = os.getenv('TELEGRAM')
+DATABASE_URL = os.getenv("DATABASE_URL").replace("postgres", "postgresql")
+TEST_MODE = os.getenv("TEST", False)
+PORT = int(os.getenv("PORT", 8080))
+
 CHANNEL_MEME = -1001486678205
 CHANNEL_SOURCE = -1001372304339
 

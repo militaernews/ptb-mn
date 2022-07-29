@@ -4,7 +4,7 @@ from typing import Union
 import deepl
 from deep_translator import GoogleTranslator
 
-from flag import flags
+from data.flag import flags
 from util.regex import HASHTAG
 
 translator = deepl.Translator(os.environ['DEEPL'])
@@ -63,7 +63,6 @@ def get_hashtag(key: str, language: Union[str, None] = None) -> str:
 
 
 def translate(target_lang: str, text: str) -> str:
-    #if target_lang == "fa":  # or "ru"?
-    return GoogleTranslator(source='de',
-                                target=target_lang).translate(text=text)
-    #return translator.translate_text(text, target_lang=target_lang, tag_handling="html").text
+    # if target_lang == "fa":  # or "ru"?
+    return GoogleTranslator(source='de', target=target_lang).translate(text=text)
+    # return translator.translate_text(text, target_lang=target_lang, tag_handling="html").text
