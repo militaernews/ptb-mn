@@ -22,7 +22,7 @@ GERMAN = Language(
 )
 
 ENGLISH = Language(
-    "en",  # English - en-us
+    "en-us",  # English - en-us
     -1001258430463,  # https://t.me/MilitaryNewsEN
     "🔰 Subscribe to @MilitaryNewsEN\n🔰 Join us @MilitaryChatEN",
     "BREAKING",
@@ -54,7 +54,7 @@ languages: [Language] = [
         "ОБЪЯВЛЕНИЕ",
     ),
     Language(
-        "pt",  # Portugese - pt-br
+        "pt-br",  # Portugese - pt-br
         -1001614849485,  # https://t.me/MilitaryNewsBR
         "🔰 Se inscreva no @militaryNewsBR",
         "NOTÍCIAS_URGENTES",

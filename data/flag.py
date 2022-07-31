@@ -244,6 +244,7 @@ flags = {
     '🇻🇺': 'Vanuatu',
     '🇼🇫': 'Wallis und Futuna',
     '🇼🇸': 'Samoa',
+    '🇽🇰':'Kosovo',
     '🇾🇪': 'Jemen',
     '🇾🇹': 'Mayotte',
     '🇿🇦': 'Südafrika',

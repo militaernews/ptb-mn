@@ -37,7 +37,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit dev / coverage reports
+# Unit test / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -137,5 +137,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-/.idea/workspace.xml

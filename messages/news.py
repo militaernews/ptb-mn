@@ -9,6 +9,7 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 import config
+import twitter
 from data.lang import ENGLISH, GERMAN, languages
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import flag_to_hashtag, translate_message
@@ -39,6 +40,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
     for lang in languages:
         print(lang)
         print(context.bot_data[str(update.channel_post.message_id)])
+
         try:
             msg_id: MessageId = await update.channel_post.copy(
                 chat_id=lang.channel_id,
@@ -63,8 +65,10 @@ async def post_channel_single(update: Update, context: CallbackContext):
 
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
+    formatted_text = flag_to_hashtag(original_caption)
+
     try:
-        await update.channel_post.edit_caption(flag_to_hashtag(original_caption) + GERMAN.footer)
+        await update.channel_post.edit_caption(formatted_text  + GERMAN.footer)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await context.bot.send_message(
@@ -72,6 +76,16 @@ async def post_channel_single(update: Update, context: CallbackContext):
                 f"<b>⚠️ Error when trying to edit post in Channel de</b>\n"
                 f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
+
+    try:
+        # todo: upload photo aswell
+        twitter.post_twitter(formatted_text )
+    except Exception as e:
+        await context.bot.send_message(
+            config.LOG_GROUP,
+            f"<b>⚠️ Error when trying to post single on Twitter</b>\n"
+            f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+        )
 
 
 # TODO: make method more generic
@@ -364,12 +378,12 @@ async def handle_url(update: Update, context: CallbackContext):
 async def post_channel_text(update: Update, context: CallbackContext):
     if update.channel_post.message_id not in context.bot_data:
         print("::::: post channel text ::: new msg")
-        context.bot_data[update.channel_post.message_id] = {"langs": defaultdict(str)}
+        context.bot_data[str(update.channel_post.message_id)] = {"langs": defaultdict(str)}
 
     # only index 0 should have reply_to_message -- check this!
     if update.channel_post.reply_to_message is not None:
         print("::::: post channel text ::: new reply")
-        context.bot_data[update.channel_post.message_id][
+        context.bot_data[str(update.channel_post.message_id)][
             "reply"
         ] = update.channel_post.reply_to_message.message_id
 
@@ -393,7 +407,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
             print(msg.message_id)
 
-            context.bot_data[update.channel_post.message_id]["langs"][
+            context.bot_data[str(update.channel_post.message_id)]["langs"][
                 lang.lang_key
             ] = msg.message_id
         except Exception as e:

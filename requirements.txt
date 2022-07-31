@@ -6,3 +6,5 @@ psycopg2-binary
 sqlalchemy~=1.4.20
 ujson==4.0.2
 python-dotenv~=0.20.0
+tweepy~=4.10.0
+PyTweet

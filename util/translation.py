@@ -1,11 +1,14 @@
 import os
+import re
 from typing import Union
 
 import deepl
 from deep_translator import GoogleTranslator
 
+import twitter
 from data.flag import flags
-from util.regex import HASHTAG
+from data.lang import GERMAN
+from util.regex import HASHTAG, FOOTER
 
 translator = deepl.Translator(os.environ['DEEPL'])
 
@@ -63,6 +66,26 @@ def get_hashtag(key: str, language: Union[str, None] = None) -> str:
 
 
 def translate(target_lang: str, text: str) -> str:
-    # if target_lang == "fa":  # or "ru"?
-    return GoogleTranslator(source='de', target=target_lang).translate(text=text)
-    # return translator.translate_text(text, target_lang=target_lang, tag_handling="html").text
+    print("---------------------------- text")
+    print(text)
+    print("--- footer")
+    print(GERMAN.footer)
+    print("--- replace")
+    print(text.replace(GERMAN.footer, ""))
+    print("--- cleaned text")
+
+    sub_text = re.sub(FOOTER, "", text, )
+
+    cleaned_text = text.replace(GERMAN.footer, "")
+
+    print(cleaned_text)
+    print("--- sub text")
+    print(sub_text)
+    print("----------------------------")
+
+    if target_lang == "fa":  # or "ru"?
+        # text.replace: if bot was down and footer got added manually
+
+        return GoogleTranslator(source='de', target=target_lang).translate(text=sub_text)
+
+    return translator.translate_text(sub_text, target_lang=target_lang, tag_handling="html").text
