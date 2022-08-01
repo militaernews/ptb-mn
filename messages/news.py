@@ -44,7 +44,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
         try:
             msg_id: MessageId = await update.channel_post.copy(
                 chat_id=lang.channel_id,
-                caption=f"{translate_message(lang.lang_key, original_caption)}\n{lang.footer}",
+                caption=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 reply_to_message_id=replies[lang.lang_key]
                 if replies is not None
                 else None,
@@ -68,7 +68,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
     formatted_text = flag_to_hashtag(original_caption)
 
     try:
-        await update.channel_post.edit_caption(formatted_text  + GERMAN.footer)
+        await update.channel_post.edit_caption(formatted_text + GERMAN.footer)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await context.bot.send_message(
@@ -79,7 +79,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
 
     try:
         # todo: upload photo aswell
-        twitter.post_twitter(formatted_text )
+        twitter.post_twitter(formatted_text)
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -138,7 +138,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
         context.bot_data[update.channel_post.message_id] = {}
         print(
             "trans---SINGLE ::: ",
-            translate_message(ENGLISH.lang_key, update.channel_post.caption_html_urled),
+            translate_message(ENGLISH.lang_key, update.channel_post.caption_html_urled, ENGLISH.lang_key_deepl),
         )
 
         context.bot_data[update.channel_post.media_group_id][
@@ -192,7 +192,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             await context.bot.send_photo(
                 chat_id=lang.channel_id,
                 photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
-                caption=f"#{lang.breaking}\n\n{translate_message(lang.lang_key, text)}\n{lang.footer}",
+                caption=f"#{lang.breaking}\n\n{translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}",
             )
         except Exception as e:
             await context.bot.send_message(
@@ -228,7 +228,7 @@ async def announcement(update: Update, context: CallbackContext):
             msg = await context.bot.send_photo(
                 chat_id=lang.channel_id,
                 photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
-                caption=f"#{lang.announce}{translate_message(lang.lang_key, text)}\n{lang.footer}",
+                caption=f"#{lang.announce}{translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}",
 
             )
             await msg.pin()
@@ -262,7 +262,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     for lang in languages:
         files[0].caption = (
-                translate_message(lang.lang_key, original_caption) + "\n" + lang.footer
+                translate_message(lang.lang_key, original_caption, lang.lang_key_deepl) + "\n" + lang.footer
         )
 
         try:
@@ -310,7 +310,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                     message_id=context.bot_data[
                         str(update.edited_channel_post.message_id)
                     ]["langs"][lang.lang_key],
-                    caption=f"{translate_message(lang.lang_key, original_caption)}\n{lang.footer}",
+                    caption=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 )
             except TelegramError as e:
                 if not e.message.startswith("Message is not modified"):
@@ -397,7 +397,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
         try:
             msg: Message = await context.bot.send_message(
                 chat_id=lang.channel_id,
-                text=translate_message(lang.lang_key, original_caption)
+                text=translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)
                      + "\n"
                      + lang.footer,
                 reply_to_message_id=replies[lang.lang_key]
@@ -444,7 +444,7 @@ async def edit_channel_text(update: Update, context: CallbackContext):
     for lang in languages:
         try:
             await context.bot.edit_message_text(
-                text=f"{translate_message(lang.lang_key, original_caption)}\n{lang.footer}",
+                text=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 chat_id=lang.channel_id,
                 message_id=context.bot_data[str(update.edited_channel_post.message_id)][
                     "langs"

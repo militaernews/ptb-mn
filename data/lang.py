@@ -9,6 +9,7 @@ class Language:
     breaking: str
     announce: str
     chat_id: int = None
+    lang_key_deepl: str = None
     # captcha:str
 
 
@@ -22,12 +23,13 @@ GERMAN = Language(
 )
 
 ENGLISH = Language(
-    "en-us",  # English - en-us
+    "en",  # English - en-us
     -1001258430463,  # https://t.me/MilitaryNewsEN
     "🔰 Subscribe to @MilitaryNewsEN\n🔰 Join us @MilitaryChatEN",
     "BREAKING",
     "ANNOUNCEMENT",
     -1001382962633,  # https://t.me/MilitaryChatEN
+    lang_key_deepl="en-us"
 )
 
 languages: [Language] = [
@@ -54,11 +56,12 @@ languages: [Language] = [
         "ОБЪЯВЛЕНИЕ",
     ),
     Language(
-        "pt-br",  # Portugese - pt-br
+        "pt",  # Portugese - pt-br
         -1001614849485,  # https://t.me/MilitaryNewsBR
         "🔰 Se inscreva no @militaryNewsBR",
         "NOTÍCIAS_URGENTES",
         "MENSAGEM",
+        lang_key_deepl="pt-br"
     ),
     Language(
         "es",  # Spanish

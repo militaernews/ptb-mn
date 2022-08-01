@@ -1,12 +1,10 @@
 import os
 import re
-from typing import Union
 
 import deepl
 from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 
-import twitter
 from data.flag import flags
 from data.lang import GERMAN
 from util.regex import HASHTAG, FOOTER
@@ -14,7 +12,7 @@ from util.regex import HASHTAG, FOOTER
 translator = deepl.Translator(os.environ['DEEPL'])
 
 
-def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
+def flag_to_hashtag(text: str, language: str = None, target_lang_deepl: str = None) -> str:
     if not HASHTAG.search(text):
 
         last = None
@@ -36,7 +34,7 @@ def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
                 key = c
 
             if key in flags:
-                text += "#" + get_hashtag(key, language).replace(" ", "") + " "
+                text += "#" + get_hashtag(key, language, target_lang_deepl).replace(" ", "") + " "
 
             last = None
     print("--- Translated Text ---")
@@ -44,10 +42,10 @@ def flag_to_hashtag(text: str, language: Union[str, None] = None) -> str:
     return text
 
 
-def translate_message(target_lang: str, text: str) -> str:
-    translated_text = translate(target_lang, text)
+def translate_message(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
+    translated_text = translate(target_lang, text, target_lang_deepl)
 
-    return flag_to_hashtag(translated_text, target_lang)
+    return flag_to_hashtag(translated_text, target_lang, target_lang_deepl)
 
 
 def is_flag_character(c):
@@ -55,7 +53,7 @@ def is_flag_character(c):
 
 
 # could be replaced by using multiple txt-files for the different languages
-def get_hashtag(key: str, language: Union[str, None] = None) -> str:
+def get_hashtag(key: str, language: str = None, target_lang_deepl: str = None) -> str:
     hashtag = flags.get(key)
 
     if language is None:
@@ -63,10 +61,10 @@ def get_hashtag(key: str, language: Union[str, None] = None) -> str:
 
     # maybe just pass along the hashtag an let it translate in full?
     # will not for for e.g. French where UK has hyphen
-    return translate(language, hashtag).replace("-", "")
+    return translate(language, hashtag, target_lang_deepl).replace("-", "")
 
 
-def translate(target_lang: str, text: str) -> str:
+def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
     print("---------------------------- text")
     print(text)
     print("--- footer")
@@ -89,11 +87,12 @@ def translate(target_lang: str, text: str) -> str:
 
         return GoogleTranslator(source='de', target=target_lang).translate(text=sub_text)
     try:
-        return translator.translate_text(sub_text, target_lang=target_lang, tag_handling="html").text
+        return translator.translate_text(sub_text,
+                                         target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
+                                         tag_handling="html").text
     except QuotaExceededException:
         print("--- Quota exceeded ---")
         return GoogleTranslator(source='de', target=target_lang).translate(text=sub_text)
         pass
     except Exception as e:
         print("--- other error translating --- ", e)
-
