@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="added base for twitter, some fixes">
       <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/ptb-mn.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/flag.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/flag.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/lang.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/util/regex.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/regex.py" afterDir="false" />
@@ -102,7 +104,7 @@
       <workItem from="1659193165346" duration="17000" />
       <workItem from="1659195475172" duration="9059000" />
       <workItem from="1659286002136" duration="709000" />
-      <workItem from="1659307940435" duration="831000" />
+      <workItem from="1659307940435" duration="1147000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -125,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659112441348</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added base for twitter, some fixes">
+      <created>1659309084214</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1659309084214</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,7 +155,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="refactor, dependency bump, fixes" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="added base for twitter, some fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="added base for twitter, some fixes" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1659308387476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

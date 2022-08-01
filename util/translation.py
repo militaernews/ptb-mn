@@ -4,6 +4,7 @@ from typing import Union
 
 import deepl
 from deep_translator import GoogleTranslator
+from deepl import QuotaExceededException
 
 import twitter
 from data.flag import flags
@@ -87,5 +88,12 @@ def translate(target_lang: str, text: str) -> str:
         # text.replace: if bot was down and footer got added manually
 
         return GoogleTranslator(source='de', target=target_lang).translate(text=sub_text)
+    try:
+        return translator.translate_text(sub_text, target_lang=target_lang, tag_handling="html").text
+    except QuotaExceededException:
+        print("--- Quota exceeded ---")
+        return GoogleTranslator(source='de', target=target_lang).translate(text=sub_text)
+        pass
+    except Exception as e:
+        print("--- other error translating --- ", e)
 
-    return translator.translate_text(sub_text, target_lang=target_lang, tag_handling="html").text
