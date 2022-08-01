@@ -24,6 +24,5 @@ def post_twitter(text: str):
     print("--- tweet", text)
 
     if len(text) <= 280:
-        client.tweet(
-            "Hello world, Hello twitter!p")  # This requires read & write app permissions also elevated access type.
+        client.tweet(text)  # This requires read & write app permissions also elevated access type.
 
