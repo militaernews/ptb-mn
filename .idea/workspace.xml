@@ -2,41 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇪🇺.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇳.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇬.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇬.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇮.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇮.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇴.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇴.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇶.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇶.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇸.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇸.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇮.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇮.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇯.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇯.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇲.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇳.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇳.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇪🇪.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇪🇪.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇪🇭.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇪🇭.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇪.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇪.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇫.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇬.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇬.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇲.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇹.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇹.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇫.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇹.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇹.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇺🇸.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇸.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇼🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇼🇫.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_de.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_de.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_en.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_en.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_es.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_es.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/flag_fa.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_fa.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_fr.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_it.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_it.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_pt.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_pt.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_ru.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_ru.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_tr.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_tr.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/split_into_hashtag_json.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/split_into_hashtag_json.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/regex.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/regex.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +97,7 @@
       <workItem from="1659339189474" duration="1357000" />
       <workItem from="1659376596719" duration="312000" />
       <workItem from="1659378360900" duration="7808000" />
-      <workItem from="1659438767183" duration="10005000" />
+      <workItem from="1659438767183" duration="10402000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -202,7 +169,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659450771178</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fix">
+      <created>1659452708303</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1659452708303</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

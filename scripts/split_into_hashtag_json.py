@@ -20,6 +20,7 @@ def split_to_json():
         input_filename = f"flag_{lang.lang_key}.json"
 
         with open(input_filename, 'rb') as f:
+            print(input_filename,lang.lang_key)
             content = orjson.loads(f.read())
 
             for flag_key, hashtag in content.items():
@@ -29,7 +30,7 @@ def split_to_json():
                 text = ""
 
                 if lang.lang_key == GERMAN.lang_key:
-                    text += f"{{\"{lang.lang_key}\":\"{hashtag.replace(' ', '').replace('-', '').replace('.', '')}\""
+                    text += f"{{\"{lang.lang_key}\":\"{hashtag.replace(' ', '_').replace('-', '').replace('.', '')}\""
                 else:
                     text += f",\"{lang.lang_key}\":\"{hashtag.replace(' ', '').replace('-', '').replace('.', '')}\""
 
