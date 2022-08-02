@@ -1,6 +1,8 @@
 from dotenv import load_dotenv
 from orjson import orjson
 
+from util.helper import sanitize_hashtag
+
 load_dotenv()
 
 from data.lang import languages, GERMAN
@@ -25,9 +27,9 @@ def split_to_json():
                 text = ""
 
                 if lang.lang_key == GERMAN.lang_key:
-                    text += f"{{\"{lang.lang_key}\":\"{hashtag.replace(' ', '_').replace('-', '').replace('.', '')}\""
+                    text += f"{{\"{lang.lang_key}\":\"{sanitize_hashtag(hashtag)}\""
                 else:
-                    text += f",\"{lang.lang_key}\":\"{hashtag.replace(' ', '').replace('-', '').replace('.', '')}\""
+                    text += f",\"{lang.lang_key}\":\"{sanitize_hashtag(hashtag)}\""
 
                 if lang.lang_key == languages[-1].lang_key:
                     text += "}"

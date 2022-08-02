@@ -20,3 +20,7 @@ def sanitize_text(text: str = None) -> str:
         return ""
 
     return re.sub(FOOTER, "", text)
+
+
+def sanitize_hashtag(text: str) -> str:
+    return text.replace(' ', '_').replace('-', '').replace('.', '').replace("'", "")
