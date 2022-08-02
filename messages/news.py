@@ -11,10 +11,9 @@ from telegram.ext import CallbackContext
 import config
 import twitter
 from data.lang import ENGLISH, GERMAN, languages
+from util.helper import get_replies, sanitize_text
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import flag_to_hashtag, translate_message
-
-from util.helper import get_replies, sanitize_text
 
 
 # TODO: make method more generic

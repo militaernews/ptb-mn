@@ -45,26 +45,15 @@ def get_hashtag(key: str, language: str = GERMAN.lang_key) -> str:
     print(filename)
 
     with open(filename, 'rb') as f:
+        # todo: find a way to open this file up just once when iterating thtough langs
         return orjson.loads(f.read())[language]
 
 
 def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
     print("---------------------------- text ----------------------------")
     print(text)
-    print("--- footer")
-    print(GERMAN.footer)
-    print("--- replace")
-    print(text.replace(GERMAN.footer, ""))
-    print("--- cleaned text")
 
     sub_text = sanitize_text(text)
-
-    cleaned_text = text.replace(GERMAN.footer, "")
-
-    print(cleaned_text)
-    print("--- sub text")
-    print(sub_text)
-    print("----------------------------")
 
     if target_lang == "fa":  # or "ru"?
         # text.replace: if bot was down and footer got added manually

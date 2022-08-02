@@ -3,7 +3,7 @@ import traceback
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from util.translation import translate_message, flag_to_hashtag
+from util.translation import flag_to_hashtag
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
