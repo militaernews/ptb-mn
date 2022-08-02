@@ -14,26 +14,12 @@ from data.lang import ENGLISH, GERMAN, languages
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import flag_to_hashtag, translate_message
 
-
-def get_replies(bot_data, msg_id: str):
-    print("Trying to get bot_data ------------------")
-    print(bot_data)
-    print("-------------------------")
-
-    if "reply" in bot_data[msg_id]:
-        print(bot_data[bot_data[msg_id]["reply"]])
-        return bot_data[bot_data[msg_id]["reply"]]["langs"]
-
-    return None
+from util.helper import get_replies, sanitize_text
 
 
 # TODO: make method more generic
 async def post_channel_single(update: Update, context: CallbackContext):
-    original_caption = (
-        update.channel_post.caption_html_urled
-        if update.channel_post.caption is not None
-        else ""
-    )
+    original_caption = sanitize_text(update.channel_post.caption)
 
     replies = get_replies(context.bot_data, str(update.channel_post.message_id))
 
@@ -63,8 +49,6 @@ async def post_channel_single(update: Update, context: CallbackContext):
                 f"<b>Caused by Update</b>\n<code>{update}</code>",
             )
 
-    await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
-
     formatted_text = flag_to_hashtag(original_caption)
 
     try:
@@ -86,6 +70,8 @@ async def post_channel_single(update: Update, context: CallbackContext):
             f"<b>⚠️ Error when trying to post single on Twitter</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
+
+    await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
 
 # TODO: make method more generic

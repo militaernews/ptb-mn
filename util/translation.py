@@ -4,39 +4,28 @@ import re
 import deepl
 from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
+from orjson import orjson
 
-from data.flag import flags
 from data.lang import GERMAN
-from util.regex import HASHTAG, FOOTER
+from util.helper import sanitize_text
+from util.regex import FLAG_EMOJI, HASHTAG
 
 translator = deepl.Translator(os.environ['DEEPL'])
 
 
-def flag_to_hashtag(text: str, language: str = None, target_lang_deepl: str = None) -> str:
+def flag_to_hashtag(text: str, language: str = None) -> str:
     if not HASHTAG.search(text):
 
-        last = None
+        flag_emojis = re.findall(FLAG_EMOJI, text)
+
+        print("flag:::::::::::::: ", flag_emojis)
 
         text += "\n\n"
 
-        for c in text:
+        for fe in flag_emojis:
+            # todo: filter if valid flag?
+            text += f"#{get_hashtag(fe, language)} "
 
-            if c not in ["🏴"]:
-                if not is_flag_character(c):
-                    continue
-
-                if last is None:
-                    last = c
-                    continue
-
-                key = last + c
-            else:
-                key = c
-
-            if key in flags:
-                text += "#" + get_hashtag(key, language, target_lang_deepl).replace(" ", "") + " "
-
-            last = None
     print("--- Translated Text ---")
     print(text)
     return text
@@ -45,27 +34,22 @@ def flag_to_hashtag(text: str, language: str = None, target_lang_deepl: str = No
 def translate_message(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
     translated_text = translate(target_lang, text, target_lang_deepl)
 
-    return flag_to_hashtag(translated_text, target_lang, target_lang_deepl)
-
-
-def is_flag_character(c):
-    return "🇦" <= c <= "🇿"
+    return flag_to_hashtag(translated_text, target_lang)
 
 
 # could be replaced by using multiple txt-files for the different languages
-def get_hashtag(key: str, language: str = None, target_lang_deepl: str = None) -> str:
-    hashtag = flags.get(key)
+def get_hashtag(key: str, language: str = GERMAN.lang_key) -> str:
+    print("--- hashtag ---")
 
-    if language is None:
-        return hashtag
+    filename = f"res/countries/{key}.json"
+    print(filename)
 
-    # maybe just pass along the hashtag an let it translate in full?
-    # will not for for e.g. French where UK has hyphen
-    return translate(language, hashtag, target_lang_deepl).replace("-", "")
+    with open(filename, 'rb') as f:
+        return orjson.loads(f.read())[language]
 
 
 def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
-    print("---------------------------- text")
+    print("---------------------------- text ----------------------------")
     print(text)
     print("--- footer")
     print(GERMAN.footer)
@@ -73,7 +57,7 @@ def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str
     print(text.replace(GERMAN.footer, ""))
     print("--- cleaned text")
 
-    sub_text = re.sub(FOOTER, "", text, )
+    sub_text = sanitize_text(text)
 
     cleaned_text = text.replace(GERMAN.footer, "")
 

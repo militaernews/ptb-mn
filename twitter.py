@@ -25,4 +25,3 @@ def post_twitter(text: str):
 
     if len(text) <= 280:
         client.tweet(text)  # This requires read & write app permissions also elevated access type.
-

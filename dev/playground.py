@@ -3,7 +3,7 @@ import traceback
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from util.translation import translate_message
+from util.translation import translate_message, flag_to_hashtag
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -11,9 +11,8 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     await update.message.reply_text("-------\n\nTEST\n\n-------")
     try:
 
-        await update.message.reply_text(
-            translate_message("tr", update.message.text_html_urled)
-        )
+        #   await update.message.reply_text(        translate_message("tr", update.message.text_html_urled))
+        await update.message.reply_text(flag_to_hashtag(update.message.text_html_urled, "tr"))
     except Exception as e:
         await update.message.reply_text("-------\n\nTEST FAIL\n\n-------")
         await update.message.reply_text(
