@@ -41,12 +41,16 @@ def translate_message(target_lang: str, text: str, target_lang_deepl: str = None
 def get_hashtag(key: str, language: str = GERMAN.lang_key) -> str:
     print("--- hashtag ---")
 
-    filename = f"res/countries/{key}.json"
-    print(filename)
+    try:
+        filename = f"res/countries/{key}.json"
+        print(filename)
 
-    with open(filename, 'rb') as f:
-        # todo: find a way to open this file up just once when iterating thtough langs
-        return orjson.loads(f.read())[language]
+        with open(filename, 'rb') as f:
+            # todo: find a way to open this file up just once when iterating through langs
+            return orjson.loads(f.read())[language]
+    except Exception as e:
+        print("Error when trying to get hashtag --- ", e)
+        pass
 
 
 def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
