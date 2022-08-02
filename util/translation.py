@@ -38,8 +38,10 @@ def translate_message(target_lang: str, text: str, target_lang_deepl: str = None
 
 
 # could be replaced by using multiple txt-files for the different languages
-def get_hashtag(key: str, language: str = GERMAN.lang_key) -> str:
+def get_hashtag(key: str, language: str = None) -> str:
     print("--- hashtag ---")
+    if language is None:
+        language = GERMAN.lang_key
 
     try:
         filename = f"res/countries/{key}.json"
