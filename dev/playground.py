@@ -12,7 +12,7 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
 
         #   await update.message.reply_text(        translate_message("tr", update.message.text_html_urled))
-        await update.message.reply_text(flag_to_hashtag(update.message.text_html_urled, "tr"))
+        await update.message.reply_text(flag_to_hashtag(update.message.text_html_urled, "de"))
     except Exception as e:
         await update.message.reply_text("-------\n\nTEST FAIL\n\n-------")
         await update.message.reply_text(

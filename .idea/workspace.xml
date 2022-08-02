@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="json resources fully available, but may need correction">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
+      <change afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇪🇺.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇳.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇬.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇬.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇮.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇮.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇴.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇴.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇶.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇶.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇸.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇸.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇮.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇮.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇯.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇯.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇲.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇳.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇳.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇪🇪.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇪🇪.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇪🇭.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇪🇭.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇪.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇪.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇬.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇬.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇲.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇹.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇹.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇹.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇹.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇺🇸.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇸.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇼🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇼🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_de.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_de.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_en.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_es.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_es.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_fa.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_fa.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_fr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_it.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_it.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_pt.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_pt.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_ru.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_ru.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_tr.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_tr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/split_into_hashtag_json.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/split_into_hashtag_json.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/regex.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/regex.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +130,7 @@
       <workItem from="1659339189474" duration="1357000" />
       <workItem from="1659376596719" duration="312000" />
       <workItem from="1659378360900" duration="7808000" />
-      <workItem from="1659438767183" duration="8100000" />
+      <workItem from="1659438767183" duration="10005000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -163,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659448025514</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="fix">
+      <created>1659450771178</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1659450771178</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -183,18 +222,18 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="refactor, dependency bump, fixes" />
-    <MESSAGE value="fix" />
     <MESSAGE value="added base for twitter, some fixes" />
     <MESSAGE value="handle deepl quota" />
     <MESSAGE value="handle deepl quota - fix" />
     <MESSAGE value="reading from json, fixes and refactoring" />
     <MESSAGE value="json resources fully available, but may need correction" />
-    <option name="LAST_COMMIT_MESSAGE" value="json resources fully available, but may need correction" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
-    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1659441279559" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1659447844912" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
+    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1659452423633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1659452682086" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
     <SUITE FILE_PATH="coverage/ptb_mn$twitter.coverage" NAME="twitter Coverage Results" MODIFIED="1659271016316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$config.coverage" NAME="config Coverage Results" MODIFIED="1659108625070" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

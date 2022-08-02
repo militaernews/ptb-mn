@@ -1,3 +1,8 @@
+import os
+import shutil
+from os import mkdir
+from pathlib import Path
+
 from dotenv import load_dotenv
 from orjson import orjson
 
@@ -8,6 +13,8 @@ from util.translation import translate
 
 
 def split_to_json():
+    output_directory = '../res/countries/'
+
     input_languages = [GERMAN] + languages
     for lang in input_languages:
         input_filename = f"flag_{lang.lang_key}.json"
@@ -17,7 +24,7 @@ def split_to_json():
 
             for flag_key, hashtag in content.items():
                 print(flag_key, hashtag)
-                output_filename = f"../res/countries/{flag_key}.json"
+                output_filename = f"{ output_directory}{flag_key}.json"
 
                 text = ""
 
@@ -64,5 +71,5 @@ def translate_json():
 
 
 if __name__ == "__main__":
-    # translate_json()
+   # translate_json()
     split_to_json()
