@@ -61,8 +61,10 @@ async def post_channel_single(update: Update, context: CallbackContext):
             )
 
     try:
+
         # todo: upload photo aswell
-        twitter.post_twitter(formatted_text)
+        # twitter.post_twitter(formatted_text)
+        print("-")
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -83,7 +85,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
     # only index 0 should have reply_to_message -- check this!
     if update.channel_post.reply_to_message is not None:
         print(":::::::::: reply exists! ::::::::::::::::::::::::")
-        print(vars(update.channel_post))
+        print(update.channel_post)
         context.bot_data[str(update.channel_post.message_id)]["reply"] = str(
             update.channel_post.reply_to_message.message_id
         )

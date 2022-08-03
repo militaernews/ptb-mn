@@ -16,9 +16,9 @@ def split_to_json():
     for lang in input_languages:
         input_filename = f"flag_{lang.lang_key}.json"
 
-        with open(input_filename, 'rb') as f:
+        with open(input_filename, 'rb') as input_file:
             print(input_filename, lang.lang_key)
-            content = orjson.loads(f.read())
+            content = orjson.loads(input_file.read())
 
             for flag_key, hashtag in content.items():
                 print(flag_key, hashtag)
@@ -34,8 +34,8 @@ def split_to_json():
                 if lang.lang_key == languages[-1].lang_key:
                     text += "}"
 
-                with open(output_filename, 'a') as f:
-                    f.write(text)
+                with open(output_filename, 'a') as output_file:
+                    output_file.write(text)
 
 
 def translate_json():
