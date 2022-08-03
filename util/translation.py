@@ -13,12 +13,15 @@ from util.regex import FLAG_EMOJI, HASHTAG
 translator = deepl.Translator(os.environ['DEEPL'])
 
 
-def flag_to_hashtag(text: str, language: str = None) -> str:
+def flag_to_hashtag(text: str, language: str = None):
     if not HASHTAG.search(text):
 
         flag_emojis = re.findall(FLAG_EMOJI, text)
 
         print("flag:::::::::::::: ", flag_emojis)
+
+        if len(flag_emojis) == 0:
+            return f"\n{text}"
 
         text += "\n\n"
 

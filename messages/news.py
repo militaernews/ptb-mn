@@ -9,7 +9,6 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 import config
-import twitter
 from data.lang import ENGLISH, GERMAN, languages
 from util.helper import get_replies, sanitize_text
 from util.regex import HASHTAG, WHITESPACE
@@ -154,12 +153,17 @@ async def post_channel_english(update: Update, context: CallbackContext):
 async def breaking_news(update: Update, context: CallbackContext):
     await update.channel_post.delete()
 
+    text = re.sub(
+        re.compile(r"#eilmeldung[\r\n]*", re.IGNORECASE),
+        "",
+        update.channel_post.text_html_urled,
+    )
+
     try:
         await context.bot.send_photo(
             chat_id=GERMAN.channel_id,
-            photo=open("../res/breaking/mn-breaking-de.png", "rb"),
-            caption=flag_to_hashtag(update.channel_post.text_html_urled)
-                    + GERMAN.footer,
+            photo=open("res/breaking/mn-breaking-de.png", "rb"),
+            caption=f"#{GERMAN.breaking}\n\n{flag_to_hashtag(update.channel_post.text_html_urled)}\n{GERMAN.footer}",
         )
     except Exception as e:
         await context.bot.send_message(
@@ -167,12 +171,6 @@ async def breaking_news(update: Update, context: CallbackContext):
             f"<b>⚠️ Error when trying to send breaking news in channel DE</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
-
-    text = re.sub(
-        re.compile(r"#eilmeldung[\r\n]*", re.IGNORECASE),
-        "",
-        update.channel_post.text_html_urled,
-    )
 
     for lang in languages:
         try:
@@ -199,7 +197,7 @@ async def announcement(update: Update, context: CallbackContext):
     try:
         msg_de = await context.bot.send_photo(
             chat_id=GERMAN.channel_id,
-            photo=open("../res/announce/mn-announce-de.png", "rb"),
+            photo=open("res/announce/mn-announce-de.png", "rb"),
             caption="#MITTEILUNG" + text,
         )
         await msg_de.pin()

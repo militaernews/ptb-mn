@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/temp/file_8.jpg" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="tweeting media works">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ptb-mn.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ptb-mn.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/split_into_hashtag_json.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/split_into_hashtag_json.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/announce/mn-announce-en-us.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/announce/mn-announce-en.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/announce/mn-announce-pt-br.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/announce/mn-announce-pt.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/breaking/mn-breaking-en-us.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/breaking/mn-breaking-en.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/breaking/mn-breaking-pt-br.png" beforeDir="false" afterPath="$PROJECT_DIR$/res/breaking/mn-breaking-pt.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +122,7 @@
       <workItem from="1659376596719" duration="312000" />
       <workItem from="1659378360900" duration="7808000" />
       <workItem from="1659438767183" duration="12516000" />
-      <workItem from="1659515685975" duration="8219000" />
+      <workItem from="1659515685975" duration="11780000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -214,7 +222,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659453993956</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="tweeting media works">
+      <created>1659539133140</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1659539133140</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -241,12 +256,13 @@
     <MESSAGE value="json resources fully available, but may need correction" />
     <MESSAGE value="fix fa" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="tweeting media works" />
+    <option name="LAST_COMMIT_MESSAGE" value="tweeting media works" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
     <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1659453978238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
-    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1659538900488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1659542152294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$twitter.coverage" NAME="twitter Coverage Results" MODIFIED="1659271016316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$config.coverage" NAME="config Coverage Results" MODIFIED="1659108625070" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

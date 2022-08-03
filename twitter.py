@@ -1,10 +1,12 @@
 import os
 
-import pytweet
-import telegram
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# PyTweet at least kinda worked :(
+from peony import PeonyClient
+from telegram import File
 
 consumer_key = os.environ.get("CONSUMER_KEY")
 consumer_secret = os.environ.get("CONSUMER_SECRET")
@@ -12,39 +14,34 @@ access_token = os.getenv("ACCESS_KEY")
 access_secret = os.getenv("ACCESS_SECRET")
 bearer = os.getenv("BEARER")
 
-client = pytweet.Client(
-    bearer_token=bearer,
-    consumer_key=consumer_key,
-    consumer_key_secret=consumer_secret,
-    access_token=access_token,
-    access_token_secret=access_secret
-)
+client = PeonyClient(consumer_key=consumer_key,
+                     consumer_key_secret=consumer_secret,
+                     access_token=access_token,
+                     access_token_secret=access_secret)
 
 
-def post_twitter(text: str):
-    print("--- tweet", text)
+def tweet_text(text: str):
+    print("--- tweet text", text)
 
     if len(text) <= 280:
-        client.tweet(text)  # This requires read & write app permissions also elevated access type.
+        client.tweet(text)
 
 
-async def tweet_photo(text: str, file: telegram.File):
-    path = f"temp/{file.file_path.split('/')[-1]}"
-    await file.download(path)
-    # todo: can also quote tweet here.. is that an option?
-    client.tweet(text=text, file=pytweet.File(path))
-    os.remove(path)
+async def tweet_file(text: str, file: File):
+    print("--- tweet media", text)
+
+    if len(text) <= 280:
+        media = await client.upload_media(file.file_path)
+        await client.api.statuses.update.post(status=text, media_ids=[media.media_id])
 
 
-async def tweet_album(text: str, files: [telegram.File]):
-    upload_files = list()
-    for file in files:
-        path = f"temp/{file.file_path.split('/')[-1]}"
-        await file.download(path)
-        upload_files.append(pytweet.File(path))
-    # todo: param "files" is only available in 1.5.0a10
-    # client.tweet(text=text, files=upload_files)
-    client.tweet(text=text, file=upload_files[0])
+async def tweet_files(text: str, files: [File]):
+    print("--- tweet album", text)
 
-    for file in upload_files:
-        os.remove(file.path)
+    if len(text) <= 280:
+        media_ids = list()
+        for file in files:
+            media = await client.upload_media(file.file_path)
+            media_ids.append(media.media_id)
+
+        await client.api.statuses.update.post(status=text, media_ids=media_ids)

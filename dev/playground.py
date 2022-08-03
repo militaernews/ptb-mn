@@ -3,7 +3,10 @@ import traceback
 from telegram import Update
 from telegram.ext import ContextTypes
 
-import twitter
+# from twitter import  tweet_text,tweet_file
+from config import NYX
+from data.lang import GERMAN
+from util.translation import flag_to_hashtag
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -12,6 +15,13 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
 
         #   await update.message.reply_text(        translate_message("tr", update.message.text_html_urled))
+
+        await context.bot.send_photo(
+            chat_id=NYX,
+            photo=open("res/breaking/mn-breaking-de.png", "rb"),
+            caption=flag_to_hashtag(update.message.text_html_urled)
+                    + GERMAN.footer,
+        )
 
         p = update.message.photo
 
@@ -22,7 +32,7 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
         # can use param "out" in download() to instead save to object, idk if that makes sense for twitter.
         ff = await f.download(f"../temp/")
         print(ff)
-        await twitter.tweet_photo("", f)
+       ## await tweet_file(update.message.text, f)
 
     # await context.bot.send_photo(chat_id=NYX, photo=f.file_path)
 
