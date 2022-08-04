@@ -317,7 +317,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                     )
 
     # not sure if this will cause eternal triggering
-    update.channel_post.edit_caption(flag_to_hashtag(original_caption) + FOOTER_DE)
+        await update.edited_channel_post.edit_caption(flag_to_hashtag(original_caption) + GERMAN.footer)
 
 
 @dataclass
