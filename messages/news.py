@@ -160,11 +160,14 @@ async def breaking_news(update: Update, context: CallbackContext):
         update.channel_post.text_html_urled,
     )
 
+    breaking_photo_path = "res/breaking/mn-breaking-de.png"
+    formatted_text = f"#{GERMAN.breaking}\n\n{flag_to_hashtag(update.channel_post.text_html_urled)}"
+
     try:
         await context.bot.send_photo(
             chat_id=GERMAN.channel_id,
-            photo=open("res/breaking/mn-breaking-de.png", "rb"),
-            caption=f"#{GERMAN.breaking}\n\n{flag_to_hashtag(update.channel_post.text_html_urled)}\n{GERMAN.footer}",
+            photo=open(breaking_photo_path, "rb"),
+            caption=f"{formatted_text}\n{GERMAN.footer}",
         )
     except Exception as e:
         await context.bot.send_message(
@@ -186,6 +189,18 @@ async def breaking_news(update: Update, context: CallbackContext):
                 f"<b>⚠️ Error when trying to send breaking news in channel {lang.lang_key}</b>\n"
                 f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
+
+    try:
+
+        # todo: upload photo aswell
+        await twitter.tweet_file_3(formatted_text, breaking_photo_path)
+        print("-")
+    except Exception as e:
+        await context.bot.send_message(
+            config.LOG_GROUP,
+            f"<b>⚠️ Error when trying to post single on Twitter</b>\n"
+            f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+        )
 
 
 async def announcement(update: Update, context: CallbackContext):

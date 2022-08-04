@@ -43,6 +43,11 @@ async def tweet_file(text: str, file: telegram.File):
     os.remove(path)
 
 
+async def tweet_file_3(text: str, path: str):
+    # todo: can also quote tweet here.. is that an option?
+    client.tweet(text=text, file=pytweet.File(path))
+
+
 async def tweet_file_2(update: Update, context: CallbackContext):
     await tweet_file(get_caption(update), await get_file(update, context))
 
