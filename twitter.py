@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from config import TWEET_LENGTH
 from util.helper import get_caption, get_file
 
 load_dotenv()
@@ -28,6 +27,8 @@ client = pytweet.Client(
     access_token_secret=access_secret
 )
 
+TWEET_LENGTH = 280
+
 
 def tweet_text(text: str):
     print("--- tweet", text)
@@ -46,8 +47,9 @@ async def tweet_file(text: str, file: telegram.File):
 
 
 async def tweet_file_3(text: str, path: str):
-    # todo: can also quote tweet here.. is that an option?
-    client.tweet(text=text, file=pytweet.File(path))
+    if len(text) <= TWEET_LENGTH:
+        # todo: can also quote tweet here.. is that an option?
+        client.tweet(text=text, file=pytweet.File(path))
 
 
 async def tweet_file_2(update: Update, context: CallbackContext):

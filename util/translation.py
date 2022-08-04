@@ -9,7 +9,7 @@ from orjson import orjson
 from config import PLACEHOLDER
 from data.lang import GERMAN
 from util.helper import sanitize_text
-from util.regex import FLAG_EMOJI, HASHTAG, EMOJI
+from util.regex import FLAG_EMOJI, HASHTAG
 
 translator = deepl.Translator(os.environ['DEEPL'])
 
@@ -64,18 +64,18 @@ def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str
     print(text)
 
     sub_text = sanitize_text(text)
-    emojis = re.findall(EMOJI, sub_text)
-    text_to_translate = re.sub(EMOJI, PLACEHOLDER, sub_text)
+    emojis = re.findall(FLAG_EMOJI, sub_text)
+    text_to_translate = re.sub(FLAG_EMOJI, PLACEHOLDER, sub_text)
 
     translated_text = ""
 
     if target_lang == "fa":  # or "ru"?
         # text.replace: if bot was down and footer got added manually
 
-        # the method with replacing emojis ignored Right-to-left languages like Persian
-        return GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
+        # I'm uncertain, whether replacing emojis for Right-to-left languages like Persian butchers the order
+        translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
     try:
-        translated_text = translator.translate_text(sub_text,
+        translated_text = translator.translate_text(text_to_translate,
                                                     target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
                                                     tag_handling="html").text
     except QuotaExceededException:
@@ -88,5 +88,5 @@ def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str
     for emoji in emojis:
         translated_text = re.sub(PLACEHOLDER, emoji, translated_text, 1)
 
-    print(translated_text)
+    print("translated text ----------------- ", text, emojis, sub_text, text_to_translate, translated_text)
     return translated_text

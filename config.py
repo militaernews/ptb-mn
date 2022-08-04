@@ -23,4 +23,3 @@ ADMINS = (
 
 # Constants
 PLACEHOLDER = "×"
-TWEET_LENGTH = 280
