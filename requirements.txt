@@ -9,3 +9,4 @@ python-dotenv~=0.20.0
 orjson~=3.7.11
 peony-twitter~=2.1.2
 tweepy==4.10.0
+pytweet==1.3.6
