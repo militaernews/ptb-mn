@@ -316,8 +316,16 @@ async def edit_channel(update: Update, context: CallbackContext):
                         f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                     )
 
-    # not sure if this will cause eternal triggering
-        await update.edited_channel_post.edit_caption(flag_to_hashtag(original_caption) + GERMAN.footer)
+        try:
+            # not sure if this will cause eternal triggering, hopefully not
+            await update.edited_channel_post.edit_caption(flag_to_hashtag(original_caption) + GERMAN.footer)
+        except TelegramError as e:
+            if not e.message.startswith("Message is not modified"):
+                await context.bot.send_message(
+                    config.LOG_GROUP,
+                    f"<b>⚠️ Error when trying to edit post in Channel de</b>\n"
+                    f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+                )
 
 
 @dataclass
