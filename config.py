@@ -20,3 +20,7 @@ ADMINS = (
     525147382,  # melik
     466451473  # maxe
 )
+
+# Constants
+PLACEHOLDER = "×"
+TWEET_LENGTH = 280

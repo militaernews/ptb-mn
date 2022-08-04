@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import CallbackContext
 
+from config import TWEET_LENGTH
 from util.helper import get_caption, get_file
 
 load_dotenv()
@@ -31,16 +32,17 @@ client = pytweet.Client(
 def tweet_text(text: str):
     print("--- tweet", text)
 
-    if len(text) <= 280:
+    if len(text) <= TWEET_LENGTH:
         client.tweet(text)  # This requires read & write app permissions also elevated access type.
 
 
 async def tweet_file(text: str, file: telegram.File):
-    path = f"temp/{file.file_path.split('/')[-1]}"
-    await file.download(path)
-    # todo: can also quote tweet here.. is that an option?
-    client.tweet(text=text, file=pytweet.File(path))
-    os.remove(path)
+    if len(text) <= TWEET_LENGTH:
+        path = f"temp/{file.file_path.split('/')[-1]}"
+        await file.download(path)
+        # todo: can also quote tweet here.. is that an option?
+        client.tweet(text=text, file=pytweet.File(path))
+        os.remove(path)
 
 
 async def tweet_file_3(text: str, path: str):
@@ -57,14 +59,15 @@ async def tweet_files_2(update: Update, context: CallbackContext):
 
 
 async def tweet_files(text: str, files: [telegram.File]):
-    upload_files = list()
-    for file in files:
-        path = f"temp/{file.file_path.split('/')[-1]}"
-        await file.download(path)
-        upload_files.append(pytweet.File(path))
-    # todo: param "files" is only available in 1.5.0a10
-    # client.tweet(text=text, files=upload_files)
-    client.tweet(text=text, file=upload_files[0])
+    if len(text) <= TWEET_LENGTH:
+        upload_files = list()
+        for file in files:
+            path = f"temp/{file.file_path.split('/')[-1]}"
+            await file.download(path)
+            upload_files.append(pytweet.File(path))
+        # todo: param "files" is only available in 1.5.0a10
+        # client.tweet(text=text, files=upload_files)
+        client.tweet(text=text, file=upload_files[0])
 
-    for file in upload_files:
-        os.remove(file.path)
+        for file in upload_files:
+            os.remove(file.path)

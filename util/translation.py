@@ -6,9 +6,10 @@ from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 from orjson import orjson
 
+from config import PLACEHOLDER
 from data.lang import GERMAN
 from util.helper import sanitize_text
-from util.regex import FLAG_EMOJI, HASHTAG
+from util.regex import FLAG_EMOJI, HASHTAG, EMOJI
 
 translator = deepl.Translator(os.environ['DEEPL'])
 
@@ -63,18 +64,29 @@ def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str
     print(text)
 
     sub_text = sanitize_text(text)
+    emojis = re.findall(EMOJI, sub_text)
+    text_to_translate = re.sub(EMOJI, PLACEHOLDER, sub_text)
+
+    translated_text = ""
 
     if target_lang == "fa":  # or "ru"?
         # text.replace: if bot was down and footer got added manually
 
-        return GoogleTranslator(source='de', target=target_lang).translate(text=sub_text)
+        # the method with replacing emojis ignored Right-to-left languages like Persian
+        return GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
     try:
-        return translator.translate_text(sub_text,
-                                         target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
-                                         tag_handling="html").text
+        translated_text = translator.translate_text(sub_text,
+                                                    target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
+                                                    tag_handling="html").text
     except QuotaExceededException:
         print("--- Quota exceeded ---")
-        return GoogleTranslator(source='de', target=target_lang).translate(text=sub_text)
+        translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
         pass
     except Exception as e:
         print("--- other error translating --- ", e)
+
+    for emoji in emojis:
+        translated_text = re.sub(PLACEHOLDER, emoji, translated_text, 1)
+
+    print(translated_text)
+    return translated_text
