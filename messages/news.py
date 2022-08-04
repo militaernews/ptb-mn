@@ -12,7 +12,7 @@ import config
 import twitter
 from data.lang import ENGLISH, GERMAN, languages
 from util.helper import get_replies, sanitize_text, get_file
-from util.regex import HASHTAG, WHITESPACE
+from util.regex import HASHTAG, WHITESPACE, BREAKING
 from util.translation import flag_to_hashtag, translate_message
 
 
@@ -154,14 +154,9 @@ async def post_channel_english(update: Update, context: CallbackContext):
 async def breaking_news(update: Update, context: CallbackContext):
     await update.channel_post.delete()
 
-    text = re.sub(
-        re.compile(r"#eilmeldung[\r\n]*", re.IGNORECASE),
-        "",
-        update.channel_post.text_html_urled,
-    )
-
+    text = re.sub(BREAKING, "", update.channel_post.text_html_urled)
+    formatted_text = f"#{GERMAN.breaking}\n\n{flag_to_hashtag(text)}"
     breaking_photo_path = "res/breaking/mn-breaking-de.png"
-    formatted_text = f"#{GERMAN.breaking}\n\n{flag_to_hashtag(update.channel_post.text_html_urled)}"
 
     try:
         await context.bot.send_photo(
@@ -191,14 +186,12 @@ async def breaking_news(update: Update, context: CallbackContext):
             )
 
     try:
-
-        # todo: upload photo aswell
         await twitter.tweet_file_3(formatted_text, breaking_photo_path)
         print("-")
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to post single on Twitter</b>\n"
+            f"<b>⚠️ Error when trying to post breaking on Twitter</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
 

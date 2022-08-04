@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="single files are now posted to twitter">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="tweet breaking">
       <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/regex.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/regex.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +140,7 @@
       <workItem from="1659515685975" duration="11933000" />
       <workItem from="1659544642253" duration="613000" />
       <workItem from="1659597401251" duration="4546000" />
-      <workItem from="1659602512059" duration="522000" />
+      <workItem from="1659602512059" duration="1307000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -262,7 +261,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659602263339</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="tweet breaking">
+      <created>1659603043960</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1659603043960</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,7 +298,8 @@
     <MESSAGE value="tweeting media works" />
     <MESSAGE value="peony doesn't work, some fixes" />
     <MESSAGE value="single files are now posted to twitter" />
-    <option name="LAST_COMMIT_MESSAGE" value="single files are now posted to twitter" />
+    <MESSAGE value="tweet breaking" />
+    <option name="LAST_COMMIT_MESSAGE" value="tweet breaking" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
