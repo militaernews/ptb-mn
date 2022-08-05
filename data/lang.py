@@ -58,7 +58,7 @@ languages: [Language] = [
     Language(
         "pt",  # Portugese - pt-br
         -1001614849485,  # https://t.me/MilitaryNewsBR
-        "🔰 Se inscreva no @militaryNewsBR",
+        "🔰 Se inscreva no @MilitaryNewsBR",
         "NOTÍCIAS_URGENTES",
         "MENSAGEM",
         lang_key_deepl="pt-br"

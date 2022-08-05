@@ -40,6 +40,7 @@ def tweet_text(text: str):
 async def tweet_file(text: str, file: telegram.File):
     if len(text) <= TWEET_LENGTH:
         path = f"temp/{file.file_path.split('/')[-1]}"
+        print("file to download:::: ", path)
         await file.download(path)
         # todo: can also quote tweet here.. is that an option?
         client.tweet(text=text, file=pytweet.File(path))
@@ -53,7 +54,7 @@ async def tweet_file_3(text: str, path: str):
 
 
 async def tweet_file_2(update: Update, context: CallbackContext):
-    await tweet_file(get_caption(update), await get_file(update, context))
+    await tweet_file(get_caption(update), await get_file(update))
 
 
 async def tweet_files_2(update: Update, context: CallbackContext):

@@ -27,9 +27,9 @@ def split_to_json():
                 text = ""
 
                 if lang.lang_key == GERMAN.lang_key:
-                    text += f"{{\"{lang.lang_key}\":\"{sanitize_hashtag(hashtag)}\""
+                    text += f"{{\"{lang.lang_key}\":\"{sanitize_hashtag(lang.lang_key, hashtag)}\""
                 else:
-                    text += f",\"{lang.lang_key}\":\"{sanitize_hashtag(hashtag)}\""
+                    text += f",\"{lang.lang_key}\":\"{sanitize_hashtag(lang.lang_key, hashtag)}\""
 
                 if lang.lang_key == languages[-1].lang_key:
                     text += "}"

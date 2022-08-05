@@ -2,7 +2,93 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix edit caption?">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/lang.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇪.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇪.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇬.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇬.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇦🇽.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇦🇽.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇦.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇦.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇱.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇱.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇲.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇳.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇳.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇧🇻.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇧🇻.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇨🇨.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇨🇨.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇨🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇨🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇨🇮.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇨🇮.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇨🇰.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇨🇰.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇨🇷.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇨🇷.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇨🇻.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇨🇻.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇨🇽.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇨🇽.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇨🇿.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇨🇿.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇩🇴.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇩🇴.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇪🇭.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇪🇭.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇪🇺.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇪🇺.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇫🇰.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇫🇰.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇫🇴.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇫🇴.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇧.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇧.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇶.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇶.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇸.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇸.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇬🇼.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇬🇼.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇭🇰.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇭🇰.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇭🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇭🇲.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇮🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇮🇲.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇮🇴.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇮🇴.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇰🇳.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇰🇳.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇰🇵.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇰🇵.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇰🇷.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇰🇷.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇰🇾.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇰🇾.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇱🇨.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇱🇨.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇱🇰.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇱🇰.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇲🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇲🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇲🇭.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇲🇭.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇲🇵.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇲🇵.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇳🇨.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇳🇨.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇳🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇳🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇳🇱.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇳🇱.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇳🇿.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇳🇿.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇬.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇬.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇲.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇷.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇷.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇹.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇹.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇷🇪.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇷🇪.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇦.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇦.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇧.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇧.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇨.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇨.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇭.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇭.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇱.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇱.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇲.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇸.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇸.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇹.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇹.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇻.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇻.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇸🇽.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇸🇽.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇨.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇨.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇬.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇬.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇱.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇱.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇹.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇹.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇺🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇲.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇺🇳.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇳.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇺🇸.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇸.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇻🇨.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇻🇨.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇻🇬.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇻🇬.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇻🇮.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇻🇮.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇻🇳.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇻🇳.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇼🇫.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇼🇫.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇿🇦.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇿🇦.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🏴.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🏴.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_de.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_de.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_en.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_ru.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_ru.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_tr.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_tr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/split_into_hashtag_json.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/split_into_hashtag_json.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/temp/file_8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/helper.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +150,28 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
+    <configuration name="helper" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="ptb-mn" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/util" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/util/helper.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="ptb-mn" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -78,6 +186,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="playground" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ptb-mn" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/dev" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dev/playground.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -110,6 +240,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.playground" />
         <item itemvalue="Python.twitter" />
       </list>
     </recent_temporary>
@@ -146,6 +277,7 @@
       <workItem from="1659622121945" duration="1031000" />
       <workItem from="1659642221575" duration="1559000" />
       <workItem from="1659643882240" duration="694000" />
+      <workItem from="1659700174350" duration="7247000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -346,9 +478,11 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
-    <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1659453978238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
-    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1659643434569" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1659702496097" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
+    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1659710723094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$twitter.coverage" NAME="twitter Coverage Results" MODIFIED="1659601080632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ptb_mn$playground.coverage" NAME="playground Coverage Results" MODIFIED="1659701971642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
     <SUITE FILE_PATH="coverage/ptb_mn$config.coverage" NAME="config Coverage Results" MODIFIED="1659108625070" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ptb_mn$helper.coverage" NAME="helper Coverage Results" MODIFIED="1659709301030" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
   </component>
 </project>

@@ -63,7 +63,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
     try:
 
         # todo: upload photo aswell
-        await twitter.tweet_file(formatted_text, await get_file(update, context))
+        await twitter.tweet_file(formatted_text, await get_file(update))
         print("-")
     except Exception as e:
         await context.bot.send_message(
