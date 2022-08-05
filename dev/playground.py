@@ -12,8 +12,8 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
 
     except Exception as e:
         await update.message.reply_text("-------\n\nTEST FAIL\n\n-------")
-    await update.message.reply_text(
-        f"-------\n\nEXCEPTION: {e}\n\nTRACE: {traceback.format_exc()}\n\n-------"
-    )
+        await update.message.reply_text(
+            f"-------\n\nEXCEPTION: {e}\n\nTRACE: {traceback.format_exc()}\n\n-------"
+        )
 
     await update.message.reply_text("-------\n\nTEST DONE\n\n-------")
