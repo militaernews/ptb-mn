@@ -12,10 +12,10 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         print("--")
 
-        with open('test.txt', 'w') as f:
+        with open('app/temp/test.txt', 'w') as f:
             f.write('test123')
 
-        with open('test.txt', 'r') as f:
+        with open('app/temp/test.txt', 'r') as f:
             print(f.read())
 
         if len(update.message.photo) > 0:
