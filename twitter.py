@@ -42,6 +42,7 @@ async def tweet_file(text: str, file: telegram.File):
         path = f"temp/{file.file_path.split('/')[-1]}"
         print("file to download:::: ", path)
         await file.download(path)
+        print("-- download done")
         # todo: can also quote tweet here.. is that an option?
         client.tweet(text=text, file=pytweet.File(path))
         os.remove(path)
