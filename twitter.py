@@ -39,7 +39,7 @@ def tweet_text(text: str):
 
 async def tweet_file(text: str, file: telegram.File):
     if len(text) <= TWEET_LENGTH:
-        path = f"temp/{file.file_path.split('/')[-1]}"
+        path = file.file_path.split('/')[-1]
         print("file to download:::: ", path)
         await file.download(path)
         print("-- download done")
@@ -66,7 +66,7 @@ async def tweet_files(text: str, files: [telegram.File]):
     if len(text) <= TWEET_LENGTH:
         upload_files = list()
         for file in files:
-            path = f"temp/{file.file_path.split('/')[-1]}"
+            path = file.file_path.split('/')[-1]
             await file.download(path)
             upload_files.append(pytweet.File(path))
         # todo: param "files" is only available in 1.5.0a10

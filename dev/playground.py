@@ -1,4 +1,3 @@
-import os
 import traceback
 
 import pytweet
@@ -12,21 +11,12 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         print("--")
 
-        with open('temp/test.txt', 'w') as f:
-            f.write('test123')
-
-        with open('temp/test.txt', 'r') as f:
-            print(f.read())
-
-        with open('temp/test2.txt', 'r') as f:
-            print(f.read())
-
         if len(update.message.photo) > 0:
             file = await update.message.photo[-1].get_file()
         elif update.message.video is not None:
             file = await update.message.video.get_file()
 
-        path = f"./temp/{file.file_path.split('/')[-1]}"
+        path = file.file_path.split('/')[-1]
         print("file to download:::: ", path)
         await file.download(path)
         print("-- download done")
