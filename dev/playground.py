@@ -18,6 +18,9 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
         with open('temp/test.txt', 'r') as f:
             print(f.read())
 
+        with open('temp/test2.txt', 'r') as f:
+            print(f.read())
+
         if len(update.message.photo) > 0:
             file = await update.message.photo[-1].get_file()
         elif update.message.video is not None:
