@@ -29,6 +29,8 @@ def sanitize_hashtag(lang_key: str, text: str) -> str:
 
     if lang_key == "fa":
         result = text.replace(' ', '_')
+    else:
+        result = text.replace(' ', '')
 
     return result.replace('-', '').replace('.', '').replace("'", "")
 
