@@ -47,6 +47,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
                 f"{lang.lang_key}</b>\n<code>{e}</code>\n\n"
                 f"<b>Caused by Update</b>\n<code>{update}</code>",
             )
+            pass
 
     formatted_text = flag_to_hashtag(original_caption)
 
@@ -59,6 +60,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
                 f"<b>⚠️ Error when trying to edit post in Channel de</b>\n"
                 f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
+            pass
 
     try:
 
@@ -71,6 +73,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
             f"<b>⚠️ Error when trying to post single on Twitter</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
+        pass
 
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
@@ -142,6 +145,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
                 f"<b>⚠️ Error when trying to edit caption in channel DE</b>\n"
                 f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
+            pass
 
     context.job_queue.run_once(
         share_in_other_channels,
@@ -170,6 +174,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             f"<b>⚠️ Error when trying to send breaking news in channel DE</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
+        pass
 
     for lang in languages:
         try:
@@ -194,6 +199,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             f"<b>⚠️ Error when trying to post breaking on Twitter</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
+        pass
 
 
 async def announcement(update: Update, context: CallbackContext):
@@ -216,6 +222,7 @@ async def announcement(update: Update, context: CallbackContext):
             f"<b>⚠️ Error when trying to send announcement in channel DE</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
+        pass
 
     for lang in languages:
         try:
@@ -231,6 +238,7 @@ async def announcement(update: Update, context: CallbackContext):
                 config.LOG_GROUP,
                 f"<b>⚠️ Error when trying to send announcement in Channel {lang.lang_key}</b>\ncode>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
+            pass
 
 
 # TODO: make method more generic
@@ -277,6 +285,7 @@ async def share_in_other_channels(context: CallbackContext):
                 f"<b>⚠️ Error when trying to send media group in Channel {lang.lang_key}</b>\n\n"
                 f"<code>{e}</code>",
             )
+            pass
 
     print("----- done -----")
 
@@ -315,6 +324,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                         f"<b>⚠️ Error when trying to edit post in Channel {lang.lang_key}</b>\n"
                         f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                     )
+                    pass
 
         try:
             # not sure if this will cause eternal triggering, hopefully not
@@ -326,6 +336,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                     f"<b>⚠️ Error when trying to edit post in Channel de</b>\n"
                     f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                 )
+                pass
 
 
 @dataclass
@@ -419,11 +430,12 @@ async def post_channel_text(update: Update, context: CallbackContext):
                 f"<b>⚠️ Error when trying to send text post in Channel {lang.lang_key}</b>\n"
                 f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
+            pass
 
     formatted_text = flag_to_hashtag(original_caption)
 
     try:
-        await update.channel_post.edit_text(formatted_text + GERMAN.footer)
+        await update.channel_post.edit_text(f"{formatted_text}\n{GERMAN.footer}")
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await context.bot.send_message(
@@ -431,6 +443,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
                 f"<b>⚠️ Error when trying to post text in Channel de</b>\n"
                 f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
+            pass
 
     try:
         await twitter.tweet_text(formatted_text)
@@ -440,6 +453,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
             f"<b>⚠️ Error when trying to post text on Twitter</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
+        pass
 
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
@@ -471,3 +485,4 @@ async def edit_channel_text(update: Update, context: CallbackContext):
                     f"<b>⚠️ Error when trying to edit post in Channel {lang.lang_key}</b>\n"
                     f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                 )
+                pass

@@ -1,8 +1,9 @@
 import traceback
 
-import pytweet
 from telegram import Update
 from telegram.ext import ContextTypes
+
+from util.translation import translate_message
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -11,18 +12,7 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         print("--")
 
-        if len(update.message.photo) > 0:
-            file = await update.message.photo[-1].get_file()
-        elif update.message.video is not None:
-            file = await update.message.video.get_file()
-
-        path = file.file_path.split('/')[-1]
-        print("file to download:::: ", path)
-        await file.download(path)
-        print("-- download done")
-        f = pytweet.File(path)
-        print(f.path)
-        # os.remove(path)
+        await update.message.reply_text(translate_message("de", update.message.text_html_urled, None))
 
     except Exception as e:
         await update.message.reply_text("-------\n\nTEST FAIL\n\n-------")
