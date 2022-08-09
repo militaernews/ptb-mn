@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="test file storage heroku">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇵🇪.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇵🇪.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇷.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇷.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇹🇹.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇹🇹.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇺🇲.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇲.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇺🇸.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇺🇸.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/flag_es.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_es.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/meme.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/meme.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/flag_pt.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_pt.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +65,7 @@
       <recent name="$PROJECT_DIR$/messages" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager">
     <configuration name="helper" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="ptb-mn" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -208,7 +200,7 @@
       <workItem from="1659815735907" duration="3121000" />
       <workItem from="1659980106812" duration="864000" />
       <workItem from="1660026811408" duration="892000" />
-      <workItem from="1660049238506" duration="928000" />
+      <workItem from="1660049238506" duration="2354000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -441,7 +433,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659817971372</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="fix">
+      <created>1660050189849</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1660050189849</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -471,18 +470,18 @@
     <MESSAGE value="peony doesn't work, some fixes" />
     <MESSAGE value="single files are now posted to twitter" />
     <MESSAGE value="tweet breaking" />
-    <MESSAGE value="fix" />
     <MESSAGE value="placeholders for translation" />
     <MESSAGE value="fix placeholders" />
     <MESSAGE value="fix edit caption?" />
     <MESSAGE value="upload videos to twitter, fixes" />
     <MESSAGE value="test file storage heroku" />
-    <option name="LAST_COMMIT_MESSAGE" value="test file storage heroku" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
-    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1659980222293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1660050161981" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
+    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1660051451515" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$twitter.coverage" NAME="twitter Coverage Results" MODIFIED="1659601080632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$playground.coverage" NAME="playground Coverage Results" MODIFIED="1659798212823" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
     <SUITE FILE_PATH="coverage/ptb_mn$config.coverage" NAME="config Coverage Results" MODIFIED="1659108625070" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

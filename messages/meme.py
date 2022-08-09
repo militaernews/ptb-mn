@@ -2,15 +2,14 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 import config
-from data.lang import ENGLISH, GERMAN
+from data.lang import ENGLISH, GERMAN, languages
 
 
 async def post_media_meme(update: Update, context: CallbackContext):
     if update.channel_post.media_group_id is None:
         await add_footer_meme(update, context)
-        return
 
-    if update.channel_post.media_group_id not in context.bot_data:
+    elif update.channel_post.media_group_id not in context.chat_data:
         await add_footer_meme(update, context)
 
         context.job_queue.run_once(
@@ -22,24 +21,21 @@ async def post_media_meme(update: Update, context: CallbackContext):
 
 
 # TODO: make method more generic
+# TODO: apply footer only to 1st entry of mediagroup
 async def add_footer_meme(update: Update, context: CallbackContext):
+    context.chat_data[update.channel_post.media_group_id] = update.channel_post.id
+
     if update.channel_post.caption is None:
         original_caption = ""
     else:
         original_caption = update.channel_post.caption_html_urled
 
-    if "#de" in original_caption:
-        footer = "Abonniere @MilitaerMemes für mehr!"
-        original_caption = original_caption.replace("#de", "")
-    else:
-        footer = "Subscribe to @MilitaerMemes for more"
-
     try:
-        await update.channel_post.edit_caption(f"{original_caption}\n\n🔰 {footer}")
 
+        await update.channel_post.edit_caption(format_meme_footer(original_caption))
+
+        # Unfortunately it is not possible for bots to forward a mediagroup as a whole.
         await update.channel_post.forward(chat_id=GERMAN.chat_id)
-        # TODO: iterate through all chats
-        await update.channel_post.forward(chat_id=ENGLISH.chat_id)
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -47,23 +43,20 @@ async def add_footer_meme(update: Update, context: CallbackContext):
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
 
+    if "#de" not in original_caption:
+        for lang in languages:
+            if lang.chat_id is not None:
+                await update.channel_post.forward(chat_id=lang.chat_id)
+
 
 async def remove_media_group_id(context: CallbackContext):
     del context.bot_data[context.job.context]
 
 
 async def post_text_meme(update: Update, context: CallbackContext):
-    original_text = update.channel_post.text_html_urled
-
-    if "#de" in original_text:
-        footer = "Abonniere @MilitaerMemes für mehr!"
-        original_text = original_text.replace("#de", "")
-    else:
-        footer = "Subscribe to @MilitaerMemes for more"
-
     try:
         await update.channel_post.edit_text(
-            f"{original_text}\n\n🔰 {footer}", disable_web_page_preview=False
+            format_meme_footer(update.channel_post.text_html_urled), disable_web_page_preview=False
         )
 
         await update.channel_post.forward(chat_id=GERMAN.chat_id)
@@ -74,3 +67,13 @@ async def post_text_meme(update: Update, context: CallbackContext):
             "<b>⚠️ Error when trying to send text in Channel meme</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
+
+
+def format_meme_footer(original_text: str) -> str:
+    if "#de" in original_text:
+        footer = "Abonniere @MilitaerMemes für mehr!"
+        original_text = original_text.replace("#de", "")
+    else:
+        footer = "Subscribe to @MilitaerMemes for more"
+
+    return f"{original_text}\n\n🔰 {footer}"
