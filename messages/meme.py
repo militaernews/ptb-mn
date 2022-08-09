@@ -50,7 +50,7 @@ async def add_footer_meme(update: Update, context: CallbackContext):
 
 
 async def remove_media_group_id(context: CallbackContext):
-    del context.bot_data[context.job.context]
+    del context.chat_data[context.job.context]
 
 
 async def post_text_meme(update: Update, context: CallbackContext):

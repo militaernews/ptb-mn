@@ -6,10 +6,11 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters
 
-from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, NYX
+from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, NYX, ADMINS
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
+from messages.admin import private_setup
 from messages.meme import post_media_meme, post_text_meme
 from messages.news import edit_channel_text, announcement, breaking_news, edit_channel, post_channel_text, \
     post_channel_english
@@ -38,6 +39,10 @@ if __name__ == "__main__":
     #      & filters.Chat(
     #         chat_id=[config.LOG_GROUP]),  # config.CHAT_DE, config.CHAT_DE
     #    join_member))
+
+
+
+    app.add_handler((MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup)))
 
     app.add_handler(MessageHandler(filters.Chat(NYX), flag_to_hashtag_test))
 
