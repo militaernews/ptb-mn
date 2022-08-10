@@ -1,6 +1,5 @@
 import logging
 import re
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from telegram.constants import ParseMode
@@ -39,8 +38,6 @@ if __name__ == "__main__":
     #      & filters.Chat(
     #         chat_id=[config.LOG_GROUP]),  # config.CHAT_DE, config.CHAT_DE
     #    join_member))
-
-
 
     app.add_handler((MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup)))
 

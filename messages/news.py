@@ -1,7 +1,6 @@
 import re
 from collections import defaultdict
 from dataclasses import dataclass
-
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       InputMediaVideo, Message, MessageEntity, MessageId,
                       Update)
@@ -413,7 +412,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
         try:
             msg: Message = await context.bot.send_message(
                 chat_id=lang.channel_id,
-                text=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n\n{lang.footer}",
+                text=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 reply_to_message_id=replies[lang.lang_key]
                 if replies is not None
                 else None,

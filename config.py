@@ -22,4 +22,4 @@ ADMINS = (
 )
 
 # Constants
-PLACEHOLDER = "×"
+PLACEHOLDER = "║"

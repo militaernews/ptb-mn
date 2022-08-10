@@ -1,7 +1,6 @@
+import deepl
 import os
 import re
-
-import deepl
 from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 from orjson import orjson

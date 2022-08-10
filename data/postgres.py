@@ -1,11 +1,10 @@
 import json
 from logging import getLogger
-from typing import Any, Dict, List, Optional, Tuple
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.sql import text
 from telegram.ext import DictPersistence
+from typing import Any, Dict, List, Optional, Tuple
 
 CDCData = Tuple[List[Tuple[str, float, Dict[str, Any]]], Dict[str, str]]
 
