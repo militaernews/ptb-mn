@@ -1,6 +1,7 @@
-import deepl
 import os
 import re
+
+import deepl
 from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 from orjson import orjson
@@ -76,7 +77,8 @@ def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str
     try:
         translated_text = translator.translate_text(text_to_translate,
                                                     target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
-                                                    tag_handling="html").text
+                                                    tag_handling="html",
+                                                    preserve_formatting=True).text
     except QuotaExceededException:
         print("--- Quota exceeded ---")
         translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)

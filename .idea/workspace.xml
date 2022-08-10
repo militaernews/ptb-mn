@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6c0a81a3-8096-4f77-a792-5dddf7dbb583" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -476,7 +475,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660056265150</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="fix">
+      <created>1660130507900</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1660130507900</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -511,8 +517,8 @@
     <MESSAGE value="fix edit caption?" />
     <MESSAGE value="upload videos to twitter, fixes" />
     <MESSAGE value="test file storage heroku" />
-    <MESSAGE value="fix" />
     <MESSAGE value="admins can append entries to bot_data" />
-    <option name="LAST_COMMIT_MESSAGE" value="admins can append entries to bot_data" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>
