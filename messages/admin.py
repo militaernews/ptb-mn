@@ -1,8 +1,9 @@
 import random
+from typing import Dict
+
 import requests
 from orjson import orjson
 from telegram import Poll, Update
-from typing import Dict
 
 import config
 from data.db import *
