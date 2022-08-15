@@ -40,7 +40,7 @@ if __name__ == "__main__":
     #         chat_id=[config.LOG_GROUP]),  # config.CHAT_DE, config.CHAT_DE
     #    join_member))
 
-    app.add_handler((MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup)))
+    app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
 
     app.add_handler(MessageHandler(filters.Chat(NYX), flag_to_hashtag_test))
 
