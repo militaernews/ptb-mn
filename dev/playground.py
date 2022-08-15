@@ -20,7 +20,7 @@ async def flag_to_hashtag_test(update: Update, context:ContextTypes.DEFAULT_TYPE
 
         print("--")
 
-        user =  await context.bot.get_chat("@n6y9x")
+        user =  await context.bot.get_chat("n6y9x")
 
         await update.message.reply_text(str(user.id))
 
