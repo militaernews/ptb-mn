@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import List
 
 import numpy as numpy
-import svgwrite
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,7 +19,7 @@ ENTRIES = [
     "Wunderwaffe",
     "Lindner verspricht",
     "SDF/YPG",
-    "Hartz IV",
+    "HartzIV",
     "Atomkrieg",
     "kampferprobt",
     "Spinner",
@@ -62,7 +61,7 @@ ENTRIES = [
     "Wehrmacht",
     "Unfall",
     "Ivan",
-    "NATO-Osterweiterung",
+    "NATO Osterweiterung",
     "Vorstoß",
     "T-14",
     "Armata",
@@ -141,51 +140,77 @@ def set_checked(word: str, fields: List[List[BingoField]]):
             print("check")
 
 
-# "<text style='font-size:3.175px;fill:#000000;stroke-width:0.264583' x='42.4465' y='32.978203' id='text277'>Test2</text>"
+rrr = generate_bingo_field()
 
-dwg = svgwrite.Drawing('test.svg', profile='tiny', size=(600, 600))
-dwg.add(dwg.line((0, 0), (100, 40), stroke=svgwrite.rgb(10, 10, 16, '%')))
-dwg.add(dwg.text('Test', insert=(0, 8), fill='red'))
-dwg.save()
-
-canvas_size = 1080
+all_width = 2500
+all_height = 2500
 
 svg = f"""<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <svg
-   width='{canvas_size}'
-   height='{canvas_size}'
-   viewBox='0 0 {canvas_size} {canvas_size}'
+   width='{all_width}'
+   height='{all_height}'
+   viewBox='0 0 {all_width} {all_height}'
    version='1.1'
    xmlns='http://www.w3.org/2000/svg'
    xmlns:svg='http://www.w3.org/2000/svg'>"""
 
-field_size = 3
+canvas_width = 1920
+canvas_height = 1080
+field_size = 5
 line_width = 6
-width_treshold = int((canvas_size - ((field_size - 1) * line_width)) / field_size + line_width)
-current_width = width_treshold
+height_treshold = int((canvas_height - (field_size * line_width)) / field_size + line_width)
+width_treshold = int((canvas_width - (
+            field_size * line_width)) / field_size + line_width)  # int((canvas_size - ((field_size - 1) * line_width)) / field_size + line_width)
+current_width = 0
 
-while current_width < canvas_size:
+svg_field = f"<svg width=\"{canvas_width}\" height=\"{canvas_height}\"  x=\"%50\" dy=\"1em\">"
+
+field_counter = 0
+curr_x = 0
+
+while current_width < canvas_width:
     print(current_width)
-    svg += f"""
-    <rect
-       style="fill:#1884cc;fill-opacity:1"
-       width="{canvas_size}"
-       height="6"
-       x="0"
-       y="{current_width - line_width}" />
-    <rect
-       style="fill:#1884cc;fill-opacity:1"   
-       width="6"
-       height="{canvas_size}"
-       x="{current_width - line_width}"
-       y="0" />
-"""
-    current_width += width_treshold
 
+    x_var = f"<svg width=\"{width_treshold}\" height=\"{height_treshold}\"  x=\"{current_width}\""
+    current_height = 0
+    curr_y = 0
+
+    while current_height < canvas_height:
+        print(current_height)
+
+        curr_field = rrr[curr_x][curr_y]
+        print(curr_field)
+
+        textss = curr_field.text.split(" ")
+        if len(textss)==1:
+            inner_text = f"""<tspan  x="50%" text-anchor="middle">{textss[0]}</tspan>"""
+        elif len(textss)==2:
+            inner_text = f"""<tspan  x="50%" text-anchor="middle" dy="1em" transform="translate(0 -1em)">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">{textss[0]}</tspan>"""
+        elif len(textss) == 3:
+            inner_text = f"""<tspan  x="50%" text-anchor="middle">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="1em">{textss[2]}</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">{textss[0]}</tspan>"""
+        else:
+            inner_text = "TOO LONG"
+
+        svg_field += f"""
+        {x_var} y="{current_height}" text-align="center">
+       <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside"  fill="#2a1a3f" />
+       <text y="50%" font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white" >{inner_text}</text>
+     </svg>
+"""
+        curr_y += 1
+        current_height += height_treshold
+    curr_x+=1
+    current_width += width_treshold
 
 print("lines done, now text -----------------")
 
+svg_field += "</svg>"
 
+svg += svg_field
+
+svg += f"""
+<text dy="1em" x="50%" font-size="56px" font-family="Arial" dominant-baseline="middle" fill="white" >Subscribe to MNCHAT</text>
+"""
 
 svg += "</svg>"
 
