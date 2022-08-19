@@ -15,7 +15,7 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
 
         # await update.message.reply_text(translate_message("de", update.message.text_html_urled, None))
 
-        with open("dev/bitmap.svg", "rb") as f:
+        with open("dev/tesdt2.svg", "rb") as f:
             with Image(blob=f.read(), format="svg") as image:
                 png_image = image.make_blob("png")
 

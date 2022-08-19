@@ -7,6 +7,9 @@
    id="svg16"
    sodipodi:docname="test2.svg"
    inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   inkscape:export-filename="tesdt2.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -82,17 +85,20 @@
   <text
      xml:space="preserve"
      id="text232"
-     style="white-space:pre;shape-inside:url(#rect234);shape-padding:3.00001;fill:#000000"
+     style="white-space:pre;shape-inside:url(#rect234);shape-padding:3.00001;display:inline;fill:#000000"
      transform="translate(-63.525312,-47.379127)"><tspan
-       x="62.445312"
-       y="56.559127"
-       id="tspan369">Ukraine beschießt Zivilisten</tspan></text>
+       sodipodi:role="line"
+       id="tspan236">Ukraine beschießt Zivilisten</tspan></text>
   <text
      xml:space="preserve"
      id="text294"
-     style="fill:#000000;white-space:pre;shape-inside:url(#rect296)" />
+     style="white-space:pre;shape-inside:url(#rect296);display:inline;fill:#000000"><tspan
+       sodipodi:role="line"
+       id="tspan298"></tspan></text>
   <text
      xml:space="preserve"
      id="text300"
-     style="fill:#000000;white-space:pre;shape-inside:url(#rect302)" />
+     style="white-space:pre;shape-inside:url(#rect302);display:inline;fill:#000000"><tspan
+       sodipodi:role="line"
+       id="tspan304"></tspan></text>
 </svg>

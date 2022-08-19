@@ -149,7 +149,6 @@ dwg.add(dwg.text('Test', insert=(0, 8), fill='red'))
 dwg.save()
 
 canvas_size = 1080
-field_size = 3
 
 svg = f"""<?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <svg
@@ -160,32 +159,33 @@ svg = f"""<?xml version='1.0' encoding='UTF-8' standalone='no'?>
    xmlns='http://www.w3.org/2000/svg'
    xmlns:svg='http://www.w3.org/2000/svg'>"""
 
+field_size = 3
 line_width = 6
-field_width = int(canvas_size / field_size)
-print(field_width)
-print(field_width-int(line_width/2))
-print(line_width/2)
-print("---")
+width_treshold = int((canvas_size - ((field_size - 1) * line_width)) / field_size + line_width)
+current_width = width_treshold
 
-field_nr = 0
-
-for i in range(field_width-int(line_width/2), canvas_size, field_width):
-    print(i)
+while current_width < canvas_size:
+    print(current_width)
     svg += f"""
     <rect
        style="fill:#1884cc;fill-opacity:1"
        width="{canvas_size}"
        height="6"
        x="0"
-       y="{i+field_nr*int(line_width/2) }" />
+       y="{current_width - line_width}" />
     <rect
        style="fill:#1884cc;fill-opacity:1"   
        width="6"
        height="{canvas_size}"
-       x="{i +field_nr*int(line_width/2) }"
+       x="{current_width - line_width}"
        y="0" />
 """
-    field_nr += 1
+    current_width += width_treshold
+
+
+print("lines done, now text -----------------")
+
+
 
 svg += "</svg>"
 
