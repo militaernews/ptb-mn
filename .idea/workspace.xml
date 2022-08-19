@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="test" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="test">
+      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/bitmap.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/test2.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messages/bingo.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messages/test.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,18 +56,21 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nyx/Downloads/Telegram Desktop/ptb-mn/main.py&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/nyx/PycharmProjects/ptb-mn/messages&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/messages" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/dev" />
       <recent name="$PROJECT_DIR$/scripts" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$/data" />
-      <recent name="$PROJECT_DIR$/messages" />
     </key>
   </component>
   <component name="RunManager">
@@ -134,6 +146,9 @@
       <workItem from="1660287643856" duration="634000" />
       <workItem from="1660321923725" duration="3492000" />
       <workItem from="1660545812740" duration="1053000" />
+      <workItem from="1660547003318" duration="299000" />
+      <workItem from="1660811483969" duration="17703000" />
+      <workItem from="1660883676028" duration="7446000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -408,7 +423,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660546830246</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="test">
+      <created>1660547014712</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1660547014712</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -448,29 +470,14 @@
     <MESSAGE value="test" />
     <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/dev/playground.py</url>
-          <line>22</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/dev/playground.py</url>
-          <line>16</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
+    <SUITE FILE_PATH="coverage/ptb_mn$bingo.coverage" NAME="bingo Coverage Results" MODIFIED="1660895995700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/messages" />
     <SUITE FILE_PATH="coverage/ptb_mn$admin.coverage" NAME="admin Coverage Results" MODIFIED="1660054275843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/messages" />
-    <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1660332864488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
-    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1660546741413" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1660884040625" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
+    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1660884051986" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$twitter.coverage" NAME="twitter Coverage Results" MODIFIED="1659601080632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ptb_mn$playground.coverage" NAME="playground Coverage Results" MODIFIED="1659798212823" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
+    <SUITE FILE_PATH="coverage/ptb_mn$playground.coverage" NAME="playground Coverage Results" MODIFIED="1660846028448" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
     <SUITE FILE_PATH="coverage/ptb_mn$config.coverage" NAME="config Coverage Results" MODIFIED="1659108625070" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$helper.coverage" NAME="helper Coverage Results" MODIFIED="1660546140009" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
   </component>
