@@ -27,12 +27,37 @@
      height="6"
      x="0"
      y="718"
-     id="rect6" /><g>
-     <svg width="200" height="100" x="718" y="718">
-       <rect x="0" y="0" width="200" height="100" stroke="red" stroke-width="3px" fill="white"/>
-       <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">TEXT</text>
+     id="rect6" />
+
+
+     157.4375
+
+
+
+     <svg width="356" height="356"  x="362" y="724" text-align="center">
+       <rect x="0" y="0" width="356" height="356"   stroke="#1884cc" stroke-width="6px"   fill="#2a1a3f" />
+       <text y="50%" font-size="56px" font-family="Arial" dominant-baseline="middle" fill="white" ><tspan  x="50%" text-anchor="middle">beschießt</tspan><tspan  x="50%" text-anchor="middle" dy="1em">Zivilisten</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">Ukraine</tspan></text>
      </svg>
-</g>
+
+     <svg width="356" height="356"  x="718" y="718">
+       <rect x="0" y="0" width="356" height="356" stroke="red" stroke-width="6px"  fill="#32a852" />
+
+
+       <text x="50%" y="50%" fill="white" font-size="56px"   dominant-baseline="central" font-family="Arial"  stroke="yellow"  text-anchor="middle">Ukraine<tspan   x="50%" dy="56px">beschießt</tspan><tspan  x="50%"  dy="56px">Zivilisten</tspan><tspan  x="50%"  dy="56px">Zivilisten</tspan><tspan  x="50%"  dy="56px">Zivilisten</tspan><tspan  x="50%"  dy="56px">Zivilisten</tspan>
+       </text>
+
+     </svg>
+
+     <svg width="356" height="356"  x="0" y="718">
+       <rect x="0" y="0" width="100%" height="100%" stroke="red" stroke-width="6px"  fill="#32a852" />
+
+
+       <text x="50%" y="50%" fill="white" transform="translate(0 -height/2)" font-size="56px"   dominant-baseline="middle"   font-family="Arial"  text-anchor="middle"><tspan  x="50%"  dy="0" >Ukraine</tspan><tspan   x="50%" dy="1em">beschießt</tspan><tspan   x="50%"  dy="1em">Zivilisten</tspan>
+       </text>
+
+     </svg>
+
+
      <g>
   <rect
          fill="#1884cc"
@@ -44,7 +69,7 @@
 
 
 
-   <text dx="50" dy="101.5" fill="white" font-size="56px"  dominant-baseline="central" font-family="Arial" text-anchor="middle">Ukraine
+   <text dx="50%" dy="201.5"  fill="#1884cc" font-size="56px"  dominant-baseline="central" font-family="Arial" text-anchor="middle">Ukraine
    <tspan  x="540"  dy="56px">beschießt</tspan>
      <tspan  x="540"  dy="56px">Zivilisten</tspan>
    </text>

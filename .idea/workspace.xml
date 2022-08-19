@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="bingo">
-      <change afterPath="$PROJECT_DIR$/dev/tesddt2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/tesdt2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/tesdt2.svg.2022_08_19_15_23_21.0.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/tesdt2.svg.2022_08_19_15_23_21.1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/test2.svg.2022_08_19_11_50_11.0.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/test2.svg.2022_08_19_11_50_11.1.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/test2.svg.2022_08_19_11_50_11.2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/test2.svg.2022_08_19_15_23_21.2.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/test2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/dev/test2.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/bingo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/tesdt2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/dev/tesdt2.svg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,7 +142,7 @@
       <workItem from="1660545812740" duration="1053000" />
       <workItem from="1660547003318" duration="299000" />
       <workItem from="1660811483969" duration="17703000" />
-      <workItem from="1660883676028" duration="11518000" />
+      <workItem from="1660883676028" duration="12724000" />
     </task>
     <task id="LOCAL-00001" summary="refactor, dependency bump, fixes">
       <created>1659110100995</created>
@@ -441,7 +431,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660896137524</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="bingo">
+      <created>1660916138193</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1660916138193</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
