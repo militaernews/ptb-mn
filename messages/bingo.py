@@ -15,7 +15,7 @@ ENTRIES = [
     "wirkungsvoll",
     "Biden",
     "Schwurbler",
-    "böse NATO",
+    "böse_NATO",
     "Wunderwaffe",
     "Lindner verspricht",
     "SDF/YPG",
@@ -28,7 +28,7 @@ ENTRIES = [
     "Entnazifizieren",
     "HIMARS",
     "Krim",
-    "Russland droht",
+    "Russland_droht",
     "Biolabor",
     "Schlangeninsel",
     "Faschist",
@@ -50,7 +50,7 @@ ENTRIES = [
     "Trump",
     "Schwarzmarkt",
     "einsatzbereit",
-    "Putin macht bald ernst",
+    "Putin_macht bald_ernst",
     "Militärexperte",
     "Zweiter Weltkrieg",
     "Palästina",
@@ -65,23 +65,23 @@ ENTRIES = [
     "Vorstoß",
     "T-14",
     "Armata",
-    "Kämpf doch selbst",
+    "Kämpf_doch selbst",
     "Propaganda",
     "Taliban",
     "Wahrheit",
-    "Aber die USA",
+    "Aber_die_USA",
     "Ukraine beschießt Zivilisten",
     "Munitionsdepot",
     "Selenski fordert",
-    "Man muss verhandeln",
+    "Man_muss verhandeln",
     "Gas",
     "Bayraktar-TB2",
     "Quelle?",
     "Hostomel",
     "Elite",
-    "8 Jahre",
+    "8_Jahre",
     "Genozid",
-    "seit 2014"
+    "seit_2014"
 ]
 
 
@@ -152,7 +152,16 @@ svg = f"""<?xml version='1.0' encoding='UTF-8' standalone='no'?>
    viewBox='0 0 {all_width} {all_height}'
    version='1.1'
    xmlns='http://www.w3.org/2000/svg'
-   xmlns:svg='http://www.w3.org/2000/svg'>"""
+   xmlns:svg='http://www.w3.org/2000/svg'>
+   <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#731173;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#400840;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+    <rect x="0" y="0" width="100%" height="100%"  fill="url(#grad1)" />
+<text y="{25}" x="50%" font-size="56px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan  x="50%" font-weight="bold" text-anchor="middle">MilitaerNews-Bullshit-Bingo: Runde 0</tspan><tspan dy="1em" x="50%" text-anchor="middle">Hier kommen Regeln hin.</tspan></text>
+"""
 
 canvas_width = 1920
 canvas_height = 1080
@@ -160,10 +169,12 @@ field_size = 5
 line_width = 6
 height_treshold = int((canvas_height - (field_size * line_width)) / field_size + line_width)
 width_treshold = int((canvas_width - (
-            field_size * line_width)) / field_size + line_width)  # int((canvas_size - ((field_size - 1) * line_width)) / field_size + line_width)
+        field_size * line_width)) / field_size + line_width)  # int((canvas_size - ((field_size - 1) * line_width)) / field_size + line_width)
 current_width = 0
 
-svg_field = f"<svg width=\"{canvas_width}\" height=\"{canvas_height}\"  x=\"%50\" dy=\"1em\">"
+svg_field = f"""
+<svg width="{canvas_width}" height="{canvas_height}"  x="{int((all_width-canvas_width)/2)}" dy="24">
+"""
 
 field_counter = 0
 curr_x = 0
@@ -182,24 +193,35 @@ while current_width < canvas_width:
         print(curr_field)
 
         textss = curr_field.text.split(" ")
-        if len(textss)==1:
-            inner_text = f"""<tspan  x="50%" text-anchor="middle">{textss[0]}</tspan>"""
-        elif len(textss)==2:
-            inner_text = f"""<tspan  x="50%" text-anchor="middle" dy="1em" transform="translate(0 -1em)">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">{textss[0]}</tspan>"""
-        elif len(textss) == 3:
-            inner_text = f"""<tspan  x="50%" text-anchor="middle">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="1em">{textss[2]}</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">{textss[0]}</tspan>"""
+        for index, value in enumerate(textss):
+            textss[index] = value.replace("_", " ")
+
+        inner_text = """<text  font-size="48px" font-family="Arial" dominant-baseline="middle" """
+
+        if not curr_field.checked:
+            inner_text += """text-decoration="line-through" fill="gray" 
+            """
         else:
-            inner_text = "TOO LONG"
+            inner_text += "fill=\"white\" "
+
+        if len(textss) == 1:
+            inner_text += f""" y="50%"><tspan  x="50%" text-anchor="middle">{textss[0]}</tspan>"""
+        elif len(textss) == 2:
+            inner_text += f""" y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">{textss[0]}</tspan>"""
+        elif len(textss) == 3:
+            inner_text += f"""y="50%"><tspan  x="50%" text-anchor="middle">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="1em">{textss[2]}</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">{textss[0]}</tspan>"""
+        else:
+            inner_text = "> TOO LONG"
 
         svg_field += f"""
         {x_var} y="{current_height}" text-align="center">
        <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside"  fill="#2a1a3f" />
-       <text y="50%" font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white" >{inner_text}</text>
+       {inner_text}</text>
      </svg>
 """
         curr_y += 1
         current_height += height_treshold
-    curr_x+=1
+    curr_x += 1
     current_width += width_treshold
 
 print("lines done, now text -----------------")
@@ -209,7 +231,8 @@ svg_field += "</svg>"
 svg += svg_field
 
 svg += f"""
-<text dy="1em" x="50%" font-size="56px" font-family="Arial" dominant-baseline="middle" fill="white" >Subscribe to MNCHAT</text>
+
+<text y="{all_height-100}" x="50%" font-size="56px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan  x="50%" text-anchor="middle">🔰 Nachrichten rund um Militärische/Protest Aktionen weltweit  und brandaktuell 🔰</tspan><tspan dy="1em" x="50%" text-anchor="middle">@MNChat @MilitaerNews</tspan></text>
 """
 
 svg += "</svg>"

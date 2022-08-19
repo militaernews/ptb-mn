@@ -32,6 +32,11 @@
 
      157.4375
 
+     <svg width="384" height="216"  x="728" y="216" text-align="center">
+    <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside"  fill="#2a1a3f" />
+    <text y="40%" font-size="48px" font-family="Arial" dominant-baseline="middle" text-decoration="line-through" fill="gray"
+           ><tspan  x="50%" text-anchor="middle" dy="1em">verurteilt</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">Baerbock</tspan></text>
+   </svg>
 
 
      <svg width="356" height="356"  x="362" y="724" text-align="center">
