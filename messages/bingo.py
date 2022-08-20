@@ -261,6 +261,8 @@ async def filter_message(update: Update, context: CallbackContext):
 
 async def bingo_field(update: Update, context: CallbackContext):
     try:
+        if "bingo" not in context.bot_data:
+            context.bot_data["bingo"] = generate_bingo_field()
         create_svg(context.bot_data["bingo"])
         with open("field.png", "rb") as f:
             await update.message.reply_photo(photo=f,
