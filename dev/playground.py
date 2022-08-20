@@ -3,7 +3,8 @@ import traceback
 from telegram import Update
 from telegram.ext import ContextTypes
 from wand.image import Image
-
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPM
 from messages import bingo
 from messages.bingo import create_svg
 
@@ -26,9 +27,17 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
 
         with open("dev/field.svg", "rb") as f:
             with Image(blob=f.read(), format="svg") as image:
-                png_image = image.make_blob("png")
+                image.compression_quality = 100
+
+                png_image = image.make_blob("jpg")
 
                 await update.message.reply_photo(photo=png_image)
+
+        drawing = svg2rlg("dev/field.svg")
+        renderPM.drawToFile(drawing, "dev/my.jpg", fmt="JPG", bg=0x00231e)
+
+        with open("dev/my.jpg", "rb") as f:
+                await update.message.reply_photo(photo=f)
 
         await update.message.reply_text(str(bingo.check_win(context.bot_data["bingo"])))
 

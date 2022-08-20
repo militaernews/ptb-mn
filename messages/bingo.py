@@ -1,5 +1,6 @@
 import random
 from dataclasses import dataclass
+import datetime
 from typing import List
 
 import numpy as numpy
@@ -141,8 +142,13 @@ def set_checked(word: str, fields: List[List[BingoField]]):
 
 
 def create_svg(field: List[List[BingoField]]):
-    all_width = 2200
-    all_height = 1500
+    all_width = 2460
+    all_height = 1460
+
+    canvas_width = 2360
+    canvas_height = 1200
+    border_distance = int((all_width-canvas_width)/2)
+    print("border_distance",border_distance)
 
     svg = f"""<?xml version='1.0' encoding='UTF-8' standalone='no'?>
     <svg
@@ -152,29 +158,22 @@ def create_svg(field: List[List[BingoField]]):
        version='1.1'
        xmlns='http://www.w3.org/2000/svg'
        xmlns:svg='http://www.w3.org/2000/svg'>
-       <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#731173;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#400840;stop-opacity:1" />
-        </linearGradient>
-      </defs>
-        <rect x="0" y="0" width="100%" height="100%"  fill="#52237a" />
-    <text y="60" x="50%" font-size="56px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" font-weight="bold" text-anchor="middle">Bullshit-Bingo: Runde 0</tspan></text>
-    <text y="140" x="50%" font-size="40px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" text-anchor="middle">Wenn eine im MN-Chat gesendete Nachricht auf dem Spielfeld vorkommendende Begriffe enthält, werden diese rausgestrichen.</tspan><tspan dy="1.2em" x="50%" text-anchor="middle">Ist eine gesamte Zeile oder Spalte durchgestrichen, dann heißt es BINGO! 🥳 und eine neue Runde startet.</tspan></text>
-
+      
+    <text y="{border_distance+60}" x="50%" font-size="60px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" font-weight="bold" text-anchor="middle">Militär-News Bullshit-Bingo</tspan></text>
     """
 
-    canvas_width = 2020
-    canvas_height = 1080
     field_size = 5
-    line_width = 6
+    line_width = 2
+
+    line_half = int(line_width/2)
     height_treshold = int((canvas_height - (field_size * line_width)) / field_size + line_width)
     width_treshold = int((canvas_width - (
             field_size * line_width)) / field_size + line_width)  # int((canvas_size - ((field_size - 1) * line_width)) / field_size + line_width)
     current_width = 0
 
+
     svg_field = f"""
-    <svg width="{canvas_width}" height="{canvas_height}"  x="{int((all_width - canvas_width) / 2)}" y="240">
+    <svg width="{canvas_width}" height="{canvas_height}"  x="{border_distance-line_half }" y="170"    viewBox='{-line_half} {-line_half} {canvas_width+line_half } {canvas_height+line_half}'>
     """
 
     field_counter = 0
@@ -197,16 +196,15 @@ def create_svg(field: List[List[BingoField]]):
             for index, value in enumerate(textss):
                 textss[index] = value.replace("_", " ")
 
-            inner_text = """<text  font-size="48px" font-family="Arial" dominant-baseline="middle" """
+            inner_text = """<text  font-size="48px" font-family="Arial" dominant-baseline="central" """
 
             if  curr_field.checked:
-                inner_text += """text-decoration="line-through" fill="gray" 
-                """
+                inner_text += "fill=\"#e8cc00\" "
             else:
                 inner_text += "fill=\"white\" "
 
             if len(textss) == 1:
-                inner_text += f""" dy="50%"><tspan  x="50%" text-anchor="middle">{textss[0]}</tspan>"""
+                inner_text += f""" y="50%"><tspan  x="50%" text-anchor="middle">{textss[0]}</tspan>"""
             elif len(textss) == 2:
                 inner_text += f""" y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">{textss[0]}</tspan>"""
             elif len(textss) == 3:
@@ -216,7 +214,7 @@ def create_svg(field: List[List[BingoField]]):
 
             svg_field += f"""
             {x_var} y="{current_height}" text-align="center">
-           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#2c5a2b" stroke-width="6px" paint-order="fill" fill="#002a24"  />
            {inner_text}</text>
          </svg>
     """
@@ -231,11 +229,11 @@ def create_svg(field: List[List[BingoField]]):
 
     svg += svg_field
 
-    svg += f"""
-    <text y="{all_height - 120}" x="50%" font-size="50px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan  x="50%" text-anchor="middle">🔰 Nachrichten rund um Militäraktionen und Proteste - weltweit und brandaktuell 🔰</tspan><tspan dy="1.2em" x="50%" text-anchor="middle">@MNChat @MilitaerNews</tspan></text>
-    """
 
-    svg += "</svg>"
+
+    svg += f"""
+    <text y="{all_height-border_distance}" x="{all_width-border_distance}" font-size="26px" font-family="Arial" dominant-baseline="middle"  text-anchor="end" fill="gray" >zuletzt aktualisiert {datetime.datetime.now().strftime("%d.%m.%Y, %H:%M:%S")}</text>
+    </svg>"""
 
     print(svg)
 
