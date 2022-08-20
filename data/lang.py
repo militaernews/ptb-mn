@@ -16,7 +16,7 @@ class Language:
 GERMAN = Language(
     "de",  # German
     -1001240262412,  # https://t.me/MilitaerNews
-    "\n🔰 Abonnieren Sie @MilitaerNews\n🔰 Tritt uns bei @MNChat",
+    "\n🔰 Abonniere @MilitaerNews\n🔰 Diskutiere im @MNChat",
     "EILMELDUNG",
     "MITTEILUNG",
     -1001526741474,  # https://t.me/MNChat
