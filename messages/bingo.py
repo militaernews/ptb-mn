@@ -87,7 +87,23 @@ ENTRIES = [
     "Elite",
     "8_Jahre",
     "Genozid",
-    "seit_2014"
+    "seit_2014",
+    "Irpin",
+    "Butcha",
+    "Klitschko",
+    "Chornobayivka",
+    "Butscha",
+    "Lipp",
+    "Ork",
+    "Belgorod",
+    "kapitulieren",
+    "aufgeben",
+    "Vakuumbomben",
+    "thermobarisch",
+    "sanktionieren",
+    "russophob",
+    "Eskalation",
+    "AKW"
 ]
 
 
