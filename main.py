@@ -4,13 +4,14 @@ import re
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from telegram.constants import ParseMode
-from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters
+from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler
 
 from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, NYX, ADMINS
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
 from messages.admin import private_setup
+from messages.bingo import bingo_field, filter_message
 from messages.meme import post_media_meme, post_text_meme
 from messages.news import edit_channel_text, announcement, breaking_news, edit_channel, post_channel_text, \
     post_channel_english
@@ -33,15 +34,7 @@ if __name__ == "__main__":
     app = ApplicationBuilder().token(TOKEN).defaults(Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True)) \
         .persistence(PostgresPersistence(url=DATABASE_URL, session=session)).build()
 
-    #   dp.add_handler(
-    #  MessageHandler(
-    #       Filters.status_update.new_chat_members
-    #      & filters.Chat(
-    #         chat_id=[config.LOG_GROUP]),  # config.CHAT_DE, config.CHAT_DE
-    #    join_member))
-
     app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
-
     app.add_handler(MessageHandler(filters.Chat(NYX), flag_to_hashtag_test))
 
     app.add_handler(
@@ -49,7 +42,6 @@ if __name__ == "__main__":
             filters.UpdateType.CHANNEL_POST &
             (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
             & filters.Chat(chat_id=CHANNEL_MEME), post_media_meme))
-
     app.add_handler(
         MessageHandler(filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=CHANNEL_MEME),
                        post_text_meme))
@@ -58,7 +50,6 @@ if __name__ == "__main__":
         filters.UpdateType.CHANNEL_POST &
         (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
         & filters.Chat(chat_id=GERMAN.channel_id), post_channel_english))
-
     app.add_handler(MessageHandler(
         filters.UpdateType.EDITED_CHANNEL_POST &
         (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
@@ -68,7 +59,6 @@ if __name__ == "__main__":
         MessageHandler(
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Regex(re.compile(r"#eilmeldung", re.IGNORECASE)),
             breaking_news))
-
     app.add_handler(
         MessageHandler(
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Regex(re.compile(r"#mitteilung", re.IGNORECASE)),
@@ -78,10 +68,12 @@ if __name__ == "__main__":
         MessageHandler(
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
             post_channel_text))
-
     app.add_handler(
         MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
                        edit_channel_text))
+
+    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
+    app.add_handler(MessageHandler(filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS), filter_message))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace

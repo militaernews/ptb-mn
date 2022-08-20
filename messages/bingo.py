@@ -3,8 +3,13 @@ import random
 from dataclasses import dataclass
 from typing import List
 
+import cairosvg
 import numpy as numpy
 from dotenv import load_dotenv
+from telegram import Update
+from telegram.ext import CallbackContext
+
+from data.lang import GERMAN
 
 load_dotenv()
 
@@ -92,20 +97,15 @@ class BingoField:
     checked: bool = False
 
 
+field_size = 5
+
+
 def generate_bingo_field():
     random.shuffle(ENTRIES)
 
     outer = list()
 
-    #   for x in range(1, 4):
-    #
-    #     inner = list()
-    #    for y in range(1, 4):
-    #       inner.append(BingoField(ENTRIES[x + y]))
-    #
-    # outer.append(inner)
-
-    for x in range(1, 5 * 5, 5):
+    for x in range(1, field_size * field_size, field_size):
         inner = list()
         print(x)
 
@@ -133,12 +133,16 @@ def check_win(fields: List[List[BingoField]]):
     return False
 
 
-def set_checked(word: str, fields: List[List[BingoField]]):
+def set_checked(text: str, fields: List[List[BingoField]]):
+    found = False
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
-        if item.text == word:
+        if item.text.replace("_", " ").lower() in text.lower():
             item.checked = True
-            print("check")
+            found = True
+            print(f"{text} is a valid bingo entry")
+
+    return found
 
 
 def create_svg(field: List[List[BingoField]]):
@@ -162,20 +166,17 @@ def create_svg(field: List[List[BingoField]]):
     <text y="{border_distance + 60}" x="50%" font-size="60px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" font-weight="bold" text-anchor="middle">Militär-News Bullshit-Bingo</tspan></text>
     """
 
-    field_size = 5
     line_width = 2
-
     line_half = int(line_width / 2)
     height_treshold = int((canvas_height - (field_size * line_width)) / field_size + line_width)
     width_treshold = int((canvas_width - (
-            field_size * line_width)) / field_size + line_width)  # int((canvas_size - ((field_size - 1) * line_width)) / field_size + line_width)
+            field_size * line_width)) / field_size + line_width)
     current_width = 0
 
     svg_field = f"""
     <svg width="{canvas_width}" height="{canvas_height}"  x="{border_distance - line_half}" y="170"    viewBox='{-line_half} {-line_half} {canvas_width + line_half} {canvas_height + line_half}'>
     """
 
-    field_counter = 0
     curr_x = 0
 
     while current_width < canvas_width:
@@ -234,4 +235,35 @@ def create_svg(field: List[List[BingoField]]):
 
     print(svg)
 
-    return svg
+    cairosvg.svg2png(bytestring=svg, write_to='field.png', background_color="#00231e")
+
+
+async def filter_message(update: Update, context: CallbackContext):
+    text = update.message.text.lower()
+
+    if 1 == 2:
+        print("Spam detected")
+    # todo: filter and report
+
+    elif datetime.datetime.now().weekday() == 6:  # Sunday
+        print("checking bingo...")
+        if "bingo" not in context.bot_data:
+            context.bot_data["bingo"] = generate_bingo_field()
+            create_svg(context.bot_data["bingo"])
+
+        if set_checked(text, context.bot_data["bingo"]) and check_win(context.bot_data["bingo"]):
+            create_svg(context.bot_data["bingo"])
+            with open("field.png", "rb") as f:
+                await update.message.reply_photo(photo=f,
+                                                 caption=f"<b>BINGO! 🥳</b>\n\n {update.message.from_user.name} hat den letzten Begriff beigetragen. So sah das Spielfeld am Ende aus.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
+            context.bot_data["bingo"] = generate_bingo_field()
+
+
+async def bingo_field(update: Update, context: CallbackContext):
+    try:
+        create_svg(context.bot_data["bingo"])
+        with open("field.png", "rb") as f:
+            await update.message.reply_photo(photo=f,
+                                             caption=f"<b>Militär-News Bullshit-Bingo</b>\n\nWenn eine im @MNChat gesendete Nachricht auf dem Spielfeld vorkommendende Begriffe enthält, werden diese rausgestrichen.\n\nIst eine gesamte Zeile oder Spalte durchgestrichen, dann heißt es <b>BINGO!</b> und eine neue Runde startet.\n{GERMAN.footer}")
+    except FileNotFoundError as e:
+        print("No field yet")
