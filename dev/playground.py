@@ -5,6 +5,7 @@ from telegram.ext import ContextTypes
 from wand.image import Image
 
 from messages import bingo
+from messages.bingo import create_svg
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -15,15 +16,19 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
 
         # await update.message.reply_text(translate_message("de", update.message.text_html_urled, None))
 
-        with open("dev/tesdt2.svg", "rb") as f:
+        if "bingo" not in context.bot_data:
+            context.bot_data["bingo"] = bingo.generate_bingo_field()
+
+        bingo.set_checked(update.message.text, context.bot_data["bingo"])
+
+        with open("dev/field.svg", "w") as f:
+            f.write(create_svg(context.bot_data["bingo"]))
+
+        with open("dev/field.svg", "rb") as f:
             with Image(blob=f.read(), format="svg") as image:
                 png_image = image.make_blob("png")
 
                 await update.message.reply_photo(photo=png_image)
-
-        if "bingo" not in context.bot_data:
-            context.bot_data["bingo"] = bingo.generate_bingo_field()
-        bingo.set_checked(update.message.text, context.bot_data["bingo"])
 
         await update.message.reply_text(str(bingo.check_win(context.bot_data["bingo"])))
 

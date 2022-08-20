@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+    <svg
+       width='2200'
+       height='1500'
+       viewBox='0 0 2200 1500'
+       version='1.1'
+       xmlns='http://www.w3.org/2000/svg'
+       xmlns:svg='http://www.w3.org/2000/svg'>
+       <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#731173;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#400840;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+        <rect x="0" y="0" width="100%" height="100%"  fill="#52237a" />
+    <text y="60" x="50%" font-size="56px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" font-weight="bold" text-anchor="middle">Bullshit-Bingo: Runde 0</tspan></text>
+    <text y="140" x="50%" font-size="40px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" text-anchor="middle">Wenn eine im MN-Chat gesendete Nachricht auf dem Spielfeld vorkommendende Begriffe enthält, werden diese rausgestrichen.</tspan><tspan dy="1.2em" x="50%" text-anchor="middle">Ist eine gesamte Zeile oder Spalte durchgestrichen, dann heißt es BINGO! 🥳 und eine neue Runde startet.</tspan></text>
+
+    
+    <svg width="2020" height="1080"  x="90" y="240">
+    
+            <svg width="404" height="216"  x="0" y="0" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Reichsbürger</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="0" y="216" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Frontverlauf</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="0" y="432" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">fordert</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">Selenski</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="0" y="648" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">warnt</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">Lauterbach</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="0" y="864" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">HIMARS</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="404" y="0" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Vorstoß</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="404" y="216" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Taliban</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="404" y="432" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Palästina</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="404" y="648" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">8 Jahre</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="404" y="864" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" text-decoration="line-through" fill="gray" 
+                 dy="50%"><tspan  x="50%" text-anchor="middle">Israel</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="808" y="0" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" text-decoration="line-through" fill="gray" 
+                 dy="50%"><tspan  x="50%" text-anchor="middle">Gas</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="808" y="216" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">verspricht</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">Lindner</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="808" y="432" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Unfall</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="808" y="648" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Schlangeninsel</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="808" y="864" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Russland droht</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1212" y="0" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" text-decoration="line-through" fill="gray" 
+                 dy="50%"><tspan  x="50%" text-anchor="middle">Alina</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1212" y="216" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">verurteilt</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">Baerbock</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1212" y="432" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Trump</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1212" y="648" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Wehrmacht</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1212" y="864" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Bayraktar-TB2</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1616" y="0" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">Osterweiterung</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">NATO</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1616" y="216" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white" y="50%"><tspan  x="50%" text-anchor="middle">beschießt</tspan><tspan  x="50%" text-anchor="middle" dy="1em">Zivilisten</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">Ukraine</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1616" y="432" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">seit 2014</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1616" y="648" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Ivan</tspan></text>
+         </svg>
+    
+            <svg width="404" height="216"  x="1616" y="864" text-align="center">
+           <rect x="0" y="0" width="100%" height="100%"   stroke="#1884cc" stroke-width="6px"  stroke-location="inside" fill="#2a1a3f"  />
+           <text  font-size="48px" font-family="Arial" dominant-baseline="middle" fill="white"  dy="50%"><tspan  x="50%" text-anchor="middle">Wunderwaffe</tspan></text>
+         </svg>
+    </svg>
+    <text y="1380" x="50%" font-size="50px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan  x="50%" text-anchor="middle">🔰 Nachrichten rund um Militäraktionen und Proteste - weltweit und brandaktuell 🔰</tspan><tspan dy="1.2em" x="50%" text-anchor="middle">@MNChat @MilitaerNews</tspan></text>
+    </svg>
