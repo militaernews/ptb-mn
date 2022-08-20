@@ -34,8 +34,9 @@ if __name__ == "__main__":
     app = ApplicationBuilder().token(TOKEN).defaults(Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True)) \
         .persistence(PostgresPersistence(url=DATABASE_URL, session=session)).build()
 
+    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
     app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
-    app.add_handler(MessageHandler(filters.Chat(NYX), flag_to_hashtag_test))
+    app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     app.add_handler(
         MessageHandler(
@@ -72,8 +73,7 @@ if __name__ == "__main__":
         MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
                        edit_channel_text))
 
-    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
-    app.add_handler(MessageHandler(filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS), filter_message))
+    app.add_handler(MessageHandler(filters.TEXT & filters.Chat(GERMAN.chat_id) & filters.User(ADMINS), filter_message))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace

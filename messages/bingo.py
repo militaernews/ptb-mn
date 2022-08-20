@@ -1,7 +1,6 @@
 import datetime
 import random
-from dataclasses import dataclass
-from typing import List
+from typing import List, Union, Dict
 
 import cairosvg
 import numpy as numpy
@@ -41,11 +40,12 @@ ENTRIES = [
     "Nazi",
     "Britischer Geheimdienst",
     "Azov",
+    "Asow",
     "Alina",
     "Erdogan",
     "Korruption",
     "Konvention",
-    "Lufthohheit",
+    "Lufthoheit",
     "Taiwan",
     "Frontverlauf",
     "Kinzhal",
@@ -69,7 +69,7 @@ ENTRIES = [
     "Ivan",
     "NATO Osterweiterung",
     "Vorstoß",
-    "T-14",
+    "T14",
     "Armata",
     "Kämpf_doch selbst",
     "Propaganda",
@@ -81,7 +81,8 @@ ENTRIES = [
     "Selenski fordert",
     "Man_muss verhandeln",
     "Gas",
-    "Bayraktar-TB2",
+    "Bayraktar",
+    "TB2",
     "Quelle?",
     "Hostomel",
     "Elite",
@@ -89,29 +90,25 @@ ENTRIES = [
     "Genozid",
     "seit_2014",
     "Irpin",
-    "Butcha",
+    "Butscha",
     "Klitschko",
     "Chornobayivka",
-    "Butscha",
     "Lipp",
     "Ork",
     "Belgorod",
     "kapitulieren",
     "aufgeben",
-    "Vakuumbomben",
+    "Vakuumbombe",
     "thermobarisch",
-    "sanktionieren",
+    "Sanktion",
+    "Deflation",
+    "Wagner",
+    "Volksrepublik",
+    "Referendum",
     "russophob",
     "Eskalation",
     "AKW"
 ]
-
-
-@dataclass
-class BingoField:
-    text: str
-    checked: bool = False
-
 
 field_size = 5
 
@@ -125,9 +122,12 @@ def generate_bingo_field():
         inner = list()
         print(x)
 
-        for y in ENTRIES[x:x + 5]:
+        for y in ENTRIES[x:x + field_size]:
             print(y)
-            inner.append(BingoField(y))
+            inner.append({
+                "text": y,
+                "checked": False
+            })
 
         outer.append(inner)
 
@@ -135,33 +135,33 @@ def generate_bingo_field():
     return outer
 
 
-def check_win(fields: List[List[BingoField]]):
+def check_win(fields: List[List[Dict[str, Union[str, bool]]]]):
     # horizontal condition
     for row in fields:
-        if all(item.checked for item in row):
+        if all(item["checked"] for item in row):
             return True
 
     # vertical condition
     for column in zip(*fields):
-        if all(item.checked for item in column):
+        if all(item["checked"] for item in column):
             return True
 
     return False
 
 
-def set_checked(text: str, fields: List[List[BingoField]]):
+def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     found = False
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
-        if item.text.replace("_", " ").lower() in text.lower():
-            item.checked = True
+        if item["text"].replace("_", " ").lower() in text.replace("-", "").lower():
+            item["checked"] = True
             found = True
             print(f"{text} is a valid bingo entry")
 
     return found
 
 
-def create_svg(field: List[List[BingoField]]):
+def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     all_width = 2460
     all_height = 1460
 
@@ -208,13 +208,13 @@ def create_svg(field: List[List[BingoField]]):
             curr_field = field[curr_x][curr_y]
             print(curr_field)
 
-            textss = curr_field.text.split(" ")
+            textss = curr_field["text"].split(" ")
             for index, value in enumerate(textss):
                 textss[index] = value.replace("_", " ")
 
             inner_text = """<text  font-size="48px" font-family="Arial" dominant-baseline="central" """
 
-            if curr_field.checked:
+            if curr_field["checked"]:
                 inner_text += "fill=\"#e8cc00\" "
             else:
                 inner_text += "fill=\"white\" "
@@ -255,13 +255,15 @@ def create_svg(field: List[List[BingoField]]):
 
 
 async def filter_message(update: Update, context: CallbackContext):
+    print(update)
     text = update.message.text.lower()
 
     if 1 == 2:
         print("Spam detected")
+        return
     # todo: filter and report
 
-    elif datetime.datetime.now().weekday() == 6:  # Sunday
+    elif datetime.datetime.now().weekday() ==  5:  # Sunday
         print("checking bingo...")
         if "bingo" not in context.bot_data:
             context.bot_data["bingo"] = generate_bingo_field()

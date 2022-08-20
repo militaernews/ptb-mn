@@ -1,6 +1,7 @@
 import re
 from collections import defaultdict
 from dataclasses import dataclass
+from typing import Dict, Union
 
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       InputMediaVideo, Message, MessageEntity, MessageId,
@@ -149,8 +150,8 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
     context.job_queue.run_once(
         share_in_other_channels,
-        30,
-        JobContext(update.channel_post.media_group_id, update.channel_post.message_id),
+        20,
+        {"media_group_id": update.channel_post.media_group_id, "message_id":update.channel_post.message_id},
         str(update.channel_post.media_group_id),
     )
 
@@ -243,22 +244,22 @@ async def announcement(update: Update, context: CallbackContext):
 
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
-    job_context: JobContext = context.job.data
+    job_context: Dict[str,Union[str,int]] = context.job.data
     files: [InputMedia] = []
 
     print("JOB ::::::::::::: ", context.job.data)
     print(
         "bot-data :::::::::::::::::::::::::::",
-        context.bot_data[job_context.media_group_id],
+        context.bot_data[job_context["media_group_id"]],
     )
 
-    for file in context.bot_data[job_context.media_group_id]:
+    for file in context.bot_data[job_context["media_group_id"]]:
         print(file)
         files.append(file)
 
     original_caption = files[0].caption
 
-    replies = get_replies(context.bot_data, str(job_context.message_id))
+    replies = get_replies(context.bot_data, str(job_context["message_id"]))
     print("::::::::::: share in other ::::::::::")
     print(replies)
 
@@ -278,7 +279,7 @@ async def share_in_other_channels(context: CallbackContext):
 
             print(msgs)
 
-            context.bot_data[str(job_context.message_id)]["langs"][lang.lang_key] = msgs[0].message_id
+            context.bot_data[str(job_context["message_id"])]["langs"][lang.lang_key] = msgs[0].message_id
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
@@ -291,7 +292,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     # todo: tweet media_group
 
-    del context.bot_data[job_context.media_group_id]
+    del context.bot_data[job_context["media_group_id"]]
 
 
 async def edit_channel(update: Update, context: CallbackContext):
@@ -339,10 +340,6 @@ async def edit_channel(update: Update, context: CallbackContext):
                 pass
 
 
-@dataclass
-class JobContext:
-    media_group_id: str
-    message_id: int
 
 
 async def handle_url(update: Update, context: CallbackContext):
