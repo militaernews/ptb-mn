@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/bingo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,14 +169,7 @@
       <workItem from="1660987709619" duration="16976000" />
       <workItem from="1661017583489" duration="4676000" />
       <workItem from="1661070952497" duration="2542000" />
-      <workItem from="1661085872102" duration="630000" />
-    </task>
-    <task id="LOCAL-00005" summary="handle deepl quota">
-      <created>1659339434185</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1659339434185</updated>
+      <workItem from="1661085872102" duration="1758000" />
     </task>
     <task id="LOCAL-00006" summary="handle deepl quota - fix">
       <created>1659340201340</created>
@@ -514,7 +507,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661073449019</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="fix">
+      <created>1661094065875</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1661094065876</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -269,18 +269,23 @@ async def filter_message(update: Update, context: CallbackContext):
         return
     # todo: filter and report
 
-    elif datetime.datetime.now().weekday() == 6:  # Sunday
+    elif datetime.datetime.now().weekday() == 5 or datetime.datetime.now().weekday() == 6:
         print("checking bingo...")
         if "bingo" not in context.bot_data:
             context.bot_data["bingo"] = generate_bingo_field()
             create_svg(context.bot_data["bingo"])
 
-        if set_checked(text, context.bot_data["bingo"]) and check_win(context.bot_data["bingo"]):
-            create_svg(context.bot_data["bingo"])
-            with open("field.png", "rb") as f:
-                await update.message.reply_photo(photo=f,
-                                                 caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
-            context.bot_data["bingo"] = generate_bingo_field()
+        if set_checked(text, context.bot_data["bingo"]):
+
+            if check_win(context.bot_data["bingo"]):
+                create_svg(context.bot_data["bingo"])
+                with open("field.png", "rb") as f:
+                    await update.message.reply_photo(photo=f,
+                                                     caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
+                context.bot_data["bingo"] = generate_bingo_field()
+            else:
+                await update.message.reply_text(
+                    "<bTreffer! 🥳</b>\n\nDeine Nachricht beinhaltet gesuchte Begriffe im Bullshit-Bingo.")
 
 
 async def bingo_field(update: Update, context: CallbackContext):
