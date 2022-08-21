@@ -20,8 +20,13 @@ ENTRIES = [
     "wirkungsvoll",
     "Biden",
     "Schwurbler",
+    "Schneelensky",
+    "Booster"
+    "Zwang",
+    "geimpft",
     "böse_NATO",
     "Wunderwaffe",
+    "Offensive",
     "Lindner verspricht",
     "SDF/YPG",
     "Hartz_IV",

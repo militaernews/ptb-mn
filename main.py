@@ -73,7 +73,9 @@ if __name__ == "__main__":
         MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
                        edit_channel_text))
 
-    app.add_handler(MessageHandler(filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS), filter_message))
+    app.add_handler(MessageHandler(
+        filters.UpdateType.MESSAGE & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
+        filter_message))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
