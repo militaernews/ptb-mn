@@ -263,7 +263,7 @@ async def filter_message(update: Update, context: CallbackContext):
         return
     # todo: filter and report
 
-    elif datetime.datetime.now().weekday() ==  5:  # Sunday
+    elif datetime.datetime.now().weekday() == 6:  # Sunday
         print("checking bingo...")
         if "bingo" not in context.bot_data:
             context.bot_data["bingo"] = generate_bingo_field()
@@ -273,7 +273,7 @@ async def filter_message(update: Update, context: CallbackContext):
             create_svg(context.bot_data["bingo"])
             with open("field.png", "rb") as f:
                 await update.message.reply_photo(photo=f,
-                                                 caption=f"<b>BINGO! 🥳</b>\n\n {update.message.from_user.name} hat den letzten Begriff beigetragen. So sah das Spielfeld am Ende aus.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
+                                                 caption=f"<b>BINGO! 🥳</b>\n\n{update.message.from_user.name} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
             context.bot_data["bingo"] = generate_bingo_field()
 
 
