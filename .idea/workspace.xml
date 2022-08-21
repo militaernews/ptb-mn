@@ -4,7 +4,6 @@
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/bingo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,14 +168,8 @@
       <workItem from="1660883676028" duration="21478000" />
       <workItem from="1660987709619" duration="16976000" />
       <workItem from="1661017583489" duration="4676000" />
-      <workItem from="1661070952497" duration="2141000" />
-    </task>
-    <task id="LOCAL-00004" summary="added base for twitter, some fixes">
-      <created>1659309084214</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1659309084214</updated>
+      <workItem from="1661070952497" duration="2542000" />
+      <workItem from="1661085872102" duration="630000" />
     </task>
     <task id="LOCAL-00005" summary="handle deepl quota">
       <created>1659339434185</created>
@@ -514,7 +507,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661071645200</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="fix">
+      <created>1661073449018</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1661073449019</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

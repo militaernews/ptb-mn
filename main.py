@@ -6,7 +6,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler
 
-from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, NYX, ADMINS
+from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test

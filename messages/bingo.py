@@ -7,6 +7,7 @@ import numpy as numpy
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import CallbackContext
+from telegram.helpers import mention_html
 
 from data.lang import GERMAN
 
@@ -278,7 +279,7 @@ async def filter_message(update: Update, context: CallbackContext):
             create_svg(context.bot_data["bingo"])
             with open("field.png", "rb") as f:
                 await update.message.reply_photo(photo=f,
-                                                 caption=f"<b>BINGO! 🥳</b>\n\n{update.message.from_user.name} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
+                                                 caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
             context.bot_data["bingo"] = generate_bingo_field()
 
 
