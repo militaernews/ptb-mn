@@ -285,7 +285,7 @@ async def filter_message(update: Update, context: CallbackContext):
                 context.bot_data["bingo"] = generate_bingo_field()
             else:
                 await update.message.reply_text(
-                    "<bTreffer! 🥳</b>\n\nDeine Nachricht beinhaltet gesuchte Begriffe im Bullshit-Bingo.")
+                    "<b>Treffer! 🥳</b>\n\nDeine Nachricht beinhaltet gesuchte Begriffe im Bullshit-Bingo.")
 
 
 async def bingo_field(update: Update, context: CallbackContext):
