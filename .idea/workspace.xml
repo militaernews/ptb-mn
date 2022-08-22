@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/bingo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -170,6 +169,7 @@
       <workItem from="1661017583489" duration="4676000" />
       <workItem from="1661070952497" duration="2542000" />
       <workItem from="1661085872102" duration="2910000" />
+      <workItem from="1661175030019" duration="389000" />
     </task>
     <task id="LOCAL-00007" summary="reading from json, fixes and refactoring">
       <created>1659439996738</created>

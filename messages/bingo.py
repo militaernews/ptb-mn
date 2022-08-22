@@ -61,6 +61,13 @@ ENTRIES = [
     "Reichsbürger",
     "Trump",
     "Schwarzmarkt",
+    "Troll",
+    "WEF",
+    "Bill Gates",
+    "Dimension",
+    "Reptiloid",
+    "Gerücht",
+    "System",
     "einsatzbereit",
     "Putin_macht bald_ernst",
     "Militärexperte",
@@ -156,12 +163,12 @@ def check_win(fields: List[List[Dict[str, Union[str, bool]]]]):
 
 
 def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
-    found = False
+    found = list()
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
         if item["text"].replace("_", " ").lower() in text.replace("-", "").lower():
             item["checked"] = True
-            found = True
+            found.append(item["text"])
             print(f"{text} is a valid bingo entry")
 
     return found
@@ -269,13 +276,16 @@ async def filter_message(update: Update, context: CallbackContext):
         return
     # todo: filter and report
 
-    elif datetime.datetime.now().weekday() == 5 or datetime.datetime.now().weekday() == 6:
+    else:
+        # elif datetime.datetime.now().weekday() == 5 or datetime.datetime.now().weekday() == 6:
         print("checking bingo...")
         if "bingo" not in context.bot_data:
             context.bot_data["bingo"] = generate_bingo_field()
             create_svg(context.bot_data["bingo"])
 
-        if set_checked(text, context.bot_data["bingo"]):
+        found = set_checked(text, context.bot_data["bingo"])
+
+        if len(found) != 0:
 
             if check_win(context.bot_data["bingo"]):
                 create_svg(context.bot_data["bingo"])
@@ -285,7 +295,7 @@ async def filter_message(update: Update, context: CallbackContext):
                 context.bot_data["bingo"] = generate_bingo_field()
             else:
                 await update.message.reply_text(
-                    "<b>Treffer! 🥳</b>\n\nDeine Nachricht beinhaltet gesuchte Begriffe im Bullshit-Bingo.")
+                    f"<b>Treffer! 🥳</b>\n\n{', '.join(found)} sind gesuchte Begriffe im Bullshit-Bingo.")
 
 
 async def bingo_field(update: Update, context: CallbackContext):

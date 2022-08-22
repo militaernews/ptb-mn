@@ -1,6 +1,5 @@
 import re
 from collections import defaultdict
-from dataclasses import dataclass
 from typing import Dict, Union
 
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
@@ -151,7 +150,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
     context.job_queue.run_once(
         share_in_other_channels,
         20,
-        {"media_group_id": update.channel_post.media_group_id, "message_id":update.channel_post.message_id},
+        {"media_group_id": update.channel_post.media_group_id, "message_id": update.channel_post.message_id},
         str(update.channel_post.media_group_id),
     )
 
@@ -244,7 +243,7 @@ async def announcement(update: Update, context: CallbackContext):
 
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
-    job_context: Dict[str,Union[str,int]] = context.job.data
+    job_context: Dict[str, Union[str, int]] = context.job.data
     files: [InputMedia] = []
 
     print("JOB ::::::::::::: ", context.job.data)
@@ -338,8 +337,6 @@ async def edit_channel(update: Update, context: CallbackContext):
                     f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                 )
                 pass
-
-
 
 
 async def handle_url(update: Update, context: CallbackContext):
