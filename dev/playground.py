@@ -1,4 +1,5 @@
 import traceback
+from itertools import repeat
 
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -10,7 +11,10 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         print("--")
 
+        txt = "o" * 4090
 
+
+        await update.message.reply_text(txt)
 
 
 
