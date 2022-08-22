@@ -166,7 +166,7 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     found = list()
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
-        if item["text"].replace("_", " ").lower() in text.replace("-", "").lower():
+        if not item["checked"] and item["text"].replace("_", " ").replace("-","").replace(" ","").lower() in text.replace("-", "").replace(" ", "").lower() :
             item["checked"] = True
             found.append(item["text"])
             print(f"{text} is a valid bingo entry")
@@ -301,15 +301,17 @@ async def filter_message(update: Update, context: CallbackContext):
                 for index, word in enumerate(found):
                     text += f'\"{word}\"'
 
-                    if index == found_amount - 2:
-                        text += " und "
-                    elif index == found_amount - 1:
+                    if index == found_amount - 1:
                         if found_amount == 1:
                             text += " ist ein gesuchter Begriff"
                         else:
                             text += " sind gesuchte Begriffe"
 
                         text += " im Bullshit-Bingo."
+
+                    elif index == found_amount - 2:
+                        text += " und "
+
                     else:
                         text += ", "
 

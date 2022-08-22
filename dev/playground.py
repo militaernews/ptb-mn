@@ -1,5 +1,4 @@
 import traceback
-from itertools import repeat
 
 from telegram import Update
 from telegram.ext import ContextTypes
