@@ -295,13 +295,25 @@ async def filter_message(update: Update, context: CallbackContext):
                                                      caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
                 context.bot_data["bingo"] = generate_bingo_field()
             else:
-                results = '\", \"'.join(found)
-                if found_amount == 1:
-                    text = "ist ein gesuchter Begriff"
-                else:
-                    text = "sind gesuchte Begriffe"
-                await update.message.reply_text(
-                    f"<b>Treffer! 🥳</b>\n\n\"{results}\" {text} im Bullshit-Bingo.")
+
+                text = '<b>Treffer! 🥳</b>\n\n'
+
+                for index, word in enumerate(found):
+                    text += f'\"{word}\"'
+
+                    if index == found_amount - 2:
+                        text += " und "
+                    elif index == found_amount - 1:
+                        if found_amount == 1:
+                            text += " ist ein gesuchter Begriff"
+                        else:
+                            text += " sind gesuchte Begriffe"
+
+                        text += " im Bullshit-Bingo."
+                    else:
+                        text += ", "
+
+                await update.message.reply_text(text)
 
 
 async def bingo_field(update: Update, context: CallbackContext):

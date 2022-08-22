@@ -4,6 +4,8 @@ from itertools import repeat
 from telegram import Update
 from telegram.ext import ContextTypes
 
+from messages.bingo import filter_message
+
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("-------\n\nTEST\n\n-------")
@@ -11,10 +13,7 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         print("--")
 
-        txt = "o" * 4090
-
-
-        await update.message.reply_text(txt)
+        await filter_message(update, context)
 
 
 
