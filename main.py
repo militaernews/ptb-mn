@@ -14,7 +14,7 @@ from messages.admin import private_setup
 from messages.bingo import bingo_field, filter_message
 from messages.meme import post_media_meme, post_text_meme
 from messages.news import edit_channel_text, announcement, breaking_news, edit_channel, post_channel_text, \
-    post_channel_english
+    post_channel_english, post_info
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -64,6 +64,11 @@ if __name__ == "__main__":
         MessageHandler(
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Regex(re.compile(r"#mitteilung", re.IGNORECASE)),
             announcement))
+    app.add_handler(
+        MessageHandler(
+            filters.UpdateType.CHANNEL_POST & (filters.PHOTO | filters.VIDEO | filters.ANIMATION) & filters.Regex(
+                re.compile(r"#info", re.IGNORECASE)),
+            post_info))
 
     app.add_handler(
         MessageHandler(

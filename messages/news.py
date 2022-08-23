@@ -166,7 +166,7 @@ async def breaking_news(update: Update, context: CallbackContext):
         await context.bot.send_photo(
             chat_id=GERMAN.channel_id,
             photo=open(breaking_photo_path, "rb"),
-            caption=f"{formatted_text}\n{GERMAN.footer}",
+            caption=f"{formatted_text}{GERMAN.footer}",
         )
     except Exception as e:
         await context.bot.send_message(
@@ -229,7 +229,7 @@ async def announcement(update: Update, context: CallbackContext):
             msg = await context.bot.send_photo(
                 chat_id=lang.channel_id,
                 photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
-                caption=f"#{lang.announce}{translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}",
+                caption=f"#{lang.announce}{translate_message(lang.lang_key, text, lang.lang_key_deepl)}",
 
             )
             await msg.pin()
@@ -429,7 +429,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
     formatted_text = flag_to_hashtag(original_caption)
 
     try:
-        await update.channel_post.edit_text(f"{formatted_text}\n{GERMAN.footer}")
+        await update.channel_post.edit_text(f"{formatted_text}{GERMAN.footer}")
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await context.bot.send_message(
@@ -480,3 +480,20 @@ async def edit_channel_text(update: Update, context: CallbackContext):
                     f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                 )
                 pass
+
+
+async def post_info(update: Update, context: CallbackContext):
+    text = "#INFORMATION ‼️\n\n" + re.sub(
+        re.compile(r"#info", re.IGNORECASE), "", update.channel_post.caption_html_urled
+    )
+
+    try:
+        msg = await update.channel_post.edit_text(text)
+        await msg.pin()
+    except Exception as e:
+        await context.bot.send_message(
+            config.LOG_GROUP,
+            "<b>⚠️ Error when trying to send info in Channel de</b>\n<code>{e}</code>\n\n"
+            f"<b>Caused by Update</b>\n<code>{update}</code>",
+        )
+        pass

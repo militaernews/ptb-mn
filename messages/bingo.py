@@ -166,7 +166,9 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     found = list()
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
-        if not item["checked"] and item["text"].replace("_", " ").replace("-","").replace(" ","").lower() in text.replace("-", "").replace(" ", "").lower() :
+        if not item["checked"] and item["text"].replace("_", " ").replace("-", "").replace(" ",
+                                                                                           "").lower() in text.replace(
+                "-", "").replace(" ", "").lower():
             item["checked"] = True
             found.append(item["text"])
             print(f"{text} is a valid bingo entry")
