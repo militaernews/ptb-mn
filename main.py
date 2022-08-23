@@ -47,6 +47,12 @@ if __name__ == "__main__":
         MessageHandler(filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=CHANNEL_MEME),
                        post_text_meme))
 
+    app.add_handler(
+        MessageHandler(
+            filters.UpdateType.CHANNEL_POST & (filters.PHOTO | filters.VIDEO | filters.ANIMATION) & filters.Regex(
+                re.compile(r"#info", re.IGNORECASE)),
+            post_info))
+
     app.add_handler(MessageHandler(
         filters.UpdateType.CHANNEL_POST &
         (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
@@ -66,17 +72,12 @@ if __name__ == "__main__":
             announcement))
     app.add_handler(
         MessageHandler(
-            filters.UpdateType.CHANNEL_POST & (filters.PHOTO | filters.VIDEO | filters.ANIMATION) & filters.Regex(
-                re.compile(r"#info", re.IGNORECASE)),
-            post_info))
-
-    app.add_handler(
-        MessageHandler(
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
             post_channel_text))
     app.add_handler(
-        MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & ~filters.Regex(
-                re.compile(r"🔰 MN-Hauptquartier", re.IGNORECASE)),
+        MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(
+            chat_id=GERMAN.channel_id) & ~filters.Regex(
+            re.compile(r"🔰 MN-Hauptquartier", re.IGNORECASE)),
                        edit_channel_text))
 
     app.add_handler(MessageHandler(
