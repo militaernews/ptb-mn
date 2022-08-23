@@ -102,6 +102,7 @@ ENTRIES = [
     "8_Jahre",
     "Genozid",
     "seit_2014",
+    "Hohol",
     "Irpin",
     "Butscha",
     "Klitschko",

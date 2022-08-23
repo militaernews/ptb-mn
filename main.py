@@ -75,7 +75,8 @@ if __name__ == "__main__":
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
             post_channel_text))
     app.add_handler(
-        MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
+        MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & ~filters.Regex(
+                re.compile(r"🔰 MN-Hauptquartier", re.IGNORECASE)),
                        edit_channel_text))
 
     app.add_handler(MessageHandler(

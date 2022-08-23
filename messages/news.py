@@ -483,7 +483,7 @@ async def edit_channel_text(update: Update, context: CallbackContext):
 
 
 async def post_info(update: Update, context: CallbackContext):
-    text = "#INFORMATION ‼️\n\n" + re.sub(
+    text = "🔰 MN-Hauptquartier\n\n" + re.sub(
         re.compile(r"#info", re.IGNORECASE), "", update.channel_post.caption_html_urled
     )
 

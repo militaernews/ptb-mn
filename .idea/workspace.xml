@@ -4,6 +4,7 @@
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/bingo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -174,14 +175,7 @@
       <workItem from="1661175030019" duration="1129000" />
       <workItem from="1661177766538" duration="1013000" />
       <workItem from="1661178922595" duration="3323000" />
-      <workItem from="1661273055584" duration="570000" />
-    </task>
-    <task id="LOCAL-00012" summary="fix fa">
-      <created>1659453309830</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1659453309830</updated>
+      <workItem from="1661273055584" duration="2152000" />
     </task>
     <task id="LOCAL-00013" summary="fix">
       <created>1659453550604</created>
@@ -519,7 +513,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661181212955</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="fix">
+      <created>1661273871927</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1661273871928</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
