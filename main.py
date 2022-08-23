@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     app.add_handler(
         MessageHandler(
-            filters.UpdateType.CHANNEL_POST & (filters.PHOTO | filters.VIDEO | filters.ANIMATION) & filters.Regex(
+            filters.UpdateType.CHANNEL_POST & (filters.PHOTO | filters.VIDEO | filters.ANIMATION) & filters.CaptionRegex(
                 re.compile(r"#info", re.IGNORECASE)),
             post_info))
 
@@ -76,7 +76,7 @@ if __name__ == "__main__":
             post_channel_text))
     app.add_handler(
         MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(
-            chat_id=GERMAN.channel_id) & ~filters.Regex(
+            chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
             re.compile(r"🔰 MN-Hauptquartier", re.IGNORECASE)),
                        edit_channel_text))
 
