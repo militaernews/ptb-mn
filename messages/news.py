@@ -483,12 +483,13 @@ async def edit_channel_text(update: Update, context: CallbackContext):
 
 
 async def post_info(update: Update, context: CallbackContext):
+    print("---- post info ----")
     text = "🔰 MN-Hauptquartier\n\n" + re.sub(
         re.compile(r"#info", re.IGNORECASE), "", update.channel_post.caption_html_urled
     )
 
     try:
-        msg = await update.channel_post.edit_text(text)
+        msg = await update.channel_post.edit_caption(text)
         await msg.pin()
     except Exception as e:
         await context.bot.send_message(

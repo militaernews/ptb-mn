@@ -49,8 +49,9 @@ if __name__ == "__main__":
 
     app.add_handler(
         MessageHandler(
-            filters.UpdateType.CHANNEL_POST & (filters.PHOTO | filters.VIDEO | filters.ANIMATION) & filters.CaptionRegex(
-                re.compile(r"#info", re.IGNORECASE)),
+            filters.UpdateType.CHANNEL_POST & (
+                        filters.PHOTO | filters.VIDEO | filters.ANIMATION) & filters.CaptionRegex(
+                re.compile(r"#info", re.IGNORECASE)) & filters.Chat(chat_id=GERMAN.channel_id),
             post_info))
 
     app.add_handler(MessageHandler(
@@ -64,11 +65,13 @@ if __name__ == "__main__":
 
     app.add_handler(
         MessageHandler(
-            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Regex(re.compile(r"#eilmeldung", re.IGNORECASE)),
+            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & filters.Regex(
+                re.compile(r"#eilmeldung", re.IGNORECASE)),
             breaking_news))
     app.add_handler(
         MessageHandler(
-            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Regex(re.compile(r"#mitteilung", re.IGNORECASE)),
+            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & filters.Regex(
+                re.compile(r"#mitteilung", re.IGNORECASE)),
             announcement))
     app.add_handler(
         MessageHandler(

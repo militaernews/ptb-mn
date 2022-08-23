@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,14 +173,7 @@
       <workItem from="1661175030019" duration="1129000" />
       <workItem from="1661177766538" duration="1013000" />
       <workItem from="1661178922595" duration="3323000" />
-      <workItem from="1661273055584" duration="2543000" />
-    </task>
-    <task id="LOCAL-00015" summary="tweeting media works">
-      <created>1659539133140</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1659539133140</updated>
+      <workItem from="1661273055584" duration="2851000" />
     </task>
     <task id="LOCAL-00016" summary="peony doesn't work, some fixes">
       <created>1659542689059</created>
@@ -517,7 +511,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661292769778</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="fix">
+      <created>1661293043780</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1661293043780</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
