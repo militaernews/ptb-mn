@@ -14,7 +14,7 @@ from util.log import log
 # fixme: refine
 def key_exists(context, key):
     return (
-            key in context.user_data or key in context.chat_data or key in context.bot_data
+            key in context.bot_data["users"]
     )
 
 

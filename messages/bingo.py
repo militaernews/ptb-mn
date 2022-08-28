@@ -169,7 +169,7 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     for item in list(numpy.array(fields).flat):
         if not item["checked"] and item["text"].replace("_", " ").replace("-", "").replace(" ",
                                                                                            "").lower() in text.replace(
-                "-", "").replace(" ", "").lower():
+            "-", "").replace(" ", "").lower():
             item["checked"] = True
             found.append(item["text"])
             print(f"{text} is a valid bingo entry")
@@ -274,10 +274,41 @@ async def filter_message(update: Update, context: CallbackContext):
     print(update)
     text = update.message.text.lower()
 
+    print(filter(lambda element: 'abc' in element, text))
+
     if 1 == 2:
         print("Spam detected")
         return
     # todo: filter and report
+
+    elif any(ext in text for ext in ("test", "aa")):
+        print("warning user...")
+
+        if "users" not in context.bot_data or update.message.from_user.id not in context.bot_data[
+            "users"] or "warn" not in context.bot_data["users"][update.message.from_user.id]:
+            warnings = 1
+            context.bot_data["users"] = {update.message.from_user.id: {"warn": warnings}}
+
+        else:
+            warnings = context.bot_data["users"][update.message.from_user.id]["warn"]
+            if warnings == 3:
+                print(f"banning {update.message.from_user.id} !!")
+                await context.bot.ban_chat_member(update.message.chat_id, update.message.from_user.id, until_date=1)
+
+                await update.message.reply_text(
+                    f"Aufgrund wiederholter Verstöße habe ich {mention_html(update.message.from_user.id, update.message.from_user.first_name)} gebannt.")
+                return
+            else:
+                warnings = warnings + 1
+                context.bot_data["users"][update.message.from_user.id]["warn"] = warnings
+
+        # Verstoßes gegen die Regeln dieser Gruppe - siehe /rules ???
+        await update.message.reply_text(
+            f"Wegen Beleidigung hat der Nutzer {mention_html(update.message.from_user.id, update.message.from_user.first_name)} die Warnung {warnings} von 3 erhalten.")
+
+
+
+
 
     else:
         # elif datetime.datetime.now().weekday() == 5 or datetime.datetime.now().weekday() == 6:
