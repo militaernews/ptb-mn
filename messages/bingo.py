@@ -270,86 +270,48 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     cairosvg.svg2png(bytestring=svg, write_to='field.png', background_color="#00231e")
 
 
-async def filter_message(update: Update, context: CallbackContext):
-    print(update)
+async def handle_bingo(update: Update, context: CallbackContext):
     text = update.message.text.lower()
 
-    print(filter(lambda element: 'abc' in element, text))
+    # elif datetime.datetime.now().weekday() == 5 or datetime.datetime.now().weekday() == 6:
+    print("checking bingo...")
+    if "bingo" not in context.bot_data:
+        context.bot_data["bingo"] = generate_bingo_field()
+        create_svg(context.bot_data["bingo"])
 
-    if 1 == 2:
-        print("Spam detected")
-        return
-    # todo: filter and report
+    found = set_checked(text, context.bot_data["bingo"])
+    found_amount = len(found)
 
-    elif any(ext in text for ext in ("test", "aa")):
-        print("warning user...")
+    if found_amount != 0:
 
-        if "users" not in context.bot_data or update.message.from_user.id not in context.bot_data[
-            "users"] or "warn" not in context.bot_data["users"][update.message.from_user.id]:
-            warnings = 1
-            context.bot_data["users"] = {update.message.from_user.id: {"warn": warnings}}
-
-        else:
-            warnings = context.bot_data["users"][update.message.from_user.id]["warn"]
-            if warnings == 3:
-                print(f"banning {update.message.from_user.id} !!")
-                await context.bot.ban_chat_member(update.message.chat_id, update.message.from_user.id, until_date=1)
-
-                await update.message.reply_text(
-                    f"Aufgrund wiederholter Verstöße habe ich {mention_html(update.message.from_user.id, update.message.from_user.first_name)} gebannt.")
-                return
-            else:
-                warnings = warnings + 1
-                context.bot_data["users"][update.message.from_user.id]["warn"] = warnings
-
-        # Verstoßes gegen die Regeln dieser Gruppe - siehe /rules ???
-        await update.message.reply_text(
-            f"Wegen Beleidigung hat der Nutzer {mention_html(update.message.from_user.id, update.message.from_user.first_name)} die Warnung {warnings} von 3 erhalten.")
-
-
-
-
-
-    else:
-        # elif datetime.datetime.now().weekday() == 5 or datetime.datetime.now().weekday() == 6:
-        print("checking bingo...")
-        if "bingo" not in context.bot_data:
-            context.bot_data["bingo"] = generate_bingo_field()
+        if check_win(context.bot_data["bingo"]):
             create_svg(context.bot_data["bingo"])
+            with open("field.png", "rb") as f:
+                await update.message.reply_photo(photo=f,
+                                                 caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
+            context.bot_data["bingo"] = generate_bingo_field()
+        else:
 
-        found = set_checked(text, context.bot_data["bingo"])
-        found_amount = len(found)
+            text = '<b>Treffer! 🥳</b>\n\n'
 
-        if found_amount != 0:
+            for index, word in enumerate(found):
+                text += f'\"{word}\"'
 
-            if check_win(context.bot_data["bingo"]):
-                create_svg(context.bot_data["bingo"])
-                with open("field.png", "rb") as f:
-                    await update.message.reply_photo(photo=f,
-                                                     caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
-                context.bot_data["bingo"] = generate_bingo_field()
-            else:
-
-                text = '<b>Treffer! 🥳</b>\n\n'
-
-                for index, word in enumerate(found):
-                    text += f'\"{word}\"'
-
-                    if index == found_amount - 1:
-                        if found_amount == 1:
-                            text += " ist ein gesuchter Begriff"
-                        else:
-                            text += " sind gesuchte Begriffe"
-
-                        text += " im Bullshit-Bingo."
-
-                    elif index == found_amount - 2:
-                        text += " und "
-
+                if index == found_amount - 1:
+                    if found_amount == 1:
+                        text += " ist ein gesuchter Begriff"
                     else:
-                        text += ", "
+                        text += " sind gesuchte Begriffe"
 
-                await update.message.reply_text(text)
+                    text += " im Bullshit-Bingo."
+
+                elif index == found_amount - 2:
+                    text += " und "
+
+                else:
+                    text += ", "
+
+            await update.message.reply_text(text)
 
 
 async def bingo_field(update: Update, context: CallbackContext):

@@ -1,11 +1,10 @@
 import traceback
 
-import ftfy as ftfy
 from telegram import Update
-from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
-from messages.bingo import filter_message
+from messages.chat import filter_message
+
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("-------\n\nTEST\n\n-------")
