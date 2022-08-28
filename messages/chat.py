@@ -2,7 +2,6 @@ import random
 from typing import Dict
 
 import requests
-from httpx import post
 from orjson import orjson
 from telegram import Poll, Update
 from telegram.helpers import mention_html
@@ -159,7 +158,7 @@ async def unwarn_user(update: Update, context: CallbackContext):
             context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"] = warnings
 
             await update.message.reply_to_message.reply_text(
-                f"Dem Nutzer {mention_html(update.message.from_user.id, update.message.from_user.first_name)} wurde eine Warnung erlassen, womit er nur noch {warnings} von 3 hat.")
+                f"Dem Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde eine Warnung erlassen, womit er nur noch {warnings} von 3 hat.")
 
 
 async def warn_user(update: Update, context: CallbackContext):
@@ -194,10 +193,14 @@ async def report_user(update: Update, context: CallbackContext):
 
     if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
         print(f"reporting {update.message.reply_to_message.from_user.id} !!")
-        post(url="https://tartaros-telegram.herokuapp.com/reports", json={
-            "id": update.message.reply_to_message.from_user.id,
-            "message": update.message.text_html_urled
-        })
+        r = requests.post(url="https://tartaros-telegram.herokuapp.com/reports/",
+                          json={
+                              "user_id": update.message.reply_to_message.from_user.id,
+                              "message": update.message.reply_to_message.text_html_urled,
+                              "account_id": 1
+                          }
+                          )
+        print(r)
 
         await update.message.reply_to_message.reply_text(
             f"Der Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde Tartaros-Antispam gemeldet.")
@@ -243,4 +246,4 @@ async def filter_message(update: Update, context: CallbackContext):
 
 
     else:
-        handle_bingo(update, context)
+        await handle_bingo(update, context)
