@@ -1,3 +1,6 @@
+import os
+import shutil
+
 from dotenv import load_dotenv
 from orjson import orjson
 
@@ -11,6 +14,9 @@ from util.translation import translate
 
 def split_to_json():
     output_directory = '../res/countries/'
+    if os.path.isdir(output_directory):
+        shutil.rmtree(output_directory)
+    os.mkdir(output_directory)
 
     input_languages = [GERMAN] + languages
     for lang in input_languages:
