@@ -24,6 +24,10 @@ ENTRIES = [
     "Schneelensky",
     "Booster"
     "Zwang",
+    "Genozid",
+    "Völkermord",
+    "Dampfplauderer",
+    "Drogen",
     "geimpft",
     "böse_NATO",
     "Wunderwaffe",

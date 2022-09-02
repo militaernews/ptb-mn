@@ -61,6 +61,7 @@ class PostgresPersistence(DictPersistence):
             conversations_json = data.get("conversations", "{}")
             callback_data_json = data.get("callback_data_json", "")
 
+            self.logger.info(data)
             self.logger.info("Database loaded successfully!")
 
             # if it is a fresh setup we'll add some placeholder data so we

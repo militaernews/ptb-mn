@@ -149,7 +149,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
     context.job_queue.run_once(
         share_in_other_channels,
-        20,
+        10,
         {"media_group_id": update.channel_post.media_group_id, "message_id": update.channel_post.message_id},
         str(update.channel_post.media_group_id),
     )
