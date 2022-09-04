@@ -125,7 +125,12 @@ ENTRIES = [
     "Referendum",
     "russophob",
     "Eskalation",
-    "AKW"
+    "AKW",
+    "Gaspreis",
+    "reagiert",
+    "Globohomo",
+    "Doppelmoral",
+    "Clown"
 ]
 
 field_size = 5
@@ -291,8 +296,9 @@ async def handle_bingo(update: Update, context: CallbackContext):
         if check_win(context.bot_data["bingo"]):
             create_svg(context.bot_data["bingo"])
             with open("field.png", "rb") as f:
-                await update.message.reply_photo(photo=f,
-                                                 caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
+                msg = await  update.message.reply_photo(photo=f,
+                                                        caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
+                await msg.pin()
             context.bot_data["bingo"] = generate_bingo_field()
         else:
 
