@@ -257,7 +257,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     original_caption = files[0].caption
 
-    replies = get_replies(context.bot_data, str(job_context["message_id"]))
+    replies = get_replies(context.bot_data, job_context["message_id"])
     print("::::::::::: share in other ::::::::::")
     print(replies)
 
@@ -277,7 +277,8 @@ async def share_in_other_channels(context: CallbackContext):
 
             print(msgs)
 
-            context.bot_data[str(job_context["message_id"])]["langs"][lang.lang_key] = msgs[0].message_id
+            context.bot_data[job_context["message_id"]]["langs"][lang.lang_key] = msgs[0].message_id
+            print("append ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",   context.bot_data[job_context["message_id"]]["langs"])
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
