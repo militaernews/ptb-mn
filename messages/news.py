@@ -82,7 +82,7 @@ async def post_channel_single(update: Update, context: CallbackContext):
 async def post_channel_english(update: Update, context: CallbackContext):
     if str(update.channel_post.message_id) not in context.bot_data:
         context.bot_data[str(update.channel_post.message_id)] = {
-            "langs": defaultdict(str)
+            "langs": {}
         }
 
     print("----------------\n\nDICT\n\n-----------------------")
@@ -128,7 +128,6 @@ async def post_channel_english(update: Update, context: CallbackContext):
         )
 
     if update.channel_post.caption is not None:
-        context.bot_data[str(update.channel_post.message_id)] = {}
 
         context.bot_data[update.channel_post.media_group_id][
             -1
