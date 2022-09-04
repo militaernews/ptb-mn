@@ -10,7 +10,7 @@ from telegram.ext import CallbackContext
 
 import config
 import twitter
-from data.lang import ENGLISH, GERMAN, languages
+from data.lang import GERMAN, languages
 from util.helper import get_replies, sanitize_text, get_file
 from util.regex import HASHTAG, WHITESPACE, BREAKING
 from util.translation import flag_to_hashtag, translate_message
@@ -84,7 +84,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
         context.bot_data[str(update.channel_post.message_id)] = {
             "langs": {}
         }
-    #maybe put "text" key here ??
+    # maybe put "text" key here ??
 
     print("----------------\n\nDICT\n\n-----------------------")
     print(context.bot_data[str(update.channel_post.message_id)])
@@ -102,37 +102,33 @@ async def post_channel_english(update: Update, context: CallbackContext):
         return
 
     if update.channel_post.media_group_id in context.bot_data:
-        for job in context.job_queue.get_jobs_by_name(
-                update.channel_post.media_group_id
-        ):
-            job.schedule_removal()
         print("--- job gone ::::::::")
+        context.bot_data[update.channel_post.media_group_id].append(str(update.channel_post.id))
+
+        for job in context.job_queue.get_jobs_by_name(update.channel_post.media_group_id):
+            job.schedule_removal()
+
     else:
         print("--- NEW MG ------------------------")
         context.bot_data[update.channel_post.media_group_id] = []
+        context.bot_data[f"temp_{update.channel_post.media_group_id}"] = []
 
     if update.channel_post.photo:
-        context.bot_data[update.channel_post.media_group_id].append(
+        context.bot_data[f"temp_{update.channel_post.media_group_id}"].append(
             InputMediaPhoto(media=update.channel_post.photo[-1].file_id)
         )
-        print(
-            "--- PHOTO ----------------------------------------------------------------"
-        )
     elif update.channel_post.video:
-        context.bot_data[update.channel_post.media_group_id].append(
+        context.bot_data[f"temp_{update.channel_post.media_group_id}"].append(
             InputMediaVideo(media=update.channel_post.video.file_id)
         )
-
     elif update.channel_post.animation:
-        context.bot_data[update.channel_post.media_group_id].append(
+        context.bot_data[f"temp_{update.channel_post.media_group_id}"].append(
             InputMediaAnimation(media=update.channel_post.animation.file_id)
         )
 
     if update.channel_post.caption is not None:
 
-        context.bot_data[update.channel_post.media_group_id][
-            -1
-        ].caption = f"{update.channel_post.caption_html_urled}"
+        context.bot_data[f"temp_{update.channel_post.media_group_id}"][-1].caption = update.channel_post.caption_html_urled
 
         try:
             await update.channel_post.edit_caption(
@@ -149,8 +145,9 @@ async def post_channel_english(update: Update, context: CallbackContext):
     context.job_queue.run_once(
         share_in_other_channels,
         10,
-        {"media_group_id": update.channel_post.media_group_id, "message_id": str(update.channel_post.message_id)},
-        str(update.channel_post.media_group_id),
+        {"media_group_id": update.channel_post.media_group_id,
+         "message_id": str(update.channel_post.message_id)},
+        update.channel_post.media_group_id
     )
 
 
@@ -251,7 +248,7 @@ async def share_in_other_channels(context: CallbackContext):
         context.bot_data[job_context["media_group_id"]],
     )
 
-    for file in context.bot_data[job_context["media_group_id"]]:
+    for file in context.bot_data[f"temp_{job_context['media_group_id']}"]:
         print(file)
         files.append(file)
 
@@ -278,7 +275,7 @@ async def share_in_other_channels(context: CallbackContext):
             print(msgs)
 
             context.bot_data[job_context["message_id"]]["langs"][lang.lang_key] = msgs[0].message_id
-            print("append ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",   context.bot_data[job_context["message_id"]]["langs"])
+            print("append ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", context.bot_data[job_context["message_id"]]["langs"])
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,

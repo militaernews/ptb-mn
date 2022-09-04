@@ -35,7 +35,7 @@ if __name__ == "__main__":
         .persistence(PostgresPersistence(url=DATABASE_URL, session=session)).build()
 
     app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
-    app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
+  #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     app.add_handler(
