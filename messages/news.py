@@ -84,6 +84,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
         context.bot_data[str(update.channel_post.message_id)] = {
             "langs": {}
         }
+    #maybe put "text" key here ??
 
     print("----------------\n\nDICT\n\n-----------------------")
     print(context.bot_data[str(update.channel_post.message_id)])
