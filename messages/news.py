@@ -112,27 +112,23 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
     if update.channel_post.photo:
         context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaPhoto(media=update.channel_post.photo[-1].file_id)
+            InputMediaPhoto(media=update.channel_post.photo[-1].file_id).to_json()
         )
         print(
             "--- PHOTO ----------------------------------------------------------------"
         )
     elif update.channel_post.video:
         context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaVideo(media=update.channel_post.video.file_id)
+            InputMediaVideo(media=update.channel_post.video.file_id).to_json()
         )
 
     elif update.channel_post.animation:
         context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaAnimation(media=update.channel_post.animation.file_id)
+            InputMediaAnimation(media=update.channel_post.animation.file_id).to_json()
         )
 
     if update.channel_post.caption is not None:
-        context.bot_data[update.channel_post.message_id] = {}
-        print(
-            "trans---SINGLE ::: ",
-            translate_message(ENGLISH.lang_key, update.channel_post.caption_html_urled, ENGLISH.lang_key_deepl),
-        )
+        context.bot_data[str(update.channel_post.message_id)] = {}
 
         context.bot_data[update.channel_post.media_group_id][
             -1
@@ -153,7 +149,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
     context.job_queue.run_once(
         share_in_other_channels,
         10,
-        {"media_group_id": update.channel_post.media_group_id, "message_id": update.channel_post.message_id},
+        {"media_group_id": update.channel_post.media_group_id, "message_id": str(update.channel_post.message_id)},
         str(update.channel_post.media_group_id),
     )
 
@@ -257,7 +253,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     for file in context.bot_data[job_context["media_group_id"]]:
         print(file)
-        files.append(file)
+        files.append(file.from_json())
 
     original_caption = files[0].caption
 

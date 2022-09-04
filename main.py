@@ -84,7 +84,7 @@ if __name__ == "__main__":
                        edit_channel_text))
 
     app.add_handler(MessageHandler(
-        filters.UpdateType.MESSAGE & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
+        filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
         filter_message))
     app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
