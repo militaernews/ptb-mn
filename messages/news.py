@@ -85,6 +85,9 @@ async def post_channel_english(update: Update, context: CallbackContext):
             "langs": defaultdict(str)
         }
 
+    print("----------------\n\nDICT\n\n-----------------------")
+    print(context.bot_data[str(update.channel_post.message_id)])
+
     # only index 0 should have reply_to_message -- check this!
     if update.channel_post.reply_to_message is not None:
         print(":::::::::: reply exists! ::::::::::::::::::::::::")
@@ -149,7 +152,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
     context.job_queue.run_once(
         share_in_other_channels,
-        30,
+        10,
         {"media_group_id": update.channel_post.media_group_id, "message_id": update.channel_post.message_id},
         str(update.channel_post.media_group_id),
     )

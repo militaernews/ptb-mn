@@ -130,6 +130,7 @@ ENTRIES = [
     "reagiert",
     "Globohomo",
     "Doppelmoral",
+    "Euromaidan",
     "Clown"
 ]
 
