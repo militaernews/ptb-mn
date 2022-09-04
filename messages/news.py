@@ -112,19 +112,19 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
     if update.channel_post.photo:
         context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaPhoto(media=update.channel_post.photo[-1].file_id).to_json()
+            InputMediaPhoto(media=update.channel_post.photo[-1].file_id)
         )
         print(
             "--- PHOTO ----------------------------------------------------------------"
         )
     elif update.channel_post.video:
         context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaVideo(media=update.channel_post.video.file_id).to_json()
+            InputMediaVideo(media=update.channel_post.video.file_id)
         )
 
     elif update.channel_post.animation:
         context.bot_data[update.channel_post.media_group_id].append(
-            InputMediaAnimation(media=update.channel_post.animation.file_id).to_json()
+            InputMediaAnimation(media=update.channel_post.animation.file_id)
         )
 
     if update.channel_post.caption is not None:
@@ -253,7 +253,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     for file in context.bot_data[job_context["media_group_id"]]:
         print(file)
-        files.append(file.from_json())
+        files.append(file)
 
     original_caption = files[0].caption
 

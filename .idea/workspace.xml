@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix?">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -231,14 +229,7 @@
       <workItem from="1661980715483" duration="1028000" />
       <workItem from="1662193118754" duration="875000" />
       <workItem from="1662275738400" duration="1624000" />
-      <workItem from="1662300212353" duration="1016000" />
-    </task>
-    <task id="LOCAL-00023" summary="fix edit caption?">
-      <created>1659644332955</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1659644332955</updated>
+      <workItem from="1662300212353" duration="1435000" />
     </task>
     <task id="LOCAL-00024" summary="upload videos to twitter, fixes">
       <created>1659712730715</created>
@@ -576,7 +567,14 @@
       <option name="project" value="LOCAL" />
       <updated>1662300344143</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="fix?">
+      <created>1662301338342</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1662301338342</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
