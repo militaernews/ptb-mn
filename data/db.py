@@ -44,7 +44,7 @@ def query_replies2(post_id: int,lang_key:str):
         return res
 
 
-def insert_single3(post_id=int, msg_id: int, reply_id: int, msg: Message, meg_id: str = None, lang_key: str = GERMAN.lang_key):
+def insert_single3(post_id:int, msg_id: int, reply_id: int, msg: Message, meg_id: str = None, lang_key: str = GERMAN.lang_key):
     if len(msg.photo) != 0:
         file_type = PHOTO
         file_id = msg.photo[-1].file_id
@@ -90,9 +90,9 @@ def insert_single( msg_id: int, meg_id: str = None, reply_id: int = None, file_t
 
     with conn.cursor() as c:
         c.execute(
-            "insert into posts(msg_id, media_group_id, reply_id, file_type, file_id,lang) values (%s,%s,%s,%s,%s,%s) returning post_id",
+            "insert into posts(msg_id, media_group_id, reply_id, file_type, file_id,lang,post_id) values (%s,%s,%s,%s,%s,%s,%s)",
             insertable)
-        res = c.fetchone()[0]
+        res = c.fetchone()
         conn.commit()
 
         print(">> Result: post_id =",res)
