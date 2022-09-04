@@ -6194,7 +6194,7 @@
 411007984||411007982|c|G
 411007984||411007982|C|G
 411007984||411007982|T|G</Grants>
-      <IntrospectionStateNumber>296954349</IntrospectionStateNumber>
+      <IntrospectionStateNumber>296977864</IntrospectionStateNumber>
       <ServerVersion>14.4</ServerVersion>
       <StartupTime>1659729080</StartupTime>
       <TimeZones>true ACDT
@@ -8255,8 +8255,10 @@ true posixrules
 404322716||10|C|G
 404322716||10|U|G
 404322716||402606860|U|O</Grants>
-      <IntrospectionStateNumber>296954349</IntrospectionStateNumber>
+      <IntrospectionStateNumber>296977864</IntrospectionStateNumber>
       <ObjectId>402606861</ObjectId>
+      <Relations>sequence|table|411031620|411031621|1
+</Relations>
       <OwnerName>oyefmwurylwzhi</OwnerName>
     </database>
     <database id="159" parent="1" name="d23j941stg3t47">
@@ -31286,7 +31288,7 @@ true posixrules
     </schema>
     <schema id="4735" parent="158" name="public">
       <Current>1</Current>
-      <IntrospectionStateNumber>296954349</IntrospectionStateNumber>
+      <IntrospectionStateNumber>296977864</IntrospectionStateNumber>
       <ObjectId>405845061</ObjectId>
       <StateNumber>281986551</StateNumber>
       <OwnerName>oyefmwurylwzhi</OwnerName>
@@ -31301,71 +31303,92 @@ photo</Labels>
       <SubKind>enum</SubKind>
       <OwnerName>oyefmwurylwzhi</OwnerName>
     </object-type>
-    <table id="4737" parent="4735" name="persistence">
+    <sequence id="4737" parent="4735" name="posts_post_id_seq">
+      <DataType>integer|0s</DataType>
+      <ObjectId>411031620</ObjectId>
+      <StateNumber>296977860</StateNumber>
+      <OwnerName>oyefmwurylwzhi</OwnerName>
+    </sequence>
+    <table id="4738" parent="4735" name="persistence">
       <ObjectId>405845090</ObjectId>
       <StateNumber>281986589</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>oyefmwurylwzhi</OwnerName>
     </table>
-    <table id="4738" parent="4735" name="posts">
-      <ObjectId>411022946</ObjectId>
-      <StateNumber>296954292</StateNumber>
+    <table id="4739" parent="4735" name="posts">
+      <ObjectId>411031621</ObjectId>
+      <StateNumber>296977860</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>oyefmwurylwzhi</OwnerName>
     </table>
-    <column id="4739" parent="4737" name="data">
+    <column id="4740" parent="4738" name="data">
       <DataType>json|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StateNumber>281986589</StateNumber>
       <TypeId>114</TypeId>
     </column>
-    <column id="4740" parent="4738" name="post_id">
+    <column id="4741" parent="4739" name="post_id">
       <DataType>integer|0s</DataType>
+      <DefaultExpression>nextval(&apos;posts_post_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <StateNumber>296954292</StateNumber>
+      <StateNumber>296977860</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="4741" parent="4738" name="media_group_id">
-      <DataType>varchar(120)|0s</DataType>
+    <column id="4742" parent="4739" name="lang">
+      <DataType>char(2)|0s</DataType>
+      <NotNull>1</NotNull>
       <Position>2</Position>
-      <StateNumber>296954292</StateNumber>
-      <TypeId>1043</TypeId>
+      <StateNumber>296977860</StateNumber>
+      <TypeId>1042</TypeId>
     </column>
-    <column id="4742" parent="4738" name="reply_id">
+    <column id="4743" parent="4739" name="msg_id">
       <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
       <Position>3</Position>
-      <StateNumber>296954292</StateNumber>
+      <StateNumber>296977860</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="4743" parent="4738" name="file_type">
-      <DataType>integer|0s</DataType>
-      <Position>4</Position>
-      <StateNumber>296954292</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="4744" parent="4738" name="file_id">
+    <column id="4744" parent="4739" name="media_group_id">
       <DataType>varchar(120)|0s</DataType>
-      <Position>5</Position>
-      <StateNumber>296954292</StateNumber>
+      <Position>4</Position>
+      <StateNumber>296977860</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <index id="4745" parent="4738" name="posts_pkey">
+    <column id="4745" parent="4739" name="reply_id">
+      <DataType>integer|0s</DataType>
+      <Position>5</Position>
+      <StateNumber>296977860</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="4746" parent="4739" name="file_type">
+      <DataType>integer|0s</DataType>
+      <Position>6</Position>
+      <StateNumber>296977860</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="4747" parent="4739" name="file_id">
+      <DataType>varchar(120)|0s</DataType>
+      <Position>7</Position>
+      <StateNumber>296977860</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <index id="4748" parent="4739" name="posts_pkey">
       <ColNames>post_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
-      <ObjectId>411022949</ObjectId>
+      <ObjectId>411031625</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>296954292</StateNumber>
+      <StateNumber>296977860</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="4746" parent="4738" name="posts_pkey">
+    <key id="4749" parent="4739" name="posts_pkey">
       <NameSurrogate>1</NameSurrogate>
-      <ObjectId>411022950</ObjectId>
+      <ObjectId>411031626</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>296954292</StateNumber>
-      <UnderlyingIndexId>411022949</UnderlyingIndexId>
+      <StateNumber>296977860</StateNumber>
+      <UnderlyingIndexId>411031625</UnderlyingIndexId>
     </key>
   </database-model>
 </dataSource>

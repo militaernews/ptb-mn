@@ -17,7 +17,7 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
 
         get_mg("awd")
 
-        insert_single(update.message)
+        insert_single2(update.message)
 
 
 

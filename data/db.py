@@ -2,12 +2,10 @@ import psycopg2
 from telegram import Message
 from telegram.ext import CallbackContext
 
-conn = psycopg2.connect(
-    host="ec2-34-246-227-219.eu-west-1.compute.amazonaws.com",
-    database="d23c16oa17p1os",
-    user="oyefmwurylwzhi",
-    port="5432",
-    password="e17612f3bd355908dab3ce6dfc72571cf6d92bc1c57d0e2636935dd05b157e87")
+from config import DATABASE_URL
+from data.lang import GERMAN
+
+conn = psycopg2.connect(DATABASE_URL)
 
 
 def key_exists(context: CallbackContext, key: int) -> bool:
@@ -29,7 +27,40 @@ def get_mg(mg_id: str):
 PHOTO, VIDEO, ANIMATION = range(3)
 
 
-def insert_single(msg: Message):
+def query_replies(msg_id: int,lang_key:str):
+    with conn.cursor() as c:
+        c.execute("select p.reply_id from posts p where p.msg_id = %s and p.lang=%s", (msg_id,lang_key))
+        res = c.fetchone()
+
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+        return res
+
+def query_replies2(post_id: int,lang_key:str):
+    with conn.cursor() as c:
+        c.execute("select p.reply_id from posts p where p.post_id = %s and p.lang=%s", (post_id,lang_key))
+        res = c.fetchone()[0]
+
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+        return res
+
+
+def insert_single3(post_id=int, msg_id: int, reply_id: int, msg: Message, meg_id: str = None, lang_key: str = GERMAN.lang_key):
+    if len(msg.photo) != 0:
+        file_type = PHOTO
+        file_id = msg.photo[-1].file_id
+    elif msg.video is not None:
+        file_type = VIDEO
+        file_id = msg.video.file_id
+    elif msg.animation is not None:
+        file_type = ANIMATION
+        file_id = msg.animation.file_id
+    else:
+        file_type = None
+        file_id = None
+    insert_single(post_id, msg_id, meg_id, reply_id, file_type, file_id, lang_key)
+
+
+def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key):
     if len(msg.photo) != 0:
         file_type = PHOTO
         file_id = msg.photo[-1].file_id
@@ -48,11 +79,22 @@ def insert_single(msg: Message):
     else:
         reply_id = None
 
-    insertable = (msg.id, msg.media_group_id, reply_id, file_type, file_id)
+    # add text aswell?
+    return insert_single(msg.id, msg.media_group_id, reply_id, file_type, file_id, lang_key)
+
+
+def insert_single( msg_id: int, meg_id: str = None, reply_id: int = None, file_type: int = None, file_id: str = None,
+                  lang_key: str = GERMAN.lang_key):
+    insertable = (msg_id, meg_id, reply_id, file_type, file_id, lang_key)
     print(">> Insert: ", insertable)
 
     with conn.cursor() as c:
-        c.execute("insert into posts(post_id, media_group_id, reply_id, file_type, file_id) values (%s,%s,%s,%s,%s)",
-                  insertable)
+        c.execute(
+            "insert into posts(msg_id, media_group_id, reply_id, file_type, file_id,lang) values (%s,%s,%s,%s,%s,%s) returning post_id",
+            insertable)
+        res = c.fetchone()[0]
+        conn.commit()
 
-    conn.commit()
+        print(">> Result: post_id =",res)
+        return res
+

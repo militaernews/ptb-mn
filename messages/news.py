@@ -10,6 +10,7 @@ from telegram.ext import CallbackContext
 
 import config
 import twitter
+from data.db import insert_single, insert_single3, query_replies, insert_single2, query_replies2
 from data.lang import GERMAN, languages
 from util.helper import get_replies, sanitize_text, get_file
 from util.regex import HASHTAG, WHITESPACE, BREAKING
@@ -17,29 +18,24 @@ from util.translation import flag_to_hashtag, translate_message
 
 
 # TODO: make method more generic
-async def post_channel_single(update: Update, context: CallbackContext):
-    original_caption = sanitize_text(update.channel_post.caption)
-
-    replies = get_replies(context.bot_data, str(update.channel_post.message_id))
+async def post_channel_single(update: Update, context: CallbackContext, post_id:int):
+    original_caption = sanitize_text(update.channel_post.caption_html_urled)
 
     for lang in languages:
         print(lang)
-        print(context.bot_data[str(update.channel_post.message_id)])
+
+        reply_id = query_replies2(post_id, lang.lang_key)
 
         try:
+
             msg_id: MessageId = await update.channel_post.copy(
                 chat_id=lang.channel_id,
                 caption=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
-                reply_to_message_id=replies[lang.lang_key]
-                if replies is not None
-                else None,
+                reply_to_message_id=reply_id
             )
+            print("---------- MSG ID :::::::::", msg_id)
+            insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key)
 
-            print(msg_id)
-
-            context.bot_data[str(update.channel_post.message_id)]["langs"][
-                lang.lang_key
-            ] = msg_id.message_id
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
@@ -80,25 +76,10 @@ async def post_channel_single(update: Update, context: CallbackContext):
 
 # TODO: make method more generic
 async def post_channel_english(update: Update, context: CallbackContext):
-    if str(update.channel_post.message_id) not in context.bot_data:
-        context.bot_data[str(update.channel_post.message_id)] = {
-            "langs": {}
-        }
-    # maybe put "text" key here ??
-
-    print("----------------\n\nDICT\n\n-----------------------")
-    print(context.bot_data[str(update.channel_post.message_id)])
-
-    # only index 0 should have reply_to_message -- check this!
-    if update.channel_post.reply_to_message is not None:
-        print(":::::::::: reply exists! ::::::::::::::::::::::::")
-        print(update.channel_post)
-        context.bot_data[str(update.channel_post.message_id)]["reply"] = str(
-            update.channel_post.reply_to_message.message_id
-        )
+    post_id = insert_single2(update.channel_post)
 
     if update.channel_post.media_group_id is None:
-        await post_channel_single(update, context)
+        await post_channel_single(update, context,post_id)
         return
 
     if update.channel_post.media_group_id in context.bot_data:
@@ -111,25 +92,8 @@ async def post_channel_english(update: Update, context: CallbackContext):
     else:
         print("--- NEW MG ------------------------")
         context.bot_data[update.channel_post.media_group_id] = []
-        context.bot_data[f"temp_{update.channel_post.media_group_id}"] = []
-
-    if update.channel_post.photo:
-        context.bot_data[f"temp_{update.channel_post.media_group_id}"].append(
-            InputMediaPhoto(media=update.channel_post.photo[-1].file_id)
-        )
-    elif update.channel_post.video:
-        context.bot_data[f"temp_{update.channel_post.media_group_id}"].append(
-            InputMediaVideo(media=update.channel_post.video.file_id)
-        )
-    elif update.channel_post.animation:
-        context.bot_data[f"temp_{update.channel_post.media_group_id}"].append(
-            InputMediaAnimation(media=update.channel_post.animation.file_id)
-        )
 
     if update.channel_post.caption is not None:
-
-        context.bot_data[f"temp_{update.channel_post.media_group_id}"][-1].caption = update.channel_post.caption_html_urled
-
         try:
             await update.channel_post.edit_caption(
                 flag_to_hashtag(update.channel_post.caption_html_urled) + GERMAN.footer
@@ -159,11 +123,12 @@ async def breaking_news(update: Update, context: CallbackContext):
     breaking_photo_path = "res/breaking/mn-breaking-de.png"
 
     try:
-        await context.bot.send_photo(
+        msg_de = await context.bot.send_photo(
             chat_id=GERMAN.channel_id,
             photo=open(breaking_photo_path, "rb"),
             caption=f"{formatted_text}{GERMAN.footer}",
         )
+        insert_single2(msg_de)
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -174,11 +139,12 @@ async def breaking_news(update: Update, context: CallbackContext):
 
     for lang in languages:
         try:
-            await context.bot.send_photo(
+            msg = await context.bot.send_photo(
                 chat_id=lang.channel_id,
                 photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
                 caption=f"#{lang.breaking}\n\n{translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}",
             )
+            insert_single2(msg, lang.lang_key)
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
@@ -211,7 +177,9 @@ async def announcement(update: Update, context: CallbackContext):
             photo=open("res/announce/mn-announce-de.png", "rb"),
             caption="#MITTEILUNG" + text,
         )
+        insert_single2(msg_de)
         await msg_de.pin()
+
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -228,6 +196,7 @@ async def announcement(update: Update, context: CallbackContext):
                 caption=f"#{lang.announce}{translate_message(lang.lang_key, text, lang.lang_key_deepl)}",
 
             )
+            insert_single2(msg, lang.lang_key)
             await msg.pin()
         except Exception as e:
             await context.bot.send_message(
@@ -383,38 +352,22 @@ async def handle_url(update: Update, context: CallbackContext):
 
 
 async def post_channel_text(update: Update, context: CallbackContext):
-    if update.channel_post.message_id not in context.bot_data:
-        print("::::: post channel text ::: new msg")
-        context.bot_data[str(update.channel_post.message_id)] = {"langs": defaultdict(str)}
+    original_caption = sanitize_text(update.channel_post.caption_html_urled)
 
-    # only index 0 should have reply_to_message -- check this!
-    if update.channel_post.reply_to_message is not None:
-        print("::::: post channel text ::: new reply")
-        context.bot_data[str(update.channel_post.message_id)][
-            "reply"
-        ] = update.channel_post.reply_to_message.message_id
-
-    original_caption = update.channel_post.text_html_urled
-
-    replies = get_replies(context.bot_data, str(update.channel_post.message_id))
+    insert_single2(update.channel_post)
 
     for lang in languages:
         print(lang)
-        print(context.bot_data[str(update.channel_post.message_id)])
+
+        reply_id = query_replies(update.channel_post.message_id, lang.lang_key)
+
         try:
             msg: Message = await context.bot.send_message(
                 chat_id=lang.channel_id,
                 text=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
-                reply_to_message_id=replies[lang.lang_key]
-                if replies is not None
-                else None,
+                reply_to_message_id=reply_id
             )
-
-            print(msg.message_id)
-
-            context.bot_data[str(update.channel_post.message_id)]["langs"][
-                lang.lang_key
-            ] = msg.message_id
+            insert_single2(msg, lang.lang_key)
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
