@@ -27,24 +27,56 @@ def get_mg(mg_id: str):
 PHOTO, VIDEO, ANIMATION = range(3)
 
 
-def query_replies(msg_id: int,lang_key:str):
+def query_replies(msg_id: int, lang_key: str):
     with conn.cursor() as c:
-        c.execute("select p.reply_id from posts p where p.msg_id = %s and p.lang=%s", (msg_id,lang_key))
+        c.execute("select p.reply_id from posts p where p.msg_id = %s and p.lang=%s", (msg_id, lang_key))
         res = c.fetchone()
 
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
         return res
 
-def query_replies2(post_id: int,lang_key:str):
+
+def query_replies2(post_id: int, lang_key: str):
     with conn.cursor() as c:
-        c.execute("select p.reply_id from posts p where p.post_id = %s and p.lang=%s", (post_id,lang_key))
-        res = c.fetchone()[0]
+        c.execute("select p.reply_id from posts p where p.post_id = %s and p.lang=%s", (post_id, lang_key))
+        res = c.fetchone()
 
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
-        return res
+        if res is not None:
+            return res[0]
+        else:
+            return res
 
 
-def insert_single3(post_id:int, msg_id: int, reply_id: int, msg: Message, meg_id: str = None, lang_key: str = GERMAN.lang_key):
+def get_post_id(msg: Message):
+    if msg.reply_to_message is None:
+        return
+
+    with conn.cursor() as c:
+        c.execute("select p.post_id from posts p where p.msg_id = %s and p.lang='de'", [msg.reply_to_message.id])
+        res = c.fetchone()
+
+        if res is not None:
+            return res[0]
+        else:
+            return res
+
+
+def query_replies3(post_id: int, lang_key: str):
+    with conn.cursor() as c:
+
+        c.execute("select p.msg_id from posts p where p.post_id = %s and p.lang=%s", (post_id, lang_key))
+        res = c.fetchone()
+
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+        if res is not None:
+            return res[0]
+        else:
+            return res
+
+
+def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None,
+                   lang_key: str = GERMAN.lang_key, post_id: int = None):
     if len(msg.photo) != 0:
         file_type = PHOTO
         file_id = msg.photo[-1].file_id
@@ -57,7 +89,7 @@ def insert_single3(post_id:int, msg_id: int, reply_id: int, msg: Message, meg_id
     else:
         file_type = None
         file_id = None
-    insert_single(post_id, msg_id, meg_id, reply_id, file_type, file_id, lang_key)
+    insert_single(msg_id, meg_id, reply_id, file_type, file_id, lang_key, post_id)
 
 
 def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key):
@@ -83,18 +115,22 @@ def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key):
     return insert_single(msg.id, msg.media_group_id, reply_id, file_type, file_id, lang_key)
 
 
-def insert_single( msg_id: int, meg_id: str = None, reply_id: int = None, file_type: int = None, file_id: str = None,
-                  lang_key: str = GERMAN.lang_key):
-    insertable = (msg_id, meg_id, reply_id, file_type, file_id, lang_key)
+def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_type: int = None, file_id: str = None,
+                  lang_key: str = GERMAN.lang_key, post_id: int = None):
+    if post_id is None:
+        with conn.cursor() as c:
+            c.execute("select max(p.post_id) from posts p")
+            post_id = int(c.fetchone()[0] or 0) + 1
+
+    insertable = (post_id, msg_id, meg_id, reply_id, file_type, file_id, lang_key)
     print(">> Insert: ", insertable)
 
     with conn.cursor() as c:
         c.execute(
-            "insert into posts(msg_id, media_group_id, reply_id, file_type, file_id,lang,post_id) values (%s,%s,%s,%s,%s,%s,%s)",
+            "insert into posts(post_id, msg_id, media_group_id, reply_id, file_type, file_id,lang) values (%s,%s,%s,%s,%s,%s,%s) returning post_id",
             insertable)
         res = c.fetchone()
         conn.commit()
 
-        print(">> Result: post_id =",res)
+        print(">> Result: post_id =", res)
         return res
-

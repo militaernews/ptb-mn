@@ -10,7 +10,8 @@ from telegram.ext import CallbackContext
 
 import config
 import twitter
-from data.db import insert_single, insert_single3, query_replies, insert_single2, query_replies2
+from data.db import insert_single, insert_single3, query_replies, insert_single2, query_replies2, query_replies3, \
+    get_post_id
 from data.lang import GERMAN, languages
 from util.helper import get_replies, sanitize_text, get_file
 from util.regex import HASHTAG, WHITESPACE, BREAKING
@@ -18,13 +19,15 @@ from util.translation import flag_to_hashtag, translate_message
 
 
 # TODO: make method more generic
-async def post_channel_single(update: Update, context: CallbackContext, post_id:int):
+async def post_channel_single(update: Update, context: CallbackContext, de_post_id:int):
+    post_id = get_post_id(update.channel_post)
     original_caption = sanitize_text(update.channel_post.caption_html_urled)
 
     for lang in languages:
         print(lang)
 
-        reply_id = query_replies2(post_id, lang.lang_key)
+        reply_id = query_replies3(post_id, lang.lang_key)
+        print("--- SINGLE ---",post_id,reply_id,lang.lang_key)
 
         try:
 
@@ -34,7 +37,7 @@ async def post_channel_single(update: Update, context: CallbackContext, post_id:
                 reply_to_message_id=reply_id
             )
             print("---------- MSG ID :::::::::", msg_id)
-            insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key)
+            insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key, post_id=de_post_id)
 
         except Exception as e:
             await context.bot.send_message(
@@ -79,7 +82,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
     post_id = insert_single2(update.channel_post)
 
     if update.channel_post.media_group_id is None:
-        await post_channel_single(update, context,post_id)
+        await post_channel_single(update, context, post_id)
         return
 
     if update.channel_post.media_group_id in context.bot_data:
@@ -346,9 +349,7 @@ async def handle_url(update: Update, context: CallbackContext):
 
     print(text)
 
-    await context.bot.send_message(
-        chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False
-    )
+    await context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
 
 
 async def post_channel_text(update: Update, context: CallbackContext):
