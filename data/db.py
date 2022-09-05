@@ -108,13 +108,16 @@ def query_replies3(post_id: int, lang_key: str):
         else:
             return res
 
-def query_replies4(msg:Message, lang_key: str):
+
+def query_replies4(msg: Message, lang_key: str):
     if msg.reply_to_message is None:
         return
 
     with conn.cursor() as c:
 
-        c.execute("select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')", (lang_key, msg.reply_to_message.id))
+        c.execute(
+            "select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')",
+            (lang_key, msg.reply_to_message.id))
         res = c.fetchone()
 
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
@@ -123,10 +126,13 @@ def query_replies4(msg:Message, lang_key: str):
         else:
             return res
 
-def get_msg_id(msg_id:int, lang_key:str):
+
+def get_msg_id(msg_id: int, lang_key: str):
     with conn.cursor() as c:
 
-        c.execute("select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')", (lang_key, msg_id))
+        c.execute(
+            "select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')",
+            (lang_key, msg_id))
         res = c.fetchone()
 
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
@@ -134,6 +140,7 @@ def get_msg_id(msg_id:int, lang_key:str):
             return res[0]
         else:
             return res
+
 
 def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None,
                    lang_key: str = GERMAN.lang_key, post_id: int = None):  # text=??
@@ -180,6 +187,7 @@ def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key):
 
     # add text aswell?
     return insert_single(msg.id, msg.media_group_id, reply_id, file_type, file_id, lang_key, text=text)
+
 
 def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_type: int = None, file_id: str = None,
                   lang_key: str = GERMAN.lang_key, post_id: int = None, text: str = None):

@@ -9,7 +9,7 @@ from telegram.ext import CallbackContext
 import config
 import twitter
 from data.db import insert_single3, query_replies, insert_single2, query_replies3, \
-    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, insert_single, get_msg_id
+    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id
 from data.lang import GERMAN, languages
 from util.helper import sanitize_text, get_file
 from util.regex import HASHTAG, WHITESPACE, BREAKING
@@ -24,7 +24,7 @@ async def post_channel_single(update: Update, context: CallbackContext, de_post_
     for lang in languages:
         print(lang)
 
-        reply_id = query_replies4(update.channel_post,lang.lang_key)#query_replies3(post_id, lang.lang_key)
+        reply_id = query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
         print("--- SINGLE ---", post_id, reply_id, lang.lang_key)
 
         try:
@@ -292,7 +292,7 @@ async def edit_channel(update: Update, context: CallbackContext):
         try:
             # not sure if this will cause eternal triggering, hopefully not
             await update.edited_channel_post.edit_caption(flag_to_hashtag(original_caption) + GERMAN.footer)
-            #todo: update text in db
+            # todo: update text in db
         except TelegramError as e:
             if not e.message.startswith("Message is not modified"):
                 await context.bot.send_message(
@@ -348,9 +348,11 @@ async def handle_url(update: Update, context: CallbackContext):
 
 
 async def post_channel_text(update: Update, context: CallbackContext):
-    original_caption = sanitize_text(update.channel_post.caption_html_urled)
+    original_caption = sanitize_text(update.channel_post.text_html_urled)
 
     insert_single2(update.channel_post)
+
+    print("orignal caption::::::::::", original_caption)
 
     for lang in languages:
         print(lang)
@@ -372,10 +374,8 @@ async def post_channel_text(update: Update, context: CallbackContext):
             )
             pass
 
-    formatted_text = flag_to_hashtag(original_caption)
-
     try:
-        await update.channel_post.edit_text(f"{formatted_text}{GERMAN.footer}")
+        await update.channel_post.edit_text(f"{flag_to_hashtag(original_caption)}{GERMAN.footer}")
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await context.bot.send_message(
@@ -386,7 +386,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
             pass
 
     try:
-        await twitter.tweet_text(formatted_text)
+        await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -408,6 +408,8 @@ async def edit_channel_text(update: Update, context: CallbackContext):
             update.edited_channel_post.text_html_urled.replace(GERMAN.footer, ""),
         ),
     )
+
+    print("orignal caption::::::::::", original_caption)
 
     for lang in languages:
         try:

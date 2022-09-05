@@ -11,7 +11,7 @@ from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
 from messages.bingo import bingo_field
-from messages.chat import private_setup, unwarn_user, ban_user, filter_message, warn_user, report_user
+from messages.chat import unwarn_user, ban_user, filter_message, warn_user, report_user
 from messages.meme import post_media_meme, post_text_meme
 from messages.news import edit_channel_text, announcement, breaking_news, edit_channel, post_channel_text, \
     post_channel_english, post_info
@@ -35,7 +35,7 @@ if __name__ == "__main__":
         .persistence(PostgresPersistence(url=DATABASE_URL, session=session)).build()
 
     app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
-  #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
+    #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     app.add_handler(
