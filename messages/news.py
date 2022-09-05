@@ -1,6 +1,4 @@
 import re
-from collections import defaultdict
-from typing import Dict, Union
 
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       InputMediaVideo, Message, MessageEntity, MessageId,
@@ -10,24 +8,24 @@ from telegram.ext import CallbackContext
 
 import config
 import twitter
-from data.db import insert_single, insert_single3, query_replies, insert_single2, query_replies2, query_replies3, \
-    get_post_id
+from data.db import insert_single3, query_replies, insert_single2, query_replies3, \
+    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, insert_single
 from data.lang import GERMAN, languages
-from util.helper import get_replies, sanitize_text, get_file
+from util.helper import sanitize_text, get_file
 from util.regex import HASHTAG, WHITESPACE, BREAKING
 from util.translation import flag_to_hashtag, translate_message
 
 
 # TODO: make method more generic
-async def post_channel_single(update: Update, context: CallbackContext, de_post_id:int):
+async def post_channel_single(update: Update, context: CallbackContext, de_post_id: int):
     post_id = get_post_id(update.channel_post)
     original_caption = sanitize_text(update.channel_post.caption_html_urled)
 
     for lang in languages:
         print(lang)
 
-        reply_id = query_replies3(post_id, lang.lang_key)
-        print("--- SINGLE ---",post_id,reply_id,lang.lang_key)
+        reply_id = query_replies4(update.channel_post,lang.lang_key)#query_replies3(post_id, lang.lang_key)
+        print("--- SINGLE ---", post_id, reply_id, lang.lang_key)
 
         try:
 
@@ -85,16 +83,9 @@ async def post_channel_english(update: Update, context: CallbackContext):
         await post_channel_single(update, context, post_id)
         return
 
-    if update.channel_post.media_group_id in context.bot_data:
+    for job in context.job_queue.get_jobs_by_name(update.channel_post.media_group_id):
         print("--- job gone ::::::::")
-        context.bot_data[update.channel_post.media_group_id].append(str(update.channel_post.id))
-
-        for job in context.job_queue.get_jobs_by_name(update.channel_post.media_group_id):
-            job.schedule_removal()
-
-    else:
-        print("--- NEW MG ------------------------")
-        context.bot_data[update.channel_post.media_group_id] = []
+        job.schedule_removal()
 
     if update.channel_post.caption is not None:
         try:
@@ -109,11 +100,15 @@ async def post_channel_english(update: Update, context: CallbackContext):
             )
             pass
 
+    if update.channel_post.reply_to_message is not None:
+        reply_id = update.channel_post.reply_to_message.id
+    else:
+        reply_id = None
+
     context.job_queue.run_once(
         share_in_other_channels,
         10,
-        {"media_group_id": update.channel_post.media_group_id,
-         "message_id": str(update.channel_post.message_id)},
+        reply_id,
         update.channel_post.media_group_id
     )
 
@@ -211,43 +206,45 @@ async def announcement(update: Update, context: CallbackContext):
 
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
-    job_context: Dict[str, Union[str, int]] = context.job.data
+    posts = query_files(context.job.name)
     files: [InputMedia] = []
 
-    print("JOB ::::::::::::: ", context.job.data)
-    print(
-        "bot-data :::::::::::::::::::::::::::",
-        context.bot_data[job_context["media_group_id"]],
-    )
+    for post in posts:
+        print(post)
 
-    for file in context.bot_data[f"temp_{job_context['media_group_id']}"]:
-        print(file)
-        files.append(file)
+        if post.file_type == PHOTO:
+            files.append(InputMediaPhoto(post.file_id))
+        elif post.file_type == VIDEO:
+            files.append(InputMediaVideo(post.file_id))
+        elif post.file_type == ANIMATION:
+            files.append(InputMediaAnimation(post.file_type))
 
-    original_caption = files[0].caption
+    original_caption = posts[0].text
 
-    replies = get_replies(context.bot_data, job_context["message_id"])
     print("::::::::::: share in other ::::::::::")
-    print(replies)
+    post_id = get_post_id2(context.job.data)
+    print(" ------------------------------------------- post_id:", post_id)
 
     for lang in languages:
         files[0].caption = (
                 translate_message(lang.lang_key, original_caption, lang.lang_key_deepl) + "\n" + lang.footer
         )
 
+        reply_id = query_replies3(post_id, lang.lang_key)
+        print(" ------------------------------------------- reply_id:", reply_id)
+
         try:
             msgs: [Message] = await context.bot.send_media_group(
                 chat_id=lang.channel_id,
                 media=files,
-                reply_to_message_id=replies[lang.lang_key]
-                if replies is not None
-                else None,
+                reply_to_message_id=reply_id
             )
 
             print(msgs)
 
-            context.bot_data[job_context["message_id"]]["langs"][lang.lang_key] = msgs[0].message_id
-            print("append ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", context.bot_data[job_context["message_id"]]["langs"])
+            for index, msg in enumerate(msgs):
+                insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
+                               post_id=posts[index].post_id)
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
@@ -259,8 +256,6 @@ async def share_in_other_channels(context: CallbackContext):
     print("----- done -----")
 
     # todo: tweet media_group
-
-    del context.bot_data[job_context["media_group_id"]]
 
 
 async def edit_channel(update: Update, context: CallbackContext):

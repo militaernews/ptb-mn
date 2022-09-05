@@ -9,5 +9,6 @@ create table posts
     reply_id       int,
     file_type      int,
     file_id        varchar(120),
-    primary key (msg_id,lang)
+    text           text,
+    primary key (msg_id, lang)
 );
