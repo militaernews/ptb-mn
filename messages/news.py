@@ -9,7 +9,7 @@ from telegram.ext import CallbackContext
 import config
 import twitter
 from data.db import insert_single3, query_replies, insert_single2, query_replies3, \
-    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, insert_single
+    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, insert_single, get_msg_id
 from data.lang import GERMAN, languages
 from util.helper import sanitize_text, get_file
 from util.regex import HASHTAG, WHITESPACE, BREAKING
@@ -274,11 +274,10 @@ async def edit_channel(update: Update, context: CallbackContext):
 
         for lang in languages:
             try:
+                msg_id = get_msg_id(update.edited_channel_post.id, lang.lang_key)
                 await context.bot.edit_message_caption(
                     chat_id=lang.channel_id,
-                    message_id=context.bot_data[
-                        str(update.edited_channel_post.message_id)
-                    ]["langs"][lang.lang_key],
+                    message_id=msg_id,
                     caption=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 )
             except TelegramError as e:
@@ -293,6 +292,7 @@ async def edit_channel(update: Update, context: CallbackContext):
         try:
             # not sure if this will cause eternal triggering, hopefully not
             await update.edited_channel_post.edit_caption(flag_to_hashtag(original_caption) + GERMAN.footer)
+            #todo: update text in db
         except TelegramError as e:
             if not e.message.startswith("Message is not modified"):
                 await context.bot.send_message(
