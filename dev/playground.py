@@ -4,6 +4,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from data.db import get_mg, insert_single2, query_files
+from messages.chat import filter_message
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -12,14 +13,7 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         print("--")
 
-        #   await filter_message(update, context)
-
-        get_mg("awd")
-
-        insert_single2(update.message)
-
-        res = query_files(47)
-        print(res)
+        await filter_message(update, context)
 
 
 

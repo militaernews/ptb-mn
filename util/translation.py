@@ -35,8 +35,8 @@ def flag_to_hashtag(text: str, language: str = None):
     return text
 
 
-def translate_message(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
-    translated_text = translate(target_lang, text, target_lang_deepl)
+async def translate_message(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
+    translated_text = await translate(target_lang, text, target_lang_deepl)
 
     return flag_to_hashtag(translated_text, target_lang)
 
@@ -59,7 +59,7 @@ def get_hashtag(key: str, language: str = None) -> str:
         pass
 
 
-def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
+async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
     print("---------------------------- text ----------------------------")
     print(text)
 
@@ -67,7 +67,6 @@ def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str
     emojis = re.findall(FLAG_EMOJI, sub_text)
     text_to_translate = re.sub(FLAG_EMOJI, PLACEHOLDER, sub_text)
 
-    translated_text = ""
 
     if target_lang == "fa":  # or "ru"?
         # text.replace: if bot was down and footer got added manually
@@ -75,16 +74,20 @@ def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str
         # I'm uncertain, whether replacing emojis for Right-to-left languages like Persian butchers the order
         translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
     try:
-        translated_text = translator.translate_text(text_to_translate,
-                                                    target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
-                                                    tag_handling="html",
-                                                    preserve_formatting=True).text
+        translated_text =    GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate) #translator.translate_text(text_to_translate,
+                                                 #   target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
+                                               #     tag_handling="html",
+                                              #      preserve_formatting=True).text
+
     except QuotaExceededException:
         print("--- Quota exceeded ---")
         translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
         pass
     except Exception as e:
         print("--- other error translating --- ", e)
+
+        translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
+        pass
 
     for emoji in emojis:
         translated_text = re.sub(PLACEHOLDER, emoji, translated_text, 1)

@@ -19,7 +19,7 @@ from util.translation import flag_to_hashtag, translate_message
 # TODO: make method more generic
 async def post_channel_single(update: Update, context: CallbackContext, de_post_id: int):
     post_id = get_post_id(update.channel_post)
-    original_caption = sanitize_text(update.channel_post.caption_html_urled)
+    original_caption = update.channel_post.caption_html_urled
 
     for lang in languages:
         print(lang)
@@ -31,7 +31,7 @@ async def post_channel_single(update: Update, context: CallbackContext, de_post_
 
             msg_id: MessageId = await update.channel_post.copy(
                 chat_id=lang.channel_id,
-                caption=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
+                caption=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 reply_to_message_id=reply_id
             )
             print("---------- MSG ID :::::::::", msg_id)
@@ -140,7 +140,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             msg = await context.bot.send_photo(
                 chat_id=lang.channel_id,
                 photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
-                caption=f"#{lang.breaking}\n\n{translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}",
+                caption=f"#{lang.breaking}\n\n{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}",
             )
             insert_single2(msg, lang.lang_key)
         except Exception as e:
@@ -191,7 +191,7 @@ async def announcement(update: Update, context: CallbackContext):
             msg = await context.bot.send_photo(
                 chat_id=lang.channel_id,
                 photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
-                caption=f"#{lang.announce}{translate_message(lang.lang_key, text, lang.lang_key_deepl)}",
+                caption=f"#{lang.announce}{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}",
 
             )
             insert_single2(msg, lang.lang_key)
@@ -227,7 +227,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     for lang in languages:
         files[0].caption = (
-                translate_message(lang.lang_key, original_caption, lang.lang_key_deepl) + "\n" + lang.footer
+                await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl) + "\n" + lang.footer
         )
 
         reply_id = query_replies3(post_id, lang.lang_key)
@@ -278,7 +278,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                 await context.bot.edit_message_caption(
                     chat_id=lang.channel_id,
                     message_id=msg_id,
-                    caption=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
+                    caption=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 )
             except TelegramError as e:
                 if not e.message.startswith("Message is not modified"):
@@ -362,7 +362,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
         try:
             msg: Message = await context.bot.send_message(
                 chat_id=lang.channel_id,
-                text=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
+                text=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 reply_to_message_id=reply_id
             )
             insert_single2(msg, lang.lang_key)
@@ -414,7 +414,7 @@ async def edit_channel_text(update: Update, context: CallbackContext):
     for lang in languages:
         try:
             await context.bot.edit_message_text(
-                text=f"{translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
+                text=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 chat_id=lang.channel_id,
                 message_id=context.bot_data[str(update.edited_channel_post.message_id)][
                     "langs"
@@ -442,7 +442,7 @@ async def post_info(update: Update, context: CallbackContext):
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
-            "<b>⚠️ Error when trying to send info in Channel de</b>\n<code>{e}</code>\n\n"
+            f"<b>⚠️ Error when trying to send info in Channel de</b>\n<code>{e}</code>\n\n"
             f"<b>Caused by Update</b>\n<code>{update}</code>",
         )
         pass
