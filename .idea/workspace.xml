@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/res/de/donbas.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/karten.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/maps.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/tode.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/commands.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,6 +73,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/res/de" />
       <recent name="$PROJECT_DIR$/messages" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -270,14 +267,7 @@
       <workItem from="1664307291538" duration="305000" />
       <workItem from="1664606915743" duration="1776000" />
       <workItem from="1664608830685" duration="305000" />
-      <workItem from="1664621070463" duration="426000" />
-    </task>
-    <task id="LOCAL-00036" summary="admins can append entries to bot_data">
-      <created>1660056265150</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1660056265150</updated>
+      <workItem from="1664621070463" duration="1423000" />
     </task>
     <task id="LOCAL-00037" summary="fix">
       <created>1660061993128</created>
@@ -615,7 +605,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664608687021</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="fix">
+      <created>1664621679608</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1664621679609</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
