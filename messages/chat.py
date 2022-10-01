@@ -251,8 +251,8 @@ async def filter_message(update: Update, context: CallbackContext):
 
 
 async def karten(update: Update, context: CallbackContext):
-    await reply_html(update, "karten")
+    await reply_html(update, context, "karten")
 
 
 async def tode(update: Update, context: CallbackContext):
-    await reply_html(update, "tode")
+    await reply_html(update, context, "tode")

@@ -1,6 +1,7 @@
 import re
 
 from telegram import Update
+from telegram.ext import CallbackContext
 
 from util.regex import FOOTER
 
@@ -51,8 +52,12 @@ async def get_file(update: Update):
         return await update.channel_post.animation.get_file()
 
 
-async def reply_html(update: Update, file_name: str):
+async def reply_html(update: Update, context: CallbackContext, file_name: str):
     await update.message.delete()
 
     with open(f"res/de/{file_name}.html", "r", encoding='utf-8') as f:
-        await update.message.reply_text(f.read())
+        text = f.read()
+        if update.message.reply_to_message is not None:
+            await update.message.reply_to_message.reply_text(text)
+        else:
+            await context.bot.send_message(update.message.chat_id, text)
