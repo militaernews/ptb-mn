@@ -250,9 +250,12 @@ async def filter_message(update: Update, context: CallbackContext):
         await handle_bingo(update, context)
 
 
-async def karten(update: Update, context: CallbackContext):
-    await reply_html(update, context, "karten")
+async def maps(update: Update, context: CallbackContext):
+    await reply_html(update, context, "maps")
 
 
-async def tode(update: Update, context: CallbackContext):
-    await reply_html(update, context, "tode")
+async def donbas(update: Update, context: CallbackContext):
+    await reply_html(update, context, "donbas")
+
+async def commands(update: Update, context: CallbackContext):
+    await reply_html(update, context, "commands")
