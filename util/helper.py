@@ -49,3 +49,10 @@ async def get_file(update: Update):
         return await update.channel_post.video.get_file()
     elif update.channel_post.animation is not None:
         return await update.channel_post.animation.get_file()
+
+
+async def reply_html(update: Update, file_name: str):
+    await update.message.delete()
+
+    with open(f"res/de/{file_name}.html", "r", encoding='utf-8') as f:
+        await update.message.reply_text(f.read())

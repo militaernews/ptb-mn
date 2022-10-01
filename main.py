@@ -11,7 +11,7 @@ from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
 from messages.bingo import bingo_field
-from messages.chat import unwarn_user, ban_user, filter_message, warn_user, report_user
+from messages.chat import unwarn_user, ban_user, filter_message, warn_user, report_user, karten, tode
 from messages.meme import post_media_meme, post_text_meme
 from messages.news import edit_channel_text, announcement, breaking_news, edit_channel, post_channel_text, \
     post_channel_english, post_info
@@ -91,6 +91,9 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
 
+    app.add_handler(CommandHandler("karten", karten, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("tode", tode, filters.Chat(GERMAN.chat_id)))
+
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
 
@@ -99,5 +102,5 @@ if __name__ == "__main__":
         app.run_polling()
     else:
         app.run_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN,
-                         webhook_url=f"https://web-production-5e05.up.railway.app/{TOKEN}")                 
-                        # webhook_url=f"https://ptb-mn.herokuapp.com/{TOKEN}")
+                        webhook_url=f"https://web-production-5e05.up.railway.app/{TOKEN}")
+        # webhook_url=f"https://ptb-mn.herokuapp.com/{TOKEN}")

@@ -8,6 +8,7 @@ from telegram.ext import CallbackContext
 
 from config import DATABASE_URL
 from data.lang import GERMAN
+
 logger = logging.getLogger(__name__)
 conn = psycopg2.connect(DATABASE_URL, cursor_factory=NamedTupleCursor)
 
@@ -51,8 +52,9 @@ def query_files(meg_id: str):
 
             return res
     except Exception as e:
-            logger.error("DB-Operation failed", e)
-            pass
+        logger.error("DB-Operation failed", e)
+        pass
+
 
 def query_replies(msg_id: int, lang_key: str):
     try:
@@ -65,6 +67,7 @@ def query_replies(msg_id: int, lang_key: str):
     except Exception as e:
         logger.error("DB-Operation failed", e)
         pass
+
 
 def query_replies2(post_id: int, lang_key: str):
     try:
@@ -80,6 +83,7 @@ def query_replies2(post_id: int, lang_key: str):
     except Exception as e:
         logger.error("DB-Operation failed", e)
         pass
+
 
 def get_post_id(msg: Message):
     if msg.reply_to_message is None:
@@ -97,6 +101,7 @@ def get_post_id(msg: Message):
         logger.error("DB-Operation failed", e)
         pass
 
+
 def get_post_id2(msg_id: int):
     try:
         with conn.cursor() as c:
@@ -110,6 +115,7 @@ def get_post_id2(msg_id: int):
     except Exception as e:
         logger.error("DB-Operation failed", e)
         pass
+
 
 def query_replies3(post_id: int, lang_key: str):
     try:
@@ -148,6 +154,7 @@ def query_replies4(msg: Message, lang_key: str):
         logger.error("DB-Operation failed", e)
         pass
 
+
 def get_msg_id(msg_id: int, lang_key: str):
     try:
         with conn.cursor() as c:
@@ -165,6 +172,7 @@ def get_msg_id(msg_id: int, lang_key: str):
     except Exception as e:
         logger.error("DB-Operation failed", e)
         pass
+
 
 def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None,
                    lang_key: str = GERMAN.lang_key, post_id: int = None):  # text=??

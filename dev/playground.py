@@ -3,7 +3,6 @@ import traceback
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from data.db import get_mg, insert_single2, query_files
 from messages.chat import filter_message
 
 
@@ -14,8 +13,6 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
         print("--")
 
         await filter_message(update, context)
-
-
 
     except Exception as e:
         await update.message.reply_text("-------\n\nTEST FAIL\n\n-------")

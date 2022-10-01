@@ -67,17 +67,17 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     emojis = re.findall(FLAG_EMOJI, sub_text)
     text_to_translate = re.sub(FLAG_EMOJI, PLACEHOLDER, sub_text)
 
-
     if target_lang == "fa":  # or "ru"?
         # text.replace: if bot was down and footer got added manually
 
         # I'm uncertain, whether replacing emojis for Right-to-left languages like Persian butchers the order
         translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
     try:
-        translated_text =    GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate) #translator.translate_text(text_to_translate,
-                                                 #   target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
-                                               #     tag_handling="html",
-                                              #      preserve_formatting=True).text
+        translated_text = GoogleTranslator(source='de', target=target_lang).translate(
+            text=text_to_translate)  # translator.translate_text(text_to_translate,
+        #   target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
+        #     tag_handling="html",
+        #      preserve_formatting=True).text
 
     except QuotaExceededException:
         print("--- Quota exceeded ---")

@@ -417,7 +417,7 @@ async def edit_channel_text(update: Update, context: CallbackContext):
             await context.bot.edit_message_text(
                 text=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 chat_id=lang.channel_id,
-                message_id= msg_id
+                message_id=msg_id
             )
         except TelegramError as e:
             if not e.message.startswith("Message is not modified"):

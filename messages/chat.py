@@ -10,6 +10,7 @@ import config
 from data.db import *
 from data.lang import languages
 from messages.bingo import handle_bingo
+from util.helper import reply_html
 from util.log import log
 
 
@@ -247,3 +248,11 @@ async def filter_message(update: Update, context: CallbackContext):
 
     else:
         await handle_bingo(update, context)
+
+
+async def karten(update: Update, context: CallbackContext):
+    await reply_html(update, "karten")
+
+
+async def tode(update: Update, context: CallbackContext):
+    await reply_html(update, "tode")

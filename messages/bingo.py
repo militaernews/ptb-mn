@@ -131,7 +131,11 @@ ENTRIES = [
     "Globohomo",
     "Doppelmoral",
     "Euromaidan",
-    "Clown"
+    "Clown",
+    "9/11",
+    "Rothschild",
+    "Ukronazi",
+    "Beischlafbettler"
 ]
 
 field_size = 5
