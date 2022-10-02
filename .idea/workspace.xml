@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="/sofa, refactor, fixes">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/commands.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/cmd.html" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/res/de/cmd.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/cmd.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -272,14 +269,7 @@
       <workItem from="1664608830685" duration="305000" />
       <workItem from="1664621070463" duration="2229000" />
       <workItem from="1664709887154" duration="3941000" />
-      <workItem from="1664718810671" duration="2777000" />
-    </task>
-    <task id="LOCAL-00042" summary="bingo">
-      <created>1660916138193</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1660916138193</updated>
+      <workItem from="1664718810671" duration="3095000" />
     </task>
     <task id="LOCAL-00043" summary="bingo - ?">
       <created>1660940180214</created>
@@ -617,7 +607,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664720834122</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="fix">
+      <created>1664721713272</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1664721713272</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -657,11 +654,11 @@
     <MESSAGE value="reply db works for single" />
     <MESSAGE value="reply db works for single and mg" />
     <MESSAGE value="some commands &amp; fixes" />
-    <MESSAGE value="fix" />
     <MESSAGE value="fix?" />
     <MESSAGE value="channel post media can be edited" />
     <MESSAGE value="/sofa, refactor, fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="/sofa, refactor, fixes" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$bingo.coverage" NAME="bingo Coverage Results" MODIFIED="1661018084001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/messages" />
