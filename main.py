@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     app.add_handler(CommandHandler("maps", maps, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("donbas", donbas, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("commands", commands, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("cmd", commands, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("sofa", sofa, filters.Chat(GERMAN.chat_id)))
 
     app.add_handler(MessageHandler(
