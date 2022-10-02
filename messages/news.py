@@ -9,7 +9,7 @@ from telegram.ext import CallbackContext
 import config
 import twitter
 from data.db import insert_single3, query_replies, insert_single2, query_replies3, \
-    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id
+    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id
 from data.lang import GERMAN, languages
 from util.helper import sanitize_text, get_file
 from util.regex import HASHTAG, WHITESPACE, BREAKING
@@ -272,26 +272,69 @@ async def edit_channel(update: Update, context: CallbackContext):
             ),
         )
 
+        file_id = get_file_id(update.edited_channel_post.id)
+
+        if len(update.edited_channel_post.photo) > 0:
+            new_file = await update.edited_channel_post.photo[-1].get_file()
+            input_media = InputMediaPhoto(new_file.file_id)
+        elif update.edited_channel_post.video is not None:
+            new_file = await update.edited_channel_post.video.get_file()
+            input_media = InputMediaVideo(new_file.file_id)
+        elif update.edited_channel_post.animation is not None:
+            new_file = await update.edited_channel_post.animation.get_file()
+            input_media = InputMediaAnimation(new_file.file_id)
+
+        print("-------------- EDurtuafIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT")
+
         for lang in languages:
+            msg_id = get_msg_id(update.edited_channel_post.id, lang.lang_key)
+
+
             try:
                 translated_text = await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)
                 if translated_text is not None:
-                    translated_text+=f"\n{lang.footer}"
-                msg_id = get_msg_id(update.edited_channel_post.id, lang.lang_key)
+                    translated_text += f"\n{lang.footer}"
 
                 await context.bot.edit_message_caption(
                     chat_id=lang.channel_id,
                     message_id=msg_id,
                     caption=translated_text,
                 )
+
             except TelegramError as e:
                 if not e.message.startswith("Message is not modified"):
-                    await context.bot.send_message(
+                     await context.bot.send_message(
                         config.LOG_GROUP,
-                        f"<b>⚠️ Error when trying to edit post in Channel {lang.lang_key}</b>\n"
+                        f"<b>⚠️ Error when trying to edit Caption in Channel {lang.lang_key}</b>\n"
                         f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                     )
-                    pass
+                pass
+
+            if file_id != new_file.file_id:
+                try:
+                    print(
+                        "- edit file ------------------------------------------------------------------------------------------------",
+                        input_media)
+                    await context.bot.edit_message_media(
+                        input_media,
+                        chat_id=lang.channel_id,
+                        message_id=msg_id,
+                        write_timeout=60
+                    )
+
+                except TelegramError as e:
+                    if not e.message.startswith("Message is not modified"):
+                        await context.bot.send_message(
+                            config.LOG_GROUP,
+                            f"<b>⚠️ Error when trying to edit Media in Channel {lang.lang_key}</b>\n"
+                            f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+                        )
+                        pass
+
+
+
+
+
 
         try:
             # not sure if this will cause eternal triggering, hopefully not

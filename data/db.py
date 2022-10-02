@@ -174,6 +174,24 @@ def get_msg_id(msg_id: int, lang_key: str):
         pass
 
 
+def get_file_id(msg_id: int):
+    try:
+        with conn.cursor() as c:
+
+            c.execute(
+                "select p.file_id from posts p where p.msg_id=%s",
+                [msg_id])
+            res = c.fetchone()
+
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            if res is not None:
+                return res[0]
+            else:
+                return res
+    except Exception as e:
+        logger.error("DB-Operation failed", e)
+        pass
+
 def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None,
                    lang_key: str = GERMAN.lang_key, post_id: int = None):  # text=??
     if len(msg.photo) != 0:
