@@ -35,7 +35,7 @@ def flag_to_hashtag(text: str, language: str = None):
     return text
 
 
-async def translate_message(target_lang: str, text: str, target_lang_deepl: str = None) -> str|None:
+async def translate_message(target_lang: str, text: str, target_lang_deepl: str = None) -> str | None:
     if text == "" or text is None:
         return None
 

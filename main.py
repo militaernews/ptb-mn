@@ -10,11 +10,13 @@ from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
-from messages.bingo import bingo_field
-from messages.chat import unwarn_user, ban_user, filter_message, warn_user, report_user, commands, maps, donbas
+from messages.chat.bingo import bingo_field
+from messages.chat.command import donbas, commands, sofa, maps, warn_user, unwarn_user, ban_user, report_user
+from messages.chat.filter import filter_message
 from messages.meme import post_media_meme, post_text_meme
-from messages.news import edit_channel_text, announcement, breaking_news, edit_channel, post_channel_text, \
-    post_channel_english, post_info
+from messages.news.common import edit_channel, post_channel_english
+from messages.news.special import breaking_news, announcement, post_info
+from messages.news.text import edit_channel_text, post_channel_text
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -37,7 +39,6 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
     #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
-
 
     app.add_handler(
         MessageHandler(
@@ -84,9 +85,10 @@ if __name__ == "__main__":
             re.compile(r"🔰 MN-Hauptquartier", re.IGNORECASE)),
                        edit_channel_text))
 
-    app.add_handler(CommandHandler("maps",maps, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("maps", maps, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("donbas", donbas, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("help", commands, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("commands", commands, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("sofa", sofa, filters.Chat(GERMAN.chat_id)))
 
     app.add_handler(MessageHandler(
         filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
@@ -95,8 +97,6 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
-
-
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace

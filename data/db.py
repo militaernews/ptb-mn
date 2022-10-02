@@ -192,6 +192,57 @@ def get_file_id(msg_id: int):
         logger.error("DB-Operation failed", e)
         pass
 
+
+def update_file_id(msg_id: int, file_id: str, lang_key: str = GERMAN.lang_key):
+    try:
+        with conn.cursor() as c:
+
+            c.execute(
+                "update posts p set file_id = %s where p.msg_id=%s and p.lang=%s",
+                (file_id, msg_id, lang_key))
+            res = c.fetchone()
+
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            if res is not None:
+                return res[0]
+            else:
+                return res
+    except Exception as e:
+        logger.error("DB-Operation failed", e)
+        pass
+
+
+def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
+    try:
+        with conn.cursor() as c:
+
+            c.execute(
+                "update posts p set text = %s where p.msg_id=%s and p.lang=%s",
+                (text, msg_id, lang_key))
+            res = c.fetchone()
+
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            if res is not None:
+                return res[0]
+            else:
+                return res
+    except Exception as e:
+        logger.error("DB-Operation failed", e)
+        pass
+
+
+def update_post(msg_id: int, text: str, file_id: str = None, lang_key: str = GERMAN.lang_key):
+    try:
+        with conn.cursor() as c:
+
+            c.execute(
+                "update posts p set file_id = %s, text = %s where p.msg_id=%s and p.lang=%s",
+                (file_id, text, msg_id, lang_key))
+    except Exception as e:
+        logger.error("DB-Operation failed", e)
+        pass
+
+
 def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None,
                    lang_key: str = GERMAN.lang_key, post_id: int = None):  # text=??
     if len(msg.photo) != 0:

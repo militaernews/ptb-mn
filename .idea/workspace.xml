@@ -4,10 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix?">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="channel post media can be edited">
+      <change afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messages/chat/filter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messages/news/common.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messages/news/special.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messages/news/text.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messages/setup.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/img/sofa.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/bingo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/news.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/de/commands.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/commands.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +31,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -48,41 +62,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nyx/PycharmProjects/ptb-mn/res/de&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
+    "last_opened_file_path": "/home/nyx/PycharmProjects/ptb-mn/res/img",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/res/img" />
       <recent name="$PROJECT_DIR$/res/de" />
       <recent name="$PROJECT_DIR$/messages" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/messages/chat" />
       <recent name="$PROJECT_DIR$/dev" />
       <recent name="$PROJECT_DIR$/scripts" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/test" />
-      <recent name="$PROJECT_DIR$/data" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
@@ -104,7 +119,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/messages/bingo.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/messages/chat/bingo.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -269,14 +284,8 @@
       <workItem from="1664606915743" duration="1776000" />
       <workItem from="1664608830685" duration="305000" />
       <workItem from="1664621070463" duration="2229000" />
-      <workItem from="1664709887154" duration="2814000" />
-    </task>
-    <task id="LOCAL-00040" summary="test">
-      <created>1660547014712</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1660547014712</updated>
+      <workItem from="1664709887154" duration="3941000" />
+      <workItem from="1664718810671" duration="1942000" />
     </task>
     <task id="LOCAL-00041" summary="bingo">
       <created>1660896137524</created>
@@ -614,7 +623,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664628166234</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="channel post media can be edited">
+      <created>1664712875649</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1664712875650</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -633,7 +649,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="single files are now posted to twitter" />
     <MESSAGE value="tweet breaking" />
     <MESSAGE value="placeholders for translation" />
     <MESSAGE value="fix placeholders" />
@@ -658,7 +673,8 @@
     <MESSAGE value="some commands &amp; fixes" />
     <MESSAGE value="fix" />
     <MESSAGE value="fix?" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix?" />
+    <MESSAGE value="channel post media can be edited" />
+    <option name="LAST_COMMIT_MESSAGE" value="channel post media can be edited" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$bingo.coverage" NAME="bingo Coverage Results" MODIFIED="1661018084001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/messages" />

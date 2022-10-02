@@ -27,7 +27,6 @@ def sanitize_text(text: str = None) -> str:
 
 
 def sanitize_hashtag(lang_key: str, text: str) -> str:
-
     if lang_key == "fa":
         result = text.replace(' ', '_')
     else:
@@ -62,6 +61,26 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str):
                 await update.message.reply_to_message.reply_text(text)
             else:
                 await context.bot.send_message(update.message.chat_id, text)
+
+    except Exception as e:
+        await context.bot.send_message(
+            config.LOG_GROUP,
+            f"<b>⚠️ Error when trying to read html-file {file_name}</b>\n<code>{e}</code>\n\n"
+            f"<b>Caused by Update</b>\n<code>{update}</code>",
+        )
+        pass
+
+
+async def reply_photo(update: Update, context: CallbackContext, file_name: str):
+    await update.message.delete()
+
+    try:
+        with open(f"res/img/{file_name}", "rb") as f:
+            if update.message.reply_to_message is not None:
+                await update.message.reply_to_message.reply_photo(f)
+            else:
+                await context.bot.send_photo(update.message.chat_id, f)
+
 
     except Exception as e:
         await context.bot.send_message(
