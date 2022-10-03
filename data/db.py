@@ -42,7 +42,7 @@ def get_mg(mg_id: str):
 PHOTO, VIDEO, ANIMATION = range(3)
 
 
-def query_files(meg_id: str):
+def query_files(meg_id: str) -> [Post]:
     try:
         with conn.cursor() as c:
             c.execute("select * from posts p where p.media_group_id = %s and p.lang='de'", [meg_id])

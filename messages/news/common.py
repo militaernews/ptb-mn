@@ -115,7 +115,8 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
-    posts = query_files(context.job.name)
+    posts = sorted(query_files(context.job.name), key=lambda x: x.msg_id)
+    print(posts)
     files: [InputMedia] = []
 
     for post in posts:
@@ -243,6 +244,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                         f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                     )
                     pass
+
         if msg is not None:
             update_post(msg, lang.lang_key)
 
