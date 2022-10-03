@@ -21,9 +21,9 @@ ADMINS = [
     466451473  # Maxe
 ]
 
-BINGO_ADMINS = ADMINS + [
+BINGO_ADMINS = ADMINS.extend([
     1869587716  # TheObserver
- ]
+ ])
 
 
 # Constants
