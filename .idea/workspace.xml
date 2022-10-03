@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/a5ca9a49-0193-4fe6-bc56-4889254acc5b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/a5ca9a49-0193-4fe6-bc56-4889254acc5b.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/a5ca9a49-0193-4fe6-bc56-4889254acc5b/storage_v2/_src_/database/d23c16oa17p1os.4EVEYg/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/a5ca9a49-0193-4fe6-bc56-4889254acc5b/storage_v2/_src_/database/d23c16oa17p1os.4EVEYg/schema/public.abK9xQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ptb-mn.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ptb-mn.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
-    </list>
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="twitter stream test" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -277,14 +269,7 @@
       <workItem from="1664780037317" duration="541000" />
       <workItem from="1664781670715" duration="3239000" />
       <workItem from="1664796308259" duration="650000" />
-      <workItem from="1664815277525" duration="1305000" />
-    </task>
-    <task id="LOCAL-00048" summary="fix">
-      <created>1661019619755</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1661019619755</updated>
+      <workItem from="1664815277525" duration="1812000" />
     </task>
     <task id="LOCAL-00049" summary="more bingo words">
       <created>1661020083953</created>
@@ -622,7 +607,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664806670390</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="twitter stream test">
+      <created>1664817521234</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1664817521234</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -641,7 +633,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="placeholders for translation" />
     <MESSAGE value="fix placeholders" />
     <MESSAGE value="fix edit caption?" />
     <MESSAGE value="upload videos to twitter, fixes" />
@@ -666,7 +657,8 @@
     <MESSAGE value="/sofa, refactor, fixes" />
     <MESSAGE value="fiddling" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="twitter stream test" />
+    <option name="LAST_COMMIT_MESSAGE" value="twitter stream test" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$helper.coverage" NAME="helper Coverage Results" MODIFIED="1660546140009" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />

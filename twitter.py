@@ -23,7 +23,7 @@ bearer = os.getenv("BEARER")
 #todo: does this work?
 stream = Stream(5)
 stream.add_rule("from:DarthPutinKGB")
-stream.connect()
+
 
 client = pytweet.Client(
     bearer_token=bearer,
@@ -34,6 +34,7 @@ client = pytweet.Client(
     stream=stream
 )
 
+stream.connect()
 TWEET_LENGTH = 280
 
 
