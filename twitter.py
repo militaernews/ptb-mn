@@ -20,9 +20,7 @@ access_token = os.getenv("ACCESS_KEY")
 access_secret = os.getenv("ACCESS_SECRET")
 bearer = os.getenv("BEARER")
 
-#todo: does this work?
-stream = Stream(5)
-stream.add_rule("from:DarthPutinKGB")
+
 
 
 client = pytweet.Client(
@@ -30,16 +28,16 @@ client = pytweet.Client(
     consumer_key=consumer_key,
     consumer_key_secret=consumer_secret,
     access_token=access_token,
-    access_token_secret=access_secret,
-    stream=stream
+    access_token_secret=access_secret
 )
 
-stream.connect()
 TWEET_LENGTH = 280
 
 
 @client.event
-def on_stream(tweet: Tweet, con: StreamConnection):
+def on_tweet_create(tweet: Tweet, con: StreamConnection):
+    if tweet.author.name == "DarthPutinKGB":
+        print("--- TWEET BY DARTHPUTIN")
     print(f">>>>>>>>>> Someone posted a tweet: {tweet}")
 
 
