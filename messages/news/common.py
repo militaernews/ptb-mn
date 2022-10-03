@@ -137,8 +137,8 @@ async def share_in_other_channels(context: CallbackContext):
     print(" ------------------------------------------- post_id:", post_id)
 
     for lang in languages:
-        files[0].caption = (await translate_message(lang.lang_key, original_caption,
-                                                    lang.lang_key_deepl)) + "\n" + lang.footer
+        files[
+            0].caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
 
         reply_id = query_replies3(post_id, lang.lang_key)
         print(" ------------------------------------------- reply_id:", reply_id)
