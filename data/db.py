@@ -193,7 +193,26 @@ def get_file_id(msg_id: int):
         pass
 
 
-def update_post(msg:Message, lang_key: str = GERMAN.lang_key):
+def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
+    try:
+        with conn.cursor() as c:
+
+            c.execute(
+                "update posts p set text = %s where p.msg_id=%s and p.lang=%s",
+                (text, msg_id, lang_key))
+            res = c.fetchone()
+
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            if res is not None:
+                return res[0]
+            else:
+                return res
+    except Exception as e:
+        logger.error("DB-Operation failed", e)
+        pass
+
+
+def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
     if len(msg.photo) != 0:
         file_type = PHOTO
         file_id = msg.photo[-1].file_id
