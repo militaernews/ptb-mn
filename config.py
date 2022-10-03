@@ -24,10 +24,8 @@ ADMINS = (
 
 BINGO_ADMINS = ADMINS + (
     1869587716,  # TheObserver
-298169115 # Michael Kohl
+    298169115  # Michael Kohl
 )
-
-
 
 # Constants
 PLACEHOLDER = "║"

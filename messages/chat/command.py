@@ -96,6 +96,9 @@ async def donbas(update: Update, context: CallbackContext):
 async def commands(update: Update, context: CallbackContext):
     await reply_html(update, context, "cmd")
 
+async def genozid(update: Update, context: CallbackContext):
+    await reply_html(update, context, "genozid")
+
 
 async def sofa(update: Update, context: CallbackContext):
     await reply_photo(update, context, "sofa.jpg")
