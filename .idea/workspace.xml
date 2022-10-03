@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/news/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/common.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -272,6 +273,7 @@
       <workItem from="1664709887154" duration="3941000" />
       <workItem from="1664718810671" duration="3748000" />
       <workItem from="1664780037317" duration="541000" />
+      <workItem from="1664781670715" duration="893000" />
     </task>
     <task id="LOCAL-00044" summary="field kinda works, but needs nicer layout and checkable fields">
       <created>1660945007875</created>

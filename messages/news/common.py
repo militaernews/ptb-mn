@@ -9,8 +9,7 @@ from telegram.ext import CallbackContext
 import config
 import twitter
 from data.db import insert_single3, insert_single2, query_replies3, \
-    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id, \
-    update_text, update_post, update_file_id
+    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id,  update_post
 from data.lang import GERMAN, languages
 from util.helper import get_file
 from util.regex import HASHTAG, WHITESPACE
@@ -199,6 +198,7 @@ async def edit_channel(update: Update, context: CallbackContext):
     print("-------------- EDurtuafIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT")
 
     for lang in languages:
+        msg=None
         msg_id = get_msg_id(update.edited_channel_post.id, lang.lang_key)
 
         try:
@@ -209,13 +209,11 @@ async def edit_channel(update: Update, context: CallbackContext):
 
             input_media.caption = translated_text
 
-            await context.bot.edit_message_caption(
+            msg = await context.bot.edit_message_caption(
                 chat_id=lang.channel_id,
                 message_id=msg_id,
-                caption=translated_text,
+                caption=translated_text
             )
-
-            update_text(msg_id, translated_text, lang.lang_key)
 
         except TelegramError as e:
             if not e.message.startswith("Message is not modified"):
@@ -226,19 +224,16 @@ async def edit_channel(update: Update, context: CallbackContext):
                 )
             pass
 
-        if file_id != new_file.file_id:
+        if file_id != new_file.file_id and GERMAN.breaking not in original_caption:
             try:
                 print(
-                    "- edit file ------------------------------------------------------------------------------------------------",
+                    "- edit file -------------------------------------------------------------------------------",
                     input_media)
-                await context.bot.edit_message_media(
+                msg = await context.bot.edit_message_media(
                     input_media,
                     chat_id=lang.channel_id,
-                    message_id=msg_id,
-                    write_timeout=60
+                    message_id=msg_id
                 )
-
-                update_file_id(msg_id, new_file.file_id, lang.lang_key)
 
             except TelegramError as e:
                 if not e.message.startswith("Message is not modified"):
@@ -248,6 +243,8 @@ async def edit_channel(update: Update, context: CallbackContext):
                         f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                     )
                     pass
+        if msg is not None:
+            update_post(msg, lang.lang_key)
 
     try:
         # not sure if this will cause eternal triggering, hopefully not
