@@ -99,8 +99,10 @@ if __name__ == "__main__":
         filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
         filter_message))
     app.add_handler(MessageHandler(
-        filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(-1001618190222), #Ukraine Russland Krieg Chat
-        handle_bingo))
+        filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat([
+            -1001618190222, #Ukraine Russland Krieg Chat
+            -1001755040391 #Vitaliks Fanclub
+        ]), handle_bingo))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
