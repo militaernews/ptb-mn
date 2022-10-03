@@ -3,6 +3,7 @@ import os
 import pytweet
 import telegram
 from dotenv import load_dotenv
+from pytweet import Stream, Tweet, StreamConnection
 from telegram import Update
 from telegram.ext import CallbackContext
 
@@ -19,15 +20,27 @@ access_token = os.getenv("ACCESS_KEY")
 access_secret = os.getenv("ACCESS_SECRET")
 bearer = os.getenv("BEARER")
 
+#todo: does this work?
+stream = Stream(5)
+stream.add_rule("from:DarthPutinKGB")
+stream.connect()
+
 client = pytweet.Client(
     bearer_token=bearer,
     consumer_key=consumer_key,
     consumer_key_secret=consumer_secret,
     access_token=access_token,
-    access_token_secret=access_secret
+    access_token_secret=access_secret,
+    stream=stream
 )
 
 TWEET_LENGTH = 280
+
+
+@client.event
+def on_stream(tweet: Tweet, con: StreamConnection):
+    print(f">>>>>>>>>> Someone posted a tweet: {tweet}")
+
 
 
 def tweet_text(text: str):

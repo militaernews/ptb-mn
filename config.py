@@ -17,8 +17,12 @@ LOG_GROUP = -1001739784948
 NYX = 703453307
 ADMINS = (
     NYX,
-    525147382,  # melik
-    466451473  # maxe
+    525147382,  # Melik
+    466451473  # Maxe
+)
+
+BINGO_ADMINS = ( ADMINS,
+1869587716 # TheObserver
 )
 
 # Constants

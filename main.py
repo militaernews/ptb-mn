@@ -6,7 +6,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler
 
-from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS
+from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS, BINGO_ADMINS
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     app = ApplicationBuilder().token(TOKEN).defaults(Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True)) \
         .persistence(PostgresPersistence(url=DATABASE_URL, session=session)).build()
 
-    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
+    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(BINGO_ADMINS)))
     #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
@@ -85,18 +85,19 @@ if __name__ == "__main__":
             re.compile(r"🔰 MN-Hauptquartier", re.IGNORECASE)),
                        edit_channel_text))
 
-    app.add_handler(CommandHandler("maps", maps, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("donbas", donbas, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("cmd", commands, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("sofa", sofa, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("maps", maps))
+    app.add_handler(CommandHandler("donbas", donbas))
+    app.add_handler(CommandHandler("cmd", commands))
+    app.add_handler(CommandHandler("sofa", sofa))
 
-    app.add_handler(MessageHandler(
-        filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
-        filter_message))
     app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
+
+    app.add_handler(MessageHandler(
+        filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
+        filter_message))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
