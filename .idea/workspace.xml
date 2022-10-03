@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="twitter stream test" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="twitter stream test">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -269,21 +272,7 @@
       <workItem from="1664780037317" duration="541000" />
       <workItem from="1664781670715" duration="3239000" />
       <workItem from="1664796308259" duration="650000" />
-      <workItem from="1664815277525" duration="3652000" />
-    </task>
-    <task id="LOCAL-00052" summary="fix">
-      <created>1661071645200</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1661071645200</updated>
-    </task>
-    <task id="LOCAL-00053" summary="fix">
-      <created>1661073449018</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1661073449019</updated>
+      <workItem from="1664815277525" duration="4322000" />
     </task>
     <task id="LOCAL-00054" summary="fix">
       <created>1661094065875</created>
@@ -614,7 +603,21 @@
       <option name="project" value="LOCAL" />
       <updated>1664820073680</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="twitter stream test">
+      <created>1664820476164</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1664820476164</updated>
+    </task>
+    <task id="LOCAL-00102" summary="twitter stream test">
+      <created>1664820621414</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1664820621414</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

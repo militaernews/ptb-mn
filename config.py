@@ -1,4 +1,5 @@
 import os
+from typing import Tuple
 
 from dotenv import load_dotenv
 
@@ -15,15 +16,16 @@ CHANNEL_SOURCE = -1001372304339
 LOG_GROUP = -1001739784948
 
 NYX = 703453307
-ADMINS = [
+ADMINS = (
     NYX,
     525147382,  # Melik
     466451473  # Maxe
-]
+)
 
-BINGO_ADMINS = ADMINS.extend([
-    1869587716  # TheObserver
- ])
+BINGO_ADMINS = ADMINS + (
+    1869587716,  # TheObserver
+)
+
 
 
 # Constants
