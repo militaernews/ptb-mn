@@ -9,7 +9,8 @@ from telegram.ext import CallbackContext
 import config
 import twitter
 from data.db import insert_single3, insert_single2, query_replies3, \
-    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id,  update_post
+    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id, \
+    update_post
 from data.lang import GERMAN, languages
 from util.helper import get_file
 from util.regex import HASHTAG, WHITESPACE
@@ -136,9 +137,8 @@ async def share_in_other_channels(context: CallbackContext):
     print(" ------------------------------------------- post_id:", post_id)
 
     for lang in languages:
-        files[0].caption = (
-                await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl) + "\n" + lang.footer
-        )
+        files[0].caption = (await translate_message(lang.lang_key, original_caption,
+                                                    lang.lang_key_deepl)) + "\n" + lang.footer
 
         reply_id = query_replies3(post_id, lang.lang_key)
         print(" ------------------------------------------- reply_id:", reply_id)
@@ -199,7 +199,7 @@ async def edit_channel(update: Update, context: CallbackContext):
     print("-------------- EDurtuafIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT")
 
     for lang in languages:
-        msg=None
+        msg = None
         msg_id = get_msg_id(update.edited_channel_post.id, lang.lang_key)
 
         try:
