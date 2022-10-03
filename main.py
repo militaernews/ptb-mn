@@ -10,7 +10,7 @@ from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS, B
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
-from messages.chat.bingo import bingo_field
+from messages.chat.bingo import bingo_field, handle_bingo
 from messages.chat.command import donbas, commands, sofa, maps, warn_user, unwarn_user, ban_user, report_user
 from messages.chat.filter import filter_message
 from messages.meme import post_media_meme, post_text_meme
@@ -98,6 +98,9 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(
         filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
         filter_message))
+    app.add_handler(MessageHandler(
+        filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(-1001618190222), #Ukraine Russland Krieg Chat
+        handle_bingo))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
