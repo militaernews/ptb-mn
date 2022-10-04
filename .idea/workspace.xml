@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="trying tweepy">
-      <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
-    </list>
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="trying tweepy" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -182,8 +180,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.split_into_hashtag_json" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.split_into_hashtag_json" />
         <item itemvalue="Python.bot" />
         <item itemvalue="Python.bingo" />
         <item itemvalue="Database Script.schema.sql" />
@@ -276,21 +274,7 @@
       <workItem from="1664781670715" duration="3239000" />
       <workItem from="1664796308259" duration="650000" />
       <workItem from="1664815277525" duration="6697000" />
-      <workItem from="1664898850330" duration="1209000" />
-    </task>
-    <task id="LOCAL-00060" summary="fix">
-      <created>1661181212955</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1661181212955</updated>
-    </task>
-    <task id="LOCAL-00061" summary="fix">
-      <created>1661273871927</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1661273871928</updated>
+      <workItem from="1664898850330" duration="1610000" />
     </task>
     <task id="LOCAL-00062" summary="fix">
       <created>1661292653683</created>
@@ -621,7 +605,21 @@
       <option name="project" value="LOCAL" />
       <updated>1664899852313</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="trying tweepy">
+      <created>1664900120702</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1664900120702</updated>
+    </task>
+    <task id="LOCAL-00110" summary="trying tweepy">
+      <created>1664900259324</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1664900259324</updated>
+    </task>
+    <option name="localTasksCounter" value="111" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
