@@ -39,7 +39,7 @@ printer.filter()
 
 
 client = Client(
-    bearer_token=bearer,
+#    bearer_token=bearer,
     consumer_key=consumer_key,
     consumer_secret=consumer_secret,
     access_token=access_token,
