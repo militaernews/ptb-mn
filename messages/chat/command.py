@@ -88,10 +88,12 @@ async def report_user(update: Update, context: CallbackContext):
 async def maps(update: Update, context: CallbackContext):
     await reply_html(update, context, "maps")
 
+    #todo: collect list of losses
+async def loss(update: Update, context: CallbackContext):
+    await reply_html(update, context, "loss")
 
 async def donbas(update: Update, context: CallbackContext):
     await reply_html(update, context, "donbas")
-
 
 async def commands(update: Update, context: CallbackContext):
     await reply_html(update, context, "cmd")

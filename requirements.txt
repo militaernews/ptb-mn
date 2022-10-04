@@ -7,8 +7,8 @@ sqlalchemy==1.4.41
 ujson==4.0.2
 python-dotenv==0.21.0
 #peony-twitter~=2.1.2
-#tweepy==4.10.0
-PyTweet==1.3.6
+tweepy==4.10.0
+#PyTweet==1.3.6
 orjson==3.7.12
 CairoSVG==2.5.2
 numpy==1.23.3
