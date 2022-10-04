@@ -1,5 +1,6 @@
 import os
 
+import pytweet
 import telegram
 import tweepy
 from dotenv import load_dotenv
@@ -21,17 +22,6 @@ access_token = os.getenv("ACCESS_KEY")
 access_secret = os.getenv("ACCESS_SECRET")
 bearer = os.getenv("BEARER")
 
-client = Client(
-    bearer_token=bearer,
-    consumer_key=consumer_key,
-    consumer_secret=consumer_secret,
-    access_token=access_token,
-    access_token_secret=access_secret
-)
-
-TWEET_LENGTH = 280
-
-
 class TweetPrinterV2(tweepy.StreamingClient):
 
     def on_tweet(self, tweet: Tweet):
@@ -45,6 +35,21 @@ class TweetPrinterV2(tweepy.StreamingClient):
 printer = TweetPrinterV2(bearer)
 printer.add_rules(StreamRule("from:DarthPutinKGB"))
 printer.filter()
+
+
+
+client = Client(
+    bearer_token=bearer,
+    consumer_key=consumer_key,
+    consumer_secret=consumer_secret,
+    access_token=access_token,
+    access_token_secret=access_secret
+)
+
+TWEET_LENGTH = 280
+
+
+
 
 
 def tweet_text(text: str):
