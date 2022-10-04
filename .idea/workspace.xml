@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/genozid.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/genozid.html" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="trying tweepy">
       <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -280,14 +276,7 @@
       <workItem from="1664781670715" duration="3239000" />
       <workItem from="1664796308259" duration="650000" />
       <workItem from="1664815277525" duration="6697000" />
-      <workItem from="1664898850330" duration="431000" />
-    </task>
-    <task id="LOCAL-00057" summary="fix">
-      <created>1661178506018</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1661178506019</updated>
+      <workItem from="1664898850330" duration="851000" />
     </task>
     <task id="LOCAL-00058" summary="fix">
       <created>1661178984987</created>
@@ -625,7 +614,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664822548903</updated>
     </task>
-    <option name="localTasksCounter" value="106" />
+    <task id="LOCAL-00106" summary="trying tweepy">
+      <created>1664899538194</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1664899538194</updated>
+    </task>
+    <option name="localTasksCounter" value="107" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -644,7 +640,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="fix placeholders" />
     <MESSAGE value="fix edit caption?" />
     <MESSAGE value="upload videos to twitter, fixes" />
     <MESSAGE value="test file storage heroku" />
@@ -669,7 +664,8 @@
     <MESSAGE value="fiddling" />
     <MESSAGE value="twitter stream test" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="trying tweepy" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying tweepy" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$helper.coverage" NAME="helper Coverage Results" MODIFIED="1660546140009" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
