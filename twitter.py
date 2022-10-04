@@ -22,6 +22,7 @@ access_token = os.getenv("ACCESS_KEY")
 access_secret = os.getenv("ACCESS_SECRET")
 bearer = os.getenv("BEARER")
 
+
 class TweetPrinterV2(tweepy.StreamingClient):
 
     def on_tweet(self, tweet: Tweet):
@@ -32,14 +33,10 @@ class TweetPrinterV2(tweepy.StreamingClient):
         print(f">>>>>>>>>> Someone posted a tweet: {tweet}")
 
 
-printer = TweetPrinterV2(bearer)
-printer.add_rules(StreamRule("from:DarthPutinKGB"))
-printer.filter()
-
 
 
 client = Client(
-#    bearer_token=bearer,
+    #    bearer_token=bearer,
     consumer_key=consumer_key,
     consumer_secret=consumer_secret,
     access_token=access_token,
@@ -49,8 +46,9 @@ client = Client(
 TWEET_LENGTH = 280
 
 
-
-
+printer = TweetPrinterV2(bearer)
+printer.add_rules(StreamRule("from:DarthPutinKGB"))
+printer.filter()
 
 def tweet_text(text: str):
     print("--- tweet", text)
