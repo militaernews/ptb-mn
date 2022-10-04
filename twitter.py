@@ -46,9 +46,9 @@ client = Client(
 TWEET_LENGTH = 280
 
 
-printer = TweetPrinterV2(bearer)
-printer.add_rules(StreamRule("from:DarthPutinKGB"))
-printer.filter()
+#printer = TweetPrinterV2(bearer)
+#printer.add_rules(StreamRule("from:DarthPutinKGB"))
+#printer.filter()
 
 def tweet_text(text: str):
     print("--- tweet", text)
