@@ -157,7 +157,7 @@ def generate_bingo_field():
         inner = list()
         print(x)
 
-        for entry in list(d2)[x:x + field_size]:
+        for entry in list(d2.items())[x:x + field_size]:
             print("ENTRY >>>>>>>>> ", entry, entry[0])
             if entry[1] is None:
                 entry[1] = entry[0]
