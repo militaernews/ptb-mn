@@ -24,8 +24,8 @@ ENTRIES = [
     "Schneelensky",
     "Booster"
     "Zwang",
-    "Genozid",
-    "Völkermord",
+    # "Genozid",
+    # "Völkermord",
     "Dampfplauderer",
     "Drogen",
     "geimpft",

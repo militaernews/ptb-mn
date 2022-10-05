@@ -2,19 +2,14 @@ import os
 
 import pytweet
 import telegram
-import tweepy
 from dotenv import load_dotenv
-
+from pytweet import Client
 from telegram import Update
 from telegram.ext import CallbackContext
-from tweepy import Client, StreamingClient, StreamRule, Tweet
 
 from util.helper import get_caption, get_file
 
 load_dotenv()
-
-# PyTweet at least kinda worked :(
-# from peony import PeonyClient
 
 consumer_key = os.getenv("CONSUMER_KEY")
 consumer_secret = os.getenv("CONSUMER_SECRET")
@@ -22,33 +17,16 @@ access_token = os.getenv("ACCESS_KEY")
 access_secret = os.getenv("ACCESS_SECRET")
 bearer = os.getenv("BEARER")
 
-
-class TweetPrinterV2(tweepy.StreamingClient):
-
-    def on_tweet(self, tweet: Tweet):
-        print(f"{tweet.id} {tweet.created_at} ({tweet.author_id}): {tweet.text}")
-        print("-" * 50)
-        if tweet.author.name == "DarthPutinKGB":
-            print("--- TWEET BY DARTHPUTIN")
-        print(f">>>>>>>>>> Someone posted a tweet: {tweet}")
-
-
-
-
 client = Client(
-    #    bearer_token=bearer,
+    bearer_token=bearer,
     consumer_key=consumer_key,
-    consumer_secret=consumer_secret,
+    consumer_key_secret=consumer_secret,
     access_token=access_token,
     access_token_secret=access_secret
 )
 
 TWEET_LENGTH = 280
 
-
-#printer = TweetPrinterV2(bearer)
-#printer.add_rules(StreamRule("from:DarthPutinKGB"))
-#printer.filter()
 
 def tweet_text(text: str):
     print("--- tweet", text)

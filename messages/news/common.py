@@ -166,6 +166,9 @@ async def share_in_other_channels(context: CallbackContext):
     print("----- done -----")
 
     # todo: tweet media_group
+    # todo: add attribute "path" to post
+    # await twitter.tweet_file_2(original_caption,posts[0])
+    await twitter.tweet_text(flag_to_hashtag(original_caption))
 
 
 async def edit_channel(update: Update, context: CallbackContext):
