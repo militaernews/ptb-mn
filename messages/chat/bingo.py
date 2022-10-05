@@ -339,3 +339,6 @@ async def bingo_field(update: Update, context: CallbackContext):
                                              caption=f"<b>Militär-News Bullshit-Bingo</b>\n\nWenn eine im @MNChat gesendete Nachricht auf dem Spielfeld vorkommendende Begriffe enthält, werden diese rausgestrichen.\n\nIst eine gesamte Zeile oder Spalte durchgestrichen, dann heißt es <b>BINGO!</b> und eine neue Runde startet.\n{GERMAN.footer}")
     except FileNotFoundError as e:
         print("No field yet")
+
+async def reset_bingo(update: Update, context: CallbackContext):
+    context.bot_data["bingo"] = generate_bingo_field()
