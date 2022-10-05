@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="update to bingo">
-      <change beforePath="$PROJECT_DIR$/messages/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/setup.py" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/messages/chat/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/bingo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -279,21 +279,7 @@
       <workItem from="1664898850330" duration="3757000" />
       <workItem from="1664956713183" duration="2151000" />
       <workItem from="1664959484301" duration="1702000" />
-      <workItem from="1664962805712" duration="2836000" />
-    </task>
-    <task id="LOCAL-00074" summary="fiddling">
-      <created>1662301992936</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1662301992936</updated>
-    </task>
-    <task id="LOCAL-00075" summary="fiddling">
-      <created>1662303549651</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1662303549651</updated>
+      <workItem from="1664962805712" duration="3303000" />
     </task>
     <task id="LOCAL-00076" summary="fiddling">
       <created>1662304853859</created>
@@ -624,7 +610,21 @@
       <option name="project" value="LOCAL" />
       <updated>1664965492139</updated>
     </task>
-    <option name="localTasksCounter" value="123" />
+    <task id="LOCAL-00123" summary="update to bingo">
+      <created>1664965685073</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1664965685073</updated>
+    </task>
+    <task id="LOCAL-00124" summary="fix">
+      <created>1664965959329</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1664965959329</updated>
+    </task>
+    <option name="localTasksCounter" value="125" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -664,11 +664,11 @@
     <MESSAGE value="/sofa, refactor, fixes" />
     <MESSAGE value="fiddling" />
     <MESSAGE value="twitter stream test" />
-    <MESSAGE value="fix" />
     <MESSAGE value="trying tweepy" />
     <MESSAGE value="back to pytweet" />
     <MESSAGE value="update to bingo" />
-    <option name="LAST_COMMIT_MESSAGE" value="update to bingo" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$helper.coverage" NAME="helper Coverage Results" MODIFIED="1660546140009" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
