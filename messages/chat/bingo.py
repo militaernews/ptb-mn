@@ -194,7 +194,9 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     found = list()
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
-        if not item["checked"] and len(re.findall(item["regex"], text, re.IGNORECASE)) != 0:
+        matches = re.findall(item["regex"], text, re.IGNORECASE)
+        print(matches)
+        if not item["checked"] and len(matches) != 0:
             item["checked"] = True
             found.append(item["text"])
             print(f"{text} is a valid bingo entry")
