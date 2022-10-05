@@ -103,7 +103,6 @@ ENTRIES = {
     "Hostomel": None,
     "Elite": None,
     "8_Jahre": None,
-    "Genozid": None,
     "seit_2014": None,
     "Hohol": None,
     "Irpin": None,
