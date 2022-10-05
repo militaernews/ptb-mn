@@ -157,16 +157,16 @@ def generate_bingo_field():
         inner = list()
         print(x)
 
-        for key,value in d2[x:x + field_size].items():
+        for entry in list(d2)[x:x + field_size]:
+            print(entry)
+            if entry[1] is None:
+                entry[1] = entry[0]
 
-            if value is None:
-                value = key
 
-            print(key,value)
             inner.append({
-                "text": key,
+                "text": entry[0],
                 "checked": False,
-                "regex": value
+                "regex": entry[1]
             })
 
         outer.append(inner)
