@@ -158,10 +158,9 @@ def generate_bingo_field():
         print(x)
 
         for entry in list(d2)[x:x + field_size]:
-            print(entry)
+            print("ENTRY >>>>>>>>> ", entry, entry[0])
             if entry[1] is None:
                 entry[1] = entry[0]
-
 
             inner.append({
                 "text": entry[0],
@@ -353,3 +352,4 @@ async def bingo_field(update: Update, context: CallbackContext):
 
 async def reset_bingo(update: Update, context: CallbackContext):
     context.bot_data["bingo"] = generate_bingo_field()
+    await update.message.reply_text(f"Bingo was reset!\n\n{context.bot_data['bingo']}")
