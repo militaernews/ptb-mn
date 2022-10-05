@@ -1,11 +1,11 @@
 from typing import Dict
 
 from orjson import orjson
-from telegram import Update
+from telegram import Update, BotCommandScopeChatAdministrators
 from telegram.ext import CallbackContext
 
 import config
-from data.lang import languages
+from data.lang import languages, GERMAN
 
 
 async def private_setup(update: Update, context: CallbackContext):
@@ -68,3 +68,25 @@ async def repair_saved_post(update: Update, context: CallbackContext):
         )
 
         context.bot_data[post_id] = final_dict
+
+
+def set_cmd(update: Update, context: CallbackContext):
+    chat_de_commands = [
+        ("cmd", "Übersicht aller Befehle"),
+        ("maps", "Karten Ukraine-Krieg"),
+        ("donbas", "14.000 Zivilisten im Donbas"),
+        ("genozid", "Kein Genozid der Ukrainer im Donbas"),
+        ("sofa", "Waffensystem des Sofa-Kriegers"),
+    ]
+
+    context.bot.set_my_commands(chat_de_commands)
+
+    context.bot.set_my_commands(chat_de_commands + [
+        ("warn", "Nutzer verwarnen"),
+        ("unwarn", "Warnung abziehen"),
+        ("ban", "Nutzer sperren"),
+        ("bingo", "Spielfeld des Bullshit-Bingos"),
+        ("reset_bingo", "Neue Bingo-Runde")
+    ], scope=BotCommandScopeChatAdministrators(GERMAN.chat) )
+
+    await update.message.reply_text("Commands updated!")
