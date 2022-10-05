@@ -87,6 +87,6 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("ban", "Nutzer sperren"),
         ("bingo", "Spielfeld des Bullshit-Bingos"),
         ("reset_bingo", "Neue Bingo-Runde")
-    ], scope=BotCommandScopeChatAdministrators(GERMAN.chat))
+    ], scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))
 
     await update.message.reply_text("Commands updated!")
