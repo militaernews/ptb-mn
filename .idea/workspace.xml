@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="update to bingo">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -281,21 +279,7 @@
       <workItem from="1664898850330" duration="3757000" />
       <workItem from="1664956713183" duration="2151000" />
       <workItem from="1664959484301" duration="1702000" />
-      <workItem from="1664962805712" duration="2498000" />
-    </task>
-    <task id="LOCAL-00072" summary="fix?">
-      <created>1662301338342</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1662301338342</updated>
-    </task>
-    <task id="LOCAL-00073" summary="fix?">
-      <created>1662301651128</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1662301651129</updated>
+      <workItem from="1664962805712" duration="2836000" />
     </task>
     <task id="LOCAL-00074" summary="fiddling">
       <created>1662301992936</created>
@@ -626,7 +610,21 @@
       <option name="project" value="LOCAL" />
       <updated>1664964723247</updated>
     </task>
-    <option name="localTasksCounter" value="121" />
+    <task id="LOCAL-00121" summary="update to bingo">
+      <created>1664965346525</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1664965346525</updated>
+    </task>
+    <task id="LOCAL-00122" summary="update to bingo">
+      <created>1664965492139</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1664965492139</updated>
+    </task>
+    <option name="localTasksCounter" value="123" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

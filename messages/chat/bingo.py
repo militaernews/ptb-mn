@@ -160,12 +160,14 @@ def generate_bingo_field():
         for entry in list(d2.items())[x:x + field_size]:
             print("ENTRY >>>>>>>>> ", entry, entry[0])
             if entry[1] is None:
-                entry[1] = entry[0]
+                regex = entry[0]
+            else:
+                regex = entry[1]
 
             inner.append({
                 "text": entry[0],
                 "checked": False,
-                "regex": entry[1]
+                "regex": regex
             })
 
         outer.append(inner)
