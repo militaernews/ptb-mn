@@ -1,5 +1,6 @@
 import datetime
 import random
+import re
 from typing import List, Union, Dict
 
 import cairosvg
@@ -13,136 +14,142 @@ from data.lang import GERMAN
 
 load_dotenv()
 
-ENTRIES = [
-    "Israel",
-    "Baerbock verurteilt",
-    "Lauterbach warnt",
-    "China",
-    "wirkungsvoll",
-    "Biden",
-    "Schwurbler",
-    "Schneelensky",
-    "Booster"
-    "Zwang",
+ENTRIES = {
+    "Israel": None,
+    "Baerbock verurteilt": None,
+    "Lauterbach warnt": None,
+    "China": None,
+    "wirkungsvoll": None,
+    "Biden": None,
+    "Schwurbler": None,
+    "Schneelensky": None,
+    "Booster": None,
+    "Zwang": None,
     # "Genozid",
     # "Völkermord",
-    "Dampfplauderer",
-    "Drogen",
-    "geimpft",
-    "böse_NATO",
-    "Wunderwaffe",
-    "Offensive",
-    "Lindner verspricht",
-    "SDF/YPG",
-    "Hartz_IV",
-    "Atomkrieg",
-    "kampferprobt",
-    "Spinner",
-    "Weltmacht",
-    "Kokain",
-    "Entnazifizieren",
-    "HIMARS",
-    "Krim",
-    "Russland_droht",
-    "Biolabor",
-    "Schlangeninsel",
-    "Faschist",
-    "Nazi",
-    "Britischer Geheimdienst",
-    "Azov",
-    "Asow",
-    "Alina",
-    "Erdogan",
-    "Korruption",
-    "Konvention",
-    "Lufthoheit",
-    "Taiwan",
-    "Frontverlauf",
-    "Kinzhal",
-    "Meinung",
-    "Lukashenko",
-    "Impfung",
-    "Reichsbürger",
-    "Trump",
-    "Schwarzmarkt",
-    "Troll",
-    "WEF",
-    "Bill Gates",
-    "Dimension",
-    "Reptiloid",
-    "Gerücht",
-    "System",
-    "einsatzbereit",
-    "Putin_macht bald_ernst",
-    "Militärexperte",
-    "Zweiter Weltkrieg",
-    "Palästina",
-    "Verluste",
-    "Logistik",
-    "Stalingrad",
-    "Barbarossa",
-    "Wehrmacht",
-    "Unfall",
-    "Ivan",
-    "NATO Osterweiterung",
-    "Vorstoß",
-    "T14",
-    "Armata",
-    "Kämpf_doch selbst",
-    "Propaganda",
-    "Taliban",
-    "Wahrheit",
-    "Aber_die_USA",
-    "Ukraine beschießt Zivilisten",
-    "Munitionsdepot",
-    "Selenski fordert",
-    "Man_muss verhandeln",
-    "Gas",
-    "Bayraktar",
-    "TB2",
-    "Quelle?",
-    "Hostomel",
-    "Elite",
-    "8_Jahre",
-    "Genozid",
-    "seit_2014",
-    "Hohol",
-    "Irpin",
-    "Butscha",
-    "Klitschko",
-    "Chornobayivka",
-    "Lipp",
-    "Ork",
-    "Belgorod",
-    "kapitulieren",
-    "aufgeben",
-    "Vakuumbombe",
-    "thermobarisch",
-    "Sanktion",
-    "Deflation",
-    "Wagner",
-    "Volksrepublik",
-    "Referendum",
-    "russophob",
-    "Eskalation",
-    "AKW",
-    "Gaspreis",
-    "reagiert",
-    "Globohomo",
-    "Doppelmoral",
-    "Euromaidan",
-    "Clown",
-    "9/11",
-    "Rothschild",
-    "Ukronazi",
-    "Beischlafbettler"
-]
+    "Dampfplauderer": None,
+    "Drogen": None,
+    "geimpft": None,
+    "böse_NATO": None,
+    "Wunderwaffe": None,
+    "Offensive": None,
+    "Lindner verspricht": None,
+    "SDF/YPG": None,
+    "Hartz_IV": None,
+    "Atomkrieg": None,
+    "kampferprobt": None,
+    "Spinner": None,
+    "Weltmacht": None,
+    "Kokain": None,
+    "Entnazifizierung": r"Entnazifizieren|Entnazifizierung",
+    "HIMARS": None,
+    "Krim": None,
+    "Russland_droht": None,
+    "Biolabor": None,
+    "Schlangeninsel": None,
+    "Faschist": None,
+    "Nazi": None,
+    "Britischer Geheimdienst": r"Britische(r*) Geheimdienst",
+    "Azov": r"A(s|z)o[w|v)",
+    "Alina Lipp": "Alina|Lipp",
+    "Erdogan": None,
+    "Korruption": None,
+    "Konvention": None,
+    "Lufthoheit": None,
+    "Taiwan": None,
+    "Frontverlauf": None,
+    "Kinzhal": None,
+    "Meinung": None,
+    "Lukashenko": "Lukas(c*)henko",
+    "Impfung": r"Impfung|impfen|geimpft",
+    "Reichsbürger": None,
+    "Trump": None,
+    "Schwarzmarkt": None,
+    "Troll": None,
+    "WEF": None,
+    "Bill Gates": None,
+    "Dimension": None,
+    "Reptiloid": None,
+    "Gerücht": None,
+    "System": None,
+    "einsatzbereit": None,
+    "Putin_macht bald_ernst": None,
+    "Militärexperte": None,
+    "Zweiter Weltkrieg": r"Zweite(r|n) Weltkrieg|WW2|WK",
+    "Palästina": None,
+    "Verluste": None,
+    "Logistik": None,
+    "Stalingrad": None,
+    "Barbarossa": None,
+    "Wehrmacht": None,
+    "Unfall": None,
+    "Raucher": None,
+    "Ivan": None,
+    "Osterweiterung": None,
+    "Vorstoß": None,
+    "T-14 Armata": "T(-*)14|Armata",
+    "Kämpf_doch selbst": None,
+    "Propaganda": None,
+    "Taliban": None,
+    "Wahrheit": None,
+    "Aber_die_USA": None,
+    "Ukraine beschießt Zivilisten": None,
+    "Munitionsdepot": None,
+    "Selenski fordert": None,
+    "Man_muss verhandeln": None,
+    "Gas": None,
+    "Bayraktar TB2": r"Bayraktar|Baykar|TB2|TB-2",
+    "Quelle?": None,
+    "Hostomel": None,
+    "Elite": None,
+    "8_Jahre": None,
+    "Genozid": None,
+    "seit_2014": None,
+    "Hohol": None,
+    "Irpin": None,
+    "Butscha": None,
+    "Klitschko": None,
+    "Chornobayivka": None,
+    "Lipp": None,
+    "Ork": None,
+    "Belgorod": None,
+    "kapitulieren": None,
+    "aufgeben": None,
+    "Vakuumbombe": None,
+    "thermobarisch": None,
+    "Sanktion": None,
+    "Deflation": None,
+    "Wagner": None,
+    "Volksrepublik": None,
+    "Referendum": None,
+    "russophob": None,
+    "Eskalation": None,
+    "AKW": None,
+    "Gaspreis": None,
+    "reagiert": None,
+    "Globohomo": None,
+    "Doppelmoral": None,
+    "Euromaidan": None,
+    "Clown": None,
+    "9/11": None,
+    "Rothschild": None,
+    "Ukronazi": None,
+    "Beischlafbettler": None
+}
 
 field_size = 5
 
 
 def generate_bingo_field():
-    random.shuffle(ENTRIES)
+    key_list = list(ENTRIES)
+
+    random.shuffle(key_list)
+
+    d2 = {}
+
+    for key in key_list:
+        print(key, ENTRIES[key])
+        d2[key] = ENTRIES[key]
 
     outer = list()
 
@@ -150,11 +157,16 @@ def generate_bingo_field():
         inner = list()
         print(x)
 
-        for y in ENTRIES[x:x + field_size]:
-            print(y)
+        for key,value in d2[x:x + field_size].items():
+
+            if value is None:
+                value = key
+
+            print(key,value)
             inner.append({
-                "text": y,
-                "checked": False
+                "text": key,
+                "checked": False,
+                "regex": value
             })
 
         outer.append(inner)
@@ -181,9 +193,7 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     found = list()
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
-        if not item["checked"] and item["text"].replace("_", " ").replace("-", "").replace(" ",
-                                                                                           "").lower() in text.replace(
-            "-", "").replace(" ", "").lower():
+        if not item["checked"] and re.match(item["regex"], text, re.IGNORECASE):
             item["checked"] = True
             found.append(item["text"])
             print(f"{text} is a valid bingo entry")
@@ -339,6 +349,7 @@ async def bingo_field(update: Update, context: CallbackContext):
                                              caption=f"<b>Militär-News Bullshit-Bingo</b>\n\nWenn eine im @MNChat gesendete Nachricht auf dem Spielfeld vorkommendende Begriffe enthält, werden diese rausgestrichen.\n\nIst eine gesamte Zeile oder Spalte durchgestrichen, dann heißt es <b>BINGO!</b> und eine neue Runde startet.\n{GERMAN.footer}")
     except FileNotFoundError as e:
         print("No field yet")
+
 
 async def reset_bingo(update: Update, context: CallbackContext):
     context.bot_data["bingo"] = generate_bingo_field()
