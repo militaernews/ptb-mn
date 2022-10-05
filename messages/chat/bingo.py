@@ -50,7 +50,7 @@ ENTRIES = {
     "Faschist": None,
     "Nazi": None,
     "Britischer Geheimdienst": r"Britische(r*) Geheimdienst",
-    "Azov": r"A(s|z)o[w|v)",
+    "Azov": r"A(s|z)o(w|v)",
     "Alina Lipp": r"Alina|Lipp",
     "Erdogan": None,
     "Korruption": None,
