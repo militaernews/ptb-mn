@@ -71,6 +71,8 @@ async def repair_saved_post(update: Update, context: CallbackContext):
 
 
 async def set_cmd(update: Update, context: CallbackContext):
+    await context.bot.delete_my_commands()
+
     chat_de_commands = [
         ("cmd", "Übersicht aller Befehle"),
         ("maps", "Karten Ukraine-Krieg"),
