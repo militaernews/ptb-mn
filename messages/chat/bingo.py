@@ -67,7 +67,7 @@ ENTRIES = {
     "Schwarzmarkt": None,
     "Troll": None,
     "WEF": None,
-    "Klaus Schwab":None,
+    "Klaus Schwab": None,
     "Bill Gates": None,
     "Dimension": None,
     "Reptiloid": None,
@@ -196,7 +196,7 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     found = list()
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
-        matches = re.findall(item["regex"], text.replace(" ",""), re.IGNORECASE)
+        matches = re.findall(item["regex"], text.replace(" ", ""), re.IGNORECASE)
         print(item["regex"], text, ">>>", matches)
         if not item["checked"] and len(matches) != 0:
             item["checked"] = True

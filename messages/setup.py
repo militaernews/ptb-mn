@@ -74,6 +74,7 @@ async def set_cmd(update: Update, context: CallbackContext):
     chat_de_commands = [
         ("cmd", "Übersicht aller Befehle"),
         ("maps", "Karten Ukraine-Krieg"),
+        ("loss", "Materialverluste in der Ukraine"),
         ("donbas", "14.000 Zivilisten im Donbas"),
         ("genozid", "Kein Genozid der Ukrainer im Donbas"),
         ("sofa", "Waffensystem des Sofa-Kriegers"),
