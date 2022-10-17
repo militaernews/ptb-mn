@@ -12,7 +12,7 @@ from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, handle_bingo, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, warn_user, unwarn_user, ban_user, report_user, genozid, \
-    loss
+    loss, peace, bias, ref
 from messages.chat.filter import filter_message
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
@@ -93,8 +93,11 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("donbas", donbas))
     app.add_handler(CommandHandler("cmd", commands))
     app.add_handler(CommandHandler("loss", loss))
+    app.add_handler(CommandHandler("peace", peace))
+    app.add_handler(CommandHandler("bias", bias))
     app.add_handler(CommandHandler("genozid", genozid))
     app.add_handler(CommandHandler("sofa", sofa))
+    app.add_handler(CommandHandler("ref", ref))
 
     app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))

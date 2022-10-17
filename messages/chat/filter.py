@@ -6,6 +6,7 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 from messages.chat.bingo import handle_bingo
+from messages.chat.dictionary import handle_putin_dict
 from util.log import log
 
 
@@ -99,6 +100,7 @@ async def filter_message(update: Update, context: CallbackContext):
 
 
 
-
     else:
         await handle_bingo(update, context)
+
+    await handle_putin_dict(update, context)
