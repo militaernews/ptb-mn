@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 putin_dict = {
-    "️Agression": "erzwungene Selbstverteidigung",
+    "️Angriff": "erzwungene Selbstverteidigung",
     "️Arrest": "Einladung zu einem Vorstellungsgespräch",
     "️Flüchtlinge": "Neonazis und Drogenabhängige",
     "️Arbeitslose": "Arbeitsferien",
@@ -29,9 +29,9 @@ putin_dict = {
     "Trauer": "mysteriöser Todesfall",
     "️Absturz": "schnelle taktische Landungsoperation",
     "️Krieg": "dreitägige Spezialoperation",
-    "️Agent ": "kritischer Journalist",
+    "️Agent": "kritischer Journalist",
     "️Journalist": "feindlicher Spion",
-    "️Wohnhaus": "Militärische Stellung",
+    "️Wohnhaus": "militärische Stellung",
     "Schule": "Nazi-Hauptquartier",
     "Flucht": "Umgruppierung in eine strategisch bessere Position",
     "Zwangsrekrutierte": "Freiwillige",
@@ -63,6 +63,6 @@ async def handle_putin_dict(update: Update, context: CallbackContext):
     text = f"☝🏼 Laut der neuen putin'schen Rechtschreibung hast du hier ein paar Fehler gemacht:"
 
     for k, v in matches.items():
-        text += f"\n\n🠒 „{k}” muss „{v}” lauten!"
+        text += f"\n\n❗️ „{k}” muss „{v}” lauten!"
 
     await update.message.reply_text(text)

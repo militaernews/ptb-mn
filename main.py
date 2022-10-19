@@ -13,7 +13,8 @@ from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, handle_bingo, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, warn_user, unwarn_user, ban_user, report_user, genozid, \
     loss, peace, bias, ref
-from messages.chat.filter import filter_message
+from messages.chat.dictionary import handle_putin_dict
+from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info
@@ -107,11 +108,12 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(
         filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
         filter_message))
+
     app.add_handler(MessageHandler(
         filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat([
             -1001618190222,  # Ukraine Russland Krieg Chat
             -1001755040391  # Vitaliks Fanclub
-        ]), handle_bingo))
+        ]), handle_other_chats))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace

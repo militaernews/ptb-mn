@@ -131,7 +131,7 @@ async def ref(update: Update, context: CallbackContext):
 
         text = f"Ich habe dir mal was passendes aus unserem Kanal rausgesucht😊\n\n👉🏼 <a href='t.me/{link}'>{link}</a>"
         if update.message.reply_to_message is not None:
-            await update.message.reply_to_message.reply_text(f"Hey! {update.message.reply_to_message.from_user.name}\n{text}",
+            await update.message.reply_to_message.reply_text(f"Hey {update.message.reply_to_message.from_user.name}!\n{text}",
                                                              disable_web_page_preview=False)
         else:
             await context.bot.send_message(update.message.chat_id, text, disable_web_page_preview=False)

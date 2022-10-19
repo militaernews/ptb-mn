@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="added /ref, /peace, /bias and filter for putin's dict, some fixes and additions" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="added /ref, /peace, /bias and filter for putin's dict, some fixes and additions">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/bingo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/dictionary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/filter.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,7 +66,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -270,6 +277,8 @@
       <workItem from="1664718810671" duration="3748000" />
       <workItem from="1664780037317" duration="541000" />
       <workItem from="1664781670715" duration="3239000" />
+      <workItem from="1666076712123" duration="2820000" />
+      <workItem from="1666197858893" duration="428000" />
     </task>
     <task id="LOCAL-00047" summary="bingo works now">
       <created>1661019533115</created>
