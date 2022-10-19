@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="added /ref, /peace, /bias and filter for putin's dict, some fixes and additions">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="a couple minor fixes and additions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/bingo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/dictionary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/chat/filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/filter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -278,14 +275,7 @@
       <workItem from="1664780037317" duration="541000" />
       <workItem from="1664781670715" duration="3239000" />
       <workItem from="1666076712123" duration="2820000" />
-      <workItem from="1666197858893" duration="428000" />
-    </task>
-    <task id="LOCAL-00047" summary="bingo works now">
-      <created>1661019533115</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1661019533115</updated>
+      <workItem from="1666197858893" duration="3175000" />
     </task>
     <task id="LOCAL-00048" summary="fix">
       <created>1661019619755</created>
@@ -623,7 +613,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666046402745</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="a couple minor fixes and additions">
+      <created>1666198522120</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1666198522121</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -642,7 +639,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="fix placeholders" />
     <MESSAGE value="fix edit caption?" />
     <MESSAGE value="upload videos to twitter, fixes" />
     <MESSAGE value="test file storage heroku" />
@@ -667,7 +663,8 @@
     <MESSAGE value="/sofa, refactor, fixes" />
     <MESSAGE value="fix" />
     <MESSAGE value="added /ref, /peace, /bias and filter for putin's dict, some fixes and additions" />
-    <option name="LAST_COMMIT_MESSAGE" value="added /ref, /peace, /bias and filter for putin's dict, some fixes and additions" />
+    <MESSAGE value="a couple minor fixes and additions" />
+    <option name="LAST_COMMIT_MESSAGE" value="a couple minor fixes and additions" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />

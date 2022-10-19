@@ -103,8 +103,6 @@ async def filter_message(update: Update, context: CallbackContext):
     else:
         await handle_bingo(update, context)
 
-    await handle_putin_dict(update, context)
-
 
 async def handle_other_chats(update: Update, context: CallbackContext):
     await handle_bingo(update, context)
