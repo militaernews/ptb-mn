@@ -120,22 +120,31 @@ async def bias(update: Update, context: CallbackContext):
 async def ref(update: Update, context: CallbackContext):
     await update.message.delete()
 
-    if len(context.args) == 1:
+    link = re.findall(r"([^\/]\w*\/\d+$)", update.message.text[4:])
 
-        if context.args[0].isdigit():
-            link = f"MilitaerNews/{context.args[0]}"
-        else:
-            link = re.findall(r"([^\/]\w*\/\d+$)", context.args[0])[0]
+    if len(link) == 0:
+        return
+    else:
+        link = link[0]
 
-        print(link)
+    print(link)
 
-        text = f"Ich habe dir mal was passendes aus unserem Kanal rausgesucht😊\n\n👉🏼 <a href='t.me/{link}'>{link}</a>"
-        if update.message.reply_to_message is not None:
-            await update.message.reply_to_message.reply_text(f"Hey {update.message.reply_to_message.from_user.name}!\n{text}",
-                                                             disable_web_page_preview=False)
-        else:
-            await context.bot.send_message(update.message.chat_id, text, disable_web_page_preview=False)
+    text = f"Ich habe dir mal was passendes aus unserem Kanal rausgesucht😊\n\n👉🏼 <a href='t.me/{link}'>{link}</a>"
+    if update.message.reply_to_message is not None:
+        await update.message.reply_to_message.reply_text(
+            f"Hey {update.message.reply_to_message.from_user.name}!\n{text}",
+            disable_web_page_preview=False)
+    else:
+        await context.bot.send_message(update.message.chat_id, text, disable_web_page_preview=False)
 
 
 async def sofa(update: Update, context: CallbackContext):
     await reply_photo(update, context, "sofa.jpg")
+
+
+async def bot(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "bot.jpg")
+
+
+async def mimimi(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "mimimi.jpg")
