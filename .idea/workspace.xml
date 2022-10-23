@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="a couple minor fixes and additions">
-      <change afterPath="$PROJECT_DIR$/res/img/bot.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mimimi.jpg" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="added /bot and /mimimi, some fixes">
+      <change afterPath="$PROJECT_DIR$/field.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/maps.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/maps.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -281,14 +279,9 @@
       <workItem from="1666197858893" duration="3175000" />
       <workItem from="1666261459522" duration="15000" />
       <workItem from="1666382153877" duration="1221000" />
-      <workItem from="1666466332118" duration="2226000" />
-    </task>
-    <task id="LOCAL-00048" summary="fix">
-      <created>1661019619755</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1661019619755</updated>
+      <workItem from="1666466332118" duration="3407000" />
+      <workItem from="1666511278495" duration="1672000" />
+      <workItem from="1666517873577" duration="299000" />
     </task>
     <task id="LOCAL-00049" summary="more bingo words">
       <created>1661020083953</created>
@@ -626,7 +619,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666198522121</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="added /bot and /mimimi, some fixes">
+      <created>1666469998997</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1666469998998</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -645,7 +645,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="fix edit caption?" />
     <MESSAGE value="upload videos to twitter, fixes" />
     <MESSAGE value="test file storage heroku" />
     <MESSAGE value="admins can append entries to bot_data" />
@@ -670,7 +669,8 @@
     <MESSAGE value="fix" />
     <MESSAGE value="added /ref, /peace, /bias and filter for putin's dict, some fixes and additions" />
     <MESSAGE value="a couple minor fixes and additions" />
-    <option name="LAST_COMMIT_MESSAGE" value="a couple minor fixes and additions" />
+    <MESSAGE value="added /bot and /mimimi, some fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="added /bot and /mimimi, some fixes" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
@@ -678,7 +678,7 @@
     <SUITE FILE_PATH="coverage/ptb_mn$admin.coverage" NAME="admin Coverage Results" MODIFIED="1660054275843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/messages" />
     <SUITE FILE_PATH="coverage/ptb_mn$bot.coverage" NAME="bot Coverage Results" MODIFIED="1661552954439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1662285059403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
-    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1666046293298" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1666511295988" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$twitter.coverage" NAME="twitter Coverage Results" MODIFIED="1659601080632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ptb_mn$playground.coverage" NAME="playground Coverage Results" MODIFIED="1660846028448" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
     <SUITE FILE_PATH="coverage/ptb_mn$config.coverage" NAME="config Coverage Results" MODIFIED="1659108625070" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

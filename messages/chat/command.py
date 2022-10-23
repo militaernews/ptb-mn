@@ -121,6 +121,7 @@ async def ref(update: Update, context: CallbackContext):
     await update.message.delete()
 
     link = re.findall(r"([^\/]\w*\/\d+$)", update.message.text[4:])
+    print(link)
 
     if len(link) == 0:
         return
