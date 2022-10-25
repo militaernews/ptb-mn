@@ -12,7 +12,7 @@ from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, handle_bingo, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, warn_user, unwarn_user, ban_user, report_user, genozid, \
-    loss, peace, bias, ref, bot, mimimi
+    loss, peace, bias, ref, bot, mimimi, cia
 from messages.chat.dictionary import handle_putin_dict
 from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
@@ -100,6 +100,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("sofa", sofa))
     app.add_handler(CommandHandler("bot", bot))
     app.add_handler(CommandHandler("mimimi", mimimi))
+    app.add_handler(CommandHandler("cia", cia))
     app.add_handler(MessageHandler(filters.Regex("/ref.*"), ref))
 
     #app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))

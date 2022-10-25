@@ -149,3 +149,6 @@ async def bot(update: Update, context: CallbackContext):
 
 async def mimimi(update: Update, context: CallbackContext):
     await reply_photo(update, context, "mimimi.jpg")
+
+async def cia(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "cia.jpg")
