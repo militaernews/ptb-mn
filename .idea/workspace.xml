@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/res/de/short.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
-    </list>
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -287,21 +281,7 @@
       <workItem from="1666910726859" duration="34000" />
       <workItem from="1666956570315" duration="906000" />
       <workItem from="1666957704546" duration="32000" />
-      <workItem from="1666957749614" duration="2781000" />
-    </task>
-    <task id="LOCAL-00087" summary="fix?">
-      <created>1664627838462</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
-      <option name="project" value="LOCAL" />
-      <updated>1664627838462</updated>
-    </task>
-    <task id="LOCAL-00088" summary="fix?">
-      <created>1664628166233</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
-      <option name="project" value="LOCAL" />
-      <updated>1664628166234</updated>
+      <workItem from="1666957749614" duration="3088000" />
     </task>
     <task id="LOCAL-00089" summary="channel post media can be edited">
       <created>1664712875649</created>
@@ -632,7 +612,21 @@
       <option name="project" value="LOCAL" />
       <updated>1665091592043</updated>
     </task>
-    <option name="localTasksCounter" value="136" />
+    <task id="LOCAL-00136" summary="added /short">
+      <created>1667080307873</created>
+      <option name="number" value="00136" />
+      <option name="presentableId" value="LOCAL-00136" />
+      <option name="project" value="LOCAL" />
+      <updated>1667080307873</updated>
+    </task>
+    <task id="LOCAL-00137" summary="fix">
+      <created>1667080482755</created>
+      <option name="number" value="00137" />
+      <option name="presentableId" value="LOCAL-00137" />
+      <option name="project" value="LOCAL" />
+      <updated>1667080482755</updated>
+    </task>
+    <option name="localTasksCounter" value="138" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -651,7 +645,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="admins can append entries to bot_data" />
     <MESSAGE value="test" />
     <MESSAGE value="bingo" />
     <MESSAGE value="bingo - ?" />
@@ -675,6 +668,7 @@
     <MESSAGE value="back to pytweet" />
     <MESSAGE value="update to bingo" />
     <MESSAGE value="added /loss" />
+    <MESSAGE value="added /short" />
     <MESSAGE value="fix" />
     <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>

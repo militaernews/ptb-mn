@@ -1,8 +1,7 @@
-from typing import Dict
-
 from orjson import orjson
 from telegram import Update, BotCommandScopeChatAdministrators
 from telegram.ext import CallbackContext
+from typing import Dict
 
 import config
 from data.lang import languages, GERMAN
@@ -83,6 +82,10 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("bias", "Ist MN neutral?"),
         ("genozid", "Kein Genozid der Ukrainer im Donbas"),
         ("sofa", "Waffensystem des Sofa-Kriegers"),
+        ("bot", "für Trolle"),
+        ("cia", "Wahrheit über Putin"),
+        ("mimimi", "Wenn einer mal wieder heult"),
+
     ]
 
     await context.bot.set_my_commands(chat_de_commands)
