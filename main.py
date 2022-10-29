@@ -11,7 +11,7 @@ from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, handle_bingo, reset_bingo
-from messages.chat.command import donbas, commands, sofa, maps, warn_user, unwarn_user, ban_user, report_user, genozid, \
+from messages.chat.command import donbas, commands, sofa, maps, short, warn_user, unwarn_user, ban_user, report_user, genozid, \
     loss, peace, bias, ref, bot, mimimi, cia
 from messages.chat.dictionary import handle_putin_dict
 from messages.chat.filter import filter_message, handle_other_chats
@@ -95,6 +95,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("cmd", commands))
     app.add_handler(CommandHandler("loss", loss))
     app.add_handler(CommandHandler("peace", peace))
+    app.add_handler(CommandHandler("short",short))
     app.add_handler(CommandHandler("bias", bias))
     app.add_handler(CommandHandler("genozid", genozid))
     app.add_handler(CommandHandler("sofa", sofa))

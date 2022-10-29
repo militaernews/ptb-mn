@@ -112,6 +112,9 @@ async def genozid(update: Update, context: CallbackContext):
 async def peace(update: Update, context: CallbackContext):
     await reply_html(update, context, "peace")
 
+async def short(update: Update, context: CallbackContext):
+    await reply_html(update, context, "short")
+
 
 async def bias(update: Update, context: CallbackContext):
     await reply_html(update, context, "bias")

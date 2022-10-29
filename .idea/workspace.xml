@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/res/img/cia.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/short.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field.png" beforeDir="false" afterPath="$PROJECT_DIR$/field.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,8 +58,9 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nyx/PycharmProjects/ptb-mn/res/img&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/nyx/PycharmProjects/ptb-mn/res/de&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -77,6 +77,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\nyx\PycharmProjects\ptb-mn\res\de" />
       <recent name="$PROJECT_DIR$/res/img" />
       <recent name="$PROJECT_DIR$/res/de" />
       <recent name="$PROJECT_DIR$/messages" />
@@ -146,9 +147,9 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\nyx\PycharmProjects\peony-test\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -187,9 +188,6 @@
       <list>
         <item itemvalue="Python.main" />
         <item itemvalue="Database Script.schema.sql" />
-        <item itemvalue="Python.split_into_hashtag_json" />
-        <item itemvalue="Python.bot" />
-        <item itemvalue="Python.bingo" />
       </list>
     </recent_temporary>
   </component>
@@ -277,277 +275,19 @@
       <workItem from="1664718810671" duration="3748000" />
       <workItem from="1664780037317" duration="541000" />
       <workItem from="1664781670715" duration="3239000" />
-      <workItem from="1666076712123" duration="2820000" />
-      <workItem from="1666197858893" duration="3175000" />
-      <workItem from="1666261459522" duration="15000" />
-      <workItem from="1666382153877" duration="1221000" />
-      <workItem from="1666466332118" duration="3407000" />
-      <workItem from="1666511278495" duration="1672000" />
-      <workItem from="1666517873577" duration="1267000" />
-      <workItem from="1666557974085" duration="608000" />
-      <workItem from="1666592026660" duration="607000" />
-      <workItem from="1666650584369" duration="1224000" />
-      <workItem from="1666680326438" duration="426000" />
-      <workItem from="1666681637161" duration="1337000" />
-    </task>
-    <task id="LOCAL-00050" summary="fix">
-      <created>1661071517777</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1661071517778</updated>
-    </task>
-    <task id="LOCAL-00051" summary="fix">
-      <created>1661071527320</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1661071527320</updated>
-    </task>
-    <task id="LOCAL-00052" summary="fix">
-      <created>1661071645200</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1661071645200</updated>
-    </task>
-    <task id="LOCAL-00053" summary="fix">
-      <created>1661073449018</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1661073449019</updated>
-    </task>
-    <task id="LOCAL-00054" summary="fix">
-      <created>1661094065875</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1661094065876</updated>
-    </task>
-    <task id="LOCAL-00055" summary="fix">
-      <created>1661094902985</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1661094902985</updated>
-    </task>
-    <task id="LOCAL-00056" summary="fix">
-      <created>1661175528842</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1661175528843</updated>
-    </task>
-    <task id="LOCAL-00057" summary="fix">
-      <created>1661178506018</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1661178506019</updated>
-    </task>
-    <task id="LOCAL-00058" summary="fix">
-      <created>1661178984987</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1661178984988</updated>
-    </task>
-    <task id="LOCAL-00059" summary="fix">
-      <created>1661179590586</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1661179590586</updated>
-    </task>
-    <task id="LOCAL-00060" summary="fix">
-      <created>1661181212955</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1661181212955</updated>
-    </task>
-    <task id="LOCAL-00061" summary="fix">
-      <created>1661273871927</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1661273871928</updated>
-    </task>
-    <task id="LOCAL-00062" summary="fix">
-      <created>1661292653683</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1661292653683</updated>
-    </task>
-    <task id="LOCAL-00063" summary="fix">
-      <created>1661292769778</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1661292769778</updated>
-    </task>
-    <task id="LOCAL-00064" summary="fix">
-      <created>1661293043780</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1661293043780</updated>
-    </task>
-    <task id="LOCAL-00065" summary="fix">
-      <created>1661293542033</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1661293542033</updated>
-    </task>
-    <task id="LOCAL-00066" summary="working on warnings/bans">
-      <created>1661684908461</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1661684908463</updated>
-    </task>
-    <task id="LOCAL-00067" summary="working on warnings/bans/reports">
-      <created>1661695295616</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1661695295617</updated>
-    </task>
-    <task id="LOCAL-00068" summary="working on warnings/bans/reports">
-      <created>1661698828758</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1661698828758</updated>
-    </task>
-    <task id="LOCAL-00069" summary="fix flags">
-      <created>1661981735976</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1661981735976</updated>
-    </task>
-    <task id="LOCAL-00070" summary="fix?">
-      <created>1662285086589</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1662285086590</updated>
-    </task>
-    <task id="LOCAL-00071" summary="fix?">
-      <created>1662300344142</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1662300344143</updated>
-    </task>
-    <task id="LOCAL-00072" summary="fix?">
-      <created>1662301338342</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1662301338342</updated>
-    </task>
-    <task id="LOCAL-00073" summary="fix?">
-      <created>1662301651128</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1662301651129</updated>
-    </task>
-    <task id="LOCAL-00074" summary="fiddling">
-      <created>1662301992936</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1662301992936</updated>
-    </task>
-    <task id="LOCAL-00075" summary="fiddling">
-      <created>1662303549651</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1662303549651</updated>
-    </task>
-    <task id="LOCAL-00076" summary="fiddling">
-      <created>1662304853859</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1662304853859</updated>
-    </task>
-    <task id="LOCAL-00077" summary="switching to db">
-      <created>1662325908756</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1662325908756</updated>
-    </task>
-    <task id="LOCAL-00078" summary="switching to db">
-      <created>1662325941166</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1662325941166</updated>
-    </task>
-    <task id="LOCAL-00079" summary="reply db works for single">
-      <created>1662379585377</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1662379585378</updated>
-    </task>
-    <task id="LOCAL-00080" summary="reply db works for single and mg">
-      <created>1662402686023</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1662402686023</updated>
-    </task>
-    <task id="LOCAL-00081" summary="fix">
-      <created>1662406636463</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1662406636464</updated>
-    </task>
-    <task id="LOCAL-00082" summary="fix?">
-      <created>1662655661227</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1662655661227</updated>
-    </task>
-    <task id="LOCAL-00083" summary="some commands &amp; fixes">
-      <created>1664608187679</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1664608187680</updated>
-    </task>
-    <task id="LOCAL-00084" summary="fix">
-      <created>1664608687021</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
-      <option name="project" value="LOCAL" />
-      <updated>1664608687021</updated>
-    </task>
-    <task id="LOCAL-00085" summary="fix">
-      <created>1664621679608</created>
-      <option name="number" value="00085" />
-      <option name="presentableId" value="LOCAL-00085" />
-      <option name="project" value="LOCAL" />
-      <updated>1664621679609</updated>
-    </task>
-    <task id="LOCAL-00086" summary="fix?">
-      <created>1664627608831</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
-      <option name="project" value="LOCAL" />
-      <updated>1664627608831</updated>
+      <workItem from="1664796308259" duration="650000" />
+      <workItem from="1664815277525" duration="6697000" />
+      <workItem from="1664898850330" duration="3757000" />
+      <workItem from="1664956713183" duration="2151000" />
+      <workItem from="1664959484301" duration="1702000" />
+      <workItem from="1664962805712" duration="6930000" />
+      <workItem from="1665090252576" duration="1921000" />
+      <workItem from="1665093422630" duration="150000" />
+      <workItem from="1666368689857" duration="43000" />
+      <workItem from="1666910726859" duration="34000" />
+      <workItem from="1666956570315" duration="906000" />
+      <workItem from="1666957704546" duration="32000" />
+      <workItem from="1666957749614" duration="2781000" />
     </task>
     <task id="LOCAL-00087" summary="fix?">
       <created>1664627838462</created>
@@ -605,35 +345,294 @@
       <option name="project" value="LOCAL" />
       <updated>1664782689568</updated>
     </task>
-    <task id="LOCAL-00095" summary="added /ref, /peace, /bias and filter for putin's dict, some fixes and additions">
-      <created>1666046402744</created>
+    <task id="LOCAL-00095" summary="fix">
+      <created>1664806461544</created>
       <option name="number" value="00095" />
       <option name="presentableId" value="LOCAL-00095" />
       <option name="project" value="LOCAL" />
-      <updated>1666046402745</updated>
+      <updated>1664806461544</updated>
     </task>
-    <task id="LOCAL-00096" summary="a couple minor fixes and additions">
-      <created>1666198522120</created>
+    <task id="LOCAL-00096" summary="fix">
+      <created>1664806670389</created>
       <option name="number" value="00096" />
       <option name="presentableId" value="LOCAL-00096" />
       <option name="project" value="LOCAL" />
-      <updated>1666198522121</updated>
+      <updated>1664806670390</updated>
     </task>
-    <task id="LOCAL-00097" summary="added /bot and /mimimi, some fixes">
-      <created>1666469998997</created>
+    <task id="LOCAL-00097" summary="twitter stream test">
+      <created>1664817521234</created>
       <option name="number" value="00097" />
       <option name="presentableId" value="LOCAL-00097" />
       <option name="project" value="LOCAL" />
-      <updated>1666469998998</updated>
+      <updated>1664817521234</updated>
     </task>
-    <task id="LOCAL-00098" summary="fix">
-      <created>1666518177641</created>
+    <task id="LOCAL-00098" summary="twitter stream test">
+      <created>1664817906433</created>
       <option name="number" value="00098" />
       <option name="presentableId" value="LOCAL-00098" />
       <option name="project" value="LOCAL" />
-      <updated>1666518177642</updated>
+      <updated>1664817906433</updated>
     </task>
-    <option name="localTasksCounter" value="99" />
+    <task id="LOCAL-00099" summary="twitter stream test">
+      <created>1664818699960</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1664818699960</updated>
+    </task>
+    <task id="LOCAL-00100" summary="twitter stream test">
+      <created>1664820073680</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1664820073680</updated>
+    </task>
+    <task id="LOCAL-00101" summary="twitter stream test">
+      <created>1664820476164</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1664820476164</updated>
+    </task>
+    <task id="LOCAL-00102" summary="twitter stream test">
+      <created>1664820621414</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1664820621414</updated>
+    </task>
+    <task id="LOCAL-00103" summary="twitter stream test">
+      <created>1664821138519</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1664821138519</updated>
+    </task>
+    <task id="LOCAL-00104" summary="twitter stream test">
+      <created>1664821831087</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1664821831087</updated>
+    </task>
+    <task id="LOCAL-00105" summary="fix">
+      <created>1664822548903</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1664822548903</updated>
+    </task>
+    <task id="LOCAL-00106" summary="trying tweepy">
+      <created>1664899538194</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1664899538194</updated>
+    </task>
+    <task id="LOCAL-00107" summary="trying tweepy">
+      <created>1664899710998</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1664899710998</updated>
+    </task>
+    <task id="LOCAL-00108" summary="trying tweepy">
+      <created>1664899852313</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1664899852313</updated>
+    </task>
+    <task id="LOCAL-00109" summary="trying tweepy">
+      <created>1664900120702</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1664900120702</updated>
+    </task>
+    <task id="LOCAL-00110" summary="trying tweepy">
+      <created>1664900259324</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1664900259324</updated>
+    </task>
+    <task id="LOCAL-00111" summary="trying tweepy">
+      <created>1664900759544</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1664900759544</updated>
+    </task>
+    <task id="LOCAL-00112" summary="trying tweepy">
+      <created>1664901219460</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1664901219460</updated>
+    </task>
+    <task id="LOCAL-00113" summary="trying tweepy">
+      <created>1664902173169</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1664902173169</updated>
+    </task>
+    <task id="LOCAL-00114" summary="back to pytweet">
+      <created>1664957442775</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1664957442791</updated>
+    </task>
+    <task id="LOCAL-00115" summary="back to pytweet">
+      <created>1664957885379</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1664957885379</updated>
+    </task>
+    <task id="LOCAL-00116" summary="update to bingo">
+      <created>1664963355246</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1664963355246</updated>
+    </task>
+    <task id="LOCAL-00117" summary="update to bingo">
+      <created>1664963710536</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1664963710536</updated>
+    </task>
+    <task id="LOCAL-00118" summary="update to bingo">
+      <created>1664963966362</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1664963966362</updated>
+    </task>
+    <task id="LOCAL-00119" summary="update to bingo">
+      <created>1664964200056</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1664964200056</updated>
+    </task>
+    <task id="LOCAL-00120" summary="update to bingo">
+      <created>1664964723247</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1664964723247</updated>
+    </task>
+    <task id="LOCAL-00121" summary="update to bingo">
+      <created>1664965346525</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1664965346525</updated>
+    </task>
+    <task id="LOCAL-00122" summary="update to bingo">
+      <created>1664965492139</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1664965492139</updated>
+    </task>
+    <task id="LOCAL-00123" summary="update to bingo">
+      <created>1664965685073</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1664965685073</updated>
+    </task>
+    <task id="LOCAL-00124" summary="fix">
+      <created>1664965959329</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1664965959329</updated>
+    </task>
+    <task id="LOCAL-00125" summary="fix">
+      <created>1664966155299</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1664966155299</updated>
+    </task>
+    <task id="LOCAL-00126" summary="fix">
+      <created>1664966366054</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1664966366054</updated>
+    </task>
+    <task id="LOCAL-00127" summary="fix">
+      <created>1664966714770</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1664966714770</updated>
+    </task>
+    <task id="LOCAL-00128" summary="fix">
+      <created>1664966939248</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1664966939248</updated>
+    </task>
+    <task id="LOCAL-00129" summary="fix">
+      <created>1664967101140</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1664967101140</updated>
+    </task>
+    <task id="LOCAL-00130" summary="fix">
+      <created>1664967407615</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1664967407615</updated>
+    </task>
+    <task id="LOCAL-00131" summary="fix">
+      <created>1664967824561</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1664967824562</updated>
+    </task>
+    <task id="LOCAL-00132" summary="fix">
+      <created>1664967955789</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1664967955789</updated>
+    </task>
+    <task id="LOCAL-00133" summary="fix">
+      <created>1664970104333</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1664970104333</updated>
+    </task>
+    <task id="LOCAL-00134" summary="added /loss">
+      <created>1665091059172</created>
+      <option name="number" value="00134" />
+      <option name="presentableId" value="LOCAL-00134" />
+      <option name="project" value="LOCAL" />
+      <updated>1665091059172</updated>
+    </task>
+    <task id="LOCAL-00135" summary="fix">
+      <created>1665091592043</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1665091592043</updated>
+    </task>
+    <option name="localTasksCounter" value="136" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -652,8 +651,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="upload videos to twitter, fixes" />
-    <MESSAGE value="test file storage heroku" />
     <MESSAGE value="admins can append entries to bot_data" />
     <MESSAGE value="test" />
     <MESSAGE value="bingo" />
@@ -665,7 +662,6 @@
     <MESSAGE value="working on warnings/bans" />
     <MESSAGE value="working on warnings/bans/reports" />
     <MESSAGE value="fix flags" />
-    <MESSAGE value="fiddling" />
     <MESSAGE value="switching to db" />
     <MESSAGE value="reply db works for single" />
     <MESSAGE value="reply db works for single and mg" />
@@ -673,22 +669,16 @@
     <MESSAGE value="fix?" />
     <MESSAGE value="channel post media can be edited" />
     <MESSAGE value="/sofa, refactor, fixes" />
-    <MESSAGE value="added /ref, /peace, /bias and filter for putin's dict, some fixes and additions" />
-    <MESSAGE value="a couple minor fixes and additions" />
-    <MESSAGE value="added /bot and /mimimi, some fixes" />
+    <MESSAGE value="fiddling" />
+    <MESSAGE value="twitter stream test" />
+    <MESSAGE value="trying tweepy" />
+    <MESSAGE value="back to pytweet" />
+    <MESSAGE value="update to bingo" />
+    <MESSAGE value="added /loss" />
     <MESSAGE value="fix" />
     <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ptb_mn$translation.coverage" NAME="translation Coverage Results" MODIFIED="1659441694425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
-    <SUITE FILE_PATH="coverage/ptb_mn$bingo.coverage" NAME="bingo Coverage Results" MODIFIED="1661018084001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/messages" />
-    <SUITE FILE_PATH="coverage/ptb_mn$admin.coverage" NAME="admin Coverage Results" MODIFIED="1660054275843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/messages" />
-    <SUITE FILE_PATH="coverage/ptb_mn$bot.coverage" NAME="bot Coverage Results" MODIFIED="1661552954439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ptb_mn$split_into_hashtag_json.coverage" NAME="split_into_hashtag_json Coverage Results" MODIFIED="1662285059403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
-    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1666681646182" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ptb_mn$twitter.coverage" NAME="twitter Coverage Results" MODIFIED="1659601080632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ptb_mn$playground.coverage" NAME="playground Coverage Results" MODIFIED="1660846028448" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/dev" />
-    <SUITE FILE_PATH="coverage/ptb_mn$config.coverage" NAME="config Coverage Results" MODIFIED="1659108625070" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ptb_mn$helper.coverage" NAME="helper Coverage Results" MODIFIED="1660546140009" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/util" />
+    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1667058479554" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
