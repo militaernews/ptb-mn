@@ -12,7 +12,6 @@ from data.lang import GERMAN
 logger = logging.getLogger(__name__)
 conn = psycopg2.connect(DATABASE_URL, cursor_factory=NamedTupleCursor)
 
-
 def key_exists(context: CallbackContext, key: int) -> bool:
     return key in context.bot_data().keys()
 
@@ -29,6 +28,8 @@ class Post:
     reply_id: int
     file_type: int
     file_id: str
+
+
 
 
 def get_mg(mg_id: str):

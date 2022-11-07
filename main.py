@@ -6,17 +6,18 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler
 
-from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS, BINGO_ADMINS
+from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS, BINGO_ADMINS, NX_MEME
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
-from messages.chat.bingo import bingo_field, handle_bingo, reset_bingo
+from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, warn_user, unwarn_user, ban_user, report_user, genozid, \
     loss, peace, bias, ref, bot, mimimi, cia
 from messages.chat.dictionary import handle_putin_dict
 from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
+from messages.news.nxmeme import post_media_meme_nx, post_text_meme_nx
 from messages.news.special import breaking_news, announcement, post_info
 from messages.news.text import edit_channel_text, post_channel_text
 from messages.setup import set_cmd
@@ -53,6 +54,17 @@ if __name__ == "__main__":
     app.add_handler(
         MessageHandler(filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=CHANNEL_MEME),
                        post_text_meme))
+
+    app.add_handler(
+        MessageHandler(
+            filters.UpdateType.CHANNEL_POST &
+            (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+            & filters.Chat(chat_id=NX_MEME), post_media_meme_nx))
+    app.add_handler(
+        MessageHandler(filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=NX_MEME),
+                       post_text_meme_nx))
+
+
 
     app.add_handler(
         MessageHandler(
