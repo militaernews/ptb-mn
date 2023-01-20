@@ -6,6 +6,7 @@ load_dotenv()
 
 TOKEN = os.getenv('TELEGRAM')
 DATABASE_URL = os.getenv("DATABASE_URL") #.replace("postgres", "postgresql", 1)
+DATABASE_URL_NN = os.getenv("DATABASE_URL_NN")
 TEST_MODE = os.getenv("TESTING", False)
 PORT = int(os.getenv("PORT", 8080))
 
@@ -29,5 +30,4 @@ BINGO_ADMINS = ADMINS + (
 # Constants
 PLACEHOLDER = "║"
 
-NX_MEME = -1001482614635
-NX_MAIN = -1001839268196
+

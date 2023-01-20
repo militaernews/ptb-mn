@@ -5,6 +5,7 @@ from telegram.ext import ContextTypes
 
 from messages.chat.dictionary import handle_putin_dict
 from messages.chat.filter import filter_message
+from util.translation import translate, translate_message
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -13,9 +14,14 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         print("--")
 
-        await filter_message(update, context)
+     #   await filter_message(update, context)
 
-        await handle_putin_dict(update,context)
+        text = await translate_message("tr", update.message.text_html_urled,)
+
+       # await get_hash
+        await update.message.reply_text(text)
+
+      #  await handle_putin_dict(update,context)
 
 
 

@@ -6,18 +6,16 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler
 
-from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS, BINGO_ADMINS, NX_MEME
+from config import TEST_MODE, TOKEN, PORT, DATABASE_URL, CHANNEL_MEME, ADMINS, BINGO_ADMINS
 from data.lang import GERMAN
 from data.postgres import PostgresPersistence
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
-from messages.chat.command import donbas, commands, sofa, maps, short, warn_user, unwarn_user, ban_user, report_user, genozid, \
+from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
     loss, peace, bias, ref, bot, mimimi, cia
-from messages.chat.dictionary import handle_putin_dict
 from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
-from messages.news.nxmeme import post_media_meme_nx, post_text_meme_nx
 from messages.news.special import breaking_news, announcement, post_info
 from messages.news.text import edit_channel_text, post_channel_text
 from messages.setup import set_cmd
@@ -44,6 +42,7 @@ if __name__ == "__main__":
     #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))
     app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
+
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     app.add_handler(
@@ -54,17 +53,6 @@ if __name__ == "__main__":
     app.add_handler(
         MessageHandler(filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=CHANNEL_MEME),
                        post_text_meme))
-
-    app.add_handler(
-        MessageHandler(
-            filters.UpdateType.CHANNEL_POST &
-            (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
-            & filters.Chat(chat_id=NX_MEME), post_media_meme_nx))
-    app.add_handler(
-        MessageHandler(filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=NX_MEME),
-                       post_text_meme_nx))
-
-
 
     app.add_handler(
         MessageHandler(
@@ -107,7 +95,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("cmd", commands))
     app.add_handler(CommandHandler("loss", loss))
     app.add_handler(CommandHandler("peace", peace))
-    app.add_handler(CommandHandler("short",short))
+    app.add_handler(CommandHandler("short", short))
     app.add_handler(CommandHandler("bias", bias))
     app.add_handler(CommandHandler("genozid", genozid))
     app.add_handler(CommandHandler("sofa", sofa))
@@ -116,9 +104,9 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("cia", cia))
     app.add_handler(MessageHandler(filters.Regex("/ref.*"), ref))
 
-    #app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
-    #app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
-    #app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
+    # app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
+    # app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
+    # app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
 
     app.add_handler(MessageHandler(
@@ -139,6 +127,6 @@ if __name__ == "__main__":
         app.run_polling()
     else:
         app.run_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN,
-          webhook_url=f"https://web-production-fac5.up.railway.app/{TOKEN}")
-                     #   webhook_url=f"https://web-production-5e05.up.railway.app/{TOKEN}")
+                        webhook_url=f"https://web-production-fac5.up.railway.app/{TOKEN}")
+        #   webhook_url=f"https://web-production-5e05.up.railway.app/{TOKEN}")
         # webhook_url=f"https://ptb-mn.herokuapp.com/{TOKEN}")

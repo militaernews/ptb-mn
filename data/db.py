@@ -202,6 +202,7 @@ def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
                 "update posts p set text = %s where p.msg_id=%s and p.lang=%s",
                 (text, msg_id, lang_key))
             res = c.fetchone()
+            conn.commit()
 
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
             if res is not None:
@@ -240,6 +241,7 @@ def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
             c.execute(
                 "update posts p set file_id = %s, text = %s, file_type = %s where p.msg_id=%s and p.lang=%s",
                 (file_id, text, file_type, msg.id, lang_key))
+            conn.commit()
     except Exception as e:
         logger.error("DB-Operation failed", e)
         pass
@@ -315,3 +317,4 @@ def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_ty
     except Exception as e:
         logger.error("DB-Operation failed", e)
         pass
+

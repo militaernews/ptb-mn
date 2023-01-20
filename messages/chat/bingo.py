@@ -197,7 +197,7 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
         matches = re.findall(item["regex"], text.replace(" ", ""), re.IGNORECASE)
-        print(item["regex"], text, ">>>", matches)
+        #   print(item["regex"], text, ">>>", matches)
         if not item["checked"] and len(matches) != 0:
             item["checked"] = True
             found.append(item["text"])
@@ -213,7 +213,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     canvas_width = 2360
     canvas_height = 1200
     border_distance = int((all_width - canvas_width) / 2)
-    print("border_distance", border_distance)
+    #  print("border_distance", border_distance)
 
     svg = f"""<?xml version='1.0' encoding='UTF-8' standalone='no'?>
     <svg
@@ -223,7 +223,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
        version='1.1'
        xmlns='http://www.w3.org/2000/svg'
        xmlns:svg='http://www.w3.org/2000/svg'>
-      
+
     <text y="{border_distance + 60}" x="50%" font-size="60px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" font-weight="bold" text-anchor="middle">MilitärNews-Bingo</tspan></text>
     """
 
@@ -241,17 +241,17 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     curr_x = 0
 
     while current_width < canvas_width:
-        print(current_width)
+        #  print(current_width)
 
         x_var = f"<svg width=\"{width_treshold}\" height=\"{height_treshold}\"  x=\"{current_width}\""
         current_height = 0
         curr_y = 0
 
         while current_height < canvas_height:
-            print(current_height)
+            #  print(current_height)
 
             curr_field = field[curr_x][curr_y]
-            print(curr_field)
+            # print(curr_field)
 
             textss = curr_field["text"].split(" ")
             for index, value in enumerate(textss):
@@ -294,7 +294,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     <text y="{all_height - border_distance}" x="{all_width - border_distance}" font-size="26px" font-family="Arial" dominant-baseline="middle"  text-anchor="end" fill="gray" >zuletzt aktualisiert {datetime.datetime.now().strftime("%d.%m.%Y, %H:%M:%S")}</text>
     </svg>"""
 
-    print(svg)
+    # print(svg)
 
     cairosvg.svg2png(bytestring=svg, write_to='field.png', background_color="#00231e")
 

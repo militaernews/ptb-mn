@@ -7,6 +7,8 @@ import config
 from util.regex import FOOTER
 
 MSG_REMOVAL_PERIOD = 1200
+
+
 def get_replies(bot_data, msg_id: str):
     print("Trying to get bot_data ------------------")
     print(bot_data)
@@ -50,8 +52,10 @@ async def get_file(update: Update):
     elif update.channel_post.animation is not None:
         return await update.channel_post.animation.get_file()
 
+
 async def delete(context: CallbackContext):
     await context.bot.delete_message(str(context.job.context), context.job.name)
+
 
 async def reply_html(update: Update, context: CallbackContext, file_name: str):
     await update.message.delete()
@@ -60,11 +64,11 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str):
         with open(f"res/de/{file_name}.html", "r", encoding='utf-8') as f:
             text = f.read()
             if update.message.reply_to_message is not None:
-                await update.message.reply_to_message.reply_text(text)
+                msg = await update.message.reply_to_message.reply_text(text)
             else:
                 msg = await context.bot.send_message(update.message.chat_id, text)
 
-                context.job_queue.run_once( delete, MSG_REMOVAL_PERIOD, msg.chat_id, str(msg.message_id) )
+            context.job_queue.run_once(delete, MSG_REMOVAL_PERIOD, msg.chat_id, str(msg.message_id))
 
     except Exception as e:
         await context.bot.send_message(
@@ -81,11 +85,11 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
     try:
         with open(f"res/img/{file_name}", "rb") as f:
             if update.message.reply_to_message is not None:
-                await update.message.reply_to_message.reply_photo(f)
+                msg = await update.message.reply_to_message.reply_photo(f)
             else:
                 msg = await context.bot.send_photo(update.message.chat_id, f)
 
-                context.job_queue.run_once(delete, MSG_REMOVAL_PERIOD, msg.chat_id, str(msg.message_id))
+            context.job_queue.run_once(delete, MSG_REMOVAL_PERIOD, msg.chat_id, str(msg.message_id))
 
 
     except Exception as e:
@@ -95,6 +99,3 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
             f"<b>Caused by Update</b>\n<code>{update}</code>",
         )
         pass
-
-
-

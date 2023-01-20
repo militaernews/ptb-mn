@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="some changes to make it run elsewhere">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ptb-mn.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ptb-mn.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field.png" beforeDir="false" afterPath="$PROJECT_DIR$/field.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/bingo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/news/nxmeme.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/regex.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/regex.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,7 +68,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/nyx/PycharmProjects/ptb-mn/res/de&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Pentex/PycharmProjects/ptb-mn/messages/news&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -71,6 +85,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\messages\news" />
       <recent name="C:\Users\nyx\PycharmProjects\ptb-mn\res\de" />
       <recent name="$PROJECT_DIR$/res/img" />
       <recent name="$PROJECT_DIR$/res/de" />
@@ -141,12 +156,22 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Users\nyx\PycharmProjects\peony-test\venv\Scripts\python.exe" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -178,10 +203,18 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.bingo" />
+      <item itemvalue="Python.bot" />
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.split_into_hashtag_json" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Database Script.schema.sql" />
+        <item itemvalue="Python.split_into_hashtag_json" />
+        <item itemvalue="Python.bot" />
+        <item itemvalue="Python.bingo" />
       </list>
     </recent_temporary>
   </component>
@@ -282,13 +315,6 @@
       <workItem from="1666956570315" duration="906000" />
       <workItem from="1666957704546" duration="32000" />
       <workItem from="1666957749614" duration="3088000" />
-    </task>
-    <task id="LOCAL-00089" summary="channel post media can be edited">
-      <created>1664712875649</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1664712875650</updated>
     </task>
     <task id="LOCAL-00090" summary="/sofa, refactor, fixes">
       <created>1664720834121</created>
@@ -626,7 +652,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667080482755</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="some changes to make it run elsewhere">
+      <created>1667857076173</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1667857076174</updated>
+    </task>
+    <option name="localTasksCounter" value="139" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -645,7 +678,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="test" />
     <MESSAGE value="bingo" />
     <MESSAGE value="bingo - ?" />
     <MESSAGE value="field kinda works, but needs nicer layout and checkable fields" />
@@ -670,9 +702,7 @@
     <MESSAGE value="added /loss" />
     <MESSAGE value="added /short" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ptb_mn$main.coverage" NAME="main Coverage Results" MODIFIED="1667058479554" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <MESSAGE value="some changes to make it run elsewhere" />
+    <option name="LAST_COMMIT_MESSAGE" value="some changes to make it run elsewhere" />
   </component>
 </project>
