@@ -16,6 +16,8 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
 
      #   await filter_message(update, context)
 
+        print(update.message.caption)
+
         text = await translate_message("tr", update.message.text_html_urled,)
 
        # await get_hash
