@@ -16,7 +16,7 @@ from messages.chat.command import donbas, commands, sofa, maps, short, report_us
 from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
-from messages.news.special import breaking_news, announcement, post_info
+from messages.news.special import breaking_news, announcement, post_info, advertisement
 from messages.news.text import edit_channel_text, post_channel_text
 from messages.setup import set_cmd
 
@@ -80,6 +80,11 @@ if __name__ == "__main__":
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & filters.Regex(
                 re.compile(r"#mitteilung", re.IGNORECASE)),
             announcement))
+    app.add_handler(
+        MessageHandler(
+            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & filters.Regex(
+                re.compile(r"#werbung", re.IGNORECASE)),
+            advertisement))
     app.add_handler(
         MessageHandler(
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),

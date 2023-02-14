@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="migrating some functionality to another bot">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field.png" beforeDir="false" afterPath="$PROJECT_DIR$/field.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/lang.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/news/special.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/special.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/helper.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -307,13 +307,6 @@
       <workItem from="1666956570315" duration="906000" />
       <workItem from="1666957704546" duration="32000" />
       <workItem from="1666957749614" duration="3088000" />
-    </task>
-    <task id="LOCAL-00091" summary="fix">
-      <created>1664721713272</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1664721713272</updated>
     </task>
     <task id="LOCAL-00092" summary="fix">
       <created>1664721960301</created>
@@ -651,7 +644,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674174200460</updated>
     </task>
-    <option name="localTasksCounter" value="140" />
+    <task id="LOCAL-00140" summary="fix">
+      <created>1676125531182</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1676125531183</updated>
+    </task>
+    <option name="localTasksCounter" value="141" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -692,9 +692,9 @@
     <MESSAGE value="update to bingo" />
     <MESSAGE value="added /loss" />
     <MESSAGE value="added /short" />
-    <MESSAGE value="fix" />
     <MESSAGE value="some changes to make it run elsewhere" />
     <MESSAGE value="migrating some functionality to another bot" />
-    <option name="LAST_COMMIT_MESSAGE" value="migrating some functionality to another bot" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>
