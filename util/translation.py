@@ -26,7 +26,7 @@ def flag_to_hashtag(text: str, language: str = None):
 
         text += "\n\n"
 
-        for fe in flag_emojis:
+        for fe in list(set(flag_emojis)):
             # todo: filter if valid flag?
             text += f"#{get_hashtag(fe, language)} "
 

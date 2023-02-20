@@ -1,7 +1,8 @@
 import re
 from mailbox import Message
 
-from telegram import Update
+from telegram import Update, MessageEntity
+from telegram.constants import MessageEntityType
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
@@ -23,7 +24,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
     print("orignal caption::::::::::", original_caption)
 
     for lang in languages:
-        print(lang)
+        #   print(lang)
 
         reply_id = query_replies(update.channel_post.message_id, lang.lang_key)
 
@@ -34,6 +35,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
                 reply_to_message_id=reply_id
             )
             insert_single2(msg, lang.lang_key)
+        ##  print(lang.lang_key)
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
@@ -54,7 +56,8 @@ async def post_channel_text(update: Update, context: CallbackContext):
             pass
 
     try:
-        await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
+        print("tweet")
+      #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,

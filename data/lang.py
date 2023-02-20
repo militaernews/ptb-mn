@@ -44,6 +44,7 @@ languages: [Language] = [
         "SON_DAKİKA",
         "DUYURU",
         "ADVERTISING",
+        -1001744855657
     ),
     Language(
         "fa",  # Persian

@@ -1,8 +1,9 @@
 import traceback
 
-from telegram import Update
+from telegram import Update, InputMediaVideo, InputMediaPhoto
 from telegram.ext import ContextTypes
 
+from data import lang
 from messages.chat.dictionary import handle_putin_dict
 from messages.chat.filter import filter_message
 from util.translation import translate, translate_message
@@ -16,7 +17,13 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
 
      #   await filter_message(update, context)
 
-        print(update.message.caption)
+        print(update.messagef)
+      #  print(update.message.caption)
+
+        tr = lang.languages[1]
+        print("LNG ::::::", tr)
+
+        await context.bot.send_message(tr.channel_id, "test")
 
         text = await translate_message("tr", update.message.text_html_urled,)
 

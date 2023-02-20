@@ -7,12 +7,10 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 import config
-import twitter
 from data.db import insert_single3, insert_single2, query_replies3, \
     get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id, \
     update_post
 from data.lang import GERMAN, languages
-from util.helper import get_file
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import flag_to_hashtag, translate_message
 
@@ -43,7 +41,7 @@ async def post_channel_single(update: Update, context: CallbackContext, de_post_
                 config.LOG_GROUP,
                 "<b>⚠️ Error when trying to send single post in Channel "
                 f"{lang.lang_key}</b>\n<code>{e}</code>\n\n"
-                f"<b>Caused by Update</b>\n<code>{update}</code>",
+                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
             )
             pass
 
@@ -56,20 +54,22 @@ async def post_channel_single(update: Update, context: CallbackContext, de_post_
             await context.bot.send_message(
                 config.LOG_GROUP,
                 f"<b>⚠️ Error when trying to edit post in Channel de</b>\n"
-                f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+                f"<code>{e}</code>"
+                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
             )
             pass
 
     try:
 
         # todo: upload photo aswell
-        await twitter.tweet_file(formatted_text, await get_file(update))
+        #   await twitter.tweet_file(formatted_text, await get_file(update))
         print("-")
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
             f"<b>⚠️ Error when trying to post single on Twitter</b>\n"
-            f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+            f"<code>{e}</code>\n\n"
+            f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
         )
         pass
 
@@ -97,7 +97,8 @@ async def post_channel_english(update: Update, context: CallbackContext):
             await context.bot.send_message(
                 config.LOG_GROUP,
                 f"<b>⚠️ Error when trying to edit caption in channel DE</b>\n"
-                f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+                f"<code>{e}</code>\n\n"
+                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
             )
             pass
 
@@ -137,8 +138,10 @@ async def share_in_other_channels(context: CallbackContext):
     print(" ------------------------------------------- post_id:", post_id)
 
     for lang in languages:
-        files[
-            0].caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
+        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
+        print("caption:::::::::::", caption)
+        with files[0]._unfrozen():
+            files[0].caption = caption
 
         reply_id = query_replies3(post_id, lang.lang_key)
         print(" ------------------------------------------- reply_id:", reply_id)
@@ -168,7 +171,9 @@ async def share_in_other_channels(context: CallbackContext):
     # todo: tweet media_group
     # todo: add attribute "path" to post
     # await twitter.tweet_file_2(original_caption,posts[0])
-    await twitter.tweet_text(flag_to_hashtag(original_caption))
+
+
+#   await twitter.tweet_text(flag_to_hashtag(original_caption))
 
 
 async def edit_channel(update: Update, context: CallbackContext):
@@ -211,7 +216,8 @@ async def edit_channel(update: Update, context: CallbackContext):
             else:
                 translated_text = None
 
-            input_media.caption = translated_text
+            with input_media._unfrozen():
+                input_media.caption = translated_text
 
             msg = await context.bot.edit_message_caption(
                 chat_id=lang.channel_id,
@@ -224,7 +230,8 @@ async def edit_channel(update: Update, context: CallbackContext):
                 await context.bot.send_message(
                     config.LOG_GROUP,
                     f"<b>⚠️ Error when trying to edit Caption in Channel {lang.lang_key}</b>\n"
-                    f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+                    f"<code>{e}</code>\n\n"
+                    f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
                 )
             pass
 
@@ -244,7 +251,8 @@ async def edit_channel(update: Update, context: CallbackContext):
                     await context.bot.send_message(
                         config.LOG_GROUP,
                         f"<b>⚠️ Error when trying to edit Media in Channel {lang.lang_key}</b>\n"
-                        f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+                        f"<code>{e}</code>\n\n"
+                        f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
                     )
                     pass
 
@@ -268,7 +276,8 @@ async def edit_channel(update: Update, context: CallbackContext):
             await context.bot.send_message(
                 config.LOG_GROUP,
                 f"<b>⚠️ Error when trying to edit post in Channel de</b>\n"
-                f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
+                f"<code>{e}</code>\n\n"
+                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
             )
             pass
 

@@ -74,11 +74,11 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str):
             text = f.read()
 
         if update.message.reply_to_message is not None:
-            if update.message.reply_to_message.from_user.first_name == "Telegram":
+            #if update.message.reply_to_message.from_user.first_name == "Telegram":
 
-                msg = await update.message.reply_to_message.reply_text(text)
-            else:
-                msg = await update.message.reply_text(text)
+            msg = await update.message.reply_to_message.reply_text(text)
+         #   else:
+         #       msg = await update.message.reply_text(text)
         else:
             msg = await context.bot.send_message(update.message.chat_id, text)
 
@@ -86,7 +86,7 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str):
 
     except Exception as e:
         await context.bot.send_message(
-            LOG_GROUP,
+            config.LOG_GROUP,
             f"<b>⚠️ Error when trying to read html-file {file_name}</b>\n<code>{e}</code>\n\n"
             f"<b>Caused by Update</b>\n<code>{update}</code>",
         )
