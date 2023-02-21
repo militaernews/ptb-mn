@@ -1,13 +1,11 @@
 import re
 from mailbox import Message
 
-from telegram import Update, MessageEntity
-from telegram.constants import MessageEntityType
+from telegram import Update
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 import config
-import twitter
 from data.db import query_replies, insert_single2, update_text, get_msg_id
 from data.lang import languages, GERMAN
 from messages.news.common import handle_url
@@ -57,7 +55,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
     try:
         print("tweet")
-      #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
+    #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,

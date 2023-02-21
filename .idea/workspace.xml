@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="changes to run locally">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/lang.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/common.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/dictionary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/news/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/text.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/helper.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -305,13 +312,6 @@
       <workItem from="1666956570315" duration="906000" />
       <workItem from="1666957704546" duration="32000" />
       <workItem from="1666957749614" duration="3088000" />
-    </task>
-    <task id="LOCAL-00093" summary="fix">
-      <created>1664782571792</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1664782571793</updated>
     </task>
     <task id="LOCAL-00094" summary="fix">
       <created>1664782689568</created>
@@ -649,7 +649,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676384387796</updated>
     </task>
-    <option name="localTasksCounter" value="142" />
+    <task id="LOCAL-00142" summary="changes to run locally">
+      <created>1676983468885</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1676983468885</updated>
+    </task>
+    <option name="localTasksCounter" value="143" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -668,7 +675,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="bingo - ?" />
     <MESSAGE value="field kinda works, but needs nicer layout and checkable fields" />
     <MESSAGE value="bingo has nicer layout, but still needs improvements" />
     <MESSAGE value="bingo works now" />
@@ -693,6 +699,7 @@
     <MESSAGE value="some changes to make it run elsewhere" />
     <MESSAGE value="migrating some functionality to another bot" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="changes to run locally" />
+    <option name="LAST_COMMIT_MESSAGE" value="changes to run locally" />
   </component>
 </project>

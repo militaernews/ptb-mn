@@ -1,12 +1,10 @@
 import traceback
 
-from telegram import Update, InputMediaVideo, InputMediaPhoto
+from telegram import Update
 from telegram.ext import ContextTypes
 
 from data import lang
-from messages.chat.dictionary import handle_putin_dict
-from messages.chat.filter import filter_message
-from util.translation import translate, translate_message
+from util.translation import translate_message
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -15,24 +13,22 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         print("--")
 
-     #   await filter_message(update, context)
+        #   await filter_message(update, context)
 
         print(update.messagef)
-      #  print(update.message.caption)
+        #  print(update.message.caption)
 
         tr = lang.languages[1]
         print("LNG ::::::", tr)
 
         await context.bot.send_message(tr.channel_id, "test")
 
-        text = await translate_message("tr", update.message.text_html_urled,)
+        text = await translate_message("tr", update.message.text_html_urled, )
 
-       # await get_hash
+        # await get_hash
         await update.message.reply_text(text)
 
-      #  await handle_putin_dict(update,context)
-
-
+    #  await handle_putin_dict(update,context)
 
     except Exception as e:
         await update.message.reply_text("-------\n\nTEST FAIL\n\n-------")

@@ -1,7 +1,8 @@
+from typing import Dict
+
 from orjson import orjson
 from telegram import Update, BotCommandScopeChatAdministrators
 from telegram.ext import CallbackContext
-from typing import Dict
 
 import config
 from data.lang import languages, GERMAN

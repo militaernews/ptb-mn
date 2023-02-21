@@ -12,6 +12,7 @@ from data.lang import GERMAN
 logger = logging.getLogger(__name__)
 conn = psycopg2.connect(DATABASE_URL, cursor_factory=NamedTupleCursor)
 
+
 def key_exists(context: CallbackContext, key: int) -> bool:
     return key in context.bot_data().keys()
 
@@ -28,8 +29,6 @@ class Post:
     reply_id: int
     file_type: int
     file_id: str
-
-
 
 
 def get_mg(mg_id: str):
@@ -317,4 +316,3 @@ def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_ty
     except Exception as e:
         logger.error("DB-Operation failed", e)
         pass
-

@@ -11,6 +11,7 @@ MSG_REMOVAL_PERIOD = 1200
 CHAT_ID = "chat_id"
 MSG_ID = "msg_id"
 
+
 def get_replies(bot_data, msg_id: str):
     print("Trying to get bot_data ------------------")
     print(bot_data)
@@ -55,9 +56,6 @@ async def get_file(update: Update):
         return await update.channel_post.animation.get_file()
 
 
-
-
-
 async def delete(context: CallbackContext):
     await context.bot.delete_message(context.job.data[CHAT_ID], context.job.data[MSG_ID])
 
@@ -74,11 +72,11 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str):
             text = f.read()
 
         if update.message.reply_to_message is not None:
-            #if update.message.reply_to_message.from_user.first_name == "Telegram":
+            # if update.message.reply_to_message.from_user.first_name == "Telegram":
 
             msg = await update.message.reply_to_message.reply_text(text)
-         #   else:
-         #       msg = await update.message.reply_text(text)
+        #   else:
+        #       msg = await update.message.reply_text(text)
         else:
             msg = await context.bot.send_message(update.message.chat_id, text)
 

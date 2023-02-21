@@ -112,6 +112,7 @@ async def genozid(update: Update, context: CallbackContext):
 async def peace(update: Update, context: CallbackContext):
     await reply_html(update, context, "peace")
 
+
 async def short(update: Update, context: CallbackContext):
     await reply_html(update, context, "short")
 
@@ -152,6 +153,7 @@ async def bot(update: Update, context: CallbackContext):
 
 async def mimimi(update: Update, context: CallbackContext):
     await reply_photo(update, context, "mimimi.jpg")
+
 
 async def cia(update: Update, context: CallbackContext):
     await reply_photo(update, context, "cia.jpg")

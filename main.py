@@ -61,7 +61,8 @@ if __name__ == "__main__":
         & filters.Chat(chat_id=GERMAN.channel_id), post_channel_english))
     app.add_handler(MessageHandler(
         filters.UpdateType.EDITED_CHANNEL_POST &
-        (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+        (filters.PHOTO | filters.VIDEO | filters.ANIMATION) &  ~filters.CaptionRegex(
+            re.compile(r"🔰 MN-Hauptquartier|#.+", re.IGNORECASE))
         & filters.Chat(chat_id=GERMAN.channel_id), edit_channel))
 
     app.add_handler(
@@ -79,14 +80,15 @@ if __name__ == "__main__":
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & filters.Regex(
                 re.compile(r"#werbung", re.IGNORECASE)),
             advertisement))
+
     app.add_handler(
         MessageHandler(
             filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
             post_channel_text))
     app.add_handler(
-        MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT & filters.Chat(
-            chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
-            re.compile(r"🔰 MN-Hauptquartier", re.IGNORECASE)),
+        MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT   & filters.Chat(
+            chat_id=GERMAN.channel_id) & ~filters.Regex(
+            re.compile(r"🔰 MN-Hauptquartier|#.+", re.IGNORECASE)),
                        edit_channel_text))
 
     app.add_handler(CommandHandler("maps", maps))

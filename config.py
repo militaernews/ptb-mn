@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN = os.getenv('TELEGRAM')
-DATABASE_URL = os.getenv("DATABASE_URL") #.replace("postgres", "postgresql", 1)
+DATABASE_URL = os.getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
 DATABASE_URL_NN = os.getenv("DATABASE_URL_NN")
 TEST_MODE = os.getenv("TESTING", False)
 PORT = int(os.getenv("PORT", 8080))
@@ -29,5 +29,3 @@ BINGO_ADMINS = ADMINS + (
 
 # Constants
 PLACEHOLDER = "║"
-
-

@@ -51,7 +51,7 @@ async def handle_putin_dict(update: Update, context: CallbackContext):
         print(k, update.message.text, k in update.message.text, " LLLLLLLLLLLLLLLLLLLLL")
 
         print(k, " --- IN --- ", v)
-        if  k.lower() in  update.message.text.lower():  # and k not in matches.keys():
+        if k.lower() in update.message.text.lower():  # and k not in matches.keys():
             print("---------- MATCH ----------")
             matches[k] = v
 
