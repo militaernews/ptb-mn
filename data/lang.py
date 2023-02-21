@@ -49,7 +49,7 @@ languages: [Language] = [
     Language(
         "fa",  # Persian
         -1001568841775,  # https://t.me/MilitaryNewsFA
-        "\nعضو شوید:\n🔰 @MilitaryNewsFA\nبه چت ملحق بشید:\n🔰 @MNChatFA",
+        "\nعضو شوید:\n🔰 @MilitaryNewsFA",
         "خبرفوری",
         "اعلامیه",
         "تبلیغات"

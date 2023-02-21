@@ -4,7 +4,7 @@ from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       InputMediaVideo, Message, MessageEntity, MessageId,
                       Update)
 from telegram.error import TelegramError
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, ContextTypes
 
 import config
 from data.db import insert_single3, insert_single2, query_replies3, \
@@ -16,7 +16,7 @@ from util.translation import flag_to_hashtag, translate_message
 
 
 # TODO: make method more generic
-async def post_channel_single(update: Update, context: CallbackContext, de_post_id: int):
+async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE, de_post_id: int):
     post_id = get_post_id(update.channel_post)
     original_caption = update.channel_post.caption_html_urled
 
@@ -41,7 +41,7 @@ async def post_channel_single(update: Update, context: CallbackContext, de_post_
                 config.LOG_GROUP,
                 "<b>⚠️ Error when trying to send single post in Channel "
                 f"{lang.lang_key}</b>\n<code>{e}</code>\n\n"
-                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
+                f"<b>Caused by Post</b>\n<code>{update.channel_post.caption}</code>",
             )
             pass
 
@@ -198,6 +198,7 @@ async def edit_channel(update: Update, context: CallbackContext):
         new_file = await update.edited_channel_post.photo[-1].get_file()
         input_media = InputMediaPhoto(new_file.file_id)
     elif update.edited_channel_post.video is not None:
+        # todo: file is too big
         new_file = await update.edited_channel_post.video.get_file()
         input_media = InputMediaVideo(new_file.file_id)
     elif update.edited_channel_post.animation is not None:
@@ -266,9 +267,10 @@ async def edit_channel(update: Update, context: CallbackContext):
         else:
             text = None
 
-        await update.edited_channel_post.edit_caption(text + GERMAN.footer)
+        if "#" not in update.edited_channel_post.caption:
+            await update.edited_channel_post.edit_caption(text + GERMAN.footer)
 
-        update_post(update.edited_channel_post.id, text, new_file.file_id)
+        update_post(update.edited_channel_post)
 
         # todo: update text in db
     except TelegramError as e:
