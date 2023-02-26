@@ -63,7 +63,7 @@ def join_member(update: Update, context: CallbackContext):
 
 
 async def filter_message(update: Update, context: CallbackContext):
-    print(update)
+  #  print(update)
     text = update.message.text.lower()
 
     # print(filter(lambda element: 'abc' in element, text))

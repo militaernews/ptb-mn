@@ -150,17 +150,17 @@ def generate_bingo_field():
     d2 = {}
 
     for key in key_list:
-        print(key, ENTRIES[key])
+     #   print(key, ENTRIES[key])
         d2[key] = ENTRIES[key]
 
     outer = list()
 
     for x in range(1, field_size * field_size, field_size):
         inner = list()
-        print(x)
+     #   print(x)
 
         for entry in list(d2.items())[x:x + field_size]:
-            print("ENTRY >>>>>>>>> ", entry, entry[0])
+       #     print("ENTRY >>>>>>>>> ", entry, entry[0])
             if entry[1] is None:
                 regex = entry[0]
             else:
@@ -174,7 +174,7 @@ def generate_bingo_field():
 
         outer.append(inner)
 
-    print(outer)
+  #  print(outer)
     return outer
 
 
@@ -194,7 +194,7 @@ def check_win(fields: List[List[Dict[str, Union[str, bool]]]]):
 
 def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     found = list()
-    print(list(numpy.array(fields).flat))
+  #  print(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
         matches = re.findall(item["regex"], text.replace(" ", ""), re.IGNORECASE)
         #   print(item["regex"], text, ">>>", matches)
