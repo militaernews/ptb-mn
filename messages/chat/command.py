@@ -1,3 +1,4 @@
+import logging
 import re
 
 import requests
@@ -13,7 +14,7 @@ async def ban_user(update: Update, context: CallbackContext):
     await update.message.delete()
 
     if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
-        print(f"banning {update.message.reply_to_message.from_user.id} !!")
+        logging.info(f"banning {update.message.reply_to_message.from_user.id} !!")
         await context.bot.ban_chat_member(update.message.chat_id, update.message.reply_to_message.from_user.id,
                                           until_date=1)
         await update.message.reply_to_message.reply_text(
@@ -24,7 +25,7 @@ async def unwarn_user(update: Update, context: CallbackContext):
     await update.message.delete()
 
     if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
-        print(f"unwarning {update.message.reply_to_message.from_user.id} !!")
+        logging.info(f"unwarning {update.message.reply_to_message.from_user.id} !!")
         if "users" not in context.bot_data or update.message.reply_to_message.from_user.id not in context.bot_data[
             "users"] or "warn" not in context.bot_data["users"][update.message.reply_to_message.from_user.id]:
             warnings = 0
@@ -46,7 +47,7 @@ async def warn_user(update: Update, context: CallbackContext):
     await update.message.delete()
 
     if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
-        print(f"warning {update.message.reply_to_message.from_user.id} !!")
+        logging.info(f"warning {update.message.reply_to_message.from_user.id} !!")
         if "users" not in context.bot_data or update.message.reply_to_message.from_user.id not in context.bot_data[
             "users"] or "warn" not in context.bot_data["users"][update.message.reply_to_message.from_user.id]:
             warnings = 1
@@ -55,7 +56,7 @@ async def warn_user(update: Update, context: CallbackContext):
         else:
             warnings = context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"]
             if warnings == 3:
-                print(f"banning {update.message.reply_to_message.from_user.id} !!")
+                logging.info(f"banning {update.message.reply_to_message.from_user.id} !!")
                 await context.bot.ban_chat_member(update.message.reply_to_message.chat_id,
                                                   update.message.reply_to_message.from_user.id, until_date=1)
                 await update.message.reply_to_message.reply_text(
@@ -73,7 +74,7 @@ async def report_user(update: Update, context: CallbackContext):
     await update.message.delete()
 
     if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
-        print(f"reporting {update.message.reply_to_message.from_user.id} !!")
+        logging.info(f"reporting {update.message.reply_to_message.from_user.id} !!")
         r = requests.post(url="https://tartaros-telegram.herokuapp.com/reports/",
                           json={
                               "user_id": update.message.reply_to_message.from_user.id,
@@ -81,7 +82,7 @@ async def report_user(update: Update, context: CallbackContext):
                               "account_id": 1
                           }
                           )
-        print(r)
+        logging.info(r)
 
         await update.message.reply_to_message.reply_text(
             f"Der Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde Tartaros-Antispam gemeldet.")
@@ -125,14 +126,14 @@ async def ref(update: Update, context: CallbackContext):
     await update.message.delete()
 
     link = re.findall(r"([^\/]\w*\/\d+$)", update.message.text[4:])
-    print(link)
+    logging.info(f"link REF: {link}")
 
     if len(link) == 0:
         return
     else:
         link = link[0]
 
-    print(link)
+    logging.info(link)
 
     text = f"Ich habe dir mal was passendes aus unserem Kanal rausgesucht😊\n\n👉🏼 <a href='t.me/{link}'>{link}</a>"
     if update.message.reply_to_message is not None:

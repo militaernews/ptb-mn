@@ -1,3 +1,4 @@
+import logging
 import re
 
 from telegram import Update
@@ -52,7 +53,7 @@ async def breaking_news(update: Update, context: CallbackContext):
 
     try:
         #   await twitter.tweet_file_3(formatted_text, breaking_photo_path)
-        print("-")
+        logging.info("sent breaking to twitter")
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -153,7 +154,7 @@ async def advertisement(update: Update, context: CallbackContext):
 
 
 async def post_info(update: Update, context: CallbackContext):
-    print("---- post info ----")
+    logging.info("---- post info ----")
     text = "🔰 MN-Hauptquartier\n\n" + re.sub(
         re.compile(r"#info", re.IGNORECASE), "", update.channel_post.caption_html_urled
     )

@@ -1,3 +1,4 @@
+import logging
 import os
 
 import pytweet
@@ -29,7 +30,7 @@ TWEET_LENGTH = 280
 
 
 def tweet_text(text: str):
-    print("--- tweet", text)
+    logging.info("--- tweet", text)
 
     if len(text) <= TWEET_LENGTH:
         client.tweet(text)  # This requires read & write app permissions also elevated access type.
@@ -38,14 +39,14 @@ def tweet_text(text: str):
 async def tweet_file(text: str, file: telegram.File):
     if len(text) <= TWEET_LENGTH:
         path = file.file_path.split('/')[-1]
-        print("file to download:::: ", path)
+        logging.info("file to download:::: ", path)
         await file.download(path)
-        print("-- download done")
+        logging.info("-- download done")
         # todo: can also quote tweet here.. is that an option?
         try:
             client.tweet(text=text, file=pytweet.File(path))
         except Exception as e:
-            print(f"⚠️ Error when trying to post single file to twitter: {e}")
+            logging.info(f"⚠️ Error when trying to post single file to twitter: {e}")
             pass
 
         os.remove(path)
@@ -62,7 +63,7 @@ async def tweet_file_2(update: Update, context: CallbackContext):
 
 
 async def tweet_files_2(update: Update, context: CallbackContext):
-    print("---")
+    logging.info("---")
 
 
 async def tweet_files(text: str, files: [telegram.File]):
@@ -78,7 +79,7 @@ async def tweet_files(text: str, files: [telegram.File]):
         try:
             client.tweet(text=text, file=upload_files[0])
         except Exception as e:
-            print(f"⚠️ Error when trying to post multiple files to twitter: {e}")
+            logging.info(f"⚠️ Error when trying to post multiple files to twitter: {e}")
             pass
 
         for file in upload_files:

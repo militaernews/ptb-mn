@@ -5,9 +5,9 @@ from telegram import Update, Poll
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
+import config
 from messages.chat.bingo import handle_bingo
 from messages.chat.dictionary import handle_putin_dict
-from util.log import log
 
 
 def key_exists(context, key):
@@ -28,10 +28,8 @@ def join_member(update: Update, context: CallbackContext):
             context.bot.ban_chat_member(
                 update.effective_chat.id, update.message.from_user.id
             )
-            log(
-                update,
-                context,
-                f"User {member.name} [<code>{member.id}</code>] was banned in chat "
+
+            context.bot.send_message(config.LOG_GROUP, f"User {member.name} [<code>{member.id}</code>] was banned in chat "
                 "<a href='https://t.me/username'>{update.message.chat.title}</a> due"
                 f" to CAS-ban (<a href='https://cas.chat/check?user_id={member.id}'>reason</a>). ",
             )

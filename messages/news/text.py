@@ -1,3 +1,4 @@
+import logging
 import re
 from mailbox import Message
 
@@ -19,10 +20,10 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
     insert_single2(update.channel_post)
 
-    print("orignal caption::::::::::", original_caption)
+    logging.info(f"orignal caption:::::::::: {original_caption}", )
 
     for lang in languages:
-        #   print(lang)
+        #   logging.info(flang)
 
         reply_id = query_replies(update.channel_post.message_id, lang.lang_key)
 
@@ -33,7 +34,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
                 reply_to_message_id=reply_id
             )
             insert_single2(msg, lang.lang_key)
-        ##  print(lang.lang_key)
+        ##  logging.info(flang.lang_key)
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
@@ -54,7 +55,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
             pass
 
     try:
-        print("tweet")
+        logging.info("tweet")
     #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
     except Exception as e:
         await context.bot.send_message(
@@ -80,7 +81,7 @@ async def edit_channel_text(update: Update, context: CallbackContext):
 
     update_text(update.edited_channel_post.id, f"{original_caption}\n{GERMAN.footer}")
 
-    print("orignal caption::::::::::", original_caption)
+    logging.info(f"orignal caption:::::::::: {original_caption}", )
 
     for lang in languages:
         try:

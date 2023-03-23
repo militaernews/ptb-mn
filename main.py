@@ -19,11 +19,14 @@ from messages.news.special import breaking_news, announcement, post_info, advert
 from messages.news.text import edit_channel_text, post_channel_text
 from messages.setup import set_cmd
 
-LOG_FILENAME = rf"C:\Users\Pentex\PycharmProjects\ptb-mn\logs\{datetime.now().strftime('%Y-%m-%d')}\{datetime.now().strftime('%H-%M-%S')}.out"
+LOG_FILENAME = rf"./logs/{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H-%M-%S')}.log"
 os.makedirs(os.path.dirname(LOG_FILENAME), exist_ok=True)
 logging.basicConfig(
-    format="%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)s - %(funcName)20s()]: %(message)s ",
-    level=logging.INFO, filename=LOG_FILENAME
+    format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
+    encoding="utf-8",
+    filename=LOG_FILENAME,
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S'
 )
 
 if __name__ == "__main__":

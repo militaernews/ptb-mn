@@ -1,3 +1,5 @@
+import logging
+
 from telegram import Update
 from telegram.ext import CallbackContext
 
@@ -55,7 +57,7 @@ async def handle_putin_dict(update: Update, context: CallbackContext):
             print("---------- MATCH ----------")
             matches[k] = v
 
-    print(update.message.text, "-------", matches, putin_dict)
+    logging.info(f"{update.message.text} -------{ matches, putin_dict}")
 
     if len(matches) == 0:
         return

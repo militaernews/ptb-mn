@@ -1,5 +1,7 @@
+import inspect
 import logging
 from dataclasses import dataclass
+from traceback import format_exc
 
 import psycopg2
 from psycopg2.extras import NamedTupleCursor
@@ -36,7 +38,7 @@ def get_mg(mg_id: str):
         c.execute("select * from posts")
         res = c.fetchone()
 
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
 
 
 PHOTO, VIDEO, ANIMATION = range(3)
@@ -48,13 +50,12 @@ def query_files(meg_id: str) -> [Post]:
             c.execute("select * from posts p where p.media_group_id = %s and p.lang='de'", [meg_id])
             res = c.fetchall()
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
 
             return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def query_replies(msg_id: int, lang_key: str):
     try:
@@ -62,12 +63,11 @@ def query_replies(msg_id: int, lang_key: str):
             c.execute("select p.reply_id from posts p where p.msg_id = %s and p.lang=%s", (msg_id, lang_key))
             res = c.fetchone()
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
             return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def query_replies2(post_id: int, lang_key: str):
     try:
@@ -75,15 +75,14 @@ def query_replies2(post_id: int, lang_key: str):
             c.execute("select p.reply_id from posts p where p.post_id = %s and p.lang=%s", (post_id, lang_key))
             res = c.fetchone()
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
             if res is not None:
                 return res[0]
             else:
                 return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def get_post_id(msg: Message):
     if msg.reply_to_message is None:
@@ -98,9 +97,8 @@ def get_post_id(msg: Message):
             else:
                 return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def get_post_id2(msg_id: int):
     try:
@@ -113,9 +111,8 @@ def get_post_id2(msg_id: int):
             else:
                 return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def query_replies3(post_id: int, lang_key: str):
     try:
@@ -124,15 +121,14 @@ def query_replies3(post_id: int, lang_key: str):
             c.execute("select p.msg_id from posts p where p.post_id = %s and p.lang=%s", (post_id, lang_key))
             res = c.fetchone()
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
             if res is not None:
                 return res[0]
             else:
                 return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def query_replies4(msg: Message, lang_key: str):
     if msg.reply_to_message is None:
@@ -145,15 +141,14 @@ def query_replies4(msg: Message, lang_key: str):
                 (lang_key, msg.reply_to_message.id))
             res = c.fetchone()
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
             if res is not None:
                 return res[0]
             else:
                 return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def get_msg_id(msg_id: int, lang_key: str):
     try:
@@ -164,15 +159,14 @@ def get_msg_id(msg_id: int, lang_key: str):
                 (lang_key, msg_id))
             res = c.fetchone()
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
             if res is not None:
                 return res[0]
             else:
                 return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def get_file_id(msg_id: int):
     try:
@@ -183,15 +177,14 @@ def get_file_id(msg_id: int):
                 [msg_id])
             res = c.fetchone()
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
             if res is not None:
                 return res[0]
             else:
                 return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
     try:
@@ -203,15 +196,14 @@ def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
             res = c.fetchone()
             conn.commit()
 
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", res)
+            logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}", )
             if res is not None:
                 return res[0]
             else:
                 return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
     if len(msg.photo) != 0:
@@ -242,9 +234,8 @@ def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
                 (file_id, text, file_type, msg.id, lang_key))
             conn.commit()
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
-
 
 def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None,
                    lang_key: str = GERMAN.lang_key, post_id: int = None):  # text=??
@@ -302,17 +293,18 @@ def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_ty
                 post_id = int(c.fetchone()[0] or 0) + 1
 
         insertable = (post_id, msg_id, meg_id, reply_id, file_type, file_id, lang_key, text)
-        print(">> Insert: ", insertable)
+        logging.info(f">> Insert: {insertable}", )
 
         with conn.cursor() as c:
             c.execute(
                 "insert into posts(post_id, msg_id, media_group_id, reply_id, file_type, file_id,lang,text) values (%s,%s,%s,%s,%s,%s,%s,%s) returning post_id",
                 insertable)
             res = c.fetchone().post_id
-            conn.commit()
 
-            print(">> Result: post_id =", res)
-            return res
+        conn.commit()
+
+        logging.info(f">> Result: post_id = {res}", )
+        return res
     except Exception as e:
-        logger.error("DB-Operation failed", e)
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass

@@ -1,4 +1,5 @@
 import datetime
+import logging
 import random
 import re
 from typing import List, Union, Dict
@@ -150,17 +151,17 @@ def generate_bingo_field():
     d2 = {}
 
     for key in key_list:
-     #   print(key, ENTRIES[key])
+     #   logging.info(key, ENTRIES[key])
         d2[key] = ENTRIES[key]
 
     outer = list()
 
     for x in range(1, field_size * field_size, field_size):
         inner = list()
-     #   print(x)
+     #   logging.info(x)
 
         for entry in list(d2.items())[x:x + field_size]:
-       #     print("ENTRY >>>>>>>>> ", entry, entry[0])
+       #     logging.info("ENTRY >>>>>>>>> ", entry, entry[0])
             if entry[1] is None:
                 regex = entry[0]
             else:
@@ -174,7 +175,7 @@ def generate_bingo_field():
 
         outer.append(inner)
 
-  #  print(outer)
+  #  logging.info(outer)
     return outer
 
 
@@ -194,14 +195,14 @@ def check_win(fields: List[List[Dict[str, Union[str, bool]]]]):
 
 def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     found = list()
-  #  print(list(numpy.array(fields).flat))
+  #  logging.info(list(numpy.array(fields).flat))
     for item in list(numpy.array(fields).flat):
         matches = re.findall(item["regex"], text.replace(" ", ""), re.IGNORECASE)
-        #   print(item["regex"], text, ">>>", matches)
+        #   logging.info(item["regex"], text, ">>>", matches)
         if not item["checked"] and len(matches) != 0:
             item["checked"] = True
             found.append(item["text"])
-            print(f"{text} is a valid bingo entry")
+            logging.info(f"{text} is a valid bingo entry")
 
     return found
 
@@ -213,7 +214,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     canvas_width = 2360
     canvas_height = 1200
     border_distance = int((all_width - canvas_width) / 2)
-    #  print("border_distance", border_distance)
+    #  logging.info("border_distance", border_distance)
 
     svg = f"""<?xml version='1.0' encoding='UTF-8' standalone='no'?>
     <svg
@@ -241,17 +242,17 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     curr_x = 0
 
     while current_width < canvas_width:
-        #  print(current_width)
+        #  logging.info(current_width)
 
         x_var = f"<svg width=\"{width_treshold}\" height=\"{height_treshold}\"  x=\"{current_width}\""
         current_height = 0
         curr_y = 0
 
         while current_height < canvas_height:
-            #  print(current_height)
+            #  logging.info(current_height)
 
             curr_field = field[curr_x][curr_y]
-            # print(curr_field)
+            # logging.info(curr_field)
 
             textss = curr_field["text"].split(" ")
             for index, value in enumerate(textss):
@@ -284,7 +285,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
         curr_x += 1
         current_width += width_treshold
 
-    print("lines done, now text -----------------")
+    logging.info("lines done, now text -----------------")
 
     svg_field += "</svg>"
 
@@ -294,7 +295,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     <text y="{all_height - border_distance}" x="{all_width - border_distance}" font-size="26px" font-family="Arial" dominant-baseline="middle"  text-anchor="end" fill="gray" >zuletzt aktualisiert {datetime.datetime.now().strftime("%d.%m.%Y, %H:%M:%S")}</text>
     </svg>"""
 
-    # print(svg)
+    # logging.info(svg)
 
     cairosvg.svg2png(bytestring=svg, write_to='field.png', background_color="#00231e")
 
@@ -303,7 +304,7 @@ async def handle_bingo(update: Update, context: CallbackContext):
     text = update.message.text.lower()
 
     # elif datetime.datetime.now().weekday() == 5 or datetime.datetime.now().weekday() == 6:
-    print("checking bingo...")
+    logging.info("checking bingo...")
     if "bingo" not in context.bot_data:
         context.bot_data["bingo"] = generate_bingo_field()
         create_svg(context.bot_data["bingo"])
@@ -353,7 +354,7 @@ async def bingo_field(update: Update, context: CallbackContext):
             await update.message.reply_photo(photo=f,
                                              caption=f"<b>MilitärNews-Bingo</b>\n\nWenn eine im @MNChat gesendete Nachricht auf dem Spielfeld vorkommendende Begriffe enthält, werden diese rausgestrichen.\n\nIst eine gesamte Zeile oder Spalte durchgestrichen, dann heißt es <b>BINGO!</b> und eine neue Runde startet.\n{GERMAN.footer}")
     except FileNotFoundError as e:
-        print("No field yet")
+        logging.info("No field yet")
 
 
 async def reset_bingo(update: Update, context: CallbackContext):

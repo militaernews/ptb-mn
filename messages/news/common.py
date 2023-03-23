@@ -1,3 +1,4 @@
+import logging
 import re
 
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
@@ -24,7 +25,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         print(lang)
 
         reply_id = query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
-        print("--- SINGLE ---", post_id, reply_id, lang.lang_key)
+        logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}" )
 
         try:
 
@@ -33,7 +34,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
                 caption=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 reply_to_message_id=reply_id
             )
-            print("---------- MSG ID :::::::::", msg_id)
+            logging.info(f"---------- MSG ID :::::::::", msg_id)
             insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key, post_id=de_post_id)
 
         except Exception as e:
@@ -63,7 +64,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
 
         # todo: upload photo aswell
         #   await twitter.tweet_file(formatted_text, await get_file(update))
-        print("-")
+        logging.info(f"-")
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -85,7 +86,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
         return
 
     for job in context.job_queue.get_jobs_by_name(update.channel_post.media_group_id):
-        print("--- job gone ::::::::")
+        logging.info("--- job gone ::::::::")
         job.schedule_removal()
 
     if update.channel_post.caption is not None:
@@ -133,18 +134,18 @@ async def share_in_other_channels(context: CallbackContext):
 
     original_caption = posts[0].text
 
-    print("::::::::::: share in other ::::::::::")
+    logging.info("::::::::::: share in other ::::::::::")
     post_id = get_post_id2(context.job.data)
-    print(" ------------------------------------------- post_id:", post_id)
+    logging.info(f"------------------------------------------- post_id: {post_id}", )
 
     for lang in languages:
         caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
-        print("caption:::::::::::", caption)
+        logging.info(f"caption::::::::::: {caption}", )
         with files[0]._unfrozen():
             files[0].caption = caption
 
         reply_id = query_replies3(post_id, lang.lang_key)
-        print(" ------------------------------------------- reply_id:", reply_id)
+        logging.info(f"------------------------------------------- reply_id: {reply_id}" )
 
         try:
             msgs: [Message] = await context.bot.send_media_group(
@@ -166,7 +167,7 @@ async def share_in_other_channels(context: CallbackContext):
             )
             pass
 
-    print("----- done -----")
+    logging.info("----- done -----")
 
     # todo: tweet media_group
     # todo: add attribute "path" to post
@@ -204,8 +205,6 @@ async def edit_channel(update: Update, context: CallbackContext):
     elif update.edited_channel_post.animation is not None:
         new_file = await update.edited_channel_post.animation.get_file()
         input_media = InputMediaAnimation(new_file.file_id)
-
-    print("-------------- EDurtuafIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT")
 
     for lang in languages:
         msg = None
