@@ -19,7 +19,8 @@ NYX = 703453307
 ADMINS = (
     NYX,
     525147382,  # Melik
-    466451473  # Maxe
+    466451473,  # Maxe
+    5945157782  # MN-Kontakt
 )
 
 BINGO_ADMINS = ADMINS + (

@@ -5,6 +5,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 import config
+import twitter
 from data.db import insert_single2
 from data.lang import GERMAN, languages
 from util.regex import BREAKING
@@ -52,7 +53,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             )
 
     try:
-        #   await twitter.tweet_file_3(formatted_text, breaking_photo_path)
+        await twitter.tweet_file_3(formatted_text, breaking_photo_path)
         logging.info("sent breaking to twitter")
     except Exception as e:
         await context.bot.send_message(

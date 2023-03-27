@@ -1,7 +1,8 @@
 from typing import Dict
 
 from orjson import orjson
-from telegram import Update, BotCommandScopeChatAdministrators
+from telegram import Update, BotCommandScopeChatAdministrators, BotCommandScopeChat
+from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
 import config
@@ -98,5 +99,14 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("bingo", "Spielfeld des Bullshit-Bingos"),
         ("reset_bingo", "Neue Bingo-Runde")
     ], scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))
+
+    admin_commands =  [
+        ("add_advertisement", "Werbung erstellen"),
+    ]
+    for chat_id in config.ADMINS:
+        try:
+            await context.bot.set_my_commands(admin_commands, scope=BotCommandScopeChat(chat_id=chat_id))
+        except BadRequest:  # to ignore chat not found
+            pass
 
     await update.message.reply_text("Commands updated!")

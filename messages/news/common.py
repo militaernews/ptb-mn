@@ -8,10 +8,12 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
 
 import config
+import twitter
 from data.db import insert_single3, insert_single2, query_replies3, \
     get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id, \
     update_post
 from data.lang import GERMAN, languages
+from util.helper import get_file
 from util.regex import HASHTAG, WHITESPACE
 from util.translation import flag_to_hashtag, translate_message
 
@@ -63,7 +65,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     try:
 
         # todo: upload photo aswell
-        #   await twitter.tweet_file(formatted_text, await get_file(update))
+        await twitter.tweet_file(formatted_text, await get_file(update))
         logging.info(f"-")
     except Exception as e:
         await context.bot.send_message(
@@ -171,7 +173,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     # todo: tweet media_group
     # todo: add attribute "path" to post
-    # await twitter.tweet_file_2(original_caption,posts[0])
+    await twitter.tweet_file_2(original_caption,posts[0])
 
 
 #   await twitter.tweet_text(flag_to_hashtag(original_caption))

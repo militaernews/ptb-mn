@@ -36,11 +36,11 @@ def tweet_text(text: str):
         client.tweet(text)  # This requires read & write app permissions also elevated access type.
 
 
-async def tweet_file(text: str, file: telegram.File):
+async def tweet_file(text: str, file: telegram.File ):
     if len(text) <= TWEET_LENGTH:
         path = file.file_path.split('/')[-1]
         logging.info("file to download:::: ", path)
-        await file.download(path)
+        await file.download_to_drive(path)
         logging.info("-- download done")
         # todo: can also quote tweet here.. is that an option?
         try:

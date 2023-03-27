@@ -17,7 +17,8 @@ from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info, advertisement
 from messages.news.text import edit_channel_text, post_channel_text
-from messages.setup import set_cmd
+from messages.private.advertise import add_advertisement_handler
+from messages.private.setup import set_cmd
 
 LOG_FILENAME = rf"./logs/{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H-%M-%S')}.log"
 os.makedirs(os.path.dirname(LOG_FILENAME), exist_ok=True)
@@ -38,6 +39,8 @@ if __name__ == "__main__":
     #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))
     app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
+
+    app.add_handler(add_advertisement_handler)
 
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
