@@ -4,16 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/messages/private/advertise.py" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="added advertisement, re-enabled twitter">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/lang.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/news/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/common.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news/special.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/special.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +66,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Pentex/PycharmProjects/ptb-mn/messages/news&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -311,13 +314,6 @@
       <workItem from="1666956570315" duration="906000" />
       <workItem from="1666957704546" duration="32000" />
       <workItem from="1666957749614" duration="3088000" />
-    </task>
-    <task id="LOCAL-00097" summary="twitter stream test">
-      <created>1664817521234</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1664817521234</updated>
     </task>
     <task id="LOCAL-00098" summary="twitter stream test">
       <created>1664817906433</created>
@@ -655,7 +651,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679575722993</updated>
     </task>
-    <option name="localTasksCounter" value="146" />
+    <task id="LOCAL-00146" summary="added advertisement, re-enabled twitter">
+      <created>1679916380138</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1679916380138</updated>
+    </task>
+    <option name="localTasksCounter" value="147" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -674,7 +677,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="field kinda works, but needs nicer layout and checkable fields" />
     <MESSAGE value="bingo has nicer layout, but still needs improvements" />
     <MESSAGE value="bingo works now" />
     <MESSAGE value="more bingo words" />
@@ -699,6 +701,18 @@
     <MESSAGE value="migrating some functionality to another bot" />
     <MESSAGE value="changes to run locally" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="added advertisement, re-enabled twitter" />
+    <option name="LAST_COMMIT_MESSAGE" value="added advertisement, re-enabled twitter" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/messages/news/common.py</url>
+          <line>319</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

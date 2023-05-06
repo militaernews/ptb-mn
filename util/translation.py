@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 
@@ -30,8 +31,8 @@ def flag_to_hashtag(text: str, language: str = None):
             # todo: filter if valid flag?
             text += f"#{get_hashtag(fe, language)} "
 
-    print("--- Translated Text ---")
-    print(text)
+    logging.info("--- Translated Text ---")
+    logging.info(text)
     return text
 
 
@@ -46,25 +47,25 @@ async def translate_message(target_lang: str, text: str, target_lang_deepl: str 
 
 # could be replaced by using multiple txt-files for the different languages
 def get_hashtag(key: str, language: str = None) -> str:
-    print("--- hashtag ---")
+    logging.info("--- hashtag ---")
     if language is None:
         language = GERMAN.lang_key
 
     try:
         filename = f"res/countries/{key}.json"
-        print(filename)
+        logging.info(filename)
 
         with open(filename, 'rb') as f:
             # todo: find a way to open this file up just once when iterating through langs
             return orjson.loads(f.read())[language]
     except Exception as e:
-        print("Error when trying to get hashtag --- ", e)
+        logging.error(f"Error when trying to get hashtag --- {e}")
         pass
 
 
 async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
-    print("---------------------------- text ----------------------------")
-    print(text)
+    logging.info("---------------------------- text ----------------------------")
+    logging.info(text)
 
     sub_text = sanitize_text(text)
     emojis = re.findall(FLAG_EMOJI, sub_text)
@@ -83,11 +84,11 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
         #      preserve_formatting=True).text
 
     except QuotaExceededException:
-        print("--- Quota exceeded ---")
+        logging.warning("--- Quota exceeded ---")
         translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
         pass
     except Exception as e:
-        print("--- other error translating --- ", e)
+        logging.error(f"--- other error translating --- {e}")
 
         translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
         pass
@@ -95,5 +96,5 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     for emoji in emojis:
         translated_text = re.sub(PLACEHOLDER, emoji, translated_text, 1)
 
-    print("translated text ----------------- ", text, emojis, sub_text, text_to_translate, translated_text)
+    logging.info(f"translated text ----------------- {text, emojis, sub_text, text_to_translate, translated_text}" )
     return translated_text

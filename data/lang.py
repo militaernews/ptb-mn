@@ -40,11 +40,10 @@ languages: [Language] = [
     Language(
         "tr",  # Turkish
         -1001712502236,  # https://t.me/MilitaryNewsTR
-        "🔰@MilitaryNewsTR'e abone olun\n🔰Bize katılın @MNChatTR",
+        "🔰@MilitaryNewsTR'e abone olun",
         "SON_DAKİKA",
         "DUYURU",
-        "ADVERTISING",
-        -1001744855657
+        "ADVERTISING"
     ),
     Language(
         "fa",  # Persian

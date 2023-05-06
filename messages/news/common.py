@@ -11,7 +11,7 @@ import config
 import twitter
 from data.db import insert_single3, insert_single2, query_replies3, \
     get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id, \
-    update_post
+    update_post, Post
 from data.lang import GERMAN, languages
 from util.helper import get_file
 from util.regex import HASHTAG, WHITESPACE
@@ -27,7 +27,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         print(lang)
 
         reply_id = query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
-        logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}" )
+        logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
 
         try:
 
@@ -36,7 +36,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
                 caption=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 reply_to_message_id=reply_id
             )
-            logging.info(f"---------- MSG ID :::::::::", msg_id)
+            logging.info(f"---------- MSG ID ::::::::: { msg_id}")
             insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key, post_id=de_post_id)
 
         except Exception as e:
@@ -124,30 +124,34 @@ async def share_in_other_channels(context: CallbackContext):
     print(posts)
     files: [InputMedia] = []
 
+    original_caption = None
+
+    post: Post
     for post in posts:
         print(post)
+
+        if original_caption is None and post.text is not None:
+            original_caption = post.text
 
         if post.file_type == PHOTO:
             files.append(InputMediaPhoto(post.file_id))
         elif post.file_type == VIDEO:
             files.append(InputMediaVideo(post.file_id))
         elif post.file_type == ANIMATION:
-            files.append(InputMediaAnimation(post.file_type))
-
-    original_caption = posts[0].text
+            files.append(InputMediaAnimation(post.file_id))
 
     logging.info("::::::::::: share in other ::::::::::")
-    post_id = get_post_id2(context.job.data)
-    logging.info(f"------------------------------------------- post_id: {post_id}", )
+    post_id = get_post_id2(context.job.data)  ## not medigroupid??
+    logging.info(f"------------------------------------------- post_id: {post_id}" )
 
     for lang in languages:
         caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
-        logging.info(f"caption::::::::::: {caption}", )
+        logging.info(f"caption::::::::::: {caption}" )
         with files[0]._unfrozen():
             files[0].caption = caption
 
-        reply_id = query_replies3(post_id, lang.lang_key)
-        logging.info(f"------------------------------------------- reply_id: {reply_id}" )
+        reply_id = query_replies3(posts[0].msg_id, lang.lang_key)
+        logging.info(f"------------------------------------------- reply_id: {reply_id}")
 
         try:
             msgs: [Message] = await context.bot.send_media_group(
@@ -173,7 +177,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     # todo: tweet media_group
     # todo: add attribute "path" to post
-    await twitter.tweet_file_2(original_caption,posts[0])
+    await twitter.tweet_file(original_caption, posts[0])
 
 
 #   await twitter.tweet_text(flag_to_hashtag(original_caption))
@@ -239,9 +243,7 @@ async def edit_channel(update: Update, context: CallbackContext):
 
         if file_id != new_file.file_id and GERMAN.breaking not in original_caption:
             try:
-                print(
-                    "- edit file -------------------------------------------------------------------------------",
-                    input_media)
+                logging.info(  f"- edit file -------------------------------------------------- {input_media}"   )
                 msg = await context.bot.edit_message_media(
                     input_media,
                     chat_id=lang.channel_id,

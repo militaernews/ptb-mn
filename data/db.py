@@ -31,6 +31,7 @@ class Post:
     reply_id: int
     file_type: int
     file_id: str
+    text:str
 
 
 def get_mg(mg_id: str):

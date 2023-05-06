@@ -75,7 +75,7 @@ async def report_user(update: Update, context: CallbackContext):
 
     if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
         logging.info(f"reporting {update.message.reply_to_message.from_user.id} !!")
-        r = requests.post(url="https://tartaros-telegram.herokuapp.com/reports/",
+        r = requests.post(url="http://localhost:8080/reports",
                           json={
                               "user_id": update.message.reply_to_message.from_user.id,
                               "message": update.message.reply_to_message.text_html_urled,

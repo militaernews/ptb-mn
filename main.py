@@ -44,57 +44,34 @@ if __name__ == "__main__":
 
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
-    app.add_handler(
-        MessageHandler(
-            filters.UpdateType.CHANNEL_POST &
-            (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
-            & filters.Chat(chat_id=CHANNEL_MEME), post_media_meme))
-    app.add_handler(
-        MessageHandler(filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=CHANNEL_MEME),
-                       post_text_meme))
+    media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+
+    meme_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=CHANNEL_MEME)
+
+    app.add_handler(MessageHandler(meme_post & media, post_media_meme))
+    app.add_handler(MessageHandler(meme_post & filters.TEXT, post_text_meme))
+
+    news_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=GERMAN.channel_id)
 
     app.add_handler(
-        MessageHandler(
-            filters.UpdateType.CHANNEL_POST & (
-                    filters.PHOTO | filters.VIDEO | filters.ANIMATION) & filters.CaptionRegex(
-                re.compile(r"#info", re.IGNORECASE)) & filters.Chat(chat_id=GERMAN.channel_id),
-            post_info))
+        MessageHandler(news_post & media & filters.CaptionRegex(re.compile(r"#info", re.IGNORECASE)), post_info))
 
-    app.add_handler(MessageHandler(
-        filters.UpdateType.CHANNEL_POST &
-        (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
-        & filters.Chat(chat_id=GERMAN.channel_id), post_channel_english))
-    app.add_handler(MessageHandler(
-        filters.UpdateType.EDITED_CHANNEL_POST &
-        (filters.PHOTO | filters.VIDEO | filters.ANIMATION) &  ~filters.CaptionRegex(
-            re.compile(r"🔰 MN-Hauptquartier|#.+", re.IGNORECASE))
-        & filters.Chat(chat_id=GERMAN.channel_id), edit_channel))
+    app.add_handler(MessageHandler(news_post & media, post_channel_english))
 
+    app.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(re.compile(r"#eilmeldung", re.IGNORECASE)),
+                                   breaking_news))
+    app.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(re.compile(r"#mitteilung", re.IGNORECASE)),
+                                   announcement))
     app.add_handler(
-        MessageHandler(
-            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & filters.Regex(
-                re.compile(r"#eilmeldung", re.IGNORECASE)),
-            breaking_news))
-    app.add_handler(
-        MessageHandler(
-            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & filters.Regex(
-                re.compile(r"#mitteilung", re.IGNORECASE)),
-            announcement))
-    app.add_handler(
-        MessageHandler(
-            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id) & filters.Regex(
-                re.compile(r"#werbung", re.IGNORECASE)),
-            advertisement))
+        MessageHandler(news_post & filters.TEXT & filters.Regex(re.compile(r"#werbung", re.IGNORECASE)), advertisement))
+    app.add_handler(MessageHandler(news_post & filters.TEXT, post_channel_text))
 
-    app.add_handler(
-        MessageHandler(
-            filters.UpdateType.CHANNEL_POST & filters.TEXT & filters.Chat(chat_id=GERMAN.channel_id),
-            post_channel_text))
-    app.add_handler(
-        MessageHandler(filters.UpdateType.EDITED_CHANNEL_POST & filters.TEXT   & filters.Chat(
-            chat_id=GERMAN.channel_id) & ~filters.Regex(
-            re.compile(r"🔰 MN-Hauptquartier|#.+", re.IGNORECASE)),
-                       edit_channel_text))
+    news_edited = filters.UpdateType.EDITED_CHANNEL_POST & filters.Chat(
+        chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
+        re.compile(r"🔰 MN-Hauptquartier|#\S+|MN-Team", re.IGNORECASE))
+
+    app.add_handler(MessageHandler(news_edited & media, edit_channel))
+    app.add_handler(MessageHandler(news_edited & filters.TEXT, edit_channel_text))
 
     app.add_handler(CommandHandler("maps", maps))
     app.add_handler(CommandHandler("donbas", donbas))

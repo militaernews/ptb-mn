@@ -3,6 +3,7 @@ import traceback
 from telegram import Update
 from telegram.ext import ContextTypes
 
+import twitter
 from data import lang
 from util.translation import translate_message
 
@@ -14,12 +15,12 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
         print("--")
 
         #   await filter_message(update, context)
-
-        print(update.messagef)
+        await twitter.tweet_file_3("hello","field.png")
+        print(update.message)
         #  print(update.message.caption)
 
         tr = lang.languages[1]
-        print("LNG ::::::", tr)
+        print("LNG ::::::", tr, update.message.forward_from.language_code)
 
         await context.bot.send_message(tr.channel_id, "test")
 
