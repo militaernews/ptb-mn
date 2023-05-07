@@ -7,12 +7,13 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 import config
+import twitter
 from data.db import query_replies, insert_single2, update_text, get_msg_id
 from data.lang import languages, GERMAN
 from messages.news.common import handle_url
 from util.helper import sanitize_text
 from util.regex import WHITESPACE, HASHTAG
-from util.translation import translate_message, flag_to_hashtag
+from util.translation import translate_message, flag_to_hashtag, segment_text
 
 
 async def post_channel_text(update: Update, context: CallbackContext):
@@ -57,6 +58,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
     try:
         logging.info("tweet")
     #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
+        twitter.tweet_text(segment_text(flag_to_hashtag(original_caption)))
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -66,6 +68,8 @@ async def post_channel_text(update: Update, context: CallbackContext):
         pass
 
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
+
+
 
 
 async def edit_channel_text(update: Update, context: CallbackContext):

@@ -6,7 +6,7 @@ from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       Update)
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
-
+from pysbd import Segmenter
 import config
 import twitter
 from data.db import insert_single3, insert_single2, query_replies3, \
@@ -15,7 +15,7 @@ from data.db import insert_single3, insert_single2, query_replies3, \
 from data.lang import GERMAN, languages
 from util.helper import get_file
 from util.regex import HASHTAG, WHITESPACE
-from util.translation import flag_to_hashtag, translate_message
+from util.translation import flag_to_hashtag, translate_message, segment_text
 
 
 # TODO: make method more generic
@@ -65,7 +65,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     try:
 
         # todo: upload photo aswell
-        await twitter.tweet_file(formatted_text, await get_file(update))
+        await twitter.tweet_file(segment_text( formatted_text), await get_file(update))
         logging.info(f"-")
     except Exception as e:
         await context.bot.send_message(
@@ -116,6 +116,8 @@ async def post_channel_english(update: Update, context: CallbackContext):
         reply_id,
         update.channel_post.media_group_id
     )
+
+
 
 
 # TODO: make method more generic
@@ -175,12 +177,7 @@ async def share_in_other_channels(context: CallbackContext):
 
     logging.info("----- done -----")
 
-    # todo: tweet media_group
-    # todo: add attribute "path" to post
-    await twitter.tweet_file(original_caption, posts[0])
-
-
-#   await twitter.tweet_text(flag_to_hashtag(original_caption))
+    await twitter.tweet_files(context, segment_text(flag_to_hashtag(original_caption)), posts)
 
 
 async def edit_channel(update: Update, context: CallbackContext):

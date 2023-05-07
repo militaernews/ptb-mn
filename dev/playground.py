@@ -15,7 +15,7 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
         print("--")
 
         #   await filter_message(update, context)
-        await twitter.tweet_file_3("hello","field.png")
+        #await twitter.tweet_files(context, "hello",update.message)
         print(update.message)
         #  print(update.message.caption)
 

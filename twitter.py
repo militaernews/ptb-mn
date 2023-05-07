@@ -10,6 +10,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from tweepy import API
 
+from data.db import Post
 from util.helper import get_caption, get_file
 
 load_dotenv()
@@ -87,15 +88,16 @@ async def tweet_files_2(update: Update, context: CallbackContext):
     logging.info("---")
 
 
-async def tweet_files(text: str, files: [telegram.File]):
-    if len(text) <= TWEET_LENGTH:
+async def tweet_files(context:CallbackContext, text: str, posts: [Post]):
+    if len(text) <= TWEET_LENGTH: #todo: just cut text to length
         upload_files = list()
-        for file in files:
+        for post in posts:
+            file = await context.bot.get_file(post.file_id)
+            logging.info(f"file: {file}")
             path = file.file_path.split('/')[-1]
-            await file.download(path)
+            await file.download_to_drive(path)
+            logging.info(f"path: {path}")
             upload_files.append(path)
-        # todo: param "files" is only available in 1.5.0a10
-        # client.tweet(text=text, files=upload_files)
 
         try:
 
@@ -111,5 +113,5 @@ async def tweet_files(text: str, files: [telegram.File]):
             logging.info(f"⚠️ Error when trying to post multiple files to twitter: {e}")
             pass
 
-        for file in upload_files:
-            os.remove(file.path)
+        for path in upload_files: #better use OS unlink path
+            os.remove(path)

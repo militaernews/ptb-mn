@@ -6,6 +6,7 @@ import deepl
 from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 from orjson import orjson
+from pysbd import Segmenter
 
 from config import PLACEHOLDER
 from data.lang import GERMAN
@@ -98,3 +99,15 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
 
     logging.info(f"translated text ----------------- {text, emojis, sub_text, text_to_translate, translated_text}" )
     return translated_text
+
+def segment_text(text:str)->str:
+    segmenter = Segmenter(language='de', clean=False)
+
+    tx =""
+    for s in segmenter.segment(text):
+        if len(f"{tx} {s}")< 280:
+            tx+=f" {s}"
+
+    logging.info(f"----- tx {tx} -----")
+
+    return tx
