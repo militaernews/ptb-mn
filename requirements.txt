@@ -1,12 +1,12 @@
-python-telegram-bot[job-queue]==20.2
-deep-translator==1.10.1
+python-telegram-bot[job-queue]==20.3
+deep-translator==1.11.1
 deepl==1.14.0
 psycopg2-binary==2.9.6
 python-dotenv==1.0.0
 tweepy==4.14.0
 #PyTweet==1.3.6 #archived, switch to tweepy (also supports mediagroups)
-orjson==3.8.11
+orjson==3.8.14
 CairoSVG==2.7.0
 numpy==1.24.3
 ftfy==6.1.1
-httpx==0.24.0
+httpx==0.24.1

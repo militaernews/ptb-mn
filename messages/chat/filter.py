@@ -1,7 +1,9 @@
+import logging
 import random
+import re
 
 import requests
-from telegram import Update, Poll
+from telegram import Update, Poll, MessageEntity
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
@@ -66,8 +68,14 @@ async def filter_message(update: Update, context: CallbackContext):
 
     # print(filter(lambda element: 'abc' in element, text))
 
-    if 1 == 2:
-        print("Spam detected")
+    if re.search("@\S*trade\S*",text) is not None:
+        reply_text = "👀 Scammst du? Bitte sei brav!"
+
+        for admin in config.ADMINS:
+            reply_text += mention_html(admin, "​")
+
+        await update.message.reply_text(reply_text)
+        logging.info(f"Spam detected: {update.message.from_user} :::: {text}")
         return
     # todo: filter and report
 

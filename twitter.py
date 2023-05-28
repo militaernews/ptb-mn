@@ -105,6 +105,7 @@ async def tweet_files(context:CallbackContext, text: str, posts: [Post]):
             media_ids = []
             for filename in upload_files:
                 res = api.media_upload(filename)
+                logging.info(f"media_id-RESULT: {res}")
                 media_ids.append(res.media_id)
 
             # Tweet with multiple images

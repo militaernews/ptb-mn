@@ -79,6 +79,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("maps", "Karten Ukraine-Krieg"),
         ("loss", "Materialverluste in der Ukraine"),
         ("donbas", "14.000 Zivilisten im Donbas"),
+        ("stats", "Statistiken"),
         ("short", "Abkürzungsverzeichnis"),
         ("peace", "Russische Kriege"),
         ("bias", "Ist MN neutral?"),

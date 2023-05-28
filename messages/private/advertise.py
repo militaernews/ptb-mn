@@ -3,8 +3,10 @@ from typing import Sequence, Union
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSize, Animation, Video
 from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext
 
+import config
 from config import ADMINS
 from data import lang
+from util.translation import translate
 
 ADVERTISEMENT_MEDIA = "new_ADVERTISEMENT_MEDIA"
 ADVERTISEMENT_TEXT = "new_ADVERTISEMENT_TEXT"
@@ -112,6 +114,8 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
         button = InlineKeyboardMarkup.from_button(
             InlineKeyboardButton(context.chat_data[ADVERTISEMENT_BUTTON], url=context.chat_data[ADVERTISEMENT_URL]))
 
+
+
     if isinstance(media, Animation):
         msg = await context.bot.send_animation(lang.GERMAN.channel_id, media, caption=text, reply_markup=button)
     elif isinstance(media, Sequence):
@@ -124,6 +128,29 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
     await msg.pin()
 
     await update.message.reply_text("Post sollte nun im deutschen Kanal gesendet worden sein.")
+
+    for language in lang.languages[1:]:
+        translated_text = await translate(language.lang_key, text, language.lang_key_deepl)
+
+        if button is  None:
+            translated_button = None
+        else:
+            translated_button = InlineKeyboardMarkup.from_button(
+            InlineKeyboardButton( await translate(language.lang_key,context.chat_data[ADVERTISEMENT_BUTTON],language.lang_key_deepl), url=context.chat_data[ADVERTISEMENT_URL]))
+
+        if isinstance(media, Animation):
+            msg = await context.bot.send_animation(lang.GERMAN.channel_id, media, caption=translated_text, reply_markup= translated_button)
+        elif isinstance(media, Sequence):
+            msg = await context.bot.send_photo(lang.GERMAN.channel_id, media[-1], caption=translated_text, reply_markup= translated_button)
+        elif isinstance(media, Video):
+            msg = await context.bot.send_video(lang.GERMAN.channel_id, media, caption=translated_text, reply_markup= translated_button)
+        else:
+            msg = await context.bot.send_text(lang.GERMAN.channel_id, translated_text, reply_markup= translated_button)
+
+        await msg.pin()
+
+        await update.message.reply_text(f"Post sollte nun im Kanal {language.lang_key} gesendet worden sein.")
+
     return ConversationHandler.END
 
 

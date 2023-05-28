@@ -105,8 +105,8 @@ def segment_text(text:str)->str:
 
     tx =""
     for s in segmenter.segment(text):
-        if len(f"{tx} {s}")< 280:
-            tx+=f" {s}"
+        if len(f"{tx} {s}")< 280:  
+            tx+=f" {s.lstrip()}"
 
     logging.info(f"----- tx {tx} -----")
 

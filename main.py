@@ -11,7 +11,7 @@ from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
-    loss, peace, bias, ref, bot, mimimi, cia
+    loss, peace, bias, ref, bot, mimimi, cia, stats
 from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
@@ -78,6 +78,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("cmd", commands))
     app.add_handler(CommandHandler("loss", loss))
     app.add_handler(CommandHandler("peace", peace))
+    app.add_handler(CommandHandler("stats", stats))
     app.add_handler(CommandHandler("short", short))
     app.add_handler(CommandHandler("bias", bias))
     app.add_handler(CommandHandler("genozid", genozid))
