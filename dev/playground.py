@@ -1,6 +1,6 @@
 import traceback
 
-from telegram import Update
+from telegram import Update, KeyboardButton, WebAppInfo, ReplyKeyboardMarkup
 from telegram.ext import ContextTypes
 
 import twitter
@@ -19,10 +19,16 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
         print(update.message)
         #  print(update.message.caption)
 
+        await update.message.reply_text("hi!", reply_markup=ReplyKeyboardMarkup([
+            [KeyboardButton("Show me Google!", web_app=WebAppInfo("https://4142-91-33-115-20.ngrok-free.app"))]
+        ],resize_keyboard=True, one_time_keyboard=True))
+
         tr = lang.languages[1]
+
+
         print("LNG ::::::", tr, update.message.forward_from.language_code)
 
-        await context.bot.send_message(tr.channel_id, "test")
+
 
         text = await translate_message("tr", update.message.text_html_urled, )
 

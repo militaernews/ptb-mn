@@ -129,7 +129,12 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
 
     await update.message.reply_text("Post sollte nun im deutschen Kanal gesendet worden sein.")
 
-    for language in lang.languages[1:]:
+    #fixme
+
+
+    return ConversationHandler.END
+
+    for language in lang.languages:
         translated_text = await translate(language.lang_key, text, language.lang_key_deepl)
 
         if button is  None:
@@ -139,19 +144,22 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton( await translate(language.lang_key,context.chat_data[ADVERTISEMENT_BUTTON],language.lang_key_deepl), url=context.chat_data[ADVERTISEMENT_URL]))
 
         if isinstance(media, Animation):
-            msg = await context.bot.send_animation(lang.GERMAN.channel_id, media, caption=translated_text, reply_markup= translated_button)
+            msg = await context.bot.send_animation(language.channel_id, media, caption=translated_text, reply_markup= translated_button)
         elif isinstance(media, Sequence):
-            msg = await context.bot.send_photo(lang.GERMAN.channel_id, media[-1], caption=translated_text, reply_markup= translated_button)
+            msg = await context.bot.send_photo(language.channel_id, media[-1], caption=translated_text, reply_markup= translated_button)
         elif isinstance(media, Video):
-            msg = await context.bot.send_video(lang.GERMAN.channel_id, media, caption=translated_text, reply_markup= translated_button)
+            msg = await context.bot.send_video(language.channel_id, media, caption=translated_text, reply_markup= translated_button)
         else:
-            msg = await context.bot.send_text(lang.GERMAN.channel_id, translated_text, reply_markup= translated_button)
+            msg = await context.bot.send_text(language.channel_id, translated_text, reply_markup= translated_button)
 
         await msg.pin()
 
+
+
+
+
         await update.message.reply_text(f"Post sollte nun im Kanal {language.lang_key} gesendet worden sein.")
 
-    return ConversationHandler.END
 
 
 cancel_handler = [CommandHandler("cancel", cancel)]

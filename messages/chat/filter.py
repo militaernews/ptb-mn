@@ -68,7 +68,7 @@ async def filter_message(update: Update, context: CallbackContext):
 
     # print(filter(lambda element: 'abc' in element, text))
 
-    if re.search("@\S*trade\S*",text) is not None:
+    if re.search(r"@\S*trade\S*|testimony|contact him|Petr Johnson",text) is not None:
         reply_text = "👀 Scammst du? Bitte sei brav!"
 
         for admin in config.ADMINS:

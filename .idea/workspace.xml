@@ -4,21 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="hopefully albums and segmenting text for twitter works now">
-      <change afterPath="$PROJECT_DIR$/res/de/stats.html" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/command.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/command.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/chat/filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/filter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news/special.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/special.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/private/advertise.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/advertise.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/private/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/loss.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/loss.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/res/de/maps.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/maps.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/short.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/short.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -317,13 +309,6 @@
       <workItem from="1666956570315" duration="906000" />
       <workItem from="1666957704546" duration="32000" />
       <workItem from="1666957749614" duration="3088000" />
-    </task>
-    <task id="LOCAL-00100" summary="twitter stream test">
-      <created>1664820073680</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
-      <option name="project" value="LOCAL" />
-      <updated>1664820073680</updated>
     </task>
     <task id="LOCAL-00101" summary="twitter stream test">
       <created>1664820476164</created>
@@ -661,7 +646,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683474575986</updated>
     </task>
-    <option name="localTasksCounter" value="149" />
+    <task id="LOCAL-00149" summary="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels">
+      <created>1685235165098</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1685235165098</updated>
+    </task>
+    <option name="localTasksCounter" value="150" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -680,7 +672,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="more bingo words" />
     <MESSAGE value="working on warnings/bans" />
     <MESSAGE value="working on warnings/bans/reports" />
     <MESSAGE value="fix flags" />
@@ -705,6 +696,7 @@
     <MESSAGE value="added advertisement, re-enabled twitter" />
     <MESSAGE value="using tweepy for twitter, minor fixes" />
     <MESSAGE value="hopefully albums and segmenting text for twitter works now" />
-    <option name="LAST_COMMIT_MESSAGE" value="hopefully albums and segmenting text for twitter works now" />
+    <MESSAGE value="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels" />
+    <option name="LAST_COMMIT_MESSAGE" value="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels" />
   </component>
 </project>
