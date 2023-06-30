@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
+      <change afterPath="$PROJECT_DIR$/file_899.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/filter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/private/advertise.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/advertise.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/news/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/common.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/news/special.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/special.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/maps.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/maps.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/de/donbas.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/donbas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -309,13 +311,6 @@
       <workItem from="1666956570315" duration="906000" />
       <workItem from="1666957704546" duration="32000" />
       <workItem from="1666957749614" duration="3088000" />
-    </task>
-    <task id="LOCAL-00101" summary="twitter stream test">
-      <created>1664820476164</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
-      <option name="project" value="LOCAL" />
-      <updated>1664820476164</updated>
     </task>
     <task id="LOCAL-00102" summary="twitter stream test">
       <created>1664820621414</created>
@@ -653,7 +648,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685235165098</updated>
     </task>
-    <option name="localTasksCounter" value="150" />
+    <task id="LOCAL-00150" summary="fix">
+      <created>1687613781709</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1687613781721</updated>
+    </task>
+    <option name="localTasksCounter" value="151" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -692,11 +694,11 @@
     <MESSAGE value="some changes to make it run elsewhere" />
     <MESSAGE value="migrating some functionality to another bot" />
     <MESSAGE value="changes to run locally" />
-    <MESSAGE value="fix" />
     <MESSAGE value="added advertisement, re-enabled twitter" />
     <MESSAGE value="using tweepy for twitter, minor fixes" />
     <MESSAGE value="hopefully albums and segmenting text for twitter works now" />
     <MESSAGE value="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels" />
-    <option name="LAST_COMMIT_MESSAGE" value="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>

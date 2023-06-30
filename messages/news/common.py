@@ -65,7 +65,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     try:
 
         # todo: upload photo aswell
-        await twitter.tweet_file(segment_text( formatted_text), await get_file(update))
+        await twitter.tweet_file(segment_text( formatted_text) + "\n\n🔰 Mehr erfahren: t.me/MilitaerNews", await get_file(update))
         logging.info(f"-")
     except Exception as e:
         await context.bot.send_message(
@@ -177,7 +177,9 @@ async def share_in_other_channels(context: CallbackContext):
 
     logging.info("----- done -----")
 
-    await twitter.tweet_files(context, segment_text(flag_to_hashtag(original_caption)), posts)
+    await twitter.tweet_files(context,
+                              segment_text(flag_to_hashtag(original_caption))+ "\n\n🔰 Mehr erfahren: t.me/MilitaerNews",
+                              posts)
 
 
 async def edit_channel(update: Update, context: CallbackContext):

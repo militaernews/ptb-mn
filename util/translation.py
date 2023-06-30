@@ -10,6 +10,7 @@ from pysbd import Segmenter
 
 from config import PLACEHOLDER
 from data.lang import GERMAN
+from twitter import TWEET_LENGTH
 from util.helper import sanitize_text
 from util.regex import FLAG_EMOJI, HASHTAG
 
@@ -105,7 +106,7 @@ def segment_text(text:str)->str:
 
     tx =""
     for s in segmenter.segment(text):
-        if len(f"{tx} {s}")< 280:  
+        if len(f"{tx} {s}")< TWEET_LENGTH-50:
             tx+=f" {s.lstrip()}"
 
     logging.info(f"----- tx {tx} -----")

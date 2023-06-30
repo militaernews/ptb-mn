@@ -53,7 +53,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             )
 
     try:
-        await twitter.tweet_file_3(segment_text(formatted_text), breaking_photo_path)
+        await twitter.tweet_file_3(segment_text(formatted_text) + "\n\n🔰 Mehr erfahren: t.me/MilitaerNews", breaking_photo_path)
         logging.info("sent breaking to twitter")
     except Exception as e:
         await context.bot.send_message(

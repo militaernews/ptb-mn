@@ -37,7 +37,7 @@ auth = tweepy.OAuth1UserHandler(
 )
 api = tweepy.API(auth)
 
-TWEET_LENGTH = 280
+TWEET_LENGTH = 240
 
 
 def tweet_text(text: str):
