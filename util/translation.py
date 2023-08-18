@@ -106,7 +106,7 @@ def segment_text(text:str)->str:
 
     tx =""
     for s in segmenter.segment(text):
-        if len(f"{tx} {s}")< TWEET_LENGTH-50:
+        if len(f"{tx} {s}")< TWEET_LENGTH-20:
             tx+=f" {s.lstrip()}"
 
     logging.info(f"----- tx {tx} -----")

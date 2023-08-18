@@ -14,7 +14,7 @@ from messages.chat.command import donbas, commands, sofa, maps, short, report_us
     loss, peace, bias, ref, bot, mimimi, cia, stats
 from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
-from messages.news.common import edit_channel, post_channel_english
+from messages.news.common import edit_channel, post_channel_english, test_del
 from messages.news.special import breaking_news, announcement, post_info, advertisement
 from messages.news.text import edit_channel_text, post_channel_text
 from messages.private.advertise import add_advertisement_handler
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     app.add_handler(add_advertisement_handler)
 
-    app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
+
 
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
 
@@ -105,6 +105,8 @@ if __name__ == "__main__":
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
+
+    app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     print("### RUN LOCAL ###")
     app.run_polling()

@@ -14,7 +14,7 @@ from data.db import insert_single3, insert_single2, query_replies3, \
     update_post, Post
 from data.lang import GERMAN, languages
 from util.helper import get_file
-from util.regex import HASHTAG, WHITESPACE
+from util.regex import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
 from util.translation import flag_to_hashtag, translate_message, segment_text
 
 
@@ -65,7 +65,11 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     try:
 
         # todo: upload photo aswell
-        await twitter.tweet_file(segment_text( formatted_text) + "\n\n🔰 Mehr erfahren: t.me/MilitaerNews", await get_file(update))
+
+
+        await twitter.tweet_file(segment_text(
+            flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "",update.channel_post.caption))) + "\n\n🔰 Mehr erfahren: t.me/MilitaerNews",
+                                                await get_file(update))
         logging.info(f"-")
     except Exception as e:
         await context.bot.send_message(
@@ -178,7 +182,7 @@ async def share_in_other_channels(context: CallbackContext):
     logging.info("----- done -----")
 
     await twitter.tweet_files(context,
-                              segment_text(flag_to_hashtag(original_caption))+ "\n\n🔰 Mehr erfahren: t.me/MilitaerNews",
+                              segment_text(flag_to_hashtag(re.sub(PATTERN_HTMLTAG , "",original_caption)))+ "\n\n🔰 Mehr erfahren: t.me/MilitaerNews",
                               posts)
 
 
@@ -285,6 +289,8 @@ async def edit_channel(update: Update, context: CallbackContext):
             )
             pass
 
+async def test_del(update: Update, context: CallbackContext):
+    logging.info(f"UP test del: {update}")
 
 async def handle_url(update: Update, context: CallbackContext):
     if update.channel_post.caption is not None:

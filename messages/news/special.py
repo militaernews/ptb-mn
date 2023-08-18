@@ -8,7 +8,7 @@ import config
 import twitter
 from data.db import insert_single2
 from data.lang import GERMAN, languages
-from util.regex import BREAKING
+from util.regex import BREAKING, PATTERN_HTMLTAG
 from util.translation import translate_message, flag_to_hashtag, translate, segment_text
 
 
@@ -53,7 +53,11 @@ async def breaking_news(update: Update, context: CallbackContext):
             )
 
     try:
-        await twitter.tweet_file_3(segment_text(formatted_text) + "\n\n🔰 Mehr erfahren: t.me/MilitaerNews", breaking_photo_path)
+
+        await twitter.tweet_file_3(
+            segment_text(
+                f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(re.sub(PATTERN_HTMLTAG, '', update.channel_post.text))}") + "\n\n🔰 Mehr erfahren: t.me/MilitaerNews",
+            breaking_photo_path)
         logging.info("sent breaking to twitter")
     except Exception as e:
         await context.bot.send_message(
