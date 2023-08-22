@@ -12,3 +12,11 @@ create table posts
     text           text,
     primary key (msg_id, lang)
 );
+
+create table promos
+(
+    user_id int not null,
+    channel_id int,
+    promo_id int,
+    primary key (user_id)
+);

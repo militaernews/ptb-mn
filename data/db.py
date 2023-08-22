@@ -309,3 +309,22 @@ def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_ty
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
+
+def insert_promo(user_id:int,channel_id:int,promo_id:int):
+    try:
+        insertable = (user_id, channel_id, promo_id)
+        logging.info(f">> Insert: {insertable}", )
+
+        with conn.cursor() as c:
+            c.execute(
+                "insert into promos(user_id, channel_id, promo_id) values (%s,%s,%s) returning user_id;",
+                insertable)
+            res = c.fetchone().post_id
+
+        conn.commit()
+
+        logging.info(f">> Result: user_id = {res}", )
+        return res
+    except Exception as e:
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        pass

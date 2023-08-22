@@ -95,3 +95,5 @@ languages: [Language] = [
         "PUBBLICITÀ"
     ),
 ]
+
+all_langs= [GERMAN] + languages

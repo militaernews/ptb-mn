@@ -5,38 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
-      <change afterPath="$PROJECT_DIR$/file_1123.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1124.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1125.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1126.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1133.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1134.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1135.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1136.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1234.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1235.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1236.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1237.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1238.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1239.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1240.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1241.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1252.MP4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_899.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_943.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_944.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_945.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_946.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_947.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_957.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_958.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file_1852.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file_1853.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file_1854.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file_1855.MP4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file_1856.MP4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/messages/private/promo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/lang.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/common.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news/special.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/special.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/regex.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/regex.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/private/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/schema.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,8 +26,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>

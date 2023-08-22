@@ -4,7 +4,8 @@ import re
 from datetime import datetime
 
 from telegram.constants import ParseMode
-from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence
+from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
+    CallbackQueryHandler
 
 from config import TOKEN, CHANNEL_MEME, ADMINS, BINGO_ADMINS
 from data.lang import GERMAN
@@ -18,6 +19,7 @@ from messages.news.common import edit_channel, post_channel_english, test_del
 from messages.news.special import breaking_news, announcement, post_info, advertisement
 from messages.news.text import edit_channel_text, post_channel_text
 from messages.private.advertise import add_advertisement_handler
+from messages.private.promo import start_promo,  verify_promo
 from messages.private.setup import set_cmd
 
 LOG_FILENAME = rf"./logs/{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H-%M-%S')}.log"
@@ -42,7 +44,8 @@ if __name__ == "__main__":
 
     app.add_handler(add_advertisement_handler)
 
-
+    app.add_handler(MessageHandler(filters.Regex(r"\/start promo_\d(_\d+)?"), start_promo))
+    app.add_handler(CallbackQueryHandler(verify_promo, r"promo_\d(_\d+)?" ))
 
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
 

@@ -6,6 +6,7 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
 import config
+import data.lang
 from data.lang import languages, GERMAN
 
 
@@ -72,6 +73,18 @@ async def repair_saved_post(update: Update, context: CallbackContext):
 
 
 async def set_cmd(update: Update, context: CallbackContext):
+    group_chat_id = update.message.chat.id  # replace this with group id number, if you already know it
+    user_id = update.message.forward_from.id  # replace this with user id number, if you already know it
+    print(update.message.forward_from, update.message)
+
+    check =await context.bot.getChatMember(data.lang.GERMAN.channel_id, user_id)  # check if the user exist in the target group
+    print(check)
+
+    if check:  # If check variable isn't null, user is in the group
+        print('user is in the chat')
+    else:
+        print('Not found')
+
     await context.bot.delete_my_commands()
 
     chat_de_commands = [
