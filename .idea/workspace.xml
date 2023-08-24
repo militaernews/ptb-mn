@@ -4,18 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="added promo">
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-de.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-en.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-es.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-fa.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-fr.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-it.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-pt.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-ru.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/img/mn-tg-promo-tr.png" afterDir="false" />
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="promo with img">
+      <change afterPath="$PROJECT_DIR$/file_1930.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/file_1948.MP4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/payload.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/private/promo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/promo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -659,7 +652,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687613781721</updated>
     </task>
-    <option name="localTasksCounter" value="153" />
+    <option name="localTasksCounter" value="154" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -678,7 +671,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="working on warnings/bans/reports" />
     <MESSAGE value="fix flags" />
     <MESSAGE value="switching to db" />
     <MESSAGE value="reply db works for single" />
@@ -703,6 +695,7 @@
     <MESSAGE value="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels" />
     <MESSAGE value="fix" />
     <MESSAGE value="added promo" />
-    <option name="LAST_COMMIT_MESSAGE" value="added promo" />
+    <MESSAGE value="promo with img" />
+    <option name="LAST_COMMIT_MESSAGE" value="promo with img" />
   </component>
 </project>
