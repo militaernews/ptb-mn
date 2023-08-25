@@ -5,11 +5,111 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="promo with img">
-      <change afterPath="$PROJECT_DIR$/file_1930.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/file_1948.MP4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/de/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/de/promo/verify.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/en/promo/verify.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/es/promo/verify.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fa/promo/verify.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/fr/promo/verify.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/it/promo/verify.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/pt/promo/verify.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/ru/promo/verify.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/already.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/announce.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/bonus.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/done.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/instruct.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/own.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/payload.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/require.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/reward.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/share.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/tr/promo/verify.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/lang.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/lang.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/private/promo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/promo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/de/promo/payload.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/promo/payload.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/schema.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,8 +119,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -61,7 +161,7 @@
     "WebServerToolWindowFactoryState": "false",
     "database.data.extractors.current.export.id": "Comma-separated (CSV)_id",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Pentex/PycharmProjects/ptb-mn/res/img",
+    "last_opened_file_path": "C:/Users/Pentex/PycharmProjects/ptb-mn/res/pt/promo",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -78,11 +178,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\res\img" />
-      <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\messages\news" />
-      <recent name="C:\Users\nyx\PycharmProjects\ptb-mn\res\de" />
-      <recent name="$PROJECT_DIR$/res/img" />
-      <recent name="$PROJECT_DIR$/res/de" />
+      <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\res\pt\promo" />
+      <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\res\it\promo" />
+      <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\res\fa\promo" />
+      <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\res\es\promo" />
+      <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\res\fr\promo" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Pentex\PycharmProjects\ptb-mn\messages\private" />
@@ -652,7 +752,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687613781721</updated>
     </task>
-    <option name="localTasksCounter" value="154" />
+    <option name="localTasksCounter" value="155" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

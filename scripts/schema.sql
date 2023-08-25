@@ -13,10 +13,12 @@ create table posts
     primary key (msg_id, lang)
 );
 
+drop table promos;
+
 create table promos
 (
-    user_id int not null,
-    channel_id int,
-    promo_id int,
+    user_id bigint not null,
+    lang char(2),
+    promo_id bigint,
     primary key (user_id)
 );

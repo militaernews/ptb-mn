@@ -9,6 +9,7 @@ class Language:
     breaking: str
     announce: str
     advertise: str
+    username:str
     chat_id: int = None
     lang_key_deepl: str = None
     # captcha:str
@@ -21,6 +22,7 @@ GERMAN = Language(
     "EILMELDUNG",
     "MITTEILUNG",
     "WERBUNG",
+    "MilitaerNews",
     -1001526741474,  # https://t.me/MNChat
 )
 
@@ -31,6 +33,7 @@ ENGLISH = Language(
     "BREAKING",
     "ANNOUNCEMENT",
     "ADVERTISEMENT",
+"MilitaryNewsEN",
     -1001382962633,  # https://t.me/MilitaryChatEN
     lang_key_deepl="en-us"
 )
@@ -43,7 +46,8 @@ languages: [Language] = [
         "🔰@MilitaryNewsTR'e abone olun",
         "SON_DAKİKA",
         "DUYURU",
-        "ADVERTISING"
+        "ADVERTISING",
+"MilitaryNewsTR",
     ),
     Language(
         "fa",  # Persian
@@ -51,7 +55,8 @@ languages: [Language] = [
         "\nعضو شوید:\n🔰 @MilitaryNewsFA",
         "خبرفوری",
         "اعلامیه",
-        "تبلیغات"
+        "تبلیغات",
+"MilitaryNewsFA",
     ),
     Language(
         "ru",  # Russian
@@ -59,7 +64,8 @@ languages: [Language] = [
         "🔰 Подписывайтесь на @MilitaryNewsRU",
         "СРОЧНЫЕ_НОВОСТИ",
         "ОБЪЯВЛЕНИЕ",
-        "РЕКЛАМА"
+        "РЕКЛАМА",
+"MilitaryNewsRU",
     ),
     Language(
         "pt",  # Portugese - pt-br
@@ -68,6 +74,7 @@ languages: [Language] = [
         "NOTÍCIAS_URGENTES",
         "MENSAGEM",
         "PUBLICIDADE",
+"MilitaryNewsBR",
         lang_key_deepl="pt-br"
     ),
     Language(
@@ -76,7 +83,8 @@ languages: [Language] = [
         "🔰 Suscríbete a @MilitaryNewsES",
         "ÚLTIMA_HORA",
         "ANUNCIO",
-        "PUBLICIDAD"
+        "PUBLICIDAD",
+"MilitaryNewsES",
     ),
     Language(
         "fr",  # French
@@ -84,7 +92,8 @@ languages: [Language] = [
         "🔰 Abonnez-vous à @MilitaryNewsFR",
         "BREAKING_NEWS",
         "ANNONCE",
-        "PUBLICITÉ"
+        "PUBLICITÉ",
+"MilitaryNewsFR",
     ),
     Language(
         "it",  # Italian
@@ -92,8 +101,9 @@ languages: [Language] = [
         "🔰 iscriviti a @MilitaryNewsITA",
         "ULTIME_NOTIZIE",
         "ANNUNCIO",
-        "PUBBLICITÀ"
+        "PUBBLICITÀ",
+"MilitaryNewsITA",
     ),
 ]
 
-all_langs= [GERMAN] + languages
+

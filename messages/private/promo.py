@@ -1,18 +1,62 @@
 import logging
+import os
 
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMemberOwner, \
     ChatMemberAdministrator, ChatMemberMember
 from telegram.ext import CallbackContext
 
-import util.translation
 from data.db import insert_promo
-from data.lang import all_langs
+from data.lang import languages, GERMAN
+
+all_langs = {}
+for l in [GERMAN] + languages:
+    all_langs[l.lang_key] = l
 
 
-async def is_member(context: CallbackContext, user_id: int, channel_index: int):
-    check = await context.bot.getChatMember(all_langs[channel_index].channel_id, user_id)
+def get_text(update: Update, file: str):
+    lang = update.effective_user.language_code
+    path = f"res/{lang}/promo/{file}.html"
 
-    print(f"check: {check} -- id {all_langs[channel_index].channel_id}")
+    if os.path.exists(path):
+        with open(path, "r", encoding='utf-8') as f:
+            return f.read()
+
+    with open(f"res/en/promo/{file}.html", "r", encoding='utf-8') as f:
+        return f.read()
+
+
+def get_img(update: Update):
+    lang = update.effective_user.language_code
+    path = f"res/img/mn-tg-promo-{lang}.png"
+
+    if os.path.exists(path):
+        return open(path, "rb")
+
+    return open(f"res/img/mn-tg-promo-en.png", "rb")
+
+
+async def send_promos(update: Update, context: CallbackContext):
+    for lang in all_langs.values():
+        with open(f"res/{lang.lang_key}/promo/announce.html", "r", encoding='utf-8') as f:
+            text = f.read()
+        with open(f"res/{lang.lang_key}/promo/verify.html", "r", encoding='utf-8') as f:
+            btn = f.read()
+
+        msg = await context.bot.send_photo(lang.channel_id,
+                                           open(f"res/img/mn-tg-promo-{lang.lang_key}.png", "rb"),
+                                           text,
+                                           reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+                                               btn,
+                                               url=f"https://t.me/militaernews_posting_bot?start=promo_{lang.lang_key}"
+                                           )))
+        await msg.pin()
+
+
+async def is_member(context: CallbackContext, user_id: int, lang: str):
+    check = await context.bot.getChatMember(all_langs[lang].channel_id, user_id)
+
+    print(f"check: {check} -- id {all_langs[lang].channel_id}")
+    logging.info(f"check: {check} -- id {all_langs[lang].channel_id}")
 
     return type(check) in (ChatMemberMember, ChatMemberOwner, ChatMemberAdministrator)
 
@@ -23,55 +67,42 @@ async def start_promo(update: Update, context: CallbackContext):
     cb_data = fr"promo_{data[0]}"
     if len(data) == 2:
         if int(data[1]) == update.message.from_user.id:
-            return await update.message.reply_text(  # util.translation.translate()
-                "Du kannst deinen eigenen Link nicht verwenden. Schicke ihn gerne an jemand anderen 😉")
+            return await update.message.reply_text(get_text(update, "own"))
 
         cb_data += f"_{data[1]}"
 
-    if await is_member(context, update.message.from_user.id, int(data[0])):
+    if await is_member(context, update.message.from_user.id, data[0]):
 
-        payload = (
-            f"Wir von MilitärNews feiern unseren dritten Geburtstag und verlosen Telegram Premium an unsere Abonnenten 🎉\n\n"
-            f"Damit hast du Zugriff auf eine Reihe toller Features wie mehr Zeichenlimits für Nachrichten, schnellere Downloads, automatische Übersetzung von Chats oder animierte Emojis!\n\n"
-            f"Klicke hier um mitzumachen!\n\n"
-            f"👉🏻 https://t.me/militaernews_posting_bot?start=promo_{data[0]}_")
+        payload = get_text(update, "payload") + f"{data[0]}_"
 
-        await update.message.reply_photo(open("res/img/mn-tg-promo-de.png", "rb"),
-                                         "Danke für deine Teilnahme! 😊\n\n"
-                                         "Wenn du deine Gewinnchancen erhöhen willst, dann teile deinen persönlichen Einladungslink. Mehr Lose, höhere Gewinnchance! 💪😎",
-                                         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                                             "🍀 Chancen steigern!",
-                                             url=f"https://t.me/share/url?url=Hey!&text={payload}{update.message.from_user.id}"
-                                         ))
-                                         )
+        text = get_text(update, "done")
 
         if len(data) == 2:
             try:
                 await context.bot.send_message(data[1],
-                                               "Ein Nutzer hat uns über deinen Link abonniert! Zur Belohnung erhältst du ein weiteres Los für unsere Jubiläums-Verlosung 🎉\n\n"
-                                               "Teile deinen Link mit weiteren Leuten für eine höhere Gewinnchance 😉"
-                                               ,
+                                               get_text(update, "reward"),
                                                reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                                                   "Teilen",
-                                                   url=f"https://t.me/share/url?url=Hey!&text={payload}{data[1]}"
-
-                                               ))
-                                               )
+                                                   get_text(update, "share"),
+                                                   url=f"{payload}{data[1]}"
+                                               )))
+                text += get_text(update, "bonus")
             except Exception as e:
                 logging.error(f"User blocked Bot. {e}")
                 pass
 
+        await update.message.reply_photo(get_img(update),
+                                         text,
+                                         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+                                             get_text(update, "share"),
+                                             url=f"{payload}{update.message.from_user.id}"
+                                         )))
+
     else:
-        await update.message.reply_photo(open("res/img/mn-tg-promo-de.png", "rb"),
-                                         "Damit du an der Verlosung zum Jubiläum von MilitärNews teilnehmen kannst, musst du zuerst den Kanal abonnieren.\n\n"
-                                         "Klicke einfach auf diesen Link:\n\n"
-                                         "<b>https://t.me/militaernews</b>\n\n"
-                                         "————————————\n\n"
-                                         "Wenn du abonniert hast, dann verifiziere deine Teilnahme an der Verlosung mit einem Klick auf den Button 😊",
+        await update.message.reply_photo(get_img(update),
+                                         get_text(update, "instruct"),
                                          reply_markup=InlineKeyboardMarkup.from_button(
-                                             InlineKeyboardButton("✅ Teilnehmen",  callback_data=cb_data )
-                                         )
-                                         )
+                                             InlineKeyboardButton(get_text(update, "verify"), callback_data=cb_data)
+                                         ))
 
 
 async def verify_promo(update: Update, context: CallbackContext):
@@ -79,54 +110,45 @@ async def verify_promo(update: Update, context: CallbackContext):
     print(update)
     print(data)
 
-    if await is_member(context, update.callback_query.from_user.id, int(data[0])):
+    if await is_member(context, update.callback_query.from_user.id, data[0]):
         print("is member")
 
+        text = get_text(update, "done")
         if len(data) == 2:
             promo_id = int(data[1])
+            text += get_text(update, "bonus")
         else:
             promo_id = None
 
-        res = insert_promo(update.callback_query.from_user.id, all_langs[int(data[0])].channel_id, promo_id)
+        res = insert_promo(update.callback_query.from_user.id, all_langs[data[0]].channel_id, promo_id)
 
-        payload = ("https://t.me/share/url?url=Hey!&text=\n\n"
-                   f"Wir von MilitärNews feiern unseren dritten Geburtstag und verlosen Telegram Premium an unsere Abonnenten 🎉\n\n"
-                   f"Damit hast du Zugriff auf eine Reihe toller Features wie mehr Zeichenlimits für Nachrichten, schnellere Downloads, automatische Übersetzung von Chats oder animierte Emojis!\n\n"
-                   f"Klicke hier um mitzumachen!\n\n"
-                   f"👉🏻 https://t.me/militaernews_posting_bot?start=promo_{data[0]}_")
+        payload = get_text(update, "payload") + f"{data[0]}_"
 
         if res is None:
             await update.callback_query.edit_message_caption(
-                f"Du bist bereits über den Link eines anderen Nutzers beigetreten. Damit es fair bleibt, kann jede Person nur ein Los für einen anderen Benutzer generieren. Sonst würde ja jemand stundenlang nur auf den Button tippen um einen anderen Nutzer mit tausenden Losen zu belohnen. 😉\n\n"
-                f"Hier nochmal dein Promo-Link:",
+                get_text(update, "already"),
                 reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                    "🍀 Chancen steigern!",
-                    url=f"{payload}{update.message.from_user.id}"
+                    get_text(update, "share"),
+                    url=f"{payload}{update.callback_query.from_user.id}"
                 ))
             )
 
         await update.callback_query.edit_message_caption(
-            "Danke für deine Teilnahme! Der Nutzer von dem du diesen Link erhalten hast, bekommt zur Belohnung ein zusätzliches Los! 😊\n\n"
-            "Wenn du deine eigenen Gewinnchancen erhöhen willst, dann teile deinen persönlichen Einladungslink. Mehr Lose, höhere Gewinnchance! 💪😎",
+            text,
             reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                "🍀 Chancen steigern!",
-                url=f"{payload}{update.message.from_user.id}"
+                get_text(update, "share"),
+                url=f"{payload}{update.callback_query.from_user.id}"
             ))
         )
 
         if promo_id is not None:
-            payload = ("https://t.me/share/url?url=Hey!&text=\n\n"
-                       f"Wir von MilitärNews feiern unseren dritten Geburtstag und verlosen Telegram Premium an unsere Abonnenten 🎉\n\n"
-                       f"Damit hast du Zugriff auf eine Reihe toller Features wie mehr Zeichenlimits für Nachrichten, schnellere Downloads, automatische Übersetzung von Chats oder animierte Emojis!\n\n"
-                       f"Klicke hier um mitzumachen!\n\n"
-                       f"👉🏻 https://t.me/militaernews_posting_bot?start=promo_{data[0]}_")
+            payload = get_text(update, "payload") + f"{data[0]}_"
 
             try:
                 await context.bot.send_message(promo_id,
-                                               "Ein Nutzer hat uns über deinen Link abonniert! Zur Belohnung erhältst du ein weiteres Los für unsere Jubiläums-Verlosung 🎉\n\n"
-                                               "Teile deinen Link mit weiteren Leuten für eine höhere Gewinnchance 😉",
+                                               get_text(update, "reward"),
                                                reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                                                   "Teilen",
+                                                   get_text(update, "share"),
                                                    url=f"{payload}{promo_id}"
                                                )))
             except Exception as e:
@@ -136,5 +158,5 @@ async def verify_promo(update: Update, context: CallbackContext):
         await update.callback_query.answer()
 
     else:
-        print("not member")
-        await update.callback_query.answer(f"Du musst zuerst dem Kanal beitreten 😜")
+        logging.info("not member")
+        await update.callback_query.answer(get_text(update, "require"))
