@@ -5,7 +5,7 @@ psycopg2-binary==2.9.7
 python-dotenv==1.0.0
 tweepy==4.14.0
 #PyTweet==1.3.6 #archived, switch to tweepy (also supports mediagroups)
-orjson==3.9.4
+orjson==3.9.5
 CairoSVG==2.7.1
 numpy==1.25.2
 ftfy==6.1.1

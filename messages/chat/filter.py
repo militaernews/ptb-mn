@@ -20,7 +20,7 @@ def key_exists(context, key):
 
 def check_cas(user_id: int):
     response = requests.get(f"https://api.cas.chat/check?user_id={user_id}")
-    print(user_id, response.json())
+    logging.info(f"{user_id} --- {response.json()}")
     return "True" == response.json()["ok"]
 
 
@@ -63,10 +63,10 @@ def join_member(update: Update, context: CallbackContext):
 
 
 async def filter_message(update: Update, context: CallbackContext):
-  #  print(update)
+  #  logging.info()(update)
     text = update.message.text.lower()
 
-    # print(filter(lambda element: 'abc' in element, text))
+    # logging.info()(filter(lambda element: 'abc' in element, text))
 
     if re.search(r"@\S*trade\S*|testimony|contact him|Petr Johnson",text) is not None:
         reply_text = "👀 Scammst du? Bitte sei brav!"
@@ -80,7 +80,7 @@ async def filter_message(update: Update, context: CallbackContext):
     # todo: filter and report
 
     elif any(ext in text for ext in ("Idiot", "Hurensohn", "Arschloch", "Ukronazi")):
-        print("warning user...")
+        logging.info("warning user...")
 
         if "users" not in context.bot_data or update.message.from_user.id not in context.bot_data[
             "users"] or "warn" not in context.bot_data["users"][update.message.from_user.id]:
@@ -90,7 +90,7 @@ async def filter_message(update: Update, context: CallbackContext):
         else:
             warnings = context.bot_data["users"][update.message.from_user.id]["warn"]
             if warnings == 3:
-                print(f"banning {update.message.from_user.id} !!")
+                logging.info(f"banning {update.message.from_user.id} !!")
                 await context.bot.ban_chat_member(update.message.chat_id, update.message.from_user.id, until_date=1)
                 await update.message.reply_text(
                     f"Aufgrund wiederholter Verstöße habe ich {mention_html(update.message.from_user.id, update.message.from_user.first_name)} gebannt.")

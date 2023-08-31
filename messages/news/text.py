@@ -105,4 +105,4 @@ async def edit_channel_text(update: Update, context: CallbackContext):
                     f"<b>⚠️ Error when trying to edit post in Channel {lang.lang_key}</b>\n"
                     f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                 )
-                pass
+            pass

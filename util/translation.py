@@ -22,7 +22,7 @@ def flag_to_hashtag(text: str, language: str = None):
 
         flag_emojis = re.findall(FLAG_EMOJI, text)
 
-        print("flag:::::::::::::: ", flag_emojis)
+        logging.info(f"flag:::::::::::::: {flag_emojis}" )
 
         if len(flag_emojis) == 0:
             return f"\n{text}"

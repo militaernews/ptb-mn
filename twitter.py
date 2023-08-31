@@ -1,14 +1,11 @@
 import logging
 import os
 
-import pytweet
 import telegram
 import tweepy as tweepy
 from dotenv import load_dotenv
-from pytweet import Client
 from telegram import Update
 from telegram.ext import CallbackContext
-from tweepy import API
 
 from data.db import Post
 from util.helper import get_caption, get_file

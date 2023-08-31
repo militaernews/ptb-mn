@@ -1,3 +1,4 @@
+import logging
 from typing import Sequence, Union
 
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSize, Animation, Video
@@ -33,7 +34,7 @@ async def add_advertisement(update: Update, context: CallbackContext) -> int:
 
 
 async def add_advertisement_media(update: Update, context: CallbackContext) -> int:
-    print(update.message.effective_attachment)
+    logging.info(update.message.effective_attachment)
 
     context.chat_data[ADVERTISEMENT_MEDIA] = update.message.effective_attachment
 
@@ -94,7 +95,7 @@ async def add_advertisement_button(update: Update, context: CallbackContext) -> 
 async def add_advertisement_url(update: Update, context: CallbackContext) -> int:
     context.chat_data[ADVERTISEMENT_URL] = update.message.text
 
-    print(context.chat_data)
+    logging.info(context.chat_data)
 
     button = InlineKeyboardMarkup.from_button(
         InlineKeyboardButton(context.chat_data[ADVERTISEMENT_BUTTON], url=context.chat_data[ADVERTISEMENT_URL]))

@@ -1,3 +1,4 @@
+import logging
 import re
 
 from telegram import Update
@@ -13,12 +14,12 @@ MSG_ID = "msg_id"
 
 
 def get_replies(bot_data, msg_id: str):
-    print("Trying to get bot_data ------------------")
-    print(bot_data)
-    print("-------------------------")
+    logging.info("Trying to get bot_data ------------------")
+    logging.info(bot_data)
+    logging.info("-------------------------")
 
     if "reply" in bot_data[msg_id]:
-        print(bot_data[str(bot_data[msg_id]["reply"])])
+        logging.info(bot_data[str(bot_data[msg_id]["reply"])])
         return bot_data[str(bot_data[msg_id]["reply"])]["langs"]
 
     return None
@@ -64,7 +65,7 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str):
     try:
         await update.message.delete()
     except TelegramError as e:
-        print("needs admin:", e)
+        logging.info(f"needs admin: {e}")
         pass
 
     try:

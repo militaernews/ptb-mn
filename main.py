@@ -33,9 +33,11 @@ logging.basicConfig(
 )
 
 if __name__ == "__main__":
-    app = ApplicationBuilder().token(TOKEN) \
-        .defaults(Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True)) \
-        .persistence(PicklePersistence(filepath="persistence")).build()
+    app = (ApplicationBuilder().token(TOKEN)
+           .defaults(Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True))
+           .persistence(PicklePersistence(filepath="persistence"))
+           #.read_timeout(20).get_updates_read_timeout(20)
+           .build())
 
     app.add_handler(CommandHandler("bingo", bingo_field, filters.User(BINGO_ADMINS)))
     #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
@@ -113,4 +115,4 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     print("### RUN LOCAL ###")
-    app.run_polling()
+    app.run_polling(poll_interval=1)

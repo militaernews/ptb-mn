@@ -1,6 +1,7 @@
 import logging
 import os
 
+import telegram
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMemberOwner, \
     ChatMemberAdministrator, ChatMemberMember
 from telegram.ext import CallbackContext
@@ -53,9 +54,9 @@ async def send_promos(update: Update, context: CallbackContext):
 
 
 async def is_member(context: CallbackContext, user_id: int, lang: str):
+    await context.bot.send_chat_action(chat_id=user_id, action=telegram.constants.ChatAction.TYPING)
     check = await context.bot.getChatMember(all_langs[lang].channel_id, user_id)
 
-    print(f"check: {check} -- id {all_langs[lang].channel_id}")
     logging.info(f"check: {check} -- id {all_langs[lang].channel_id}")
 
     return type(check) in (ChatMemberMember, ChatMemberOwner, ChatMemberAdministrator)
@@ -65,7 +66,9 @@ async def start_promo(update: Update, context: CallbackContext):
     data = update.message.text.split(" ")[1].split("_")[1:]
 
     cb_data = fr"promo_{data[0]}"
+    promo_id=0
     if len(data) == 2:
+        promo_id=int(data[1])
         if int(data[1]) == update.message.from_user.id:
             return await update.message.reply_text(get_text(update, "own"))
 
@@ -76,6 +79,15 @@ async def start_promo(update: Update, context: CallbackContext):
         payload = get_text(update, "payload") + f"{data[0]}_"
 
         text = get_text(update, "done")
+
+        res = insert_promo(update.message.from_user.id, data[0],promo_id )
+        if res is not None:
+            return await update.message.reply_text(  "\n".join(get_text(update, "already") .split("\n")[2:]),
+            reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+                get_text(update, "share"),
+                url=f"{payload}{update.message.from_user.id}"
+            ))
+            )
 
         if len(data) == 2:
             try:
@@ -107,11 +119,10 @@ async def start_promo(update: Update, context: CallbackContext):
 
 async def verify_promo(update: Update, context: CallbackContext):
     data = update.callback_query.data.split("_")[1:]
-    print(update)
-    print(data)
+    logging.info(f"{update}----{data}")
 
     if await is_member(context, update.callback_query.from_user.id, data[0]):
-        print("is member")
+        logging.info("is member")
 
         text = get_text(update, "done")
         if len(data) == 2:
@@ -120,7 +131,7 @@ async def verify_promo(update: Update, context: CallbackContext):
         else:
             promo_id = None
 
-        res = insert_promo(update.callback_query.from_user.id, all_langs[data[0]].channel_id, promo_id)
+        res = insert_promo(update.callback_query.from_user.id,data[0], promo_id)
 
         payload = get_text(update, "payload") + f"{data[0]}_"
 

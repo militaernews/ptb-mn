@@ -1,3 +1,4 @@
+import logging
 from typing import Dict
 
 from orjson import orjson
@@ -25,7 +26,7 @@ async def repair_saved_post(update: Update, context: CallbackContext):
 
     with open(filename, 'rb') as f:
         content: Dict[str, int] = orjson.loads(f.read())
-        print(content)
+        logging.info(content)
 
         for key, value in content.items():
             if type(key) is not str or type(value) is not int:
@@ -75,15 +76,15 @@ async def repair_saved_post(update: Update, context: CallbackContext):
 async def set_cmd(update: Update, context: CallbackContext):
     group_chat_id = update.message.chat.id  # replace this with group id number, if you already know it
     user_id = update.message.forward_from.id  # replace this with user id number, if you already know it
-    print(update.message.forward_from, update.message)
+    logging.info(update.message.forward_from, update.message)
 
     check =await context.bot.getChatMember(data.lang.GERMAN.channel_id, user_id)  # check if the user exist in the target group
-    print(check)
+    logging.info(check)
 
     if check:  # If check variable isn't null, user is in the group
-        print('user is in the chat')
+        logging.info('user is in the chat')
     else:
-        print('Not found')
+        logging.info('Not found')
 
     await context.bot.delete_my_commands()
 

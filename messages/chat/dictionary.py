@@ -54,7 +54,7 @@ async def handle_putin_dict(update: Update, context: CallbackContext):
 
     #    print(k, " --- IN --- ", v)
         if k.lower() in update.message.text.lower():  # and k not in matches.keys():
-            print("---------- MATCH ----------")
+            logging.info("---------- MATCH ----------")
             matches[k] = v
 
     logging.info(f"{update.message.text} -------{ matches, putin_dict}")

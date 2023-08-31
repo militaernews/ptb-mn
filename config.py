@@ -1,13 +1,14 @@
 import os
+from typing import Final
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
-TOKEN = os.getenv('TELEGRAM')
-DATABASE_URL = os.getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
-DATABASE_URL_NN = os.getenv("DATABASE_URL_NN")
-TEST_MODE = os.getenv("TESTING", False)
+TOKEN: Final[str] = os.getenv('TELEGRAM')
+DATABASE_URL: Final[str] = os.getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
+DATABASE_URL_NN: Final[str] = os.getenv("DATABASE_URL_NN")
+TEST_MODE: Final[bool] = os.getenv("TESTING", False)
 PORT = int(os.getenv("PORT", 8080))
 
 CHANNEL_MEME = -1001486678205

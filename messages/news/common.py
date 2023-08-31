@@ -24,7 +24,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     original_caption = update.channel_post.caption_html_urled
 
     for lang in languages:
-        print(lang)
+        logging.info(lang)
 
         reply_id = query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
         logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
@@ -127,14 +127,14 @@ async def post_channel_english(update: Update, context: CallbackContext):
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
     posts = sorted(query_files(context.job.name), key=lambda x: x.msg_id)
-    print(posts)
+    logging.info(posts)
     files: [InputMedia] = []
 
     original_caption = None
 
     post: Post
     for post in posts:
-        print(post)
+        logging.info(post)
 
         if original_caption is None and post.text is not None:
             original_caption = post.text
@@ -166,7 +166,7 @@ async def share_in_other_channels(context: CallbackContext):
                 reply_to_message_id=reply_id
             )
 
-            print(msgs)
+            logging.info(msgs)
 
             for index, msg in enumerate(msgs):
                 insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
@@ -304,7 +304,7 @@ async def handle_url(update: Update, context: CallbackContext):
     else:
         return
 
-    print(entities)
+    logging.info(entities)
 
     # TODO: maybe also remove the url/textlink from the initial message?
 
@@ -321,7 +321,7 @@ async def handle_url(update: Update, context: CallbackContext):
     )
 
     for entity, content in entities.items():
-        print(entity)
+        logging.info(entity)
         if entity.type == "text_link":
             quelle = f"<a href='{entity.url}'>{content}</a>"
         else:
@@ -331,6 +331,6 @@ async def handle_url(update: Update, context: CallbackContext):
 
     text += f"\n{GERMAN.footer}"
 
-    print(text)
+    logging.info(text)
 
     await context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
