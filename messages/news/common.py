@@ -68,7 +68,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 
         await twitter.tweet_file(segment_text(
-            flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "",update.channel_post.caption))) + "\n\n🔰 Mehr erfahren: t.me/MilitaerNews",
+            flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "",update.channel_post.caption))) ,
                                                 await get_file(update))
         logging.info(f"-")
     except Exception as e:
@@ -182,7 +182,7 @@ async def share_in_other_channels(context: CallbackContext):
     logging.info("----- done -----")
 
     await twitter.tweet_files(context,
-                              segment_text(flag_to_hashtag(re.sub(PATTERN_HTMLTAG , "",original_caption)))+ "\n\n🔰 Mehr erfahren: t.me/MilitaerNews",
+                              segment_text(flag_to_hashtag(re.sub(PATTERN_HTMLTAG , "",original_caption))),
                               posts)
 
 

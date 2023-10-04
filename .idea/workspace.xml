@@ -4,29 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="promo translations">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/playground.py" beforeDir="false" afterPath="$PROJECT_DIR$/dev/playground.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/file_1930.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/file_1948.MP4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/dictionary.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/dictionary.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/chat/filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/filter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messages/news/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/common.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/text.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/private/advertise.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/advertise.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/private/promo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/promo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/private/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/de/promo/announce.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/promo/announce.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/en/promo/announce.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/en/promo/announce.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/fr/promo/announce.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/fr/promo/announce.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/ru/promo/announce.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/ru/promo/announce.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/tr/promo/announce.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/tr/promo/announce.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇰🇭.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇰🇭.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/countries/.json" beforePathEscaped="$PROJECT_DIR$/res/countries/🇲🇱.json" beforeDir="false" afterPath="$PROJECT_DIR$/res/countries/.json" afterPathEscaped="$PROJECT_DIR$/res/countries/🇲🇱.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/de/donbas.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/de/donbas.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_de.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_de.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/flag_en.json" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/flag_en.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/helper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/translation.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/translation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,9 +49,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2CcX12aEgz3We9yMNvMOzyfGb7g" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -672,7 +662,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687613781721</updated>
     </task>
-    <option name="localTasksCounter" value="156" />
+    <option name="localTasksCounter" value="157" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -712,10 +702,10 @@
     <MESSAGE value="using tweepy for twitter, minor fixes" />
     <MESSAGE value="hopefully albums and segmenting text for twitter works now" />
     <MESSAGE value="more texts, dependency bump, tagging admins if scammer, publish advertisement to all channels" />
-    <MESSAGE value="fix" />
     <MESSAGE value="added promo" />
     <MESSAGE value="promo with img" />
     <MESSAGE value="promo translations" />
-    <option name="LAST_COMMIT_MESSAGE" value="promo translations" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>
