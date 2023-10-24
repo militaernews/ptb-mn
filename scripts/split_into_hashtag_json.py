@@ -26,22 +26,22 @@ def split_to_json():
             print(input_filename, lang.lang_key)
             content = orjson.loads(input_file.read())
 
-            for flag_key, hashtag in content.items():
-                print(flag_key, hashtag)
-                output_filename = f"{output_directory}{flag_key}.json"
+        for flag_key, hashtag in content.items():
+            print(flag_key, hashtag)
+            output_filename = f"{output_directory}{flag_key}.json"
 
-                text = ""
+            text = ""
 
-                if lang.lang_key == GERMAN.lang_key:
-                    text += f"{{\"{lang.lang_key}\":\"{sanitize_hashtag(lang.lang_key, hashtag)}\""
-                else:
-                    text += f",\"{lang.lang_key}\":\"{sanitize_hashtag(lang.lang_key, hashtag)}\""
+            if lang.lang_key == GERMAN.lang_key:
+                text += f"{{\"{lang.lang_key}\":\"{sanitize_hashtag(lang.lang_key, hashtag)}\""
+            else:
+                text += f",\"{lang.lang_key}\":\"{sanitize_hashtag(lang.lang_key, hashtag)}\""
 
-                if lang.lang_key == languages[-1].lang_key:
-                    text += "}"
+            if lang.lang_key == languages[-1].lang_key:
+                text += "}"
 
-                with open(output_filename, 'a') as output_file:
-                    output_file.write(text)
+            with open(output_filename, 'a', encoding="utf-8") as output_file:
+                output_file.write(text)
 
 
 def translate_json():

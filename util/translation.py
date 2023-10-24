@@ -57,7 +57,7 @@ def get_hashtag(key: str, language: str = None) -> str:
         filename = f"res/countries/{key}.json"
         logging.info(filename)
 
-        with open(filename, 'rb') as f:
+        with open(filename, 'rb',) as f:
             # todo: find a way to open this file up just once when iterating through langs
             return orjson.loads(f.read())[language]
     except Exception as e:
@@ -73,7 +73,7 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     emojis = re.findall(FLAG_EMOJI, sub_text)
     text_to_translate = re.sub(FLAG_EMOJI, PLACEHOLDER, sub_text)
 
-    if target_lang == "fa":  # or "ru"?
+    if target_lang == "fa" or target_lang == "ar":  # or "ru"?
         # text.replace: if bot was down and footer got added manually
 
         # I'm uncertain, whether replacing emojis for Right-to-left languages like Persian butchers the order

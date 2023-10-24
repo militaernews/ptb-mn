@@ -137,7 +137,11 @@ async def share_in_other_channels(context: CallbackContext):
         logging.info(post)
 
         if original_caption is None and post.text is not None:
-            original_caption = post.text
+            if len(re.findall(GERMAN.footer,post.text)) == 0:
+                original_caption = post.text
+            else:
+                #todo: make it actually filter out footer
+                original_caption =  re.sub(f"\s*({HASHTAG})*\s*{GERMAN.footer}", "",post.text)
 
         if post.file_type == PHOTO:
             files.append(InputMediaPhoto(post.file_id))
@@ -334,3 +338,4 @@ async def handle_url(update: Update, context: CallbackContext):
     logging.info(text)
 
     await context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
+

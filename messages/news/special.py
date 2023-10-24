@@ -56,7 +56,7 @@ async def breaking_news(update: Update, context: CallbackContext):
 
         await twitter.tweet_file_3(
             segment_text(
-                f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(re.sub(PATTERN_HTMLTAG, '', update.channel_post.text))}") + "\n\n🔰 Mehr erfahren: t.me/MilitaerNews",
+                f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(re.sub(PATTERN_HTMLTAG, '', update.channel_post.text))}"),
             breaking_photo_path)
         logging.info("sent breaking to twitter")
     except Exception as e:

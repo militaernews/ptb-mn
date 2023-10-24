@@ -6,7 +6,8 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 import config
-from util.regex import FOOTER
+from data import lang
+from data.lang import GERMAN
 
 MSG_REMOVAL_PERIOD = 1200
 CHAT_ID = "chat_id"
@@ -29,7 +30,7 @@ def sanitize_text(text: str = None) -> str:
     if text is None:
         return ""
 
-    return re.sub(FOOTER, "", text)
+    return re.sub(GERMAN.footer, "", text)
 
 
 def sanitize_hashtag(lang_key: str, text: str) -> str:

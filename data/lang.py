@@ -9,7 +9,7 @@ class Language:
     breaking: str
     announce: str
     advertise: str
-    username:str
+    username: str
     chat_id: int = None
     lang_key_deepl: str = None
     # captcha:str
@@ -33,7 +33,7 @@ ENGLISH = Language(
     "BREAKING",
     "ANNOUNCEMENT",
     "ADVERTISEMENT",
-"MilitaryNewsEN",
+    "MilitaryNewsEN",
     -1001382962633,  # https://t.me/MilitaryChatEN
     lang_key_deepl="en-us"
 )
@@ -43,11 +43,11 @@ languages: [Language] = [
     Language(
         "tr",  # Turkish
         -1001712502236,  # https://t.me/MilitaryNewsTR
-        "🔰@MilitaryNewsTR'e abone olun",
+        "🔰 @MilitaryNewsTR'e abone olun",
         "SON_DAKİKA",
         "DUYURU",
         "ADVERTISING",
-"MilitaryNewsTR",
+        "MilitaryNewsTR",
     ),
     Language(
         "fa",  # Persian
@@ -56,7 +56,7 @@ languages: [Language] = [
         "خبرفوری",
         "اعلامیه",
         "تبلیغات",
-"MilitaryNewsFA",
+        "MilitaryNewsFA",
     ),
     Language(
         "ru",  # Russian
@@ -65,7 +65,7 @@ languages: [Language] = [
         "СРОЧНЫЕ_НОВОСТИ",
         "ОБЪЯВЛЕНИЕ",
         "РЕКЛАМА",
-"MilitaryNewsRU",
+        "MilitaryNewsRU",
     ),
     Language(
         "pt",  # Portugese - pt-br
@@ -74,7 +74,7 @@ languages: [Language] = [
         "NOTÍCIAS_URGENTES",
         "MENSAGEM",
         "PUBLICIDADE",
-"MilitaryNewsBR",
+        "MilitaryNewsBR",
         lang_key_deepl="pt-br"
     ),
     Language(
@@ -84,7 +84,7 @@ languages: [Language] = [
         "ÚLTIMA_HORA",
         "ANUNCIO",
         "PUBLICIDAD",
-"MilitaryNewsES",
+        "MilitaryNewsES",
     ),
     Language(
         "fr",  # French
@@ -93,7 +93,7 @@ languages: [Language] = [
         "BREAKING_NEWS",
         "ANNONCE",
         "PUBLICITÉ",
-"MilitaryNewsFR",
+        "MilitaryNewsFR",
     ),
     Language(
         "it",  # Italian
@@ -102,8 +102,15 @@ languages: [Language] = [
         "ULTIME_NOTIZIE",
         "ANNUNCIO",
         "PUBBLICITÀ",
-"MilitaryNewsITA",
+        "MilitaryNewsITA",
+    ),
+    Language(
+        "ar",  # Arabic
+        -1001972272205,  # https://t.me/MilitaryNewsAR
+        "@MilitaryNewsAR اشترك ب أخبار عسكرية بالعربية 🔰\n",
+        "معلومات",
+        "إشعار",
+        "إعلان",
+        "MilitaryNewsAR",
     ),
 ]
-
-
