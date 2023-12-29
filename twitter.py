@@ -38,7 +38,7 @@ TWEET_LENGTH = 300
 
 
 def tweet_text(text: str):
-    logging.info("--- tweet", text)
+    logging.info(f"--- tweet {text}")
 
     if len(text) <= TWEET_LENGTH:
         client.create_tweet(text=text)  # This requires read & write app permissions also elevated access type.

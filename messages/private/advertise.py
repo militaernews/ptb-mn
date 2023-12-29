@@ -4,7 +4,6 @@ from typing import Sequence, Union
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSize, Animation, Video
 from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext
 
-import config
 from config import ADMINS
 from data import lang
 from util.translation import translate
@@ -64,17 +63,21 @@ async def send_preview(update: Update, context: CallbackContext, button: InlineK
     media: Union[Animation, Sequence[PhotoSize], Video, None] = context.chat_data[ADVERTISEMENT_MEDIA]
     text = context.chat_data[ADVERTISEMENT_TEXT]
 
-    if isinstance(media, Animation):
-        await update.message.reply_animation(media, caption=text, reply_markup=button)
-    elif isinstance(media, Sequence):
-        await update.message.reply_photo(media[-1], caption=text, reply_markup=button)
-    elif isinstance(media, Video):
-        await update.message.reply_video(media, caption=text, reply_markup=button)
-    else:
-        await update.message.reply_text(text, reply_markup=button)
+    try:
+        if isinstance(media, Animation):
+            await update.message.reply_animation(media, caption=text, reply_markup=button)
+        elif isinstance(media, Sequence):
+            await update.message.reply_photo(media[-1], caption=text, reply_markup=button)
+        elif isinstance(media, Video):
+            await update.message.reply_video(media, caption=text, reply_markup=button)
+        else:
+            await update.message.reply_text(text, reply_markup=button)
 
-    await update.message.reply_text("Passt das soweit?"
-                                    "\n\nSende den Werbungs-Post mit /save oder verwerfe ihn und beginne von vorn mit /cancel.")
+        await update.message.reply_text("Passt das soweit?"
+                                        "\n\nSende den Werbungs-Post mit /save oder verwerfe ihn und beginne von vorn mit /cancel.")
+    except Exception as e:
+        await update.message.reply_text("Fehler beim Senden der Vorschau! Beginne von vorn mit /cancel."
+                                        f"\n\n<code>{e}</code>")
 
 
 async def skip_button(update: Update, context: CallbackContext) -> int:
@@ -115,8 +118,6 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
         button = InlineKeyboardMarkup.from_button(
             InlineKeyboardButton(context.chat_data[ADVERTISEMENT_BUTTON], url=context.chat_data[ADVERTISEMENT_URL]))
 
-
-
     if isinstance(media, Animation):
         msg = await context.bot.send_animation(lang.GERMAN.channel_id, media, caption=text, reply_markup=button)
     elif isinstance(media, Sequence):
@@ -130,37 +131,36 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
 
     await update.message.reply_text("Post sollte nun im deutschen Kanal gesendet worden sein.")
 
-    #fixme
-
+    # fixme
 
     return ConversationHandler.END
 
     for language in lang.languages:
         translated_text = await translate(language.lang_key, text, language.lang_key_deepl)
 
-        if button is  None:
+        if button is None:
             translated_button = None
         else:
             translated_button = InlineKeyboardMarkup.from_button(
-            InlineKeyboardButton( await translate(language.lang_key,context.chat_data[ADVERTISEMENT_BUTTON],language.lang_key_deepl), url=context.chat_data[ADVERTISEMENT_URL]))
+                InlineKeyboardButton(await translate(language.lang_key, context.chat_data[ADVERTISEMENT_BUTTON],
+                                                     language.lang_key_deepl),
+                                     url=context.chat_data[ADVERTISEMENT_URL]))
 
         if isinstance(media, Animation):
-            msg = await context.bot.send_animation(language.channel_id, media, caption=translated_text, reply_markup= translated_button)
+            msg = await context.bot.send_animation(language.channel_id, media, caption=translated_text,
+                                                   reply_markup=translated_button)
         elif isinstance(media, Sequence):
-            msg = await context.bot.send_photo(language.channel_id, media[-1], caption=translated_text, reply_markup= translated_button)
+            msg = await context.bot.send_photo(language.channel_id, media[-1], caption=translated_text,
+                                               reply_markup=translated_button)
         elif isinstance(media, Video):
-            msg = await context.bot.send_video(language.channel_id, media, caption=translated_text, reply_markup= translated_button)
+            msg = await context.bot.send_video(language.channel_id, media, caption=translated_text,
+                                               reply_markup=translated_button)
         else:
-            msg = await context.bot.send_text(language.channel_id, translated_text, reply_markup= translated_button)
+            msg = await context.bot.send_text(language.channel_id, translated_text, reply_markup=translated_button)
 
         await msg.pin()
 
-
-
-
-
         await update.message.reply_text(f"Post sollte nun im Kanal {language.lang_key} gesendet worden sein.")
-
 
 
 cancel_handler = [CommandHandler("cancel", cancel)]
@@ -172,10 +172,10 @@ add_advertisement_handler = ConversationHandler(
             CommandHandler("skip", skip_media),
             MessageHandler(filters.PHOTO | filters.VIDEO | filters.ANIMATION, add_advertisement_media),
         ],
-        NEEDS_TEXT: [MessageHandler(filters.TEXT, add_advertisement_text)],
-        NEEDS_BUTTON: [CommandHandler("skip", skip_button), MessageHandler(filters.TEXT, add_advertisement_button),
+        NEEDS_TEXT: [MessageHandler(filters.TEXT  & ~filters.Regex(r"/cancel"), add_advertisement_text)],
+        NEEDS_BUTTON: [CommandHandler("skip", skip_button), MessageHandler(filters.TEXT  & ~filters.Regex(r"/cancel"), add_advertisement_button),
                        ],
-        NEEDS_URL: [MessageHandler(filters.TEXT, add_advertisement_url)],
+        NEEDS_URL: [MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_url)],
         SAVE_ADVERTISEMENT: [CommandHandler("save", save_advertisement)]
 
     },
