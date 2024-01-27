@@ -3,7 +3,7 @@ import random
 import re
 
 import requests
-from telegram import Update, Poll, MessageEntity
+from telegram import Update, Poll
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
@@ -31,10 +31,11 @@ def join_member(update: Update, context: CallbackContext):
                 update.effective_chat.id, update.message.from_user.id
             )
 
-            context.bot.send_message(config.LOG_GROUP, f"User {member.name} [<code>{member.id}</code>] was banned in chat "
-                "<a href='https://t.me/username'>{update.message.chat.title}</a> due"
-                f" to CAS-ban (<a href='https://cas.chat/check?user_id={member.id}'>reason</a>). ",
-            )
+            context.bot.send_message(config.LOG_GROUP,
+                                     f"User {member.name} [<code>{member.id}</code>] was banned in chat "
+                                     "<a href='https://t.me/username'>{update.message.chat.title}</a> due"
+                                     f" to CAS-ban (<a href='https://cas.chat/check?user_id={member.id}'>reason</a>). ",
+                                     )
             # todo: find out deeplink that works with chat_id
 
         if not key_exists(context, member.id):
@@ -63,12 +64,12 @@ def join_member(update: Update, context: CallbackContext):
 
 
 async def filter_message(update: Update, context: CallbackContext):
-  #  logging.info()(update)
+    #  logging.info()(update)
     text = update.message.text.lower()
 
     # logging.info()(filter(lambda element: 'abc' in element, text))
 
-    if re.search(r"@\S*trade\S*|testimony|contact him|Petr Johnson",text) is not None:
+    if re.search(r"@\S*trade\S*|testimony|contact him|Petr Johnson", text) is not None:
         reply_text = "👀 Scammst du? Bitte sei brav!"
 
         for admin in config.ADMINS:

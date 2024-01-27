@@ -172,8 +172,9 @@ add_advertisement_handler = ConversationHandler(
             CommandHandler("skip", skip_media),
             MessageHandler(filters.PHOTO | filters.VIDEO | filters.ANIMATION, add_advertisement_media),
         ],
-        NEEDS_TEXT: [MessageHandler(filters.TEXT  & ~filters.Regex(r"/cancel"), add_advertisement_text)],
-        NEEDS_BUTTON: [CommandHandler("skip", skip_button), MessageHandler(filters.TEXT  & ~filters.Regex(r"/cancel"), add_advertisement_button),
+        NEEDS_TEXT: [MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_text)],
+        NEEDS_BUTTON: [CommandHandler("skip", skip_button),
+                       MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_button),
                        ],
         NEEDS_URL: [MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_url)],
         SAVE_ADVERTISEMENT: [CommandHandler("save", save_advertisement)]

@@ -6,7 +6,6 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 import config
-from data import lang
 from data.lang import GERMAN
 
 MSG_REMOVAL_PERIOD = 1200

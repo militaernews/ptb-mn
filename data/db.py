@@ -31,7 +31,7 @@ class Post:
     reply_id: int
     file_type: int
     file_id: str
-    text:str
+    text: str
 
 
 def get_mg(mg_id: str):
@@ -58,6 +58,7 @@ def query_files(meg_id: str) -> [Post]:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
 
+
 def query_replies(msg_id: int, lang_key: str):
     try:
         with conn.cursor() as c:
@@ -69,6 +70,7 @@ def query_replies(msg_id: int, lang_key: str):
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
+
 
 def query_replies2(post_id: int, lang_key: str):
     try:
@@ -84,6 +86,7 @@ def query_replies2(post_id: int, lang_key: str):
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
+
 
 def get_post_id(msg: Message):
     if msg.reply_to_message is None:
@@ -101,6 +104,7 @@ def get_post_id(msg: Message):
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
 
+
 def get_post_id2(msg_id: int):
     try:
         with conn.cursor() as c:
@@ -114,6 +118,7 @@ def get_post_id2(msg_id: int):
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
+
 
 def query_replies3(post_id: int, lang_key: str):
     try:
@@ -130,6 +135,7 @@ def query_replies3(post_id: int, lang_key: str):
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
+
 
 def query_replies4(msg: Message, lang_key: str):
     if msg.reply_to_message is None:
@@ -151,6 +157,7 @@ def query_replies4(msg: Message, lang_key: str):
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
 
+
 def get_msg_id(msg_id: int, lang_key: str):
     try:
         with conn.cursor() as c:
@@ -168,6 +175,7 @@ def get_msg_id(msg_id: int, lang_key: str):
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
+
 
 def get_file_id(msg_id: int):
     try:
@@ -187,6 +195,7 @@ def get_file_id(msg_id: int):
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
 
+
 def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
     try:
         with conn.cursor() as c:
@@ -205,6 +214,7 @@ def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
+
 
 def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
     if len(msg.photo) != 0:
@@ -237,6 +247,7 @@ def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
+
 
 def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None,
                    lang_key: str = GERMAN.lang_key, post_id: int = None):  # text=??
@@ -310,7 +321,8 @@ def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_ty
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
 
-def insert_promo(user_id:int,lang:str,promo_id:int):
+
+def insert_promo(user_id: int, lang: str, promo_id: int):
     try:
         insertable = (user_id, lang, promo_id)
         logging.info(f">> Insert: {insertable}", )

@@ -12,10 +12,10 @@ from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
-    loss, peace, bias, ref, bot, mimimi, cia, stats
+    loss, peace, bias, ref, bot, mimimi, cia, stats, duden
 from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
-from messages.news.common import edit_channel, post_channel_english, test_del
+from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info, advertisement
 from messages.news.text import edit_channel_text, post_channel_text
 from messages.private.advertise import add_advertisement_handler
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     app = (ApplicationBuilder().token(TOKEN)
            .defaults(Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True))
            .persistence(PicklePersistence(filepath="persistence"))
-           #.read_timeout(20).get_updates_read_timeout(20)
+           # .read_timeout(20).get_updates_read_timeout(20)
            .build())
 
     app.add_handler(CommandHandler("bingo", bingo_field, filters.User(BINGO_ADMINS)))
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     app.add_handler(add_advertisement_handler)
 
     app.add_handler(MessageHandler(filters.Regex(r"\/start promo_\w{2}(_\d+)?"), start_promo))
-    app.add_handler(CallbackQueryHandler(verify_promo, r"promo_\w{2}(_\d+)?" ))
+    app.add_handler(CallbackQueryHandler(verify_promo, r"promo_\w{2}(_\d+)?"))
     app.add_handler(CommandHandler("promo", send_promos, filters.Chat(ADMINS)))
 
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
@@ -92,6 +92,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("bot", bot))
     app.add_handler(CommandHandler("mimimi", mimimi))
     app.add_handler(CommandHandler("cia", cia))
+    app.add_handler(CommandHandler("duden", duden))
     app.add_handler(MessageHandler(filters.Regex("/ref.*"), ref))
 
     # app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))

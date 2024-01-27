@@ -18,10 +18,8 @@ access_token = os.getenv("ACCESS_KEY")
 access_secret = os.getenv("ACCESS_SECRET")
 bearer = os.getenv("BEARER")
 
-
-
 client = tweepy.Client(
-consumer_key=consumer_key,
+    consumer_key=consumer_key,
     consumer_secret=consumer_secret,
     access_token=access_token,
     access_token_secret=access_secret,
@@ -44,10 +42,10 @@ def tweet_text(text: str):
         client.create_tweet(text=text)  # This requires read & write app permissions also elevated access type.
 
 
-async def tweet_file(text: str, file: telegram.File ):
+async def tweet_file(text: str, file: telegram.File):
     if len(text) <= TWEET_LENGTH:
         path = file.file_path.split('/')[-1]
-        logging.info(f"file to download:::: {str(path)}" )
+        logging.info(f"file to download:::: {str(path)}")
         await file.download_to_drive(path)
         logging.info("-- download done")
         # todo: can also quote tweet here.. is that an option?
@@ -60,12 +58,10 @@ async def tweet_file(text: str, file: telegram.File ):
                 media_ids.append(res.media_id)
 
             # Tweet with multiple images
-            client.create_tweet(text=text,media_ids=media_ids)
+            client.create_tweet(text=text, media_ids=media_ids)
         except Exception as e:
             logging.info(f"⚠️ Error when trying to post single file to twitter: {e}")
             pass
-
-
 
         os.remove(path)
 
@@ -74,7 +70,7 @@ async def tweet_file_3(text: str, path: str):
     if len(text) <= TWEET_LENGTH:
         # todo: can also quote tweet here.. is that an option?
         media_id = api.media_upload(path)
-        client.create_tweet(text=text,media_ids=[media_id.media_id])
+        client.create_tweet(text=text, media_ids=[media_id.media_id])
 
 
 async def tweet_file_2(update: Update, context: CallbackContext):
@@ -85,8 +81,8 @@ async def tweet_files_2(update: Update, context: CallbackContext):
     logging.info("---")
 
 
-async def tweet_files(context:CallbackContext, text: str, posts: [Post]):
-    if len(text) <= TWEET_LENGTH: #todo: just cut text to length
+async def tweet_files(context: CallbackContext, text: str, posts: [Post]):
+    if len(text) <= TWEET_LENGTH:  # todo: just cut text to length
         upload_files = list()
         for post in posts:
             file = await context.bot.get_file(post.file_id)
@@ -98,7 +94,6 @@ async def tweet_files(context:CallbackContext, text: str, posts: [Post]):
 
         try:
 
-
             media_ids = []
             for filename in upload_files:
                 res = api.media_upload(filename)
@@ -106,10 +101,10 @@ async def tweet_files(context:CallbackContext, text: str, posts: [Post]):
                 media_ids.append(res.media_id)
 
             # Tweet with multiple images
-            client.create_tweet(text=text,media_ids=media_ids)
+            client.create_tweet(text=text, media_ids=media_ids)
         except Exception as e:
             logging.info(f"⚠️ Error when trying to post multiple files to twitter: {e}")
             pass
 
-        for path in upload_files: #better use OS unlink path
+        for path in upload_files:  # better use OS unlink path
             os.remove(path)

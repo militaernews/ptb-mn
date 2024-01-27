@@ -78,7 +78,8 @@ async def set_cmd(update: Update, context: CallbackContext):
     user_id = update.message.forward_from.id  # replace this with user id number, if you already know it
     logging.info(update.message.forward_from, update.message)
 
-    check =await context.bot.getChatMember(data.lang.GERMAN.channel_id, user_id)  # check if the user exist in the target group
+    check = await context.bot.getChatMember(data.lang.GERMAN.channel_id,
+                                            user_id)  # check if the user exist in the target group
     logging.info(check)
 
     if check:  # If check variable isn't null, user is in the group
@@ -94,7 +95,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("loss", "Materialverluste in der Ukraine"),
         ("donbas", "14.000 Zivilisten im Donbas"),
         ("stats", "Statistiken"),
-        ("short", "Abkürzungsverzeichnis"),
+        ("short", "Abkürzungen"),
         ("peace", "Russische Kriege"),
         ("bias", "Ist MN neutral?"),
         ("genozid", "Kein Genozid der Ukrainer im Donbas"),
@@ -102,7 +103,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("bot", "für Trolle"),
         ("cia", "Wahrheit über Putin"),
         ("mimimi", "Wenn einer mal wieder heult"),
-
+        ("duden", "Deutsch. Setzen. Sechs."),
     ]
 
     await context.bot.set_my_commands(chat_de_commands)
@@ -115,7 +116,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("reset_bingo", "Neue Bingo-Runde")
     ], scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))
 
-    admin_commands =  [
+    admin_commands = [
         ("add_advertisement", "Werbung erstellen"),
     ]
     for chat_id in config.ADMINS:

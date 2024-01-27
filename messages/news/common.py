@@ -6,7 +6,7 @@ from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       Update)
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
-from pysbd import Segmenter
+
 import config
 import twitter
 from data.db import insert_single3, insert_single2, query_replies3, \
@@ -36,7 +36,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
                 caption=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 reply_to_message_id=reply_id
             )
-            logging.info(f"---------- MSG ID ::::::::: { msg_id}")
+            logging.info(f"---------- MSG ID ::::::::: {msg_id}")
             insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key, post_id=de_post_id)
 
         except Exception as e:
@@ -66,10 +66,9 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
 
         # todo: upload photo aswell
 
-
         await twitter.tweet_file(segment_text(
-            flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "",update.channel_post.caption))) ,
-                                                await get_file(update))
+            flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "", update.channel_post.caption))),
+            await get_file(update))
         logging.info(f"-")
     except Exception as e:
         await context.bot.send_message(
@@ -122,8 +121,6 @@ async def post_channel_english(update: Update, context: CallbackContext):
     )
 
 
-
-
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
     posts = sorted(query_files(context.job.name), key=lambda x: x.msg_id)
@@ -137,11 +134,11 @@ async def share_in_other_channels(context: CallbackContext):
         logging.info(post)
 
         if original_caption is None and post.text is not None:
-            if len(re.findall(GERMAN.footer,post.text)) == 0:
+            if len(re.findall(GERMAN.footer, post.text)) == 0:
                 original_caption = post.text
             else:
-                #todo: make it actually filter out footer
-                original_caption =  re.sub(f"\s*({HASHTAG})*\s*{GERMAN.footer}", "",post.text)
+                # todo: make it actually filter out footer
+                original_caption = re.sub(f"\s*({HASHTAG})*\s*{GERMAN.footer}", "", post.text)
 
         if post.file_type == PHOTO:
             files.append(InputMediaPhoto(post.file_id))
@@ -152,11 +149,11 @@ async def share_in_other_channels(context: CallbackContext):
 
     logging.info("::::::::::: share in other ::::::::::")
     post_id = get_post_id2(context.job.data)  ## not medigroupid??
-    logging.info(f"------------------------------------------- post_id: {post_id}" )
+    logging.info(f"------------------------------------------- post_id: {post_id}")
 
     for lang in languages:
         caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
-        logging.info(f"caption::::::::::: {caption}" )
+        logging.info(f"caption::::::::::: {caption}")
         with files[0]._unfrozen():
             files[0].caption = caption
 
@@ -186,7 +183,7 @@ async def share_in_other_channels(context: CallbackContext):
     logging.info("----- done -----")
 
     await twitter.tweet_files(context,
-                              segment_text(flag_to_hashtag(re.sub(PATTERN_HTMLTAG , "",original_caption))),
+                              segment_text(flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "", original_caption))),
                               posts)
 
 
@@ -250,7 +247,7 @@ async def edit_channel(update: Update, context: CallbackContext):
 
         if file_id != new_file.file_id and GERMAN.breaking not in original_caption:
             try:
-                logging.info(  f"- edit file -------------------------------------------------- {input_media}"   )
+                logging.info(f"- edit file -------------------------------------------------- {input_media}")
                 msg = await context.bot.edit_message_media(
                     input_media,
                     chat_id=lang.channel_id,
@@ -293,8 +290,10 @@ async def edit_channel(update: Update, context: CallbackContext):
             )
             pass
 
+
 async def test_del(update: Update, context: CallbackContext):
     logging.info(f"UP test del: {update}")
+
 
 async def handle_url(update: Update, context: CallbackContext):
     if update.channel_post.caption is not None:
@@ -338,4 +337,3 @@ async def handle_url(update: Update, context: CallbackContext):
     logging.info(text)
 
     await context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
-

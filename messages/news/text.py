@@ -48,9 +48,9 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
     try:
 
-       if len(re.findall(FLAG_EMOJI, text_ger)) == 0:
-           text_ger+=GERMAN.footer
-       await update.channel_post.edit_text(text_ger)
+        if len(re.findall(FLAG_EMOJI, text_ger)) == 0:
+            text_ger += GERMAN.footer
+        await update.channel_post.edit_text(text_ger)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await context.bot.send_message(
@@ -62,7 +62,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
     try:
         logging.info("tweet")
-    #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
+        #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
         twitter.tweet_text(segment_text(text_ger))
     except Exception as e:
         await context.bot.send_message(
@@ -73,8 +73,6 @@ async def post_channel_text(update: Update, context: CallbackContext):
         pass
 
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
-
-
 
 
 async def edit_channel_text(update: Update, context: CallbackContext):

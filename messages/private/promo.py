@@ -66,9 +66,9 @@ async def start_promo(update: Update, context: CallbackContext):
     data = update.message.text.split(" ")[1].split("_")[1:]
 
     cb_data = fr"promo_{data[0]}"
-    promo_id=0
+    promo_id = 0
     if len(data) == 2:
-        promo_id=int(data[1])
+        promo_id = int(data[1])
         if int(data[1]) == update.message.from_user.id:
             return await update.message.reply_text(get_text(update, "own"))
 
@@ -80,14 +80,14 @@ async def start_promo(update: Update, context: CallbackContext):
 
         text = get_text(update, "done")
 
-        res = insert_promo(update.message.from_user.id, data[0],promo_id )
+        res = insert_promo(update.message.from_user.id, data[0], promo_id)
         if res is not None:
-            return await update.message.reply_text(  "\n".join(get_text(update, "already") .split("\n")[2:]),
-            reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                get_text(update, "share"),
-                url=f"{payload}{update.message.from_user.id}"
-            ))
-            )
+            return await update.message.reply_text("\n".join(get_text(update, "already").split("\n")[2:]),
+                                                   reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+                                                       get_text(update, "share"),
+                                                       url=f"{payload}{update.message.from_user.id}"
+                                                   ))
+                                                   )
 
         if len(data) == 2:
             try:
@@ -131,7 +131,7 @@ async def verify_promo(update: Update, context: CallbackContext):
         else:
             promo_id = None
 
-        res = insert_promo(update.callback_query.from_user.id,data[0], promo_id)
+        res = insert_promo(update.callback_query.from_user.id, data[0], promo_id)
 
         payload = get_text(update, "payload") + f"{data[0]}_"
 
