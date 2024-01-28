@@ -1,13 +1,10 @@
 import logging
 import random
-from random import randint
-from typing import Final
+from typing import Final, Optional, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
-from telegram import InlineKeyboardButton, Update, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, Update, InlineKeyboardMarkup, ChatMemberUpdated, ChatMember
 from telegram.ext import CallbackContext
-
-import config
 
 from data.lang import GERMAN
 from util.helper import MSG_REMOVAL_PERIOD
@@ -114,7 +111,51 @@ def create_keyboard(context: CallbackContext):
     return keyboard
 
 
+def extract_status_change(chat_member_update: ChatMemberUpdated) -> Optional[Tuple[bool, bool]]:
+    """Takes a ChatMemberUpdated instance and extracts whether the 'old_chat_member' was a member of the chat and whether the 'new_chat_member' is a member of the chat. Returns None, if the status didn't change.
+    """
+
+    status_change = chat_member_update.difference().get("status")
+    old_is_member, new_is_member = chat_member_update.difference().get("is_member", (None, None))
+
+    if status_change is None:
+        return None
+
+    old_status, new_status = status_change
+
+    was_member = old_status in [
+        ChatMember.MEMBER,
+        ChatMember.OWNER,
+        ChatMember.ADMINISTRATOR,
+    ] or (old_status == ChatMember.RESTRICTED and old_is_member is True)
+
+    is_member = new_status in [
+        ChatMember.MEMBER,
+        ChatMember.OWNER,
+        ChatMember.ADMINISTRATOR,
+    ] or (new_status == ChatMember.RESTRICTED and new_is_member is True)
+
+    return was_member, is_member
+
+
 async def send_captcha(update: Update, context: CallbackContext):
+    if update.effective_chat.id != GERMAN.chat_id:
+        return
+
+    result = extract_status_change(update.chat_member)
+    if result is None:
+        return
+
+    was_member, is_member = result
+    cause_name = update.chat_member.from_user.mention_html()
+    member_name = update.chat_member.new_chat_member.user.mention_html()
+
+    if not was_member and is_member:
+        await update.effective_chat.send_message(
+            f"{member_name} was added by {cause_name}. Welcome!", )
+    else:
+        return
+
     answer, captcha = generate_captcha(update.chat_join_request.from_user.id)
     random.shuffle(supported_emojis)
 
@@ -124,6 +165,7 @@ async def send_captcha(update: Update, context: CallbackContext):
             break
         if em not in options:
             options.append(em)
+
     random.shuffle(options)
 
     state = []

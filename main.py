@@ -5,7 +5,7 @@ from datetime import datetime
 
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
-    CallbackQueryHandler, ChatJoinRequestHandler
+    CallbackQueryHandler, ChatJoinRequestHandler, ChatMemberHandler
 
 from config import TOKEN, CHANNEL_MEME, ADMINS, BINGO_ADMINS
 from data.lang import GERMAN
@@ -106,7 +106,8 @@ if __name__ == "__main__":
         filter_message))
 
     app.add_handler(CallbackQueryHandler(click_captcha, r"captcha_.+_.+", ))
-    app.add_handler(ChatJoinRequestHandler(callback=send_captcha, chat_id=GERMAN.chat_id, block=False))
+    app.add_handler(ChatMemberHandler(send_captcha, ChatMemberHandler.CHAT_MEMBER))
+    app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))
     app.add_handler(CommandHandler("captcha", send_captcha, filters.Chat(ADMINS)))
 
     app.add_handler(MessageHandler(

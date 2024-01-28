@@ -74,19 +74,6 @@ async def repair_saved_post(update: Update, context: CallbackContext):
 
 
 async def set_cmd(update: Update, context: CallbackContext):
-    group_chat_id = update.message.chat.id  # replace this with group id number, if you already know it
-    user_id = update.message.forward_from.id  # replace this with user id number, if you already know it
-    logging.info(update.message.forward_from, update.message)
-
-    check = await context.bot.getChatMember(data.lang.GERMAN.channel_id,
-                                            user_id)  # check if the user exist in the target group
-    logging.info(check)
-
-    if check:  # If check variable isn't null, user is in the group
-        logging.info('user is in the chat')
-    else:
-        logging.info('Not found')
-
     await context.bot.delete_my_commands()
 
     chat_de_commands = [
@@ -105,7 +92,6 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("mimimi", "Wenn einer mal wieder heult"),
         ("duden", "Deutsch. Setzen. Sechs."),
     ]
-
     await context.bot.set_my_commands(chat_de_commands)
 
     await context.bot.set_my_commands(chat_de_commands + [
