@@ -8,7 +8,7 @@ import config
 import twitter
 from data.db import insert_single2
 from data.lang import GERMAN, languages
-from util.regex import BREAKING, PATTERN_HTMLTAG
+from util.patterns import BREAKING, PATTERN_HTMLTAG
 from util.translation import translate_message, flag_to_hashtag, translate, segment_text
 
 

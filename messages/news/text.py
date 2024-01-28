@@ -12,7 +12,7 @@ from data.db import query_replies, insert_single2, update_text, get_msg_id
 from data.lang import languages, GERMAN
 from messages.news.common import handle_url
 from util.helper import sanitize_text
-from util.regex import WHITESPACE, HASHTAG, FLAG_EMOJI
+from util.patterns import WHITESPACE, HASHTAG, FLAG_EMOJI
 from util.translation import translate_message, flag_to_hashtag, segment_text
 
 

@@ -14,7 +14,7 @@ from data.db import insert_single3, insert_single2, query_replies3, \
     update_post, Post
 from data.lang import GERMAN, languages
 from util.helper import get_file
-from util.regex import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
+from util.patterns import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
 from util.translation import flag_to_hashtag, translate_message, segment_text
 
 

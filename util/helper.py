@@ -1,5 +1,6 @@
 import logging
 import re
+from typing import Final
 
 from telegram import Update
 from telegram.error import TelegramError
@@ -8,9 +9,9 @@ from telegram.ext import CallbackContext
 import config
 from data.lang import GERMAN
 
-MSG_REMOVAL_PERIOD = 1200
-CHAT_ID = "chat_id"
-MSG_ID = "msg_id"
+MSG_REMOVAL_PERIOD: Final[int] = 1200
+CHAT_ID: Final[str] = "chat_id"
+MSG_ID: Final[str] = "msg_id"
 
 
 def get_replies(bot_data, msg_id: str):
