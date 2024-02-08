@@ -163,7 +163,7 @@ def generate_bingo_field():
         for entry in list(d2.items())[x:x + field_size]:
             #     logging.info("ENTRY >>>>>>>>> ", entry, entry[0])
             if entry[1] is None:
-                regex = entry[0]
+                regex = entry[0].replace("_","")
             else:
                 regex = entry[1]
 
@@ -326,7 +326,7 @@ async def handle_bingo(update: Update, context: CallbackContext):
             text = '<b>Treffer! 🥳</b>\n\n'
 
             for index, word in enumerate(found):
-                text += f'\"{word}\"'
+                text += f"{word.replace('_','')}"
 
                 if index == found_amount - 1:
                     if found_amount == 1:

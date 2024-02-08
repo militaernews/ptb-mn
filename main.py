@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     app.add_handler(CallbackQueryHandler(click_captcha, r"captcha_.+_.+", ))
     app.add_handler(ChatMemberHandler(send_captcha, ChatMemberHandler.CHAT_MEMBER))
-    app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))
+  #  app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))
     app.add_handler(CommandHandler("captcha", send_captcha, filters.Chat(ADMINS)))
 
     app.add_handler(MessageHandler(

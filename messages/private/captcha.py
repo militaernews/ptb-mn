@@ -139,12 +139,15 @@ def extract_status_change(chat_member_update: ChatMemberUpdated) -> Optional[Tup
 
 
 async def send_captcha(update: Update, context: CallbackContext):
+    logging.info(f"update :: {update }")
     if update.effective_chat.id != GERMAN.chat_id:
         return
 
     result = extract_status_change(update.chat_member)
     if result is None:
         return
+
+    logging.info(f"result :: {result }")
 
     was_member, is_member = result
     cause_name = update.chat_member.from_user.mention_html()

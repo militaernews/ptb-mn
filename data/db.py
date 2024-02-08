@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 conn = psycopg2.connect(DATABASE_URL, cursor_factory=NamedTupleCursor)
 
 
+
 def key_exists(context: CallbackContext, key: int) -> bool:
     return key in context.bot_data().keys()
 

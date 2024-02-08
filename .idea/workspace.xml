@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fixes">
+    <list default="true" id="0e3bc151-4b3f-43cb-9bde-32d5999f0397" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/news/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/news/text.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/chat/bingo.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/chat/bingo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messages/private/captcha.py" beforeDir="false" afterPath="$PROJECT_DIR$/messages/private/captcha.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/patterns.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/patterns.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +39,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;PXNX&quot;
+  }
+}</component>
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
+  ]
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/PXNX/ptb-mn.git&quot;,
+    &quot;accountId&quot;: &quot;102ebce7-3d56-4bd2-a9e6-226b1086130e&quot;
+  }
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -62,6 +81,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Pentex/PycharmProjects/ptb-mn/res/pt/promo&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -220,7 +240,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
+        <option value="bundled-python-sdk-ec5d06899ebc-746f403e7f0c-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.11761.13" />
       </set>
     </attachedChunks>
   </component>
@@ -665,7 +685,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687613781721</updated>
     </task>
-    <option name="localTasksCounter" value="161" />
+    <option name="localTasksCounter" value="162" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -706,9 +726,9 @@
     <MESSAGE value="added promo" />
     <MESSAGE value="promo with img" />
     <MESSAGE value="promo translations" />
-    <MESSAGE value="fix" />
     <MESSAGE value="added AR, some fixes" />
     <MESSAGE value="fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixes" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>
