@@ -37,7 +37,8 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
                 reply_to_message_id=reply_id
             )
             logging.info(f"---------- MSG ID ::::::::: {msg_id}")
-            await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key, post_id=de_post_id)
+            await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
+                                 post_id=de_post_id)
 
         except Exception as e:
             await context.bot.send_message(
@@ -148,7 +149,7 @@ async def share_in_other_channels(context: CallbackContext):
             files.append(InputMediaAnimation(post.file_id))
 
     logging.info("::::::::::: share in other ::::::::::")
-    post_id = await get_post_id2(context.job.data)  ## not medigroupid??
+    post_id = await get_post_id2(context.job.data)  # not mediagroupid??
     logging.info(f"------------------------------------------- post_id: {post_id}")
 
     for lang in languages:
@@ -171,7 +172,7 @@ async def share_in_other_channels(context: CallbackContext):
 
             for index, msg in enumerate(msgs):
                 await insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
-                               post_id=posts[index].post_id)
+                                     post_id=posts[index].post_id)
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
@@ -325,15 +326,12 @@ async def handle_url(update: Update, context: CallbackContext):
 
     for entity, content in entities.items():
         logging.info(entity)
+        text += f"\n\n· "
         if entity.type == "text_link":
-            quelle = f"<a href='{entity.url}'>{content}</a>"
+            text += f"<a href='{entity.url}'>{content}</a>"
         else:
-            quelle = content
-
-        text += f"\n\n· {quelle}"
+            text += content
 
     text += f"\n{GERMAN.footer}"
-
     logging.info(text)
-
     await context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
