@@ -26,7 +26,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     for lang in languages:
         logging.info(lang)
 
-        reply_id = query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
+        reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
         logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
 
         try:
@@ -37,7 +37,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
                 reply_to_message_id=reply_id
             )
             logging.info(f"---------- MSG ID ::::::::: {msg_id}")
-            insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key, post_id=de_post_id)
+            await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key, post_id=de_post_id)
 
         except Exception as e:
             await context.bot.send_message(
@@ -138,7 +138,7 @@ async def share_in_other_channels(context: CallbackContext):
                 original_caption = post.text
             else:
                 # todo: make it actually filter out footer
-                original_caption = re.sub(f"\s*({HASHTAG})*\s*{GERMAN.footer}", "", post.text)
+                original_caption = re.sub(fr"\s*({HASHTAG})*\s*{GERMAN.footer}", "", post.text)
 
         if post.file_type == PHOTO:
             files.append(InputMediaPhoto(post.file_id))
@@ -148,7 +148,7 @@ async def share_in_other_channels(context: CallbackContext):
             files.append(InputMediaAnimation(post.file_id))
 
     logging.info("::::::::::: share in other ::::::::::")
-    post_id = get_post_id2(context.job.data)  ## not medigroupid??
+    post_id = await get_post_id2(context.job.data)  ## not medigroupid??
     logging.info(f"------------------------------------------- post_id: {post_id}")
 
     for lang in languages:
@@ -157,7 +157,7 @@ async def share_in_other_channels(context: CallbackContext):
         with files[0]._unfrozen():
             files[0].caption = caption
 
-        reply_id = query_replies3(posts[0].msg_id, lang.lang_key)
+        reply_id = await query_replies3(posts[0].msg_id, lang.lang_key)
         logging.info(f"------------------------------------------- reply_id: {reply_id}")
 
         try:
@@ -170,7 +170,7 @@ async def share_in_other_channels(context: CallbackContext):
             logging.info(msgs)
 
             for index, msg in enumerate(msgs):
-                insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
+                await insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
                                post_id=posts[index].post_id)
         except Exception as e:
             await context.bot.send_message(
@@ -218,7 +218,7 @@ async def edit_channel(update: Update, context: CallbackContext):
 
     for lang in languages:
         msg = None
-        msg_id = get_msg_id(update.edited_channel_post.id, lang.lang_key)
+        msg_id = await get_msg_id(update.edited_channel_post.id, lang.lang_key)
 
         try:
             if original_caption is not None:
@@ -265,7 +265,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                     pass
 
         if msg is not None:
-            update_post(msg, lang.lang_key)
+            await update_post(msg, lang.lang_key)
 
     try:
         # not sure if this will cause eternal triggering, hopefully not
@@ -277,7 +277,7 @@ async def edit_channel(update: Update, context: CallbackContext):
         if "#" not in update.edited_channel_post.caption:
             await update.edited_channel_post.edit_caption(text + GERMAN.footer)
 
-        update_post(update.edited_channel_post)
+        await update_post(update.edited_channel_post)
 
         # todo: update text in db
     except TelegramError as e:
@@ -291,7 +291,7 @@ async def edit_channel(update: Update, context: CallbackContext):
             pass
 
 
-async def test_del(update: Update, context: CallbackContext):
+async def test_del(update: Update, _: CallbackContext):
     logging.info(f"UP test del: {update}")
 
 

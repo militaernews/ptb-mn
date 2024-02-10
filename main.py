@@ -3,6 +3,7 @@ import os
 import re
 from datetime import datetime
 
+from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
     CallbackQueryHandler, ChatJoinRequestHandler, ChatMemberHandler
@@ -10,10 +11,10 @@ from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, 
 from config import TOKEN, CHANNEL_MEME, ADMINS, BINGO_ADMINS
 from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
-from messages.chat.bingo import bingo_field, reset_bingo
+#from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
     loss, peace, bias, ref, bot, mimimi, cia, stats, duden
-from messages.chat.filter import filter_message, handle_other_chats
+#from messages.chat.filter import filter_message, handle_other_chats
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info, advertisement
@@ -35,14 +36,14 @@ logging.basicConfig(
 
 if __name__ == "__main__":
     app = (ApplicationBuilder().token(TOKEN)
-           .defaults(Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True))
+           .defaults(Defaults(parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)))
            .persistence(PicklePersistence(filepath="persistence"))
            # .read_timeout(20).get_updates_read_timeout(20)
            .build())
 
-    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(BINGO_ADMINS)))
+   ## app.add_handler(CommandHandler("bingo", bingo_field, filters.User(BINGO_ADMINS)))
     #  app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
-    app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))
+  ##  app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))
     app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
 
     app.add_handler(add_advertisement_handler)
@@ -101,20 +102,20 @@ if __name__ == "__main__":
     # app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
 
-    app.add_handler(MessageHandler(
-        filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
-        filter_message))
+  ##  app.add_handler(MessageHandler(
+     ##   filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
+     ##   filter_message))
 
     app.add_handler(CallbackQueryHandler(click_captcha, r"captcha_.+_.+", ))
     app.add_handler(ChatMemberHandler(send_captcha, ChatMemberHandler.CHAT_MEMBER))
   #  app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))
     app.add_handler(CommandHandler("captcha", send_captcha, filters.Chat(ADMINS)))
 
-    app.add_handler(MessageHandler(
-        filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat([
-            -1001618190222,  # Ukraine Russland Krieg Chat
-            -1001755040391  # Vitaliks Fanclub
-        ]), handle_other_chats))
+  ##  app.add_handler(MessageHandler(
+  ##      filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat([
+      ##      -1001618190222,  # Ukraine Russland Krieg Chat
+    ##        -1001755040391  # Vitaliks Fanclub
+     ##   ]), handle_other_chats))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace

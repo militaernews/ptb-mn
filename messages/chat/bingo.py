@@ -326,7 +326,7 @@ async def handle_bingo(update: Update, context: CallbackContext):
             text = '<b>Treffer! 🥳</b>\n\n'
 
             for index, word in enumerate(found):
-                text += f"{word.replace('_','')}"
+                text += f"\"{word.replace('_','')}\""
 
                 if index == found_amount - 1:
                     if found_amount == 1:

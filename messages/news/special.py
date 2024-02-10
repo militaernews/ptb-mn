@@ -26,7 +26,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             photo=open(breaking_photo_path, "rb"),
             caption=f"{formatted_text}{GERMAN.footer}",
         )
-        insert_single2(msg_de)
+        await insert_single2(msg_de)
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
@@ -43,7 +43,7 @@ async def breaking_news(update: Update, context: CallbackContext):
                 photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
                 caption=f"#{lang.breaking} 🚨\n\n{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}",
             )
-            insert_single2(msg, lang.lang_key)
+            await insert_single2(msg, lang.lang_key)
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
@@ -82,7 +82,7 @@ async def announcement(update: Update, context: CallbackContext):
             photo=open("res/announce/mn-announce-de.png", "rb"),
             caption="#MITTEILUNG" + text,
         )
-        insert_single2(msg_de)
+        await insert_single2(msg_de)
         await msg_de.pin()
 
     except Exception as e:
@@ -102,7 +102,7 @@ async def announcement(update: Update, context: CallbackContext):
                 caption=f"#{lang.announce}{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}",
 
             )
-            insert_single2(msg, lang.lang_key)
+            await insert_single2(msg, lang.lang_key)
             await msg.pin()
         except Exception as e:
             await context.bot.send_message(
@@ -127,7 +127,7 @@ async def advertisement(update: Update, context: CallbackContext):
             text=f"#{GERMAN.advertise}\n\n{text}",
             disable_web_page_preview=False
         )
-        insert_single2(msg_de)
+        await insert_single2(msg_de)
         await msg_de.pin()
 
     except Exception as e:
@@ -146,7 +146,7 @@ async def advertisement(update: Update, context: CallbackContext):
                 text=f"#{lang.advertise}\n\n{await translate(lang.lang_key, text, lang.lang_key_deepl)}",
                 disable_web_page_preview=False
             )
-            insert_single2(msg, lang.lang_key)
+            await insert_single2(msg, lang.lang_key)
             await msg.pin()
         except Exception as e:
             await context.bot.send_message(

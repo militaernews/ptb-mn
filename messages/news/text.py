@@ -19,7 +19,7 @@ from util.translation import translate_message, flag_to_hashtag, segment_text
 async def post_channel_text(update: Update, context: CallbackContext):
     original_caption = sanitize_text(update.channel_post.text_html_urled)
 
-    insert_single2(update.channel_post)
+    await insert_single2(update.channel_post)
 
     logging.info(f"orignal caption:::::::::: {original_caption}", )
 
@@ -28,7 +28,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
     for lang in languages:
         #   logging.info(flang)
 
-        reply_id = query_replies(update.channel_post.message_id, lang.lang_key)
+        reply_id = await query_replies(update.channel_post.message_id, lang.lang_key)
 
         try:
             msg: Message = await context.bot.send_message(
@@ -36,7 +36,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
                 text=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
                 reply_to_message_id=reply_id
             )
-            insert_single2(msg, lang.lang_key)
+            await insert_single2(msg, lang.lang_key)
         ##  logging.info(flang.lang_key)
         except Exception as e:
             await context.bot.send_message(
@@ -86,21 +86,21 @@ async def edit_channel_text(update: Update, context: CallbackContext):
         ),
     )
 
-    update_text(update.edited_channel_post.id, f"{original_caption}\n{GERMAN.footer}")
+    await update_text(update.edited_channel_post.id, f"{original_caption}\n{GERMAN.footer}")
 
     logging.info(f"orignal caption:::::::::: {original_caption}", )
 
     for lang in languages:
         try:
             translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
-            msg_id = get_msg_id(update.edited_channel_post.id, lang.lang_key)
+            msg_id = await get_msg_id(update.edited_channel_post.id, lang.lang_key)
             await context.bot.edit_message_text(
                 text=translated_text,
                 chat_id=lang.channel_id,
                 message_id=msg_id
             )
 
-            update_text(msg_id, translated_text, lang.lang_key)
+            await update_text(msg_id, translated_text, lang.lang_key)
         except TelegramError as e:
             if not e.message.startswith("Message is not modified"):
                 await context.bot.send_message(
