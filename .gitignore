@@ -139,6 +139,7 @@ dmypy.json
 cython_debug/
 
 logs
+bingo.svg
 field.png
 persistence
 file_*.*

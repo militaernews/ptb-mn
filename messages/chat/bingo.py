@@ -3,8 +3,7 @@ import logging
 import random
 import re
 from typing import List, Union, Dict
-
-import cairosvg
+import pyvips
 import numpy as numpy
 from dotenv import load_dotenv
 from telegram import Update
@@ -222,10 +221,13 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
        height='{all_height}'
        viewBox='0 0 {all_width} {all_height}'
        version='1.1'
+       fill='#00231e'
        xmlns='http://www.w3.org/2000/svg'
        xmlns:svg='http://www.w3.org/2000/svg'>
+       
+        <rect width="100%" height="100%"   fill='#00231e'/>
 
-    <text y="{border_distance + 60}" x="50%" font-size="60px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" font-weight="bold" text-anchor="middle">MilitärNews-Bingo</tspan></text>
+    <text y="{border_distance + 60}" x="50%" font-size="60px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" font-weight="bold" text-anchor="middle">Militär-News-Bingo</tspan></text>
     """
 
     line_width = 2
@@ -297,7 +299,10 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
 
     # logging.info(svg)
 
-    cairosvg.svg2png(bytestring=svg, write_to='field.png', background_color="#00231e")
+    with open("bingo.svg", "w",encoding="UTF-8") as f:
+        f.write(svg)
+    image = pyvips.Image.new_from_file("bingo.svg", dpi=100)
+    image.write_to_file('field.png')
 
 
 async def handle_bingo(update: Update, context: CallbackContext):

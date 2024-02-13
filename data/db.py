@@ -50,7 +50,7 @@ async def query_files(meg_id: str) -> [Post]:
         async with aiopg.connect(DATABASE_URL, cursor_factory=NamedTupleCursor) as conn:
             async with conn.cursor() as c:
                 await c.execute("select * from posts p where p.media_group_id = %s and p.lang='de'", [meg_id])
-                res = c.fetchall()
+                res = await c.fetchall()
 
                 logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
 
@@ -216,7 +216,7 @@ async def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
                     "update posts p set text = %s where p.msg_id=%s and p.lang=%s",
                     (text, msg_id, lang_key))
                 res = await  c.fetchone()
-                await conn.commit()
+           
 
                 logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}", )
                 if res is not None:
@@ -255,7 +255,7 @@ async def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
                 await c.execute(
                     "update posts p set file_id = %s, text = %s, file_type = %s where p.msg_id=%s and p.lang=%s",
                     (file_id, text, file_type, msg.id, lang_key))
-                await conn.commit()
+           
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
         pass
@@ -316,7 +316,7 @@ async def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, f
             async with aiopg.connect(DATABASE_URL, cursor_factory=NamedTupleCursor) as conn:
                 async with conn.cursor() as c:
                     await c.execute("select max(p.post_id) from posts p")
-                    post_id = int(c.fetchone()[0] or 0) + 1
+                    post_id = int((await c.fetchone())[0] or 0) + 1
 
         insertable = (post_id, msg_id, meg_id, reply_id, file_type, file_id, lang_key, text)
         logging.info(f">> Insert: {insertable}", )
@@ -328,7 +328,7 @@ async def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, f
                     insertable)
                 res = (await  c.fetchone()).post_id
 
-            await conn.commit()
+       
 
             logging.info(f">> Result: post_id = {res}", )
             return res
@@ -358,7 +358,7 @@ async def insert_promo(user_id: int, lang: str, promo_id: int):
                     insertable)
                 res = (await  c.fetchone()).user_id
 
-            await conn.commit()
+       
 
         logging.info(f">> Result: user_id = {res}", )
         return res
