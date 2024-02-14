@@ -2,7 +2,7 @@ import logging
 from typing import Sequence, Union
 
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSize, Animation, Video
-from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext
+from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext, ContextTypes
 
 from config import ADMINS
 from data import lang
@@ -16,12 +16,12 @@ ADVERTISEMENT_URL = "new_ADVERTISEMENT_URL"
 NEEDS_MEDIA, NEEDS_TEXT, NEEDS_BUTTON, NEEDS_URL, SAVE_ADVERTISEMENT = range(5)
 
 
-async def cancel(update: Update, context: CallbackContext) -> int:
+async def cancel(update: Update, _: CallbackContext) -> int:
     await update.message.reply_text("Werbung verworfen.")
     return ConversationHandler.END
 
 
-async def add_advertisement(update: Update, context: CallbackContext) -> int:
+async def add_advertisement(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.chat_data[ADVERTISEMENT_MEDIA] = None
     context.chat_data[ADVERTISEMENT_TEXT] = None
     context.chat_data[ADVERTISEMENT_BUTTON] = None
@@ -29,10 +29,12 @@ async def add_advertisement(update: Update, context: CallbackContext) -> int:
 
     await update.message.reply_text(
         "Werbung erstellen.\n\nSende mir nun ein Bild oder Video.\n\nWenn du nur einen Text haben möchtest, dann drücke /skip.\n\nDen ganzen Vorgang kannst du mit /cancel abbrechen.")
+    print(update, context.chat_data)
     return NEEDS_MEDIA
 
 
-async def add_advertisement_media(update: Update, context: CallbackContext) -> int:
+async def add_advertisement_media(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    print(update)
     logging.info(update.message.effective_attachment)
 
     context.chat_data[ADVERTISEMENT_MEDIA] = update.message.effective_attachment
@@ -43,7 +45,7 @@ async def add_advertisement_media(update: Update, context: CallbackContext) -> i
     return NEEDS_TEXT
 
 
-async def skip_media(update: Update, context: CallbackContext) -> int:
+async def skip_media(update: Update, _: CallbackContext) -> int:
     await update.message.reply_text(
         "Media hinzufügen übersprungen!\n\nSende mir nun den Text der in der Werbung vorkommen soll.")
 
@@ -167,7 +169,6 @@ cancel_handler = [CommandHandler("cancel", cancel)]
 add_advertisement_handler = ConversationHandler(
     entry_points=[CommandHandler("add_advertisement", add_advertisement, filters=filters.Chat(ADMINS))],
     states={
-
         NEEDS_MEDIA: [
             CommandHandler("skip", skip_media),
             MessageHandler(filters.PHOTO | filters.VIDEO | filters.ANIMATION, add_advertisement_media),

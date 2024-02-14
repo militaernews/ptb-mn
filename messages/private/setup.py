@@ -11,7 +11,7 @@ import data.lang
 from data.lang import languages, GERMAN
 
 
-async def private_setup(update: Update, context: CallbackContext):
+async def repair_json(update: Update, context: CallbackContext):
     """
     Allow adding entries to saved posts.
     """
@@ -22,7 +22,7 @@ async def private_setup(update: Update, context: CallbackContext):
 
 
 async def repair_saved_post(update: Update, context: CallbackContext):
-    filename = await (await update.message.document.get_file()).download()
+    filename = await (await update.message.document.get_file()).download_to_drive()
 
     with open(filename, 'rb') as f:
         content: Dict[str, int] = orjson.loads(f.read())
