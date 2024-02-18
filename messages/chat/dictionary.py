@@ -62,8 +62,7 @@ async def handle_putin_dict(update: Update, context: CallbackContext):
     if len(matches) == 0:
         return
 
-    text = f"☝🏼 Laut der neuen putin'schen Rechtschreibung hast du hier ein paar Fehler gemacht:"
-
+    text = "☝🏼 Laut der neuen putin'schen Rechtschreibung hast du hier ein paar Fehler gemacht:"
     for k, v in matches.items():
         text += f"\n\n❗️ „{k}” muss „{v}” lauten!"
 

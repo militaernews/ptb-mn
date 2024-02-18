@@ -9,9 +9,7 @@ from telegram.ext import CallbackContext
 from data.db import insert_promo
 from data.lang import languages, GERMAN
 
-all_langs = {}
-for l in [GERMAN] + languages:
-    all_langs[l.lang_key] = l
+all_langs = {language.lang_key: language for language in [GERMAN] + languages}
 
 
 def get_text(update: Update, file: str):
@@ -33,7 +31,7 @@ def get_img(update: Update):
     if os.path.exists(path):
         return open(path, "rb")
 
-    return open(f"res/img/mn-tg-promo-en.png", "rb")
+    return open("res/img/mn-tg-promo-en.png", "rb")
 
 
 async def send_promos(update: Update, context: CallbackContext):

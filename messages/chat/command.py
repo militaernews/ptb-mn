@@ -9,11 +9,23 @@ from telegram.helpers import mention_html
 import config
 from util.helper import reply_html, reply_photo
 
+from collections import defaultdict
+
+
+async def is_admin_replying(update: Update, _: CallbackContext):
+    return update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None
+
+
+def manage_warnings(update: Update, context: CallbackContext, increment: int):
+    user_id = update.message.reply_to_message.from_user.id
+    user_data = context.bot_data.setdefault("users", defaultdict(lambda: {"warn": 0}))
+    user_data[user_id]["warn"] = max(0, user_data[user_id]["warn"] + increment)
+    return user_data[user_id]["warn"]
+
 
 async def ban_user(update: Update, context: CallbackContext):
     await update.message.delete()
-
-    if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
+    if await is_admin_replying(update, context):
         logging.info(f"banning {update.message.reply_to_message.from_user.id} !!")
         await context.bot.ban_chat_member(update.message.chat_id, update.message.reply_to_message.from_user.id,
                                           until_date=1)
@@ -23,67 +35,40 @@ async def ban_user(update: Update, context: CallbackContext):
 
 async def unwarn_user(update: Update, context: CallbackContext):
     await update.message.delete()
-
-    if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
+    if await is_admin_replying(update, context):
         logging.info(f"unwarning {update.message.reply_to_message.from_user.id} !!")
-        if "users" not in context.bot_data or update.message.reply_to_message.from_user.id not in context.bot_data[
-            "users"] or "warn" not in context.bot_data["users"][update.message.reply_to_message.from_user.id]:
-            warnings = 0
-            context.bot_data["users"] = {update.message.reply_to_message.from_user.id: {"warn": warnings}}
-
-        else:
-            warnings = context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"]
-
-            if warnings != 0:
-                warnings = warnings - 1
-
-            context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"] = warnings
-
-            await update.message.reply_to_message.reply_text(
-                f"Dem Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde eine Warnung erlassen, womit er nur noch {warnings} von 3 hat.")
+        warnings = manage_warnings(update, context, -1)
+        await update.message.reply_to_message.reply_text(
+            f"Dem Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde eine Warnung erlassen, womit er nur noch {warnings} von 3 hat.")
 
 
 async def warn_user(update: Update, context: CallbackContext):
     await update.message.delete()
-
-    if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
+    if await is_admin_replying(update, context):
         logging.info(f"warning {update.message.reply_to_message.from_user.id} !!")
-        if "users" not in context.bot_data or update.message.reply_to_message.from_user.id not in context.bot_data[
-            "users"] or "warn" not in context.bot_data["users"][update.message.reply_to_message.from_user.id]:
-            warnings = 1
-            context.bot_data["users"] = {update.message.reply_to_message.from_user.id: {"warn": warnings}}
-
-        else:
-            warnings = context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"]
-            if warnings == 3:
-                logging.info(f"banning {update.message.reply_to_message.from_user.id} !!")
-                await context.bot.ban_chat_member(update.message.reply_to_message.chat_id,
-                                                  update.message.reply_to_message.from_user.id, until_date=1)
-                await update.message.reply_to_message.reply_text(
-                    f"Aufgrund wiederholter Verstöße habe ich {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} gebannt.")
-                return
-            else:
-                warnings = warnings + 1
-                context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"] = warnings
-
+        warnings = manage_warnings(update, context, 1)
+        if warnings >= 3:
+            logging.info(f"banning {update.message.reply_to_message.from_user.id} !!")
+            await context.bot.ban_chat_member(update.message.reply_to_message.chat_id,
+                                              update.message.reply_to_message.from_user.id, until_date=1)
+            await update.message.reply_to_message.reply_text(
+                f"Aufgrund wiederholter Verstöße habe ich {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} gebannt.")
+            return
         await update.message.reply_to_message.reply_text(
             f"Wegen Beleidigung hat der Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} die Warnung {warnings} von 3 erhalten.")
 
 
 async def report_user(update: Update, context: CallbackContext):
     await update.message.delete()
-
-    if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None:
+    if await is_admin_replying(update, context):
         logging.info(f"reporting {update.message.reply_to_message.from_user.id} !!")
         r = requests.post(url="http://localhost:8080/reports",
                           json={
                               "user_id": update.message.reply_to_message.from_user.id,
                               "message": update.message.reply_to_message.text_html_urled,
                               "account_id": 1
-                          }
-                          )
+                          })
         logging.info(r)
-
         await update.message.reply_to_message.reply_text(
             f"Der Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde Tartaros-Antispam gemeldet.")
 

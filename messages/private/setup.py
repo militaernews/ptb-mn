@@ -1,3 +1,4 @@
+import contextlib
 import logging
 from typing import Dict
 
@@ -7,7 +8,6 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
 import config
-import data.lang
 from data.lang import languages, GERMAN
 
 
@@ -30,7 +30,9 @@ async def repair_saved_post(update: Update, context: CallbackContext):
 
         for key, value in content.items():
             if type(key) is not str or type(value) is not int:
-                await update.message.reply_text(f"Keys have to be text, values have to be numbers.")
+                await update.message.reply_text(
+                    "Keys have to be text, values have to be numbers."
+                )
                 return
 
         if "de" not in content.keys():
@@ -50,17 +52,14 @@ async def repair_saved_post(update: Update, context: CallbackContext):
             current_dict = context.bot_data[post_id]
             await update.message.reply_text(f"Entry is present in bot_data. Contents: {current_dict}")
 
-        lang_dict = dict()
+        lang_dict = {
+            key: value
+            for key, value in content.items()
+            if any(lang.lang_key == key for lang in languages)
+        }
+        final_dict = {"langs": lang_dict}
 
-        for key, value in content.items():
-            if any(lang.lang_key == key for lang in languages):
-                lang_dict[key] = value
-
-        final_dict = dict()
-
-        final_dict["langs"] = lang_dict
-
-        if "reply" in content.keys():
+        if "reply" in content:
             final_dict["reply"] = content["reply"]
 
         await update.message.reply_text(f"Final bot_data: {final_dict}")
@@ -106,9 +105,6 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("add_advertisement", "Werbung erstellen"),
     ]
     for chat_id in config.ADMINS:
-        try:
+        with contextlib.suppress(BadRequest):
             await context.bot.set_my_commands(admin_commands, scope=BotCommandScopeChat(chat_id=chat_id))
-        except BadRequest:  # to ignore chat not found
-            pass
-
     await update.message.reply_text("Commands updated!")

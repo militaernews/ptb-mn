@@ -53,15 +53,11 @@ def chunks(lst, n):
 
 
 def generate_captcha(user_id: int):
-    background = Image.open(f'res/img/captcha.jpg', )
-    paste_image_list = list()
-    emoji_names = list()
+    background = Image.open('res/img/captcha.jpg')
 
     random.shuffle(supported_emojis)
-
-    for i in range(4):
-        emoji_names.append(supported_emojis[i])
-        paste_image_list.append(supported_emojis[i])
+    emoji_names = supported_emojis[:4]
+    paste_image_list = emoji_names.copy()
 
     width = int(background.width / 3)
     heigth = int(background.height / 2)
@@ -100,11 +96,7 @@ def create_keyboard(context: CallbackContext):
     for x, row in enumerate(context.user_data["keyboard"]):
         btn_row = []
         for y, btn in enumerate(row):
-            if btn[1]:
-                text = "✅"
-            else:
-                text = btn[0]
-
+            text = "✅" if btn[1] else btn[0]
             btn_row.append(InlineKeyboardButton(text, callback_data=f"captcha_{x}_{y}"))
         keyboard.append(btn_row)
 
@@ -139,7 +131,7 @@ def extract_status_change(chat_member_update: ChatMemberUpdated) -> Optional[Tup
 
 
 async def send_captcha(update: Update, context: CallbackContext):
-    logging.info(f"update :: {update }")
+    logging.info(f"update :: {update}")
     if update.effective_chat.id != GERMAN.chat_id:
         return
 
@@ -147,7 +139,7 @@ async def send_captcha(update: Update, context: CallbackContext):
     if result is None:
         return
 
-    logging.info(f"result :: {result }")
+    logging.info(f"result :: {result}")
 
     was_member, is_member = result
     cause_name = update.chat_member.from_user.mention_html()
@@ -173,9 +165,7 @@ async def send_captcha(update: Update, context: CallbackContext):
 
     state = []
     for row in chunks(options, 4):
-        state_row = []
-        for btn in row:
-            state_row.append([btn, False])
+        state_row = [[btn, False] for btn in row]
         state.append(state_row)
 
     context.user_data["captcha"] = answer

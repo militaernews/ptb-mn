@@ -77,34 +77,30 @@ async def tweet_file_2(update: Update, context: CallbackContext):
     await tweet_file(get_caption(update), await get_file(update))
 
 
-async def tweet_files_2(update: Update, context: CallbackContext):
-    logging.info("---")
-
-
 async def tweet_files(context: CallbackContext, text: str, posts: [Post]):
-    if len(text) <= TWEET_LENGTH:  # todo: just cut text to length
-        upload_files = list()
-        for post in posts:
-            file = await context.bot.get_file(post.file_id)
-            logging.info(f"file: {file}")
-            path = file.file_path.split('/')[-1]
-            await file.download_to_drive(path)
-            logging.info(f"path: {path}")
-            upload_files.append(path)
+    if len(text) > TWEET_LENGTH:
+        # todo: better cut to text length
+        return
+    upload_files = []
+    for post in posts:
+        file = await context.bot.get_file(post.file_id)
+        logging.info(f"file: {file}")
+        path = file.file_path.split('/')[-1]
+        await file.download_to_drive(path)
+        logging.info(f"path: {path}")
+        upload_files.append(path)
 
-        try:
+    try:
 
-            media_ids = []
-            for filename in upload_files:
-                res = api.media_upload(filename)
-                logging.info(f"media_id-RESULT: {res}")
-                media_ids.append(res.media_id)
+        media_ids = []
+        for filename in upload_files:
+            res = api.media_upload(filename)
+            logging.info(f"media_id-RESULT: {res}")
+            media_ids.append(res.media_id)
 
-            # Tweet with multiple images
-            client.create_tweet(text=text, media_ids=media_ids)
-        except Exception as e:
-            logging.info(f"⚠️ Error when trying to post multiple files to twitter: {e}")
-            pass
-
-        for path in upload_files:  # better use OS unlink path
-            os.remove(path)
+        # Tweet with multiple images
+        client.create_tweet(text=text, media_ids=media_ids)
+    except Exception as e:
+        logging.info(f"⚠️ Error when trying to post multiple files to twitter: {e}")
+    for path in upload_files:  # better use OS unlink path
+        os.remove(path)

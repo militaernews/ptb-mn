@@ -27,18 +27,11 @@ def get_replies(bot_data, msg_id: str):
 
 
 def sanitize_text(text: str = None) -> str:
-    if text is None:
-        return ""
-
-    return re.sub(GERMAN.footer, "", text)
+    return "" if text is None else re.sub(GERMAN.footer, "", text)
 
 
 def sanitize_hashtag(lang_key: str, text: str) -> str:
-    if lang_key == "fa":
-        result = text.replace(' ', '_')
-    else:
-        result = text.replace(' ', '')
-
+    result = text.replace(' ', '_') if lang_key == "fa" else text.replace(' ', '')
     return result.replace('-', '').replace('.', '').replace("'", "")
 
 
@@ -104,7 +97,6 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
                 msg = await context.bot.send_photo(update.message.chat_id, f)
 
             context.job_queue.run_once(delete, MSG_REMOVAL_PERIOD, msg.chat_id, str(msg.message_id))
-
 
     except Exception as e:
         await context.bot.send_message(

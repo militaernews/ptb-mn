@@ -1,8 +1,7 @@
 import logging
 import re
-from mailbox import Message
 
-from telegram import Update
+from telegram import Update, Message
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 

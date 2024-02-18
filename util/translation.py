@@ -14,7 +14,8 @@ from twitter import TWEET_LENGTH
 from util.helper import sanitize_text
 from util.patterns import FLAG_EMOJI, HASHTAG
 
-translator = deepl.Translator(os.environ['DEEPL'])
+deepl_translator = deepl.Translator(os.environ['DEEPL'])
+google_translator = GoogleTranslator(source='de')
 
 
 def flag_to_hashtag(text: str, language: str = None):
@@ -39,7 +40,7 @@ def flag_to_hashtag(text: str, language: str = None):
 
 
 async def translate_message(target_lang: str, text: str, target_lang_deepl: str = None) -> str | None:
-    if text == "" or text is None:
+    if not text or text is None:
         return None
 
     translated_text = await translate(target_lang, text, target_lang_deepl)
@@ -77,10 +78,12 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
         # text.replace: if bot was down and footer got added manually
 
         # I'm uncertain, whether replacing emojis for Right-to-left languages like Persian butchers the order
-        translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
+        google_translator.target=target_lang
+        translated_text = google_translator.translate(text=text_to_translate)
     try:
-        translated_text = GoogleTranslator(source='de', target=target_lang).translate(
-            text=text_to_translate)  # translator.translate_text(text_to_translate,
+        google_translator.target = target_lang
+        translated_text = google_translator.translate(text=text_to_translate)
+    # translator.translate_text(text_to_translate,
         #   target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
         #     tag_handling="html",
         #      preserve_formatting=True).text

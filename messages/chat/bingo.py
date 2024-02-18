@@ -143,66 +143,26 @@ field_size = 5
 
 
 def generate_bingo_field():
-    key_list = list(ENTRIES)
-
+    key_list = list(ENTRIES.keys())
     random.shuffle(key_list)
-
-    d2 = {}
-
-    for key in key_list:
-        #   logging.info(key, ENTRIES[key])
-        d2[key] = ENTRIES[key]
-
-    outer = list()
-
-    for x in range(1, field_size * field_size, field_size):
-        inner = list()
-        #   logging.info(x)
-
-        for entry in list(d2.items())[x:x + field_size]:
-            #     logging.info("ENTRY >>>>>>>>> ", entry, entry[0])
-            if entry[1] is None:
-                regex = entry[0].replace("_", "")
-            else:
-                regex = entry[1]
-
-            inner.append({
-                "text": entry[0],
-                "checked": False,
-                "regex": regex
-            })
-
-        outer.append(inner)
-
-    #  logging.info(outer)
-    return outer
+    return [
+        [{"text": key, "checked": False, "regex": key.replace("_", "") if ENTRIES[key] is None else ENTRIES[key]} for
+         key in key_list[i:i + field_size]] for i in range(0, len(key_list), field_size)]
 
 
 def check_win(fields: List[List[Dict[str, Union[str, bool]]]]):
-    # horizontal condition
-    for row in fields:
-        if all(item["checked"] for item in row):
-            return True
-
-    # vertical condition
-    for column in zip(*fields):
-        if all(item["checked"] for item in column):
-            return True
-
-    return False
+    return any(all(item["checked"] for item in row) for row in fields) or any(
+        all(row[i]["checked"] for row in fields) for i in range(field_size))
 
 
 def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
-    found = list()
-    #  logging.info(list(numpy.array(fields).flat))
-    for item in list(numpy.array(fields).flat):
-        matches = re.findall(item["regex"], text.replace(" ", ""), re.IGNORECASE)
-        #   logging.info(item["regex"], text, ">>>", matches)
-        if not item["checked"] and len(matches) != 0:
-            item["checked"] = True
-            found.append(item["text"])
-            logging.info(f"{text} is a valid bingo entry")
-
+    found = []
+    for row in fields:
+        for item in row:
+            if not item["checked"] and re.findall(item["regex"], text, re.IGNORECASE):
+                item["checked"] = True
+                found.append(item["text"])
+                logging.info(f"{text} is a valid bingo entry")
     return found
 
 
@@ -299,7 +259,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
 
     # logging.info(svg)
 
-    with open("bingo.svg", "w",encoding="UTF-8") as f:
+    with open("bingo.svg", "w", encoding="UTF-8") as f:
         f.write(svg)
     image = pyvips.Image.new_from_file("bingo.svg", dpi=100)
     image.write_to_file('field.png')
@@ -331,7 +291,7 @@ async def handle_bingo(update: Update, context: CallbackContext):
             text = '<b>Treffer! 🥳</b>\n\n'
 
             for index, word in enumerate(found):
-                text += f"{word.replace('_','')}"
+                text += f"{word.replace('_', '')}"
 
                 if index == found_amount - 1:
                     if found_amount == 1:

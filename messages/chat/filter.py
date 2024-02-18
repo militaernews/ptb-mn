@@ -21,7 +21,7 @@ def key_exists(context, key):
 def check_cas(user_id: int):
     response = requests.get(f"https://api.cas.chat/check?user_id={user_id}")
     logging.info(f"{user_id} --- {response.json()}")
-    return "True" == response.json()["ok"]
+    return response.json()["ok"] == "True"
 
 
 def join_member(update: Update, context: CallbackContext):
@@ -103,9 +103,6 @@ async def filter_message(update: Update, context: CallbackContext):
         # Verstoßes gegen die Regeln dieser Gruppe - siehe /rules ???
         await update.message.reply_text(
             f"Wegen Beleidigung hat der Nutzer {mention_html(update.message.from_user.id, update.message.from_user.first_name)} die Warnung {warnings} von 3 erhalten.")
-
-
-
 
     else:
         await handle_bingo(update, context)

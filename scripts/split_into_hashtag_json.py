@@ -45,7 +45,7 @@ def split_to_json():
 
 
 def translate_json():
-    filename = f"flag_de.json"
+    filename = "flag_de.json"
 
     with open(filename, 'rb') as f:
         content = orjson.loads(f.read())
