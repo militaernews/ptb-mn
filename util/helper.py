@@ -60,7 +60,6 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str):
         await update.message.delete()
     except TelegramError as e:
         logging.info(f"needs admin: {e}")
-        pass
 
     try:
         with open(f"res/de/{file_name}.html", "r", encoding='utf-8') as f:
@@ -83,7 +82,6 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str):
             f"<b>⚠️ Error when trying to read html-file {file_name}</b>\n<code>{e}</code>\n\n"
             f"<b>Caused by Update</b>\n<code>{update}</code>",
         )
-        pass
 
 
 async def reply_photo(update: Update, context: CallbackContext, file_name: str):
@@ -104,4 +102,3 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
             f"<b>⚠️ Error when trying to read html-file {file_name}</b>\n<code>{e}</code>\n\n"
             f"<b>Caused by Update</b>\n<code>{update}</code>",
         )
-        pass

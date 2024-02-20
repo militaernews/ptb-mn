@@ -20,7 +20,7 @@ from util.translation import flag_to_hashtag, translate_message, segment_text
 
 # TODO: make method more generic
 async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE, de_post_id: int):
-    post_id =  await get_post_id(update.channel_post)
+    post_id = await get_post_id(update.channel_post)
     original_caption = update.channel_post.caption_html_urled
 
     for lang in languages:
@@ -85,7 +85,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 # TODO: make method more generic
 async def post_channel_english(update: Update, context: CallbackContext):
-    post_id =  await insert_single2(update.channel_post)
+    post_id = await insert_single2(update.channel_post)
 
     if update.channel_post.media_group_id is None:
         await post_channel_single(update, context, post_id)
@@ -107,8 +107,6 @@ async def post_channel_english(update: Update, context: CallbackContext):
                 f"<code>{e}</code>\n\n"
                 f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
             )
-            pass
-
     if update.channel_post.reply_to_message is not None:
         reply_id = update.channel_post.reply_to_message.id
     else:
@@ -124,7 +122,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
-    posts = sorted( await  query_files(context.job.name), key=lambda x: x.msg_id)
+    posts = sorted(await  query_files(context.job.name), key=lambda x: x.msg_id)
     logging.info(posts)
     files: [InputMedia] = []
 
@@ -179,8 +177,6 @@ async def share_in_other_channels(context: CallbackContext):
                 f"<b>⚠️ Error when trying to send media group in Channel {lang.lang_key}</b>\n\n"
                 f"<code>{e}</code>",
             )
-            pass
-
     logging.info("----- done -----")
 
     await twitter.tweet_files(context,
@@ -204,7 +200,7 @@ async def edit_channel(update: Update, context: CallbackContext):
     else:
         original_caption = None
 
-    file_id =  await get_file_id(update.edited_channel_post.id)
+    file_id = await get_file_id(update.edited_channel_post.id)
 
     if len(update.edited_channel_post.photo) > 0:
         new_file = await update.edited_channel_post.photo[-1].get_file()
@@ -244,8 +240,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                     f"<code>{e}</code>\n\n"
                     f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
                 )
-            pass
-
+                
         if file_id != new_file.file_id and GERMAN.breaking not in original_caption:
             try:
                 logging.info(f"- edit file -------------------------------------------------- {input_media}")
@@ -263,8 +258,6 @@ async def edit_channel(update: Update, context: CallbackContext):
                         f"<code>{e}</code>\n\n"
                         f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
                     )
-                    pass
-
         if msg is not None:
             await update_post(msg, lang.lang_key)
 
@@ -289,7 +282,6 @@ async def edit_channel(update: Update, context: CallbackContext):
                 f"<code>{e}</code>\n\n"
                 f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
             )
-            pass
 
 
 async def test_del(update: Update, _: CallbackContext):

@@ -34,7 +34,6 @@ async def breaking_news(update: Update, context: CallbackContext):
             f"<code>{e}</code>\n\n"
             f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
         )
-        pass
 
     for lang in languages:
         try:
@@ -66,7 +65,6 @@ async def breaking_news(update: Update, context: CallbackContext):
             f"<code>{e}</code>\n\n"
             f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
         )
-        pass
 
 
 async def announcement(update: Update, context: CallbackContext):
@@ -80,7 +78,7 @@ async def announcement(update: Update, context: CallbackContext):
         msg_de = await context.bot.send_photo(
             chat_id=GERMAN.channel_id,
             photo=open("res/announce/mn-announce-de.png", "rb"),
-            caption="#MITTEILUNG" + text,
+            caption=f"#MITTEILUNG{text}",
         )
         await insert_single2(msg_de)
         await msg_de.pin()
@@ -92,8 +90,6 @@ async def announcement(update: Update, context: CallbackContext):
             f"<code>{e}</code>\n\n"
             f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
         )
-        pass
-
     for lang in languages:
         try:
             msg = await context.bot.send_photo(
@@ -111,7 +107,6 @@ async def announcement(update: Update, context: CallbackContext):
                 f"<code>{e}</code>"
                 f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
             )
-            pass
 
 
 async def advertisement(update: Update, context: CallbackContext):
@@ -137,8 +132,6 @@ async def advertisement(update: Update, context: CallbackContext):
             f"<code>{e}</code>\n\n"
             f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
         )
-        pass
-
     for lang in languages:
         try:
             msg = await context.bot.send_message(
@@ -155,7 +148,6 @@ async def advertisement(update: Update, context: CallbackContext):
                 f"code>{e}</code>\n\n"
                 f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
             )
-            pass
 
 
 async def post_info(update: Update, context: CallbackContext):

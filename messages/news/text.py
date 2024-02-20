@@ -36,15 +36,12 @@ async def post_channel_text(update: Update, context: CallbackContext):
                 reply_to_message_id=reply_id
             )
             await insert_single2(msg, lang.lang_key)
-        ##  logging.info(flang.lang_key)
         except Exception as e:
             await context.bot.send_message(
                 config.LOG_GROUP,
                 f"<b>⚠️ Error when trying to send text post in Channel {lang.lang_key}</b>\n"
                 f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
-            pass
-
     try:
 
         if len(re.findall(FLAG_EMOJI, text_ger)) == 0:
@@ -57,8 +54,6 @@ async def post_channel_text(update: Update, context: CallbackContext):
                 f"<b>⚠️ Error when trying to post text in Channel de</b>\n"
                 f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
             )
-            pass
-
     try:
         logging.info("tweet")
         #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
@@ -69,8 +64,6 @@ async def post_channel_text(update: Update, context: CallbackContext):
             f"<b>⚠️ Error when trying to post text on Twitter</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
-        pass
-
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
 
@@ -107,4 +100,3 @@ async def edit_channel_text(update: Update, context: CallbackContext):
                     f"<b>⚠️ Error when trying to edit post in Channel {lang.lang_key}</b>\n"
                     f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
                 )
-            pass

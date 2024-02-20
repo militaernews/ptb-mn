@@ -78,7 +78,6 @@ async def query_files(meg_id: str) -> [Post]:
                 return res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def query_replies(msg_id: int, lang_key: str):
@@ -92,7 +91,6 @@ async def query_replies(msg_id: int, lang_key: str):
                 return res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def query_replies2(post_id: int, lang_key: str):
@@ -104,13 +102,9 @@ async def query_replies2(post_id: int, lang_key: str):
                 res = await  c.fetchone()
 
                 logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                if res is not None:
-                    return res[0]
-                else:
-                    return res
+                return res[0] if res is not None else res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 @db_operation
@@ -131,31 +125,22 @@ async def get_post_id2(msg_id: int):
                 await c.execute("select p.post_id from posts p where p.msg_id = %s and p.lang='de'", [msg_id])
                 res = await  c.fetchone()
 
-                if res is not None:
-                    return res[0]
-                else:
-                    return res
+                return res[0] if res is not None else res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def query_replies3(post_id: int, lang_key: str):
     try:
         async with aiopg.connect(DATABASE_URL, cursor_factory=NamedTupleCursor) as conn:
             async with conn.cursor() as c:
-
                 await c.execute("select p.msg_id from posts p where p.post_id = %s and p.lang=%s", (post_id, lang_key))
                 res = await  c.fetchone()
 
                 logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                if res is not None:
-                    return res[0]
-                else:
-                    return res
+                return res[0] if res is not None else res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def query_replies4(msg: Message, lang_key: str):
@@ -164,77 +149,57 @@ async def query_replies4(msg: Message, lang_key: str):
     try:
         async with aiopg.connect(DATABASE_URL, cursor_factory=NamedTupleCursor) as conn:
             async with conn.cursor() as c:
-
                 await c.execute(
                     "select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')",
                     (lang_key, msg.reply_to_message.id))
                 res = await  c.fetchone()
 
                 logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                if res is not None:
-                    return res[0]
-                else:
-                    return res
+                return res[0] if res is not None else res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def get_msg_id(msg_id: int, lang_key: str):
     try:
         async with aiopg.connect(DATABASE_URL, cursor_factory=NamedTupleCursor) as conn:
             async with conn.cursor() as c:
-
                 await c.execute(
                     "select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')",
                     (lang_key, msg_id))
                 res = await  c.fetchone()
 
                 logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                if res is not None:
-                    return res[0]
-                else:
-                    return res
+                return res[0] if res is not None else res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def get_file_id(msg_id: int):
     try:
         async with aiopg.connect(DATABASE_URL, cursor_factory=NamedTupleCursor) as conn:
             async with conn.cursor() as c:
-
                 await c.execute("select p.file_id from posts p where p.msg_id=%s", [msg_id])
                 res = await  c.fetchone()
 
                 logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                if res is not None:
-                    return res[0]
-                else:
-                    return res
+                return res[0] if res is not None else res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
     try:
         async with aiopg.connect(DATABASE_URL, cursor_factory=NamedTupleCursor) as conn:
             async with conn.cursor() as c:
-
                 await c.execute("update posts p set text = %s where p.msg_id=%s and p.lang=%s",
                                 (text, msg_id, lang_key))
                 res = await  c.fetchone()
 
                 logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}", )
-                if res is not None:
-                    return res[0]
-                else:
-                    return res
+                return res[0] if res is not None else res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
@@ -267,7 +232,6 @@ async def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
 
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None, lang_key: str = GERMAN.lang_key,
@@ -301,10 +265,7 @@ async def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key):
         file_type = None
         file_id = None
 
-    if msg.reply_to_message is not None:
-        reply_id = msg.reply_to_message.id
-    else:
-        reply_id = None
+    reply_id = None if msg.reply_to_message is None else msg.reply_to_message.id
 
     if msg.caption is not None:
         text = msg.caption_html_urled
@@ -340,7 +301,6 @@ async def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, f
             return res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass
 
 
 async def insert_promo(user_id: int, lang: str, promo_id: int):
@@ -367,4 +327,3 @@ async def insert_promo(user_id: int, lang: str, promo_id: int):
         return res
     except Exception as e:
         logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-        pass

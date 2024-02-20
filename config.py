@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from typing import Final
 
 from dotenv import load_dotenv
@@ -23,6 +24,7 @@ CHANNEL_MEME = -1001486678205
 CHANNEL_SOURCE = -1001372304339
 
 LOG_GROUP = -1001739784948
+LOG_FILENAME: Final[str] = rf"./logs/{datetime.now().strftime('%Y-%m-%d')}/{datetime.now().strftime('%H-%M-%S')}.log"
 
 NYX = 703453307
 ADMINS = (

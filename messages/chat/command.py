@@ -1,5 +1,6 @@
 import logging
 import re
+from collections import defaultdict
 
 import requests
 from telegram import Update
@@ -8,8 +9,6 @@ from telegram.helpers import mention_html
 
 import config
 from util.helper import reply_html, reply_photo
-
-from collections import defaultdict
 
 
 async def is_admin_replying(update: Update, _: CallbackContext):

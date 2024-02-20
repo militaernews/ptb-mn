@@ -3,8 +3,8 @@ import logging
 import random
 import re
 from typing import List, Union, Dict
+
 import pyvips
-import numpy as numpy
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import CallbackContext

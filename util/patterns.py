@@ -1,5 +1,6 @@
-#import regex as re
+# import regex as re
 import re
+
 WHITESPACE = re.compile(r'[\s\n]+$')
 HASHTAG = re.compile(r'#\S+')
 FLAG_EMOJI = re.compile(r'🏴|🏳️|([🇦-🇿]{2})')

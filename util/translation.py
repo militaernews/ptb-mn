@@ -63,7 +63,6 @@ def get_hashtag(key: str, language: str = None) -> str:
             return orjson.loads(f.read())[language]
     except Exception as e:
         logging.error(f"Error when trying to get hashtag --- {e}")
-        pass
 
 
 async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
@@ -78,15 +77,15 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
         # text.replace: if bot was down and footer got added manually
 
         # I'm uncertain, whether replacing emojis for Right-to-left languages like Persian butchers the order
-        google_translator.target=target_lang
+        google_translator.target = target_lang
         translated_text = google_translator.translate(text=text_to_translate)
     try:
         google_translator.target = target_lang
         translated_text = google_translator.translate(text=text_to_translate)
     # translator.translate_text(text_to_translate,
-        #   target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
-        #     tag_handling="html",
-        #      preserve_formatting=True).text
+    #   target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
+    #     tag_handling="html",
+    #      preserve_formatting=True).text
 
     except QuotaExceededException:
         logging.warning("--- Quota exceeded ---")

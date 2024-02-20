@@ -98,8 +98,6 @@ async def start_promo(update: Update, context: CallbackContext):
                 text += get_text(update, "bonus")
             except Exception as e:
                 logging.error(f"User blocked Bot. {e}")
-                pass
-
         await update.message.reply_photo(get_img(update),
                                          text,
                                          reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
@@ -162,8 +160,6 @@ async def verify_promo(update: Update, context: CallbackContext):
                                                )))
             except Exception as e:
                 logging.error(f"User blocked Bot. {e}")
-                pass
-
         await update.callback_query.answer()
 
     else:
