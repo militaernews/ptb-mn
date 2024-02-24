@@ -1,7 +1,9 @@
+import asyncio
 import logging
 import logging
 import os
 import re
+import sys
 
 from telegram import LinkPreviewOptions  # LinkPreviewOptions,
 from telegram.constants import ParseMode
@@ -40,6 +42,9 @@ if __name__ == "__main__":
     add_logging()
 
     #    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+    if sys.version_info >= (3, 8) and sys.platform.lower().startswith("win"):
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     app = (ApplicationBuilder().token(config.TOKEN)
            .defaults(Defaults(parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)))
