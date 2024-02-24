@@ -101,7 +101,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("reset_bingo", "Neue Bingo-Runde")
     ], scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))
 
-    admin_commands = [
+    admin_commands = chat_de_commands +[
         ("add_advertisement", "Werbung erstellen"),
     ]
     for chat_id in config.ADMINS:

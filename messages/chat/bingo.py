@@ -191,7 +191,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     """
 
     line_width = 2
-    line_half = int(line_width / 2)
+    line_half = line_width // 2
     height_treshold = int((canvas_height - (field_size * line_width)) / field_size + line_width)
     width_treshold = int((canvas_width - (
             field_size * line_width)) / field_size + line_width)
@@ -257,8 +257,12 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     <text y="{all_height - border_distance}" x="{all_width - border_distance}" font-size="26px" font-family="Arial" dominant-baseline="middle"  text-anchor="end" fill="gray" >zuletzt aktualisiert {datetime.datetime.now().strftime("%d.%m.%Y, %H:%M:%S")}</text>
     </svg>"""
 
-    # logging.info(svg)
 
+    svg_to_file(svg)
+
+
+def svg_to_file(svg: str):
+    logging.info(svg)
     with open("bingo.svg", "w", encoding="UTF-8") as f:
         f.write(svg)
     image = pyvips.Image.new_from_file("bingo.svg", dpi=100)

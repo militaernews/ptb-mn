@@ -34,7 +34,7 @@ def get_img(update: Update):
     return open("res/img/mn-tg-promo-en.png", "rb")
 
 
-async def send_promos(update: Update, context: CallbackContext):
+async def send_promos(_: Update, context: CallbackContext):
     for lang in all_langs.values():
         with open(f"res/{lang.lang_key}/promo/announce.html", "r", encoding='utf-8') as f:
             text = f.read()

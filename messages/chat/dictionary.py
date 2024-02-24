@@ -45,7 +45,7 @@ putin_dict = {
 }
 
 
-async def handle_putin_dict(update: Update, context: CallbackContext):
+async def handle_putin_dict(update: Update, _: CallbackContext):
     matches = {}
 
     for k, v in putin_dict.items():

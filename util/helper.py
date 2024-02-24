@@ -14,40 +14,32 @@ CHAT_ID: Final[str] = "chat_id"
 MSG_ID: Final[str] = "msg_id"
 
 
-def get_replies(bot_data, msg_id: str):
-    logging.info("Trying to get bot_data ------------------")
-    logging.info(bot_data)
-    logging.info("-------------------------")
-
-    if "reply" in bot_data[msg_id]:
-        logging.info(bot_data[str(bot_data[msg_id]["reply"])])
-        return bot_data[str(bot_data[msg_id]["reply"])]["langs"]
-
-    return None
-
-
 def sanitize_text(text: str = None) -> str:
     return "" if text is None else re.sub(GERMAN.footer, "", text)
 
 
 def sanitize_hashtag(lang_key: str, text: str) -> str:
-    result = text.replace(' ', '_') if lang_key == "fa" else text.replace(' ', '')
-    return result.replace('-', '').replace('.', '').replace("'", "")
+    return (
+        text.replace(' ', '_' if lang_key in {"fa", "ar"} else '')
+        .replace('-', '')
+        .replace('.', '')
+        .replace("'", "")
+    )
 
 
 def get_caption(update: Update):
     if update.channel_post.caption is not None:
-        return update.channel_post.caption
+        return update.channel_post.caption_html_urled
 
     return ""
 
 
 async def get_file(update: Update):
-    if len(update.channel_post.photo) > 0:
+    if update.channel_post.photo:
         return await update.channel_post.photo[-1].get_file()
-    elif update.channel_post.video is not None:
+    elif update.channel_post.video:
         return await update.channel_post.video.get_file()
-    elif update.channel_post.animation is not None:
+    elif update.channel_post.animation:
         return await update.channel_post.animation.get_file()
 
 
@@ -99,6 +91,6 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to read html-file {file_name}</b>\n<code>{e}</code>\n\n"
+            f"<b>⚠️ Error when trying to read photo {file_name}</b>\n<code>{e}</code>\n\n"
             f"<b>Caused by Update</b>\n<code>{update}</code>",
         )

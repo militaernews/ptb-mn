@@ -41,8 +41,6 @@ def add_logging():
 if __name__ == "__main__":
     add_logging()
 
-    #    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
     if sys.version_info >= (3, 8) and sys.platform.lower().startswith("win"):
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 

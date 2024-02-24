@@ -166,4 +166,3 @@ async def post_info(update: Update, context: CallbackContext):
             f"<code>{e}</code>\n\n"
             f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
         )
-        pass

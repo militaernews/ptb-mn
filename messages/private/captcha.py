@@ -55,16 +55,15 @@ def chunks(lst, n):
 def generate_captcha(user_id: int):
     background = Image.open('res/img/captcha.jpg')
 
-    random.shuffle(supported_emojis)
-    emoji_names = supported_emojis[:4]
+    emoji_names =random.sample(supported_emojis,4)
     paste_image_list = emoji_names.copy()
 
     width = int(background.width / 3)
     heigth = int(background.height / 2)
 
-    position = [(width * 1 - 274 * 1, heigth * 1 - 274 * 1), (int(width * 3.4 - 274 * 3), heigth * 1 - 274 * 1),
-                (width * 1 - 274 * 1, heigth * 2 - 274 * 2), (width * 2 - 274 * 2, int(heigth * 2.2 - 274 * 2))]
-    print(position)
+    positions = [(width * (i % 2 + 1) - 274 * (i % 2 + 1), heigth * (i // 2 + 1) - 274 * (i // 2 + 1)) for i in
+                 range(4)]
+    print(positions)
 
     draw = ImageDraw.Draw(background)
     font = ImageFont.truetype(r"AppleColorEmoji.ttf", 137)
@@ -76,7 +75,7 @@ def generate_captcha(user_id: int):
 
         rotated_text_layer = text_layer.rotate(random.randint(0, 350),
                                                expand=True, fillcolor=(0, 0, 0, 0), resample=Image.BICUBIC)
-        background.paste(rotated_text_layer, position[i], rotated_text_layer)
+        background.paste(rotated_text_layer, positions[i], rotated_text_layer)
 
     emoji_captcha_path = f"temp/captcha_{user_id}.png"
 
@@ -154,19 +153,10 @@ async def send_captcha(update: Update, context: CallbackContext):
     answer, captcha = generate_captcha(update.chat_join_request.from_user.id)
     random.shuffle(supported_emojis)
 
-    options = list(answer)
-    for em in supported_emojis:
-        if len(options) == 12:
-            break
-        if em not in options:
-            options.append(em)
-
+    options = list(answer) + random.sample([em for em in supported_emojis if em not in answer], 8)
     random.shuffle(options)
 
-    state = []
-    for row in chunks(options, 4):
-        state_row = [[btn, False] for btn in row]
-        state.append(state_row)
+    state = [[[btn, False] for btn in row] for row in chunked(options, 4)]
 
     context.user_data["captcha"] = answer
     context.user_data["keyboard"] = state
@@ -180,9 +170,7 @@ async def send_captcha(update: Update, context: CallbackContext):
 
 
 async def click_captcha(update: Update, context: CallbackContext):
-    x, y = update.callback_query.data.split("_")[1:]
-    x = int(x)
-    y = int(y)
+    x, y = map(int, update.callback_query.data.split("_")[1:])
 
     context.user_data[KEYBOARD][x][y][1] = not context.user_data[KEYBOARD][x][y][1]
 

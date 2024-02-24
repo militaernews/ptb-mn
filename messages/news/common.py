@@ -122,7 +122,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
 # TODO: make method more generic
 async def share_in_other_channels(context: CallbackContext):
-    posts = sorted(await  query_files(context.job.name), key=lambda x: x.msg_id)
+    posts = sorted(await query_files(context.job.name), key=lambda x: x.msg_id)
     logging.info(posts)
     files: [InputMedia] = []
 
@@ -240,7 +240,7 @@ async def edit_channel(update: Update, context: CallbackContext):
                     f"<code>{e}</code>\n\n"
                     f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
                 )
-                
+
         if file_id != new_file.file_id and GERMAN.breaking not in original_caption:
             try:
                 logging.info(f"- edit file -------------------------------------------------- {input_media}")
@@ -263,17 +263,13 @@ async def edit_channel(update: Update, context: CallbackContext):
 
     try:
         # not sure if this will cause eternal triggering, hopefully not
-        if original_caption is not None:
-            text = flag_to_hashtag(original_caption)
-        else:
-            text = None
+        text = None if original_caption is None else flag_to_hashtag(original_caption)
 
         if "#" not in update.edited_channel_post.caption:
             await update.edited_channel_post.edit_caption(text + GERMAN.footer)
 
         await update_post(update.edited_channel_post)
-
-        # todo: update text in db
+            # todo: update text in db
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await context.bot.send_message(
