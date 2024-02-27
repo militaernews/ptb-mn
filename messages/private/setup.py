@@ -84,12 +84,16 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("short", "Abkürzungen"),
         ("peace", "Russische Kriege"),
         ("bias", "Ist MN neutral?"),
+        ("sold", "Söldner Vorrausetzungen"),
         ("genozid", "Kein Genozid der Ukrainer im Donbas"),
         ("sofa", "Waffensystem des Sofa-Kriegers"),
         ("bot", "für Trolle"),
         ("cia", "Wahrheit über Putin"),
         ("mimimi", "Wenn einer mal wieder heult"),
         ("duden", "Deutsch. Setzen. Sechs."),
+        ("argu", "Argumentationspyramide"),
+        ("disso", "Kognitive Dissonanz"),
+        ("front", "An die Front!"),
     ]
     await context.bot.set_my_commands(chat_de_commands)
 

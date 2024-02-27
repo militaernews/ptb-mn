@@ -110,6 +110,10 @@ async def bias(update: Update, context: CallbackContext):
     await reply_html(update, context, "bias")
 
 
+async def sold(update: Update, context: CallbackContext):
+    await reply_html(update, context, "sold")
+
+
 async def ref(update: Update, context: CallbackContext):
     await update.message.delete()
 
@@ -150,3 +154,15 @@ async def cia(update: Update, context: CallbackContext):
 
 async def duden(update: Update, context: CallbackContext):
     await reply_photo(update, context, "duden.jpg")
+
+
+async def argu(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "argu.jpg")
+
+
+async def disso(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "disso.jpg")
+
+
+async def front(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "front.jpg")

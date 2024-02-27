@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import logging
 import os
 import re
 import sys
@@ -15,7 +14,7 @@ from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
-    loss, peace, bias, ref, bot, mimimi, cia, stats, duden
+    loss, peace, bias, ref, bot, mimimi, cia, stats, duden, sold, argu, disso, front
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info, advertisement
@@ -98,12 +97,16 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("stats", stats))
     app.add_handler(CommandHandler("short", short))
     app.add_handler(CommandHandler("bias", bias))
+    app.add_handler(CommandHandler("sold", sold))
     app.add_handler(CommandHandler("genozid", genozid))
     app.add_handler(CommandHandler("sofa", sofa))
     app.add_handler(CommandHandler("bot", bot))
     app.add_handler(CommandHandler("mimimi", mimimi))
     app.add_handler(CommandHandler("cia", cia))
     app.add_handler(CommandHandler("duden", duden))
+    app.add_handler(CommandHandler("argu", argu))
+    app.add_handler(CommandHandler("disso", disso))
+    app.add_handler(CommandHandler("front", front))
     app.add_handler(MessageHandler(filters.Regex("/ref.*"), ref))
 
     # app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
