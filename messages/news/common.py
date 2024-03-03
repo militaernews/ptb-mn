@@ -26,7 +26,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     for lang in languages:
         logging.info(lang)
 
-        reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
+        reply_id = await query_replies4(update.channel_post, lang.lang_key) # query_replies3(post_id, lang.lang_key)
         logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
 
         try:
@@ -269,7 +269,7 @@ async def edit_channel(update: Update, context: CallbackContext):
             await update.edited_channel_post.edit_caption(text + GERMAN.footer)
 
         await update_post(update.edited_channel_post)
-            # todo: update text in db
+        # todo: update text in db
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await context.bot.send_message(

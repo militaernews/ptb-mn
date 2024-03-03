@@ -57,7 +57,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
     try:
         logging.info("tweet")
         #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
-        twitter.tweet_text(segment_text(text_ger))
+        twitter.create_tweet(segment_text(text_ger))
     except Exception as e:
         await context.bot.send_message(
             config.LOG_GROUP,

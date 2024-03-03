@@ -32,75 +32,52 @@ auth = tweepy.OAuth1UserHandler(
 )
 api = tweepy.API(auth)
 
-TWEET_LENGTH = 300
+TWEET_LENGTH = 280
 
 
-def tweet_text(text: str):
-    logging.info(f"--- tweet {text}")
+def upload_media(files):
+    media_ids = []
+    for file in files:
+        res = api.media_upload(file)
+        media_ids.append(res.media_id)
+    return media_ids
 
-    if len(text) <= TWEET_LENGTH:
-        client.create_tweet(text=text)  # This requires read & write app permissions also elevated access type.
+
+def create_tweet(text, media_ids=None):
+    try:
+        client.create_tweet(text=text[:TWEET_LENGTH], media_ids=media_ids)
+    except Exception as e:
+        logging.error(f"Error when trying to post to twitter: {e}")
+
+
 
 
 async def tweet_file(text: str, file: telegram.File):
-    if len(text) <= TWEET_LENGTH:
-        path = file.file_path.split('/')[-1]
-        logging.info(f"file to download:::: {str(path)}")
-        await file.download_to_drive(path)
-        logging.info("-- download done")
-        # todo: can also quote tweet here.. is that an option?
-        try:
-
-            filenames = [path]
-            media_ids = []
-            for filename in filenames:
-                res = api.media_upload(filename)
-                media_ids.append(res.media_id)
-
-            # Tweet with multiple images
-            client.create_tweet(text=text, media_ids=media_ids)
-        except Exception as e:
-            logging.info(f"⚠️ Error when trying to post single file to twitter: {e}")
-            pass
-
-        os.remove(path)
+    path = file.file_path.split('/')[-1]
+    await file.download_to_drive(path)
+    media_ids = upload_media([path])
+    create_tweet(text, media_ids)
+    os.remove(path)
 
 
-async def tweet_file_3(text: str, path: str):
-    if len(text) <= TWEET_LENGTH:
-        # todo: can also quote tweet here.. is that an option?
-        media_id = api.media_upload(path)
-        client.create_tweet(text=text, media_ids=[media_id.media_id])
-
-
-async def tweet_file_2(update: Update, context: CallbackContext):
+async def tweet_file_2(update: Update):
     await tweet_file(get_caption(update), await get_file(update))
 
 
+async def tweet_file_3(text: str, path: str):
+
+    media_id = api.media_upload(path)
+    create_tweet(text=text, media_ids=[media_id.media_id])
+
 async def tweet_files(context: CallbackContext, text: str, posts: [Post]):
-    if len(text) > TWEET_LENGTH:
-        # todo: better cut to text length
-        return
     upload_files = []
     for post in posts:
         file = await context.bot.get_file(post.file_id)
-        logging.info(f"file: {file}")
         path = file.file_path.split('/')[-1]
         await file.download_to_drive(path)
-        logging.info(f"path: {path}")
         upload_files.append(path)
 
-    try:
-
-        media_ids = []
-        for filename in upload_files:
-            res = api.media_upload(filename)
-            logging.info(f"media_id-RESULT: {res}")
-            media_ids.append(res.media_id)
-
-        # Tweet with multiple images
-        client.create_tweet(text=text, media_ids=media_ids)
-    except Exception as e:
-        logging.info(f"⚠️ Error when trying to post multiple files to twitter: {e}")
-    for path in upload_files:  # better use OS unlink path
+    media_ids = upload_media(upload_files)
+    create_tweet(text, media_ids)
+    for path in upload_files:
         os.remove(path)
