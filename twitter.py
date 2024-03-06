@@ -45,11 +45,9 @@ def upload_media(files):
 
 def create_tweet(text, media_ids=None):
     try:
-        client.create_tweet(text=text[:TWEET_LENGTH], media_ids=media_ids)
+        client.create_tweet(text=text.replace("\n", " ").replace("  ", " ")[:TWEET_LENGTH], media_ids=media_ids)
     except Exception as e:
         logging.error(f"Error when trying to post to twitter: {e}")
-
-
 
 
 async def tweet_file(text: str, file: telegram.File):
@@ -65,9 +63,9 @@ async def tweet_file_2(update: Update):
 
 
 async def tweet_file_3(text: str, path: str):
-
     media_id = api.media_upload(path)
     create_tweet(text=text, media_ids=[media_id.media_id])
+
 
 async def tweet_files(context: CallbackContext, text: str, posts: [Post]):
     upload_files = []

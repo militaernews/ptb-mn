@@ -166,6 +166,19 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
     return found
 
 
+def create_svg_text_element(texts, checked):
+    for index, value in enumerate(texts):
+        texts[index] = value.replace("_", " ")
+    y_offset = ["0", "-1em", "1em"]
+    text_elements = [
+        f'<tspan x="50%" text-anchor="middle" dy="{y_offset[i]}">{text}</tspan>'
+        for i, text in enumerate(texts)
+    ]
+    fill_color = "#e8cc00" if checked else "white"
+    return f'<text font-size="48px" font-family="Arial" dominant-baseline="central" fill="{fill_color}" y="50%">' + "".join(
+        text_elements) + '</text>'
+
+
 def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     all_width = 2460
     all_height = 1460
@@ -216,32 +229,13 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
             curr_field = field[curr_x][curr_y]
             # logging.info(curr_field)
 
-            textss = curr_field["text"].split(" ")
-            for index, value in enumerate(textss):
-                textss[index] = value.replace("_", " ")
-
-            inner_text = """<text  font-size="48px" font-family="Arial" dominant-baseline="central" """
-
-            if curr_field["checked"]:
-                inner_text += "fill=\"#e8cc00\" "
-            else:
-                inner_text += "fill=\"white\" "
-
-            if len(textss) == 1:
-                inner_text += f""" y="50%"><tspan  x="50%" text-anchor="middle">{textss[0]}</tspan>"""
-            elif len(textss) == 2:
-                inner_text += f""" y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">{textss[0]}</tspan>"""
-            elif len(textss) == 3:
-                inner_text += f"""y="50%"><tspan  x="50%" text-anchor="middle">{textss[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="1em">{textss[2]}</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">{textss[0]}</tspan>"""
-            else:
-                inner_text = "> TOO LONG"
-
             svg_field += f"""
-            {x_var} y="{current_height}" text-align="center">
-           <rect x="0" y="0" width="100%" height="100%"   stroke="#2c5a2b" stroke-width="6px" paint-order="fill" fill="#002a24"  />
-           {inner_text}</text>
-         </svg>
-    """
+                       {x_var} y="{current_height}" text-align="center">
+                      <rect x="0" y="0" width="100%" height="100%"   stroke="#2c5a2b" stroke-width="6px" paint-order="fill" fill="#002a24"  />
+                      {create_svg_text_element(curr_field["text"].split(" "), curr_field["checked"])}
+                    </svg>
+               """
+
             curr_y += 1
             current_height += height_treshold
         curr_x += 1
@@ -256,7 +250,6 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     svg += f"""
     <text y="{all_height - border_distance}" x="{all_width - border_distance}" font-size="26px" font-family="Arial" dominant-baseline="middle"  text-anchor="end" fill="gray" >zuletzt aktualisiert {datetime.datetime.now().strftime("%d.%m.%Y, %H:%M:%S")}</text>
     </svg>"""
-
 
     svg_to_file(svg)
 
@@ -282,7 +275,6 @@ async def handle_bingo(update: Update, context: CallbackContext):
     found_amount = len(found)
 
     if found_amount != 0:
-
         if check_win(context.bot_data["bingo"]):
             create_svg(context.bot_data["bingo"])
             with open("field.png", "rb") as f:
@@ -291,18 +283,17 @@ async def handle_bingo(update: Update, context: CallbackContext):
                 await msg.pin()
             context.bot_data["bingo"] = generate_bingo_field()
         else:
-
             text = '<b>Treffer! 🥳</b>\n\n'
 
             for index, word in enumerate(found):
                 text += f"{word.replace('_', '')}"
 
                 if index == found_amount - 1:
-                    if found_amount == 1:
-                        text += " ist ein gesuchter Begriff"
-                    else:
-                        text += " sind gesuchte Begriffe"
-
+                    text += (
+                        " ist ein gesuchter Begriff"
+                        if found_amount == 1
+                        else " sind gesuchte Begriffe"
+                    )
                     text += " im MilitärNews-Bingo."
 
                 elif index == found_amount - 2:
