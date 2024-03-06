@@ -55,7 +55,7 @@ def chunks(lst, n):
 def generate_captcha(user_id: int):
     background = Image.open('res/img/captcha.jpg')
 
-    emoji_names =random.sample(supported_emojis,4)
+    emoji_names = random.sample(supported_emojis, 4)
     paste_image_list = emoji_names.copy()
 
     width = int(background.width / 3)

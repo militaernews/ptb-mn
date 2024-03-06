@@ -165,4 +165,4 @@ async def disso(update: Update, context: CallbackContext):
 
 
 async def front(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "front.jpg")
+    await reply_photo(update, context, "front.png")

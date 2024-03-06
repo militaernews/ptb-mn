@@ -26,7 +26,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     for lang in languages:
         logging.info(lang)
 
-        reply_id = await query_replies4(update.channel_post, lang.lang_key) # query_replies3(post_id, lang.lang_key)
+        reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
         logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
 
         try:

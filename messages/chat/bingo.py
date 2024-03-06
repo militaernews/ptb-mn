@@ -169,14 +169,18 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
 def create_svg_text_element(texts, checked):
     for index, value in enumerate(texts):
         texts[index] = value.replace("_", " ")
-    y_offset = ["0", "-1em", "1em"]
-    text_elements = [
-        f'<tspan x="50%" text-anchor="middle" dy="{y_offset[i]}">{text}</tspan>'
-        for i, text in enumerate(texts)
-    ]
+
+    if len(texts) == 1:
+        inner_text = f""" y="50%"><tspan  x="50%" text-anchor="middle">{texts[0]}</tspan>"""
+    elif len(texts) == 2:
+        inner_text = f""" y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">{texts[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">{texts[0]}</tspan>"""
+    elif len(texts) == 3:
+        inner_text = f"""y="50%"><tspan  x="50%" text-anchor="middle">{texts[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="1em">{texts[2]}</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">{texts[0]}</tspan>"""
+    else:
+        inner_text = "> TOO LONG"
+
     fill_color = "#e8cc00" if checked else "white"
-    return f'<text font-size="48px" font-family="Arial" dominant-baseline="central" fill="{fill_color}" y="50%">' + "".join(
-        text_elements) + '</text>'
+    return f'<text font-size="48px" font-family="Arial" dominant-baseline="central" fill="{fill_color}"{inner_text}</text>'
 
 
 def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
@@ -197,7 +201,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
        fill='#00231e'
        xmlns='http://www.w3.org/2000/svg'
        xmlns:svg='http://www.w3.org/2000/svg'>
-       
+
         <rect width="100%" height="100%"   fill='#00231e'/>
 
     <text y="{border_distance + 60}" x="50%" font-size="60px" font-family="Arial" dominant-baseline="middle"  fill="white" ><tspan dy="0" x="50%" font-weight="bold" text-anchor="middle">Militär-News-Bingo</tspan></text>
