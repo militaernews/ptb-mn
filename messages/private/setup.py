@@ -94,6 +94,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("argu", "Argumentationspyramide"),
         ("disso", "Kognitive Dissonanz"),
         ("front", "An die Front!"),
+    ("pali", "Karte Palästinas"),
     ]
     await context.bot.set_my_commands(chat_de_commands)
 

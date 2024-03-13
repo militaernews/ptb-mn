@@ -317,7 +317,7 @@ async def bingo_field(update: Update, context: CallbackContext):
         with open("field.png", "rb") as f:
             await update.message.reply_photo(photo=f,
                                              caption=f"<b>MilitärNews-Bingo</b>\n\nWenn eine im @MNChat gesendete Nachricht auf dem Spielfeld vorkommendende Begriffe enthält, werden diese rausgestrichen.\n\nIst eine gesamte Zeile oder Spalte durchgestrichen, dann heißt es <b>BINGO!</b> und eine neue Runde startet.\n{GERMAN.footer}")
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         logging.info("No field yet")
 
 
