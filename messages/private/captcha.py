@@ -4,6 +4,7 @@ from typing import Final, Optional, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
 from telegram import InlineKeyboardButton, Update, InlineKeyboardMarkup, ChatMemberUpdated, ChatMember
+from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 from data.lang import GERMAN
@@ -11,42 +12,30 @@ from util.helper import MSG_REMOVAL_PERIOD
 
 KEYBOARD: Final[str] = "keyboard"
 
-supported_emojis = ['🃏', '🎤', '🎥', '🎨', '🎩', '🎬', '🎭', '🎮', '🎯', '🎱', '🎲', '🎷', '🎸', '🎹', '🎾', '🏀', '🏆', '🏈', '🏉',
-                    '🏐',
-                    '🏓', '💠', '💡', '💣', '💨', '💸', '💻', '💾', '💿', '📈', '📉', '📊', '📌', '📍', '📎', '📏', '📐', '📞', '📟',
-                    '📠',
-                    '📡', '📢', '📣', '📦', '📹', '📺', '📻', '📼', '📽', '🖥', '🖨', '🖲', '🗂', '🗃', '🗄', '🗜', '🗝', '🗡', '🚧',
-                    '🚨',
-                    '🛒', '🛠', '🛢', '🧀', '🌭', '🌮', '🌯', '🌺', '🌻', '🌼', '🌽', '🌾', '🌿', '🍊', '🍋', '🍌', '🍍', '🍎', '🍏',
-                    '🍚',
-                    '🍛', '🍜', '🍝', '🍞', '🍟', '🍪', '🍫', '🍬', '🍭', '🍮', '🍯', '🍺', '🍻', '🍼', '🍽', '🍾', '🍿', '🎊', '🎋',
-                    '🎍',
-                    '🎏', '🎚', '🎛', '🎞', '🐌', '🐍', '🐎', '🐚', '🐛', '🐝', '🐞', '🐟', '🐬', '🐭', '🐮', '🐯', '🐻', '🐼', '🐿',
-                    '👛',
-                    '👜', '👝', '👞', '👟', '💊', '💋', '💍', '💎', '🔋', '🔌', '🔪', '🔫', '🔬', '🔭', '🔮', '🕯', '🖊', '🖋', '🖌',
-                    '🖍',
-                    '🥚', '🥛', '🥜', '🥝', '🥞', '🦊', '🦋', '🦌', '🦍', '🦎', '🦏', '🌀', '🌂', '🌑', '🌕', '🌡', '🌤', '⛅️', '🌦',
-                    '🌧',
-                    '🌨', '🌩', '🌰', '🌱', '🌲', '🌳', '🌴', '🌵', '🌶', '🌷', '🌸', '🌹', '🍀', '🍁', '🍂', '🍃', '🍄', '🍅', '🍆',
-                    '🍇',
-                    '🍈', '🍉', '🍐', '🍑', '🍒', '🍓', '🍔', '🍕', '🍖', '🍗', '🍘', '🍙', '🍠', '🍡', '🍢', '🍣', '🍤', '🍥', '🍦',
-                    '🍧',
-                    '🍨', '🍩', '🍰', '🍱', '🍲', '🍴', '🍵', '🍶', '🍷', '🍸', '🍹', '🎀', '🎁', '🎂', '🎃', '🎄', '🎈', '🎉', '🎒',
-                    '🎓',
-                    '🎙', '🐀', '🐁', '🐂', '🐃', '🐄', '🐅', '🐆', '🐇', '🐕', '🐉', '🐓', '🐖', '🐗', '🐘', '🐙', '🐠', '🐡', '🐢',
-                    '🐣',
-                    '🐤', '🐥', '🐦', '🐧', '🐨', '🐩', '🐰', '🐱', '🐴', '🐵', '🐶', '🐷', '🐸', '🐹', '👑', '👒', '👠',
-                    '👡', '👢', '💄', '💈', '🔗', '🔥', '🔦', '🔧', '🔨', '🔩', '🔰', '🔱', '🕰', '🕶', '🕹', '🖇', '🚀', '🤖', '🥀',
-                    '🥁',
-                    '🥂', '🥃', '🥐', '🥑', '🥒', '🥓', '🥔', '🥕', '🥖', '🥗', '🥘', '🥙', '🦀', '🦁', '🦂', '🦃', '🦄', '🦅', '🦆',
-                    '🦇',
-                    '🦈', '🦉', '🦐', '🦑', '⭐️', '⏰', '⏲', '⚠️', '⚡️', '⚰️', '⚽️', '⚾️', '⛄️', '⛅️', '⛈', '⛏', '⛓',
-                    '⌚️',
-                    '☎️', '⚜️', '✏️', '⌨️', '☁️', '☃️', '☄️', '☕️', '☘️', '☠️', '♨️', '⚒', '⚔️', '⚙️', '✈️', '✉️',
-                    '✒️']
+supported_emojis = ['🃏', '🎤', '🎥', '🎨', '🎩', '🎬', '🎭', '🎮', '🎯', '🎱', '🎲', '🎷', '🎸', '🎹', '🎾', '🏀',
+                    '🏆', '🏈', '🏉', '🏐', '🏓', '💠', '💡', '💣', '💨', '💸', '💻', '💾', '💿', '📈', '📉', '📊',
+                    '📌', '📍', '📎', '📏', '📐', '📞', '📟', '📠', '📡', '📢', '📣', '📦', '📹', '📺', '📻', '📼',
+                    '📽', '🖥', '🖨', '🖲', '🗂', '🗃', '🗄', '🗜', '🗝', '🗡', '🚧', '🚨', '🛒', '🛠', '🛢', '🧀', '🌭',
+                    '🌮', '🌯', '🌺', '🌻', '🌼', '🌽', '🌾', '🌿', '🍊', '🍋', '🍌', '🍍', '🍎', '🍏', '🍚', '🍛',
+                    '🍜', '🍝', '🍞', '🍟', '🍪', '🍫', '🍬', '🍭', '🍮', '🍯', '🍺', '🍻', '🍼', '🍽', '🍾', '🍿',
+                    '🎊', '🎋', '🎍', '🎏', '🎚', '🎛', '🎞', '🐌', '🐍', '🐎', '🐚', '🐛', '🐝', '🐞', '🐟', '🐬',
+                    '🐭', '🐮', '🐯', '🐻', '🐼', '🐿', '👛', '👜', '👝', '👞', '👟', '💊', '💋', '💍', '💎', '🔋',
+                    '🔌', '🔪', '🔫', '🔬', '🔭', '🔮', '🕯', '🖊', '🖋', '🖌', '🖍', '🥚', '🥛', '🥜', '🥝', '🥞', '🦊',
+                    '🦋', '🦌', '🦍', '🦎', '🦏', '🌀', '🌂', '🌑', '🌕', '🌡', '🌤', '⛅️', '🌦', '🌧', '🌨', '🌩',
+                    '🌰', '🌱', '🌲', '🌳', '🌴', '🌵', '🌶', '🌷', '🌸', '🌹', '🍀', '🍁', '🍂', '🍃', '🍄', '🍅',
+                    '🍆', '🍇', '🍈', '🍉', '🍐', '🍑', '🍒', '🍓', '🍔', '🍕', '🍖', '🍗', '🍘', '🍙', '🍠', '🍡',
+                    '🍢', '🍣', '🍤', '🍥', '🍦', '🍧', '🍨', '🍩', '🍰', '🍱', '🍲', '🍴', '🍵', '🍶', '🍷', '🍸',
+                    '🍹', '🎀', '🎁', '🎂', '🎃', '🎄', '🎈', '🎉', '🎒', '🎓', '🎙', '🐀', '🐁', '🐂', '🐃', '🐄',
+                    '🐅', '🐆', '🐇', '🐕', '🐉', '🐓', '🐖', '🐗', '🐘', '🐙', '🐠', '🐡', '🐢', '🐣', '🐤', '🐥',
+                    '🐦', '🐧', '🐨', '🐩', '🐰', '🐱', '🐴', '🐵', '🐶', '🐷', '🐸', '🐹', '👑', '👒', '👠', '👡',
+                    '👢', '💄', '💈', '🔗', '🔥', '🔦', '🔧', '🔨', '🔩', '🔰', '🔱', '🕰', '🕶', '🕹', '🖇', '🚀', '🤖',
+                    '🥀', '🥁', '🥂', '🥃', '🥐', '🥑', '🥒', '🥓', '🥔', '🥕', '🥖', '🥗', '🥘', '🥙', '🦀', '🦁',
+                    '🦂', '🦃', '🦄', '🦅', '🦆', '🦇', '🦈', '🦉', '🦐', '🦑', '⭐️', '⏰', '⏲', '⚠️', '⚡️', '⚰️',
+                    '⚽️', '⚾️', '⛄️', '⛅️', '⛈', '⛏', '⛓', '⌚️', '☎️', '⚜️', '✏️', '⌨️', '☁️', '☃️', '☄️', '☕️',
+                    '☘️', '☠️', '♨️', '⚒', '⚔️', '⚙️', '✈️', '✉️', '✒️']
 
 
-def chunks(lst, n):
+def chunked(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
@@ -65,7 +54,7 @@ def generate_captcha(user_id: int):
                  range(4)]
     print(positions)
 
-    draw = ImageDraw.Draw(background)
+    ImageDraw.Draw(background)
     font = ImageFont.truetype(r"AppleColorEmoji.ttf", 137)
 
     for i, emoji in enumerate(paste_image_list):
@@ -73,8 +62,7 @@ def generate_captcha(user_id: int):
         draw = ImageDraw.Draw(text_layer)
         draw.text(xy=(0, 0), text=emoji, fill=(255, 255, 255), embedded_color=True, font=font)
 
-        rotated_text_layer = text_layer.rotate(random.randint(0, 350),
-                                               expand=True, fillcolor=(0, 0, 0, 0), resample=Image.BICUBIC)
+        rotated_text_layer = text_layer.rotate(random.randint(0, 350), expand=True, fillcolor=(0, 0, 0, 0))
         background.paste(rotated_text_layer, positions[i], rotated_text_layer)
 
     emoji_captcha_path = f"temp/captcha_{user_id}.png"
@@ -103,7 +91,8 @@ def create_keyboard(context: CallbackContext):
 
 
 def extract_status_change(chat_member_update: ChatMemberUpdated) -> Optional[Tuple[bool, bool]]:
-    """Takes a ChatMemberUpdated instance and extracts whether the 'old_chat_member' was a member of the chat and whether the 'new_chat_member' is a member of the chat. Returns None, if the status didn't change.
+    """Takes a ChatMemberUpdated instance and extracts whether the 'old_chat_member' was a member of the chat and
+    whether the 'new_chat_member' is a member of the chat. Returns None, if the status didn't change.
     """
 
     status_change = chat_member_update.difference().get("status")
@@ -114,17 +103,11 @@ def extract_status_change(chat_member_update: ChatMemberUpdated) -> Optional[Tup
 
     old_status, new_status = status_change
 
-    was_member = old_status in [
-        ChatMember.MEMBER,
-        ChatMember.OWNER,
-        ChatMember.ADMINISTRATOR,
-    ] or (old_status == ChatMember.RESTRICTED and old_is_member is True)
+    was_member = old_status in [ChatMember.MEMBER, ChatMember.OWNER, ChatMember.ADMINISTRATOR, ] or (
+            old_status == ChatMember.RESTRICTED and old_is_member is True)
 
-    is_member = new_status in [
-        ChatMember.MEMBER,
-        ChatMember.OWNER,
-        ChatMember.ADMINISTRATOR,
-    ] or (new_status == ChatMember.RESTRICTED and new_is_member is True)
+    is_member = new_status in [ChatMember.MEMBER, ChatMember.OWNER, ChatMember.ADMINISTRATOR, ] or (
+            new_status == ChatMember.RESTRICTED and new_is_member is True)
 
     return was_member, is_member
 
@@ -145,8 +128,7 @@ async def send_captcha(update: Update, context: CallbackContext):
     member_name = update.chat_member.new_chat_member.user.mention_html()
 
     if not was_member and is_member:
-        await update.effective_chat.send_message(
-            f"{member_name} was added by {cause_name}. Welcome!", )
+        await update.effective_chat.send_message(f"{member_name} was added by {cause_name}. Welcome!", )
     else:
         return
 
@@ -185,11 +167,13 @@ async def click_captcha(update: Update, context: CallbackContext):
 
     logging.info(f"{update.callback_query.from_user.id} - correct: {correct} - active: {active}")
     if correct == 4 and active == 4:
-        await update.callback_query.message.delete()
-        await context.bot.send_message(update.callback_query.from_user.id,
-                                       "Vielen Dank für das Lösen des Captchas 😊"
-                                       "\n\nBitte warte kurz. Die Admins überprüfen dein Profil.")
-
+        try:
+            await update.callback_query.delete_message()
+            await context.bot.send_message(update.callback_query.from_user.id,
+                                           "Vielen Dank für das Lösen des Captchas 😊"
+                                           "\n\nBitte warte kurz. Die Admins überprüfen dein Profil.")
+        except TelegramError:
+            logging.error(f"Failed to delete message from user {update.callback_query.from_user.id}")
     else:
         await update.callback_query.edit_message_reply_markup(InlineKeyboardMarkup(create_keyboard(context)))
         await update.callback_query.answer()
