@@ -15,6 +15,7 @@ from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
     loss, peace, bias, ref, bot, mimimi, cia, stats, duden, sold, argu, disso, front, pali
+from messages.chat.filter import remove_command
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info, advertisement
@@ -136,6 +137,8 @@ if __name__ == "__main__":
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
 
     app.add_handler(MessageHandler(filters.Chat(config.ADMINS), flag_to_hashtag_test))
+
+    app.add_handler(MessageHandler(filters.Regex("/.*"), remove_command))
 
     print("### RUN LOCAL ###")
     app.run_polling(poll_interval=1)

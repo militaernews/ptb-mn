@@ -1,6 +1,7 @@
 import logging
 import random
 import re
+from asyncio import sleep
 
 import requests
 from telegram import Update, Poll
@@ -112,3 +113,8 @@ async def handle_other_chats(update: Update, context: CallbackContext):
     await handle_bingo(update, context)
 
     await handle_putin_dict(update, context)
+
+
+async def remove_command(update: Update, context: CallbackContext):
+    await sleep(2)
+    await update.message.delete()

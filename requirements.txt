@@ -8,8 +8,8 @@ ftfy==6.2.0
 httpx==0.27.0
 pysbd==0.3.4
 requests==2.31.0
-orjson==3.9.15
-pillow==10.2.0
+orjson==3.10.0
+pillow==10.3.0
 regex==2023.12.25
 aiopg==1.4.0
 pyvips==2.2.2 # https://www.libvips.org/install.html
