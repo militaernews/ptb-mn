@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
     app.add_handler(MessageHandler(filters.Chat(config.ADMINS), flag_to_hashtag_test))
 
-    app.add_handler(MessageHandler(filters.Regex("/.*"), remove_command))
+    app.add_handler(MessageHandler(filters.Regex(r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$"), remove_command))
 
     print("### RUN LOCAL ###")
     app.run_polling(poll_interval=1)
