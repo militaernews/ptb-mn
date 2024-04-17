@@ -198,7 +198,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
        height='{all_height}'
        viewBox='0 0 {all_width} {all_height}'
        version='1.1'
-       fill='#00231e'
+ 
        xmlns='http://www.w3.org/2000/svg'
        xmlns:svg='http://www.w3.org/2000/svg'>
 

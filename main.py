@@ -141,4 +141,4 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(filters.Regex(r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$"), remove_command))
 
     print("### RUN LOCAL ###")
-    app.run_polling(poll_interval=1)
+    app.run_polling(poll_interval=1, drop_pending_updates=False)
