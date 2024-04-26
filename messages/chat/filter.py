@@ -115,6 +115,6 @@ async def handle_other_chats(update: Update, context: CallbackContext):
     await handle_putin_dict(update, context)
 
 
-async def remove_command(update: Update, context: CallbackContext):
+async def remove_command(update: Update, _: CallbackContext):
     await sleep(2)
     await update.message.delete()
