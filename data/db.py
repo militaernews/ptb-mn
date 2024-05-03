@@ -1,9 +1,13 @@
 import inspect
 import logging
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from traceback import format_exc
+from typing import AsyncGenerator
 
 import aiopg
+from aiopg import create_pool
+from psycopg2 import OperationalError
 from psycopg2.extras import NamedTupleCursor
 from telegram import Message
 from telegram.ext import CallbackContext
@@ -33,6 +37,20 @@ class Post:
     text: str
 
 
+@asynccontextmanager
+async def db_cursor() -> AsyncGenerator:
+    try:
+        async with create_pool(DATABASE_URL) as pool:
+            async with pool.acquire() as conn:
+                async with conn.cursor(cursor_factory=NamedTupleCursor) as cursor:
+                    yield cursor
+    except OperationalError as err:
+        logging.error(
+            f"{inspect.currentframe().f_code.co_name} — DB-Operation failed!\npgerror: {err.pgerror} -- pgcode: {err.pgcode}\nextensions.Diagnostics: {err.diag}", )
+    except Exception as e:
+        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+
+
 async def get_mg(mg_id: str):
     pool = await aiopg.connect(DATABASE_URL)
     c = await pool.cursor()
@@ -45,174 +63,106 @@ async def get_mg(mg_id: str):
 PHOTO, VIDEO, ANIMATION = range(3)
 
 
-async def db_operation(query, *params, fetch='one'):
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute(query, params)
-                    if fetch == 'one':
-                        return await c.fetchone()
-                    elif fetch == 'all':
-                        return await c.fetchall()
-    except Exception as e:
-        func_name = inspect.currentframe().f_code.co_name
-        logging.error(f"{func_name} — DB-Operation failed {repr(e)} - {format_exc()}")
-
-
 async def query_files(meg_id: str) -> [Post]:
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute("select * from posts p where p.media_group_id = %s and p.lang='de'", [meg_id])
-                    res = await c.fetchall()
+    async with db_cursor() as c:
+        await c.execute("select * from posts p where p.media_group_id = %s and p.lang='de'", [meg_id])
+        res = await c.fetchall()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                    return res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        return res
 
 
 async def query_replies(msg_id: int, lang_key: str):
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute("select p.reply_id from posts p where p.msg_id = %s and p.lang=%s",
-                                    (msg_id, lang_key))
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute("select p.reply_id from posts p where p.msg_id = %s and p.lang=%s",
+                        (msg_id, lang_key))
+        res = await c.fetchone()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                    return res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        return res
 
 
 async def query_replies2(post_id: int, lang_key: str):
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute("select p.reply_id from posts p where p.post_id = %s and p.lang=%s",
-                                    (post_id, lang_key))
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute("select p.reply_id from posts p where p.post_id = %s and p.lang=%s",
+                        (post_id, lang_key))
+        res = await c.fetchone()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                    return res[0] if res is not None else res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        return res[0] if res is not None else res
 
 
 async def get_post_id(msg: Message):
     if msg.reply_to_message is None:
         return
 
-    return await db_operation(
-        "select p.post_id from posts p where p.msg_id = %s and p.lang='de'",
-        msg.reply_to_message.id,
-        fetch='one'
-    )
+    async with db_cursor() as c:
+        await c.execute("select p.post_id from posts p where p.msg_id = %s and p.lang='de'",
+                        [msg.reply_to_message.id, ])
+        res = await c.fetchone()
+
+        return res[0] if res is not None else res
 
 
 async def get_post_id2(msg_id: int):
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute("select p.post_id from posts p where p.msg_id = %s and p.lang='de'", [msg_id])
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute("select p.post_id from posts p where p.msg_id = %s and p.lang='de'", [msg_id])
+        res = await c.fetchone()
 
-                    return res[0] if res is not None else res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        return res[0] if res is not None else res
 
 
 async def query_replies3(post_id: int, lang_key: str):
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute("select p.msg_id from posts p where p.post_id = %s and p.lang=%s",
-                                    (post_id, lang_key))
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute("select p.msg_id from posts p where p.post_id = %s and p.lang=%s",
+                        (post_id, lang_key))
+        res = await c.fetchone()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                    return res[0] if res is not None else res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        return res[0] if res is not None else res
 
 
 async def query_replies4(msg: Message, lang_key: str):
     if msg.reply_to_message is None:
         return
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute(
-                        "select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')",
-                        (lang_key, msg.reply_to_message.id))
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute(
+            "select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')",
+            (lang_key, msg.reply_to_message.id))
+        res = await c.fetchone()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                    return res[0] if res is not None else res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        return res[0] if res is not None else res
 
 
 async def get_msg_id(msg_id: int, lang_key: str):
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute(
-                        "select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')",
-                        (lang_key, msg_id))
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute(
+            "select p.msg_id from posts p where p.lang=%s and p.post_id = (select pp.post_id from posts pp where pp.msg_id = %s and pp.lang='de')",
+            (lang_key, msg_id))
+        res = await c.fetchone()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                    return res[0] if res is not None else res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        return res[0] if res is not None else res
 
 
 async def get_file_id(msg_id: int):
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute("select p.file_id from posts p where p.msg_id=%s", [msg_id])
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute("select p.file_id from posts p where p.msg_id=%s", [msg_id])
+        res = await c.fetchone()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                    return res[0] if res is not None else res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        return res[0] if res is not None else res
 
 
 async def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key):
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute("update posts p set text = %s where p.msg_id=%s and p.lang=%s",
-                                    (text, msg_id, lang_key))
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute("update posts p set text = %s where p.msg_id=%s and p.lang=%s",
+                        (text, msg_id, lang_key))
+        res = await c.fetchone()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}", )
-                    return res[0] if res is not None else res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}", )
+        return res[0] if res is not None else res
 
 
 async def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
@@ -236,16 +186,10 @@ async def update_post(msg: Message, lang_key: str = GERMAN.lang_key):
     else:
         text = None
 
-    try:
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute(
-                        "update posts p set file_id = %s, text = %s, file_type = %s where p.msg_id=%s and p.lang=%s",
-                        (file_id, text, file_type, msg.id, lang_key))
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+    async with db_cursor() as c:
+        await c.execute(
+            "update posts p set file_id = %s, text = %s, file_type = %s where p.msg_id=%s and p.lang=%s",
+            (file_id, text, file_type, msg.id, lang_key))
 
 
 async def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None, lang_key: str = GERMAN.lang_key,
@@ -294,53 +238,39 @@ async def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key):
 
 async def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_type: int = None,
                         file_id: str = None, lang_key: str = GERMAN.lang_key, post_id: int = None, text: str = None):
-    try:
-        if post_id is None:
-            async with aiopg.create_pool(DATABASE_URL) as pool:
-                async with pool.acquire() as conn:
-                    async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                        await c.execute("select max(p.post_id) from posts p")
-                        post_id = int((await c.fetchone())[0] or 0) + 1
+    if post_id is None:
+        async with db_cursor() as c:
+            await c.execute("select max(p.post_id) from posts p")
+            post_id = int((await c.fetchone())[0] or 0) + 1
 
-        insertable = (post_id, msg_id, meg_id, reply_id, file_type, file_id, lang_key, text)
-        logging.info(f">> Insert: {insertable}", )
+    insertable = (post_id, msg_id, meg_id, reply_id, file_type, file_id, lang_key, text)
+    logging.info(f">> Insert: {insertable}", )
 
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute(
-                        "insert into posts(post_id, msg_id, media_group_id, reply_id, file_type, file_id,lang,text) values (%s,%s,%s,%s,%s,%s,%s,%s) returning post_id",
-                        insertable)
-                    res = (await c.fetchone()).post_id
+    async with db_cursor() as c:
+        await c.execute(
+            "insert into posts(post_id, msg_id, media_group_id, reply_id, file_type, file_id,lang,text) values (%s,%s,%s,%s,%s,%s,%s,%s) returning post_id",
+            insertable)
+        res = (await c.fetchone()).post_id
 
-                    logging.info(f">> Result: post_id = {res}", )
-                    return res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">> Result: post_id = {res}", )
+        return res
 
 
 async def insert_promo(user_id: int, lang: str, promo_id: int):
-    try:
-        insertable = (user_id, lang, promo_id)
-        logging.info(f">> Insert: {insertable}", )
+    insertable = (user_id, lang, promo_id)
+    logging.info(f">> Insert: {insertable}", )
 
-        async with aiopg.create_pool(DATABASE_URL) as pool:
-            async with pool.acquire() as conn:
-                async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
-                    await c.execute("select * from promos p where p.user_id=%s;", [user_id])
-                    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute("select * from promos p where p.user_id=%s;", [user_id])
+        res = await c.fetchone()
 
-                    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
-                    if res is not None:
-                        return None
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        if res is not None:
+            return None
 
-                    await c.execute("insert into promos(user_id, lang, promo_id) values (%s,%s,%s) returning user_id;",
-                                    insertable)
-                    res = (await c.fetchone()).user_id
+        await c.execute("insert into promos(user_id, lang, promo_id) values (%s,%s,%s) returning user_id;",
+                        insertable)
+        res = (await c.fetchone()).user_id
 
-                    logging.info(f">> Result: user_id = {res}", )
-                    return res
-
-    except Exception as e:
-        logging.error(f"{inspect.currentframe().f_code.co_name} — DB-Operation failed {repr(e)} - {format_exc()}")
+        logging.info(f">> Result: user_id = {res}", )
+        return res

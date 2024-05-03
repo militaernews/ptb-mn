@@ -3,8 +3,10 @@ import logging
 import os
 import re
 import sys
+from datetime import datetime
+from typing import Final
 
-from telegram import LinkPreviewOptions  # LinkPreviewOptions,
+from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
     CallbackQueryHandler
@@ -26,15 +28,15 @@ from messages.private.setup import set_cmd  # , private_setup
 
 
 def add_logging():
-    os.makedirs(os.path.dirname(config.LOG_FILENAME), exist_ok=True)
+    log_filename: Final[str] = rf"./logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
+    os.makedirs(os.path.dirname(log_filename), exist_ok=True)
     logging.basicConfig(
         format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
         encoding="utf-8",
-        filename=config.LOG_FILENAME,
+        filename=log_filename,
         level=logging.DEBUG,
         datefmt='%Y-%m-%d %H:%M:%S'
     )
-    # logging.getLogger(__name__).setLevel(logging.DEBUG)
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
