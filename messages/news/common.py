@@ -156,7 +156,7 @@ async def share_in_other_channels(context: CallbackContext):
         with files[0]._unfrozen():
             files[0].caption = caption
 
-        reply_id = await query_replies3(posts[0].msg_id, lang.lang_key)
+        reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
         logging.info(f"------------------------------------------- reply_id: {reply_id}")
 
         try:

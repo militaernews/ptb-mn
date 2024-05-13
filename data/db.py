@@ -114,7 +114,7 @@ async def get_post_id2(msg_id: int):
 
 async def query_replies3(post_id: int, lang_key: str):
     async with db_cursor() as c:
-        await c.execute("select p.msg_id from posts p where p.post_id = %s and p.lang=%s",
+        await c.execute("select p.reply_id from posts p where p.post_id = %s and p.lang=%s",
                         (post_id, lang_key))
         res = await c.fetchone()
 
