@@ -6,12 +6,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-vipsbin = os.getenv(r"VIPSLIB")
-add_dll_dir = getattr(os, 'add_dll_directory', None)
-if callable(add_dll_dir):
-    add_dll_dir(vipsbin)
-else:
-    os.environ['PATH'] = os.pathsep.join((vipsbin, os.environ['PATH']))
 
 TOKEN: Final[str] = os.getenv('TELEGRAM')
 PORT = int(os.getenv("PORT", 8080))

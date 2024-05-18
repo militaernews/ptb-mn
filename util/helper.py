@@ -1,3 +1,4 @@
+import base64
 import logging
 import re
 from typing import Final
@@ -8,6 +9,7 @@ from telegram.ext import CallbackContext
 
 import config
 from data.lang import GERMAN
+from resvg_py import svg_to_bytes
 
 MSG_REMOVAL_PERIOD: Final[int] = 1200
 CHAT_ID: Final[str] = "chat_id"
@@ -97,3 +99,9 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
             f"<b>⚠️ Error when trying to read photo {file_name}</b>\n<code>{e}</code>\n\n"
             f"<b>Caused by Update</b>\n<code>{update}</code>",
         )
+
+
+def export_svg(svg: str, filename: str):
+    logging.info(svg)
+    with open(filename, 'wb') as f:
+        f.write( bytes(svg_to_bytes(svg_string=svg, dpi=300, font_dirs=["../res/fonts"])))

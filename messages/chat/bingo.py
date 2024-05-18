@@ -4,13 +4,13 @@ import random
 import re
 from typing import List, Union, Dict
 
-import pyvips
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 from data.lang import GERMAN
+from util.helper import export_svg
 
 load_dotenv()
 
@@ -175,7 +175,7 @@ def create_svg_text_element(texts, checked):
     elif len(texts) == 2:
         inner_text = f""" y="40%" ><tspan  x="50%" text-anchor="middle" dy="1em">{texts[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="-1em">{texts[0]}</tspan>"""
     elif len(texts) == 3:
-        inner_text = f"""y="50%"><tspan  x="50%" text-anchor="middle">{texts[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="1em">{texts[2]}</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">{texts[0]}</tspan>"""
+        inner_text = f""" y="50%"><tspan  x="50%" text-anchor="middle">{texts[1]}</tspan><tspan  x="50%" text-anchor="middle" dy="1em">{texts[2]}</tspan><tspan  x="50%" text-anchor="middle" dy="-2em">{texts[0]}</tspan>"""
     else:
         inner_text = "> TOO LONG"
 
@@ -255,15 +255,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     <text y="{all_height - border_distance}" x="{all_width - border_distance}" font-size="26px" font-family="Arial" dominant-baseline="middle"  text-anchor="end" fill="gray" >zuletzt aktualisiert {datetime.datetime.now().strftime("%d.%m.%Y, %H:%M:%S")}</text>
     </svg>"""
 
-    svg_to_file(svg)
-
-
-def svg_to_file(svg: str):
-    logging.info(svg)
-    with open("bingo.svg", "w", encoding="UTF-8") as f:
-        f.write(svg)
-    image = pyvips.Image.new_from_file("bingo.svg", dpi=100)
-    image.write_to_file('field.png')
+    export_svg(svg, "field.png")
 
 
 async def handle_bingo(update: Update, context: CallbackContext):
@@ -324,3 +316,5 @@ async def bingo_field(update: Update, context: CallbackContext):
 async def reset_bingo(update: Update, context: CallbackContext):
     context.bot_data["bingo"] = generate_bingo_field()
     await update.message.reply_text(f"Bingo was reset!\n\n{context.bot_data['bingo']}")
+
+create_svg(generate_bingo_field())
