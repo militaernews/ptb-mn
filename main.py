@@ -16,7 +16,8 @@ from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
-    loss, peace, bias, ref, bot, mimimi, cia, stats, duden, sold, argu, disso, front, pali
+    loss, peace, bias, ref, bot, mimimi, cia, stats, duden, sold, argu, disso, front, pali, vs, warn_user, unwarn_user, \
+    send_rules
 from messages.chat.filter import remove_command
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
@@ -34,7 +35,7 @@ def add_logging():
         format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
         encoding="utf-8",
         filename=log_filename,
-        level=logging.DEBUG,
+        level=logging.INFO,
         datefmt='%Y-%m-%d %H:%M:%S'
     )
     logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -109,14 +110,16 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("cia", cia))
     app.add_handler(CommandHandler("duden", duden))
     app.add_handler(CommandHandler("argu", argu))
+    app.add_handler(CommandHandler("vs", vs))
     app.add_handler(CommandHandler("disso", disso))
     app.add_handler(CommandHandler("front", front))
     app.add_handler(CommandHandler("pali", pali))
 
     app.add_handler(MessageHandler(filters.Regex("/ref.*"), ref))
 
-    # app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
-    # app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("rules", send_rules, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
     # app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
 

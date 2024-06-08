@@ -9,6 +9,7 @@ from telegram.ext import CallbackContext
 
 from data.db import Post
 from util.helper import get_caption, get_file
+from lxml import html
 
 load_dotenv()
 
@@ -44,6 +45,7 @@ def upload_media(files):
 
 
 def create_tweet(text, media_ids=None):
+    text = html.fromstring(text).text_content().strip()
     try:
         client.create_tweet(text=text.replace("\n", " ").replace("  ", " ")[:TWEET_LENGTH], media_ids=media_ids)
     except Exception as e:

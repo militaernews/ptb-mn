@@ -2,29 +2,29 @@ import logging
 import re
 from collections import defaultdict
 from functools import wraps
+from typing import Final, List
 
 import requests
-from telegram import Update
+from telegram import Update, ChatPermissions
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 import config
-from util.helper import reply_html, reply_photo
+from util.helper import reply_html, reply_photo, admin_action, CHAT_ID, MSG_REMOVAL_PERIOD, delete, MSG_ID
 
 
-async def admin_action(func):
-    @wraps(func)
-    async def wrapper(update: Update, context: CallbackContext, *args, **kwargs):
-        try:
-            await update.message.delete()
-        except TelegramError:
-            logging.warning("Needs admin rights")
-        if update.message.from_user.id not in config.ADMINS or update.message.reply_to_message is None:
-            return
-        return await func(update, context, *args, **kwargs)
+def get_rules() -> List[str]:
+    return [
+        "1️⃣ Keine Beleidigung anderer Mitglieder.",
+        "2️⃣ Kein Spam (mehr als drei einzelne Nachrichten oder Alben hintereinander weitergeleitet).",
+        "3️⃣ Keine pornografischen Inhalte.",
+        "4️⃣ Keine Aufnahmen von Leichen oder Schwerverletzen.",
+        "5️⃣ Keine privaten Inhalte anderer Personen teilen."
+    ]
 
-    return wrapper
+
+
 
 
 def manage_warnings(update: Update, context: CallbackContext, increment: int):
@@ -45,29 +45,71 @@ async def ban_user(update: Update, context: CallbackContext):
 
 @admin_action
 async def unwarn_user(update: Update, context: CallbackContext):
-    logging.info(f"unwarning {update.message.reply_to_message.from_user.id} !!")
-    warnings = manage_warnings(update, context, -1)
-    await update.message.reply_to_message.reply_text(
-        f"Dem Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde eine Warnung erlassen, womit er nur noch {warnings} von 3 hat.")
+    if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None and update.message.reply_to_message.from_user.id not in config.ADMINS:
+        logging.info(f"unwarning {update.message.reply_to_message.from_user.id} !!")
+
+        context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"] = []
+
+        await update.message.reply_to_message.reply_text(
+            f"Dem Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde alle Verwarnungen erlassen.")
 
 
 @admin_action
 async def warn_user(update: Update, context: CallbackContext):
-    logging.info(f"warning {update.message.reply_to_message.from_user.id} !!")
-    warnings = manage_warnings(update, context, 1)
-    if warnings >= 3:
-        logging.info(f"banning {update.message.reply_to_message.from_user.id} !!")
-        await context.bot.ban_chat_member(update.message.reply_to_message.chat_id,
-                                          update.message.reply_to_message.from_user.id, until_date=1)
-        await update.message.reply_to_message.reply_text(
-            f"Aufgrund wiederholter Verstöße habe ich {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} gebannt.")
-        return
-    await update.message.reply_to_message.reply_text(
-        f"Wegen Beleidigung hat der Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} die Warnung {warnings} von 3 erhalten.")
+    if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None and update.message.reply_to_message.from_user.id not in config.ADMINS:
+        logging.info(f"warning {update.message.reply_to_message.from_user.id} !!")
+
+        if "users" not in context.bot_data or update.message.reply_to_message.from_user.id not in context.bot_data[
+            "users"] or "warn" not in context.bot_data["users"][update.message.reply_to_message.from_user.id]:
+            context.bot_data["users"] = {
+                update.message.reply_to_message.from_user.id: {"warn": [update.message.reply_to_message.id]}}
+
+        else:
+            if update.message.reply_to_message.id in \
+                    context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"]:
+                msg = await update.message.reply_to_message.reply_text(
+                    "Der Nutzer wurde für diese Nachricht bereits verwarnt.")
+                context.job_queue.run_once(delete, MSG_REMOVAL_PERIOD,
+                                           {CHAT_ID: msg.chat_id, MSG_ID: msg.message_id})
+                return
+
+            context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"].append(
+                update.message.reply_to_message.id)
+
+        warn_amount = len(context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"])
+
+        if warn_amount > 3:
+            try:
+                logging.info(f"restricting {update.message.reply_to_message.from_user.id} !!")
+                await context.bot.restrict_chat_member(update.message.reply_to_message.chat_id,
+                                                  update.message.reply_to_message.from_user.id,ChatPermissions(can_send_messages=False))
+            except TelegramError as e:
+                logging.info(f"needs admin: {e}")
+                pass
+
+            await update.message.reply_to_message.reply_text(
+                f"Aufgrund wiederholter Verstöße habe ich {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} gebannt.")
+            return
+        else:
+
+            warn_text = f"Der Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} hat die Warnung {warn_amount} von 3 erhalten."
+            if len(context.args) != 0:
+                if context.args[0].isnumeric():
+                    warn_text = f"{warn_text}\n\nGrund: {get_rules()[int(context.args[0]) - 1]}"
+                else:
+
+                    warn_text = f"{warn_text}\n\nGrund: {' '.join(context.args)}"
+            else:
+                warn_text = (
+                    f"Hey {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)}‼️ Das musste jetzt echt nicht sein. Bitte verhalte dich besser!"
+                    f"\n\n{warn_text}"
+                    f"\n\n<i>Mit /rules bekommst du eine Übersicht der Regeln dieser Gruppe.</i>")
+
+            await update.message.reply_to_message.reply_text(warn_text)
 
 
 @admin_action
-async def report_user(update: Update, context: CallbackContext):
+async def report_user(update: Update, _: CallbackContext):
     logging.info(f"reporting {update.message.reply_to_message.from_user.id} !!")
     r = requests.post(url="http://localhost:8080/reports",
                       json={
@@ -129,7 +171,8 @@ async def ref(update: Update, context: CallbackContext):
         logging.info(f"link REF: {link}")
         text = f"Ich habe dir mal was passendes aus unserem Kanal rausgesucht😊\n\n👉🏼 <a href='t.me/{link}'>{link}</a>"
         if update.message.reply_to_message:
-            await update.message.reply_to_message.reply_text(f"Hey {update.message.reply_to_message.from_user.name}!\n{text}", disable_web_page_preview=False)
+            await update.message.reply_to_message.reply_text(
+                f"Hey {update.message.reply_to_message.from_user.name}!\n{text}", disable_web_page_preview=False)
         else:
             await context.bot.send_message(update.message.chat_id, text, disable_web_page_preview=False)
 
@@ -158,6 +201,10 @@ async def argu(update: Update, context: CallbackContext):
     await reply_photo(update, context, "argu.jpg")
 
 
+async def vs(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "vs.jpg")
+
+
 async def disso(update: Update, context: CallbackContext):
     await reply_photo(update, context, "disso.jpg")
 
@@ -168,3 +215,8 @@ async def front(update: Update, context: CallbackContext):
 
 async def pali(update: Update, context: CallbackContext):
     await reply_photo(update, context, "pali.jpg")
+
+
+
+async def send_rules(update: Update, context: CallbackContext):
+    await reply_html(update, context, "rules", "\n\n".join(get_rules()))

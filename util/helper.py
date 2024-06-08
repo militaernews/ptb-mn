@@ -1,7 +1,8 @@
 import base64
 import logging
 import re
-from typing import Final
+from functools import wraps
+from typing import Final, Optional
 
 from telegram import Update
 from telegram.error import TelegramError
@@ -48,34 +49,39 @@ async def get_file(update: Update):
 async def delete(context: CallbackContext):
     await context.bot.delete_message(context.job.data[CHAT_ID], context.job.data[MSG_ID])
 
+async def admin_action(func):
+    @wraps(func)
+    async def wrapper(update: Update, context: CallbackContext):
+        try:
+            await update.message.delete()
+        except TelegramError:
+            logging.warning("Needs admin rights")
+        if update.message.from_user.id not in config.ADMINS or update.message.reply_to_message is None:
+            return
+        return await func(update, context)
 
-async def reply_html(update: Update, context: CallbackContext, file_name: str):
-    try:
-        await update.message.delete()
-    except TelegramError as e:
-        logging.info(f"needs admin: {e}")
+    return wrapper
+
+async def reply_html(update: Update, context: CallbackContext, file_name: str, replacement: Optional[str]=None):
 
     try:
         with open(f"res/de/{file_name}.html", "r", encoding='utf-8') as f:
             text = f.read()
 
-        if update.message.reply_to_message is not None:
-            # if update.message.reply_to_message.from_user.first_name == "Telegram":
+        if "{}" in text:
+            text = re.sub(r"{}", replacement, text)
 
+        if update.message.reply_to_message is not None:
             msg = await update.message.reply_to_message.reply_text(text)
-        #   else:
-        #       msg = await update.message.reply_text(text)
         else:
             msg = await context.bot.send_message(update.message.chat_id, text)
 
         context.job_queue.run_once(delete, MSG_REMOVAL_PERIOD, {CHAT_ID: msg.chat_id, MSG_ID: msg.message_id})
 
     except Exception as e:
-        await context.bot.send_message(
-            config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to read html-file {file_name}</b>\n<code>{e}</code>\n\n"
-            f"<b>Caused by Update</b>\n<code>{update}</code>",
-        )
+        logging.error(f"Couldn't read html-file {file_name}: {e}")
+        pass
+
 
 
 async def reply_photo(update: Update, context: CallbackContext, file_name: str):

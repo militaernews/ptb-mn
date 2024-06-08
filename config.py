@@ -1,11 +1,9 @@
 import os
-from datetime import datetime
 from typing import Final
 
 from dotenv import load_dotenv
 
 load_dotenv()
-
 
 TOKEN: Final[str] = os.getenv('TELEGRAM')
 PORT = int(os.getenv("PORT", 8080))
@@ -19,13 +17,14 @@ CHANNEL_SOURCE = -1001372304339
 
 LOG_GROUP = -1001739784948
 
-
 NYX = 703453307
 ADMINS = (
     NYX,
     525147382,  # Melik
     466451473,  # Maxe
-    5945157782  # MN-Kontakt
+    5945157782,  # MN-Kontakt
+    883445178,  # Konsti
+    5645350844  # Self
 )
 
 BINGO_ADMINS = ADMINS + (
