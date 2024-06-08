@@ -1,8 +1,7 @@
 import logging
 import re
 from collections import defaultdict
-from functools import wraps
-from typing import Final, List
+from typing import List
 
 import requests
 from telegram import Update, ChatPermissions
@@ -11,7 +10,7 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 import config
-from util.helper import reply_html, reply_photo, admin_action, CHAT_ID, MSG_REMOVAL_PERIOD, delete, MSG_ID
+from util.helper import reply_html, reply_photo, CHAT_ID, MSG_REMOVAL_PERIOD, delete, MSG_ID, admin_reply, remove
 
 
 def get_rules() -> List[str]:
@@ -24,9 +23,6 @@ def get_rules() -> List[str]:
     ]
 
 
-
-
-
 def manage_warnings(update: Update, context: CallbackContext, increment: int):
     user_id = update.message.reply_to_message.from_user.id
     user_data = context.bot_data.setdefault("users", defaultdict(lambda: {"warn": 0}))
@@ -34,7 +30,7 @@ def manage_warnings(update: Update, context: CallbackContext, increment: int):
     return user_data[user_id]["warn"]
 
 
-@admin_action
+@admin_reply
 async def ban_user(update: Update, context: CallbackContext):
     logging.info(f"banning {update.message.reply_to_message.from_user.id} !!")
     await context.bot.ban_chat_member(update.message.chat_id, update.message.reply_to_message.from_user.id,
@@ -43,7 +39,7 @@ async def ban_user(update: Update, context: CallbackContext):
         f"Aufgrund eines gravierenden Verstoßes habe ich {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} gebannt.")
 
 
-@admin_action
+@admin_reply
 async def unwarn_user(update: Update, context: CallbackContext):
     if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None and update.message.reply_to_message.from_user.id not in config.ADMINS:
         logging.info(f"unwarning {update.message.reply_to_message.from_user.id} !!")
@@ -54,7 +50,7 @@ async def unwarn_user(update: Update, context: CallbackContext):
             f"Dem Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde alle Verwarnungen erlassen.")
 
 
-@admin_action
+@admin_reply
 async def warn_user(update: Update, context: CallbackContext):
     if update.message.from_user.id in config.ADMINS and update.message.reply_to_message is not None and update.message.reply_to_message.from_user.id not in config.ADMINS:
         logging.info(f"warning {update.message.reply_to_message.from_user.id} !!")
@@ -82,7 +78,8 @@ async def warn_user(update: Update, context: CallbackContext):
             try:
                 logging.info(f"restricting {update.message.reply_to_message.from_user.id} !!")
                 await context.bot.restrict_chat_member(update.message.reply_to_message.chat_id,
-                                                  update.message.reply_to_message.from_user.id,ChatPermissions(can_send_messages=False))
+                                                       update.message.reply_to_message.from_user.id,
+                                                       ChatPermissions(can_send_messages=False))
             except TelegramError as e:
                 logging.info(f"needs admin: {e}")
                 pass
@@ -108,7 +105,7 @@ async def warn_user(update: Update, context: CallbackContext):
             await update.message.reply_to_message.reply_text(warn_text)
 
 
-@admin_action
+@admin_reply
 async def report_user(update: Update, _: CallbackContext):
     logging.info(f"reporting {update.message.reply_to_message.from_user.id} !!")
     r = requests.post(url="http://localhost:8080/reports",
@@ -217,6 +214,22 @@ async def pali(update: Update, context: CallbackContext):
     await reply_photo(update, context, "pali.jpg")
 
 
-
 async def send_rules(update: Update, context: CallbackContext):
     await reply_html(update, context, "rules", "\n\n".join(get_rules()))
+
+
+@remove
+async def notify_admins(update: Update, _: CallbackContext):
+    logging.info(f"admin: {update.message}")
+
+    if update.message.reply_to_message is not None:
+        response = ""
+        for a in config.ADMINS:
+            response += mention_html(a, "​")
+
+        if update.message.reply_to_message.is_automatic_forward:
+            response += "Danke für deine Meldung, wir Admins prüfen das 😊"
+        else:
+            response += "‼️ Ein Nutzer hat deine Nachricht gemeldet. Wir Admins prüfen das."
+
+        await update.message.reply_to_message.reply_text(response)

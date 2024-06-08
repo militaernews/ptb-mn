@@ -94,14 +94,14 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("argu", "Argumentationspyramide"),
         ("disso", "Kognitive Dissonanz"),
         ("front", "An die Front!"),
-    ("pali", "Karte Palästinas"),
+        ("pali", "Karte Palästinas"),
     ]
     await context.bot.set_my_commands(chat_de_commands)
 
     await context.bot.set_my_commands(chat_de_commands + [
         ("warn", "Nutzer verwarnen"),
         ("unwarn", "Warnung abziehen"),
-    #    ("ban", "Nutzer sperren"),
+        #    ("ban", "Nutzer sperren"),
         ("bingo", "Spielfeld des Bullshit-Bingos"),
         ("reset_bingo", "Neue Bingo-Runde")
     ], scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))

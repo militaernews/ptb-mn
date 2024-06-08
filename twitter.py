@@ -4,12 +4,12 @@ import os
 import telegram
 import tweepy as tweepy
 from dotenv import load_dotenv
+from lxml import html
 from telegram import Update
 from telegram.ext import CallbackContext
 
 from data.db import Post
 from util.helper import get_caption, get_file
-from lxml import html
 
 load_dotenv()
 

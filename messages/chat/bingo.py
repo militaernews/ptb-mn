@@ -10,7 +10,7 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 from data.lang import GERMAN
-from util.helper import export_svg
+from util.helper import export_svg, admin
 
 load_dotenv()
 
@@ -301,6 +301,7 @@ async def handle_bingo(update: Update, context: CallbackContext):
             await update.message.reply_text(text)
 
 
+@admin
 async def bingo_field(update: Update, context: CallbackContext):
     try:
         if "bingo" not in context.bot_data:
@@ -316,5 +317,6 @@ async def bingo_field(update: Update, context: CallbackContext):
 async def reset_bingo(update: Update, context: CallbackContext):
     context.bot_data["bingo"] = generate_bingo_field()
     await update.message.reply_text(f"Bingo was reset!\n\n{context.bot_data['bingo']}")
+
 
 create_svg(generate_bingo_field())

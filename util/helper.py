@@ -1,16 +1,14 @@
-import base64
 import logging
 import re
-from functools import wraps
 from typing import Final, Optional
 
+from resvg_py import svg_to_bytes
 from telegram import Update
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 import config
 from data.lang import GERMAN
-from resvg_py import svg_to_bytes
 
 MSG_REMOVAL_PERIOD: Final[int] = 1200
 CHAT_ID: Final[str] = "chat_id"
@@ -49,21 +47,49 @@ async def get_file(update: Update):
 async def delete(context: CallbackContext):
     await context.bot.delete_message(context.job.data[CHAT_ID], context.job.data[MSG_ID])
 
-async def admin_action(func):
-    @wraps(func)
-    async def wrapper(update: Update, context: CallbackContext):
+
+def remove(func):
+    async def wrapper(update: Update, context: CallbackContext, ):
         try:
             await update.message.delete()
         except TelegramError:
             logging.warning("Needs admin rights")
-        if update.message.from_user.id not in config.ADMINS or update.message.reply_to_message is None:
-            return
-        return await func(update, context)
+
+        await func(update, context)
 
     return wrapper
 
-async def reply_html(update: Update, context: CallbackContext, file_name: str, replacement: Optional[str]=None):
 
+def admin_reply(func):
+    async def wrapper(update: Update, context: CallbackContext, ):
+        try:
+            await update.message.delete()
+        except TelegramError:
+            logging.warning("Needs admin rights")
+
+        if update.message.from_user.id not in config.ADMINS or update.message.reply_to_message is None:
+            return
+        await func(update, context)
+
+    return wrapper
+
+
+def admin(func):
+    async def wrapper(update: Update, context: CallbackContext, ):
+        try:
+            await update.message.delete()
+        except TelegramError:
+            logging.warning("Needs admin rights")
+
+        if update.message.from_user.id not in config.ADMINS:
+            return
+        await func(update, context)
+
+    return wrapper
+
+
+@remove
+async def reply_html(update: Update, context: CallbackContext, file_name: str, replacement: Optional[str] = None):
     try:
         with open(f"res/de/{file_name}.html", "r", encoding='utf-8') as f:
             text = f.read()
@@ -81,7 +107,6 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str, r
     except Exception as e:
         logging.error(f"Couldn't read html-file {file_name}: {e}")
         pass
-
 
 
 async def reply_photo(update: Update, context: CallbackContext, file_name: str):
@@ -110,4 +135,4 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
 def export_svg(svg: str, filename: str):
     logging.info(svg)
     with open(filename, 'wb') as f:
-        f.write( bytes(svg_to_bytes(svg_string=svg, dpi=300, font_dirs=["../res/fonts"])))
+        f.write(bytes(svg_to_bytes(svg_string=svg, dpi=300, font_dirs=["../res/fonts"])))
