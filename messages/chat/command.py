@@ -209,6 +209,9 @@ async def disso(update: Update, context: CallbackContext):
 async def front(update: Update, context: CallbackContext):
     await reply_photo(update, context, "front.png")
 
+async def deutsch(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "deutsch.png")
+
 
 async def pali(update: Update, context: CallbackContext):
     await reply_photo(update, context, "pali.jpg")

@@ -17,7 +17,7 @@ from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
     loss, peace, bias, ref, bot, mimimi, cia, stats, duden, sold, argu, disso, front, pali, vs, warn_user, unwarn_user, \
-    send_rules, notify_admins
+    send_rules, notify_admins, deutsch
 from messages.chat.filter import remove_command
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
@@ -113,6 +113,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("vs", vs))
     app.add_handler(CommandHandler("disso", disso))
     app.add_handler(CommandHandler("front", front))
+    app.add_handler(CommandHandler("deutsch", deutsch))
     app.add_handler(CommandHandler("pali", pali))
 
     app.add_handler(MessageHandler(filters.Regex("/ref.*"), ref))
@@ -144,7 +145,12 @@ if __name__ == "__main__":
 
     app.add_handler(MessageHandler(filters.Chat(config.ADMINS), flag_to_hashtag_test))
 
-    app.add_handler(MessageHandler(filters.Regex(r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$"), remove_command))
+    app.add_handler(MessageHandler(filters.Regex(r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$") & filters.Chat(GERMAN.chat_id), remove_command))
+    app.add_handler(
+        MessageHandler(filters.Regex(r"(https?:\/\/)?(?!google\.com|example\.de|t\.me\/militaernews)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/\S*)?") & filters.Chat(GERMAN.chat_id),
+                       remove_command))
+
+
 
     print("### RUN LOCAL ###")
     app.run_polling(poll_interval=1, drop_pending_updates=False)
