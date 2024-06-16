@@ -11,6 +11,7 @@ from telegram.helpers import mention_html
 import config
 from messages.chat.bingo import handle_bingo
 from messages.chat.dictionary import handle_putin_dict
+from util.memo import get_admin_ids
 
 
 def key_exists(context, key):
@@ -117,4 +118,10 @@ async def handle_other_chats(update: Update, context: CallbackContext):
 
 async def remove_command(update: Update, _: CallbackContext):
     await sleep(2)
+    await update.message.delete()
+
+async def remove_url(update: Update, context: CallbackContext):
+    if update.message.from_user.id not in await get_admin_ids(context):
+        return
+
     await update.message.delete()

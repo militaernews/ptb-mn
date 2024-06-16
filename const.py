@@ -4,7 +4,6 @@ PLACEHOLDER = "║"
 PATTERN_COMMAND = r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$"
 
 whitelist: Set[str] = {
-    "google.com",
     "t.me/militaernews",
     "bbc.com",
     "bbc.co.uk",
@@ -21,6 +20,10 @@ whitelist: Set[str] = {
     "un.org",
     "icrc.org",
     "whitehouse.gov",
-    "wikpedia.org",
+    "ntv.de",
+    "nzz.ch",
+    "faz.net",
+    "maps.app.goo.gl",
+    "understandingwar.org"
 }
 PATTERN_URL = r"\b(?!" + '|'.join(whitelist).replace('.', r'\.').replace('/', r'\/') + r")([\w-]+\.\w{2,})$\b"
