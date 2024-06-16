@@ -18,7 +18,7 @@ from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
     loss, peace, bias, ref, bot, mimimi, cia, stats, duden, sold, argu, disso, front, pali, vs, warn_user, unwarn_user, \
-    send_rules, notify_admins, deutsch
+    send_rules, notify_admins, deutsch, send_whitelist
 from messages.chat.filter import remove_command
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
@@ -141,11 +141,13 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     app.add_handler(
-        MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
-                       remove_command))
-    app.add_handler(
         MessageHandler(filters.Regex(PATTERN_URL) & filters.Chat(
             GERMAN.chat_id) & ~filters.User(ADMINS) & ~filters.SenderChat.ALL,
+                       remove_command))
+    app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
+
+    app.add_handler(
+        MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
                        remove_command))
 
     print("### RUN LOCAL ###")

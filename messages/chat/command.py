@@ -10,6 +10,7 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 from config import WARN_LIMIT, ADMINS
+from const import whitelist
 from util.helper import reply_html, reply_photo, CHAT_ID, MSG_REMOVAL_PERIOD, delete, MSG_ID, admin_reply, remove, \
     remove_reply
 
@@ -217,6 +218,10 @@ async def pali(update: Update, context: CallbackContext):
 
 async def send_rules(update: Update, context: CallbackContext):
     await reply_html(update, context, "rules", "\n\n".join(get_rules()))
+
+
+async def send_whitelist(update: Update, context: CallbackContext):
+    await reply_html(update, context, "whitelist", "\n\n".join(whitelist))
 
 
 @remove_reply
