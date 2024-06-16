@@ -7,7 +7,7 @@ from telegram import Update
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
-import config
+from config import ADMINS, LOG_GROUP
 from data.lang import GERMAN
 
 MSG_REMOVAL_PERIOD: Final[int] = 1200
@@ -48,6 +48,21 @@ async def delete(context: CallbackContext):
     await context.bot.delete_message(context.job.data[CHAT_ID], context.job.data[MSG_ID])
 
 
+
+def remove_reply(func):
+    async def wrapper(update: Update, context: CallbackContext, ):
+        try:
+            await update.message.delete()
+        except TelegramError:
+            logging.warning("Needs admin rights")
+        if update.message.reply_to_message is None or update.message.reply_to_message.from_user.id in ADMINS:
+            return
+
+        await func(update, context)
+
+    return wrapper
+
+
 def remove(func):
     async def wrapper(update: Update, context: CallbackContext, ):
         try:
@@ -67,7 +82,7 @@ def admin_reply(func):
         except TelegramError:
             logging.warning("Needs admin rights")
 
-        if update.message.from_user.id not in config.ADMINS or update.message.reply_to_message is None:
+        if update.message.from_user.id not in ADMINS or update.message.reply_to_message is None or update.message.reply_to_message.from_user.id in ADMINS:
             return
         await func(update, context)
 
@@ -81,7 +96,7 @@ def admin(func):
         except TelegramError:
             logging.warning("Needs admin rights")
 
-        if update.message.from_user.id not in config.ADMINS:
+        if update.message.from_user.id not in ADMINS:
             return
         await func(update, context)
 
@@ -106,7 +121,11 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str, r
 
     except Exception as e:
         logging.error(f"Couldn't read html-file {file_name}: {e}")
-        pass
+        await context.bot.send_message(
+            LOG_GROUP,
+            f"<b>⚠️ Error when trying to read html-file {file_name}</b>\n<code>{e}</code>\n\n"
+            f"<b>Caused by Update</b>\n<code>{update}</code>",
+        )
 
 
 async def reply_photo(update: Update, context: CallbackContext, file_name: str):
@@ -126,7 +145,7 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
 
     except Exception as e:
         await context.bot.send_message(
-            config.LOG_GROUP,
+            LOG_GROUP,
             f"<b>⚠️ Error when trying to read photo {file_name}</b>\n<code>{e}</code>\n\n"
             f"<b>Caused by Update</b>\n<code>{update}</code>",
         )

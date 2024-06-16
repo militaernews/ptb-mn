@@ -8,7 +8,7 @@ from deepl import QuotaExceededException
 from orjson import orjson
 from pysbd import Segmenter
 
-from config import PLACEHOLDER
+from const import PLACEHOLDER
 from data.lang import GERMAN
 from twitter import TWEET_LENGTH
 from util.helper import sanitize_text

@@ -11,7 +11,8 @@ from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
     CallbackQueryHandler
 
-import config
+from config import TOKEN, ADMINS, CHANNEL_MEME, BINGO_ADMINS
+from const import PATTERN_URL, PATTERN_COMMAND
 from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     if sys.version_info >= (3, 8) and sys.platform.lower().startswith("win"):
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-    app = (ApplicationBuilder().token(config.TOKEN)
+    app = (ApplicationBuilder().token(TOKEN)
            .defaults(Defaults(parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)))
            .persistence(PicklePersistence(filepath="persistence"))
            # .read_timeout(20).get_updates_read_timeout(20)
@@ -55,18 +56,18 @@ if __name__ == "__main__":
 
     app.add_handler(add_advertisement_handler)
 
-    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(config.BINGO_ADMINS)))
-    # app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(config.ADMINS), private_setup))
-    app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(config.ADMINS)))
-    app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(config.ADMINS)))
+    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(BINGO_ADMINS)))
+    # app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
+    app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))
+    app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
 
     app.add_handler(MessageHandler(filters.Regex(r"\/start promo_\w{2}(_\d+)?"), start_promo))
     app.add_handler(CallbackQueryHandler(verify_promo, r"promo_\w{2}(_\d+)?"))
-    app.add_handler(CommandHandler("promo", send_promos, filters.Chat(config.ADMINS)))
+    app.add_handler(CommandHandler("promo", send_promos, filters.Chat(ADMINS)))
 
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
 
-    meme_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=config.CHANNEL_MEME)
+    meme_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=CHANNEL_MEME)
 
     app.add_handler(MessageHandler(meme_post & media, post_media_meme))
     app.add_handler(MessageHandler(meme_post & filters.TEXT, post_text_meme))
@@ -132,25 +133,20 @@ if __name__ == "__main__":
     #  app.add_handler(CallbackQueryHandler(click_captcha, r"captcha_.+_.+", ))
     #  app.add_handler(ChatMemberHandler(send_captcha, ChatMemberHandler.CHAT_MEMBER))
     #  app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))
-    #   app.add_handler(CommandHandler("captcha", send_captcha, filters.Chat(config.ADMINS)))
-
-    ##  app.add_handler(MessageHandler(
-    ##      filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat([
-    ##      -1001618190222,  # Ukraine Russland Krieg Chat
-    ##        -1001755040391  # Vitaliks Fanclub
-    ##   ]), handle_other_chats))
+    #   app.add_handler(CommandHandler("captcha", send_captcha, filters.Chat(ADMINS)))
 
     # Commands have to be added above
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
 
-    app.add_handler(MessageHandler(filters.Chat(config.ADMINS), flag_to_hashtag_test))
+    app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
-    app.add_handler(MessageHandler(filters.Regex(r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$") & filters.Chat(GERMAN.chat_id), remove_command))
     app.add_handler(
-        MessageHandler(filters.Regex(r"(https?:\/\/)?(?!google\.com|example\.de|t\.me\/militaernews)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/\S*)?") & filters.Chat(GERMAN.chat_id),
+        MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
                        remove_command))
-
-
+    app.add_handler(
+        MessageHandler(filters.Regex(PATTERN_URL) & filters.Chat(
+            GERMAN.chat_id) & ~filters.User(ADMINS) & ~filters.SenderChat.ALL,
+                       remove_command))
 
     print("### RUN LOCAL ###")
     app.run_polling(poll_interval=1, drop_pending_updates=False)

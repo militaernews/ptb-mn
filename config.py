@@ -9,6 +9,8 @@ TOKEN: Final[str] = os.getenv('TELEGRAM')
 PORT = int(os.getenv("PORT", 8080))
 TEST_MODE: Final[bool] = os.getenv("TESTING", False)
 
+WARN_LIMIT = 3
+
 DATABASE_URL: Final[str] = os.getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
 DATABASE_URL_NN: Final[str] = os.getenv("DATABASE_URL_NN")
 
@@ -31,6 +33,3 @@ BINGO_ADMINS = ADMINS + (
     1869587716,  # TheObserver
     298169115  # Michael Kohl
 )
-
-# Constants
-PLACEHOLDER = "║"
