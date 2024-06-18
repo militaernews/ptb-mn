@@ -45,7 +45,12 @@ async def get_file(update: Update):
 
 
 async def delete(context: CallbackContext):
-    await context.bot.delete_message(context.job.data[CHAT_ID], context.job.data[MSG_ID])
+    if context.job.data is int:
+        data = context.job.data
+    else:
+        data = context.job.data[CHAT_ID]
+
+    await context.bot.delete_message(data, context.job.data[MSG_ID])
 
 
 
@@ -64,19 +69,19 @@ def remove_reply(func):
 
 
 def remove(func):
-    async def wrapper(update: Update, context: CallbackContext, ):
+    async def wrapper(update: Update,  *args, **kwargs):
         try:
             await update.message.delete()
         except TelegramError:
             logging.warning("Needs admin rights")
 
-        await func(update, context)
+        await func(update,  *args, **kwargs)
 
     return wrapper
 
 
 def admin_reply(func):
-    async def wrapper(update: Update, context: CallbackContext, ):
+    async def wrapper(update: Update , *args, **kwargs ):
         try:
             await update.message.delete()
         except TelegramError:
@@ -84,13 +89,13 @@ def admin_reply(func):
 
         if update.message.from_user.id not in ADMINS or update.message.reply_to_message is None or update.message.reply_to_message.from_user.id in ADMINS:
             return
-        await func(update, context)
+        await func(update, *args, **kwargs)
 
     return wrapper
 
 
 def admin(func):
-    async def wrapper(update: Update, context: CallbackContext, ):
+    async def wrapper(update: Update, *args, **kwargs):
         try:
             await update.message.delete()
         except TelegramError:
@@ -98,7 +103,7 @@ def admin(func):
 
         if update.message.from_user.id not in ADMINS:
             return
-        await func(update, context)
+        await func(update, *args, **kwargs)
 
     return wrapper
 

@@ -1,3 +1,4 @@
+import logging
 import time
 
 from telegram import Update
@@ -47,7 +48,9 @@ class memo(object):
         return func
 
 
-@memo(timeout=3600)
+
 async def get_admin_ids(context: CallbackContext):
-    """Returns a list of admin IDs for a given chat. Results are cached for 1 hour."""
-    return [admin.user.id for admin in (await context.bot.get_chat_administrators(GERMAN.chat_id))]
+    admins = [admin.user.id for admin in (await context.bot.get_chat_administrators(GERMAN.chat_id))]
+    print(admins)
+    logging.info(admins)
+    return admins

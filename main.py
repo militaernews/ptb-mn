@@ -141,8 +141,8 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     app.add_handler(
-        MessageHandler(filters.Regex(PATTERN_URL) & filters.Chat(
-            GERMAN.chat_id) & ~filters.User(ADMINS) & ~filters.SenderChat.ALL,
+        MessageHandler(filters.Regex(r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)") & filters.Chat(
+            GERMAN.chat_id) & ~filters.SenderChat.ALL,
                        remove_url))
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
 

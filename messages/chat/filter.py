@@ -9,6 +9,7 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 import config
+from const import whitelist
 from messages.chat.bingo import handle_bingo
 from messages.chat.dictionary import handle_putin_dict
 from util.memo import get_admin_ids
@@ -121,7 +122,16 @@ async def remove_command(update: Update, _: CallbackContext):
     await update.message.delete()
 
 async def remove_url(update: Update, context: CallbackContext):
-    if update.message.from_user.id not in await get_admin_ids(context):
+    logging.info(f"MATCH? {update.message.text}")
+    print(f"MATCH? {update.message.text}")
+
+
+
+    if update.message.from_user.id in await get_admin_ids(context):
+        return
+
+    if any(ext in update.message.text for ext in whitelist):
+        print("NO MATCH ---")
         return
 
     await update.message.delete()

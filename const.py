@@ -26,4 +26,5 @@ whitelist: Set[str] = {
     "maps.app.goo.gl",
     "understandingwar.org"
 }
-PATTERN_URL = r"\b(?!" + '|'.join(whitelist).replace('.', r'\.').replace('/', r'\/') + r")([\w-]+\.\w{2,})$\b"
+
+PATTERN_URL = r"[\w-]+\.[A-Za-z]{2,}"
