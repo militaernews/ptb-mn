@@ -6,6 +6,7 @@ from resvg_py import svg_to_bytes
 from telegram import Update
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
+from telegram.helpers import mention_html
 
 from config import ADMINS, LOG_GROUP
 from data.lang import GERMAN
@@ -53,7 +54,6 @@ async def delete(context: CallbackContext):
     await context.bot.delete_message(data, context.job.data[MSG_ID])
 
 
-
 def remove_reply(func):
     async def wrapper(update: Update, context: CallbackContext, ):
         try:
@@ -69,19 +69,19 @@ def remove_reply(func):
 
 
 def remove(func):
-    async def wrapper(update: Update,  *args, **kwargs):
+    async def wrapper(update: Update, *args, **kwargs):
         try:
             await update.message.delete()
         except TelegramError:
             logging.warning("Needs admin rights")
 
-        await func(update,  *args, **kwargs)
+        await func(update, *args, **kwargs)
 
     return wrapper
 
 
 def admin_reply(func):
-    async def wrapper(update: Update , *args, **kwargs ):
+    async def wrapper(update: Update, *args, **kwargs):
         try:
             await update.message.delete()
         except TelegramError:
@@ -160,3 +160,8 @@ def export_svg(svg: str, filename: str):
     logging.info(svg)
     with open(filename, 'wb') as f:
         f.write(bytes(svg_to_bytes(svg_string=svg, dpi=300, font_dirs=["../res/fonts"])))
+
+
+def mention(update: Update) -> str:
+    return mention_html(update.message.reply_to_message.from_user.id,
+                        update.message.reply_to_message.from_user.first_name)

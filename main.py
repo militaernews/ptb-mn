@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 from typing import Final
 
-from telegram import LinkPreviewOptions
+from telegram import LinkPreviewOptions, MessageEntity
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
     CallbackQueryHandler
@@ -18,7 +18,7 @@ from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
 from messages.chat.command import donbas, commands, sofa, maps, short, report_user, genozid, \
     loss, peace, bias, ref, bot, mimimi, cia, stats, duden, sold, argu, disso, front, pali, vs, warn_user, unwarn_user, \
-    send_rules, notify_admins, deutsch, send_whitelist
+    send_rules, notify_admins, deutsch, send_whitelist, wissen
 from messages.chat.filter import remove_command, remove_url
 from messages.meme import post_media_meme, post_text_meme
 from messages.news.common import edit_channel, post_channel_english
@@ -115,6 +115,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("disso", disso))
     app.add_handler(CommandHandler("front", front))
     app.add_handler(CommandHandler("deutsch", deutsch))
+    app.add_handler(CommandHandler("wissen", wissen))
     app.add_handler(CommandHandler("pali", pali))
 
     app.add_handler(MessageHandler(filters.Regex("/ref.*"), ref))
@@ -141,8 +142,7 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
     app.add_handler(
-        MessageHandler(filters.Regex(r"[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)") & filters.Chat(
-            GERMAN.chat_id) & ~filters.SenderChat.ALL,
+        MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
                        remove_url))
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
 

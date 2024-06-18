@@ -1,10 +1,9 @@
 import logging
-import re
 from collections import defaultdict
 from typing import List
 
 import requests
-from telegram import Update, ChatPermissions
+from telegram import Update, ChatPermissions, MessageEntity
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
@@ -12,7 +11,7 @@ from telegram.helpers import mention_html
 from config import WARN_LIMIT, ADMINS
 from const import whitelist
 from util.helper import reply_html, reply_photo, CHAT_ID, MSG_REMOVAL_PERIOD, delete, MSG_ID, admin_reply, remove, \
-    remove_reply
+    remove_reply, mention
 
 
 def get_rules() -> List[str]:
@@ -38,7 +37,7 @@ async def ban_user(update: Update, context: CallbackContext):
     await context.bot.ban_chat_member(update.message.chat_id, update.message.reply_to_message.from_user.id,
                                       until_date=1)
     await update.message.reply_to_message.reply_text(
-        f"Aufgrund eines gravierenden Verstoßes habe ich {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} gebannt.")
+        f"Aufgrund eines gravierenden Verstoßes habe ich {mention(update)} gebannt.")
 
 
 @admin_reply
@@ -48,7 +47,7 @@ async def unwarn_user(update: Update, context: CallbackContext):
     context.bot_data["users"][update.message.reply_to_message.from_user.id]["warn"] = []
 
     await update.message.reply_to_message.reply_text(
-        f"Dem Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde alle Verwarnungen erlassen.")
+        f"Dem Nutzer {mention(update)} wurde alle Verwarnungen erlassen.")
 
 
 @admin_reply
@@ -84,14 +83,14 @@ async def warn_user(update: Update, context: CallbackContext):
             logging.info(f"needs admin: {e}")
 
         await update.message.reply_to_message.reply_text(
-            f"Aufgrund wiederholter Verstöße habe ich {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} die Schreibrechte genommen.")
+            f"Aufgrund wiederholter Verstöße habe ich {mention(update)} die Schreibrechte genommen.")
         return
     else:
 
-        warn_text = f"Der Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} hat die Warnung {warn_amount} von {WARN_LIMIT} erhalten."
+        warn_text = f"Der Nutzer {mention(update)} hat die Warnung {warn_amount} von {WARN_LIMIT} erhalten."
         if len(context.args) == 0:
             warn_text = (
-                f"Hey {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)}‼️ Das musste jetzt echt nicht sein. Bitte verhalte dich besser!"
+                f"Hey {mention(update)}‼️ Das musste jetzt echt nicht sein. Bitte verhalte dich besser!"
                 f"\n\n{warn_text}"
                 f"\n\n<i>Mit /rules bekommst du eine Übersicht der Regeln dieser Gruppe.</i>")
 
@@ -114,7 +113,7 @@ async def report_user(update: Update, _: CallbackContext):
                       })
     logging.info(r)
     await update.message.reply_to_message.reply_text(
-        f"Der Nutzer {mention_html(update.message.reply_to_message.from_user.id, update.message.reply_to_message.from_user.first_name)} wurde Tartaros-Antispam gemeldet.")
+        f"Der Nutzer {mention(update)} wurde Tartaros-Antispam gemeldet.")
 
 
 async def maps(update: Update, context: CallbackContext):
@@ -161,15 +160,16 @@ async def sold(update: Update, context: CallbackContext):
 
 @remove
 async def ref(update: Update, context: CallbackContext):
-    if link_match := re.search(r"([^\/]\w*\/\d+$)", update.message.text[4:]):
-        link = link_match[0]
-        logging.info(f"link REF: {link}")
-        text = f"Ich habe dir mal was passendes aus unserem Kanal rausgesucht😊\n\n👉🏼 <a href='t.me/{link}'>{link}</a>"
-        if update.message.reply_to_message:
-            await update.message.reply_to_message.reply_text(
-                f"Hey {update.message.reply_to_message.from_user.name}!\n{text}", disable_web_page_preview=False)
-        else:
-            await context.bot.send_message(update.message.chat_id, text, disable_web_page_preview=False)
+    for ent in update.message.entities:
+        if ent.type is MessageEntity.URL:
+            logging.info(f"link REF: {ent.url}")
+            text = f"Ich habe dir mal was passendes aus unserem Kanal rausgesucht😊\n\n👉🏼 <a href='{ent.url}'>{ent.url}</a>"
+            if update.message.reply_to_message:
+                await update.message.reply_to_message.reply_text(
+                    f"Hey {update.message.reply_to_message.from_user.name}!\n{text}", disable_web_page_preview=False)
+            else:
+                await context.bot.send_message(update.message.chat_id, text, disable_web_page_preview=False)
+            return
 
 
 async def sofa(update: Update, context: CallbackContext):
@@ -216,6 +216,10 @@ async def pali(update: Update, context: CallbackContext):
     await reply_photo(update, context, "pali.jpg")
 
 
+async def wissen(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "wissen.jpg")
+
+
 async def send_rules(update: Update, context: CallbackContext):
     await reply_html(update, context, "rules", "\n\n".join(get_rules()))
 
@@ -232,6 +236,6 @@ async def notify_admins(update: Update, _: CallbackContext):
         response = "".join(mention_html(a, "​") for a in ADMINS) + (
             "Danke für die Meldung dieses Posts, wir Admins prüfen das 😊"
             if update.message.reply_to_message.is_automatic_forward
-            else "‼️ Ein Nutzer hat deine Nachricht gemeldet. Wir Admins prüfen das.\n\nDie Regeln diesr Gruppe findest du unter /rules."
+            else "‼️ Ein Nutzer hat deine Nachricht gemeldet. Wir Admins prüfen das.\n\nDie Regeln dieser Gruppe findest du unter /rules."
         )
         await update.message.reply_to_message.reply_text(response)

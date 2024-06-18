@@ -121,11 +121,10 @@ async def remove_command(update: Update, _: CallbackContext):
     await sleep(2)
     await update.message.delete()
 
+
 async def remove_url(update: Update, context: CallbackContext):
     logging.info(f"MATCH? {update.message.text}")
     print(f"MATCH? {update.message.text}")
-
-
 
     if update.message.from_user.id in await get_admin_ids(context):
         return

@@ -24,7 +24,10 @@ whitelist: Set[str] = {
     "nzz.ch",
     "faz.net",
     "maps.app.goo.gl",
-    "understandingwar.org"
+    "understandingwar.org",
+    "wikipedia.org",
+    "youtube.com",
+    "youtu.be"
 }
 
-PATTERN_URL = r"[\w-]+\.[A-Za-z]{2,}"
+PATTERN_URL = r"[\w-]+\.[A-Za-z]{2,5}"
