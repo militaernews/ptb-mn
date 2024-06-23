@@ -159,7 +159,7 @@ async def log_error(action: str,context:CallbackContext,  lang:Language|str,e:Ex
     text =  f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n<code>{e}</code>"
 
     if update is not None:
-        text+=f"\n\n<b>Caused by Post</b>\n<code>{update.channel_post}</code>"
+        text+=f"\n\n<b>Caused by Post</b>\n<code>{repr(update.channel_post)}</code>"
 
     await context.bot.send_message(LOG_GROUP,text)
 
@@ -167,4 +167,6 @@ async def delete_msg(update: Update):
     try:
         await update.message.delete()
     except TelegramError as e:
-        logging.warning("Needs admin rights: {e}")
+        logging.warning(f"Needs admin rights: {e}")
+    except Exception as e:
+        logging.error(f"Error when trying to delete message: {e}")
