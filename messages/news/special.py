@@ -4,10 +4,10 @@ import re
 from telegram import Update
 from telegram.ext import CallbackContext
 
-import config
 import twitter
 from data.db import insert_single2
 from data.lang import GERMAN, languages
+from util.helper import log_error
 from util.patterns import BREAKING, PATTERN_HTMLTAG
 from util.translation import translate_message, flag_to_hashtag, translate, segment_text
 
@@ -28,12 +28,7 @@ async def breaking_news(update: Update, context: CallbackContext):
         )
         await insert_single2(msg_de)
     except Exception as e:
-        await context.bot.send_message(
-            config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to send breaking news in channel DE</b>\n"
-            f"<code>{e}</code>\n\n"
-            f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-        )
+        await log_error("send Breaking", context, GERMAN, e, update, )
 
     for lang in languages:
         try:
@@ -44,12 +39,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             )
             await insert_single2(msg, lang.lang_key)
         except Exception as e:
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send breaking news in channel {lang.lang_key}</b>\n"
-                f"<code>{e}</code>\n\n"
-                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-            )
+            await log_error("send breaking", context, lang, e, update, )
 
     try:
 
@@ -59,12 +49,7 @@ async def breaking_news(update: Update, context: CallbackContext):
             breaking_photo_path)
         logging.info("sent breaking to twitter")
     except Exception as e:
-        await context.bot.send_message(
-            config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to post breaking on Twitter</b>\n"
-            f"<code>{e}</code>\n\n"
-            f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-        )
+        await log_error("post breaking", context, "Twitter", e, update, )
 
 
 async def announcement(update: Update, context: CallbackContext):
@@ -84,12 +69,8 @@ async def announcement(update: Update, context: CallbackContext):
         await msg_de.pin()
 
     except Exception as e:
-        await context.bot.send_message(
-            config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to send announcement in channel DE</b>\n"
-            f"<code>{e}</code>\n\n"
-            f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-        )
+        await log_error("send announcement", context, GERMAN, e, update, )
+
     for lang in languages:
         try:
             msg = await context.bot.send_photo(
@@ -101,12 +82,7 @@ async def announcement(update: Update, context: CallbackContext):
             await insert_single2(msg, lang.lang_key)
             await msg.pin()
         except Exception as e:
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send announcement in Channel {lang.lang_key}</b>\n"
-                f"<code>{e}</code>"
-                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-            )
+            await log_error("send announcement", context, lang, e, update, )
 
 
 async def advertisement(update: Update, context: CallbackContext):
@@ -126,12 +102,8 @@ async def advertisement(update: Update, context: CallbackContext):
         await msg_de.pin()
 
     except Exception as e:
-        await context.bot.send_message(
-            config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to send announcement in channel DE</b>\n"
-            f"<code>{e}</code>\n\n"
-            f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-        )
+        await log_error("send advertisement", context, GERMAN, e, update, )
+
     for lang in languages:
         try:
             msg = await context.bot.send_message(
@@ -142,12 +114,7 @@ async def advertisement(update: Update, context: CallbackContext):
             await insert_single2(msg, lang.lang_key)
             await msg.pin()
         except Exception as e:
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send announcement in Channel {lang.lang_key}</b>\n"
-                f"code>{e}</code>\n\n"
-                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-            )
+            await log_error("send advertisement", context, lang, e, update, )
 
 
 async def post_info(update: Update, context: CallbackContext):
@@ -160,9 +127,5 @@ async def post_info(update: Update, context: CallbackContext):
         msg = await update.channel_post.edit_caption(text)
         await msg.pin()
     except Exception as e:
-        await context.bot.send_message(
-            config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to send info in Channel de</b>\n"
-            f"<code>{e}</code>\n\n"
-            f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-        )
+        await log_error("send info", context, GERMAN, e, update, )
+

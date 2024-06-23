@@ -10,7 +10,7 @@ import twitter
 from data.db import query_replies, insert_single2, update_text, get_msg_id
 from data.lang import languages, GERMAN
 from messages.news.common import handle_url
-from util.helper import sanitize_text
+from util.helper import sanitize_text, log_error
 from util.patterns import WHITESPACE, HASHTAG, FLAG_EMOJI
 from util.translation import translate_message, flag_to_hashtag, segment_text
 
@@ -20,13 +20,11 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
     await insert_single2(update.channel_post)
 
-    logging.info(f"orignal caption:::::::::: {original_caption}", )
+    logging.info(f"original caption::: {original_caption}", )
 
     text_ger = flag_to_hashtag(original_caption)
 
     for lang in languages:
-        #   logging.info(flang)
-
         reply_id = await query_replies(update.channel_post.message_id, lang.lang_key)
 
         try:
@@ -37,11 +35,8 @@ async def post_channel_text(update: Update, context: CallbackContext):
             )
             await insert_single2(msg, lang.lang_key)
         except Exception as e:
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send text post in Channel {lang.lang_key}</b>\n"
-                f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
-            )
+            await log_error("send text", context, lang, e, update, )
+
     try:
 
         if len(re.findall(FLAG_EMOJI, text_ger)) == 0:
@@ -49,21 +44,15 @@ async def post_channel_text(update: Update, context: CallbackContext):
         await update.channel_post.edit_text(text_ger)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to post text in Channel de</b>\n"
-                f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
-            )
+            await log_error("send text", context, GERMAN, e, update, )
+
     try:
         logging.info("tweet")
         #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
         twitter.create_tweet(segment_text(text_ger))
     except Exception as e:
-        await context.bot.send_message(
-            config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to post text on Twitter</b>\n"
-            f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
-        )
+        await log_error("send text", context, "Twitter", e, update, )
+
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
 
@@ -80,7 +69,7 @@ async def edit_channel_text(update: Update, context: CallbackContext):
 
     await update_text(update.edited_channel_post.id, f"{original_caption}\n{GERMAN.footer}")
 
-    logging.info(f"orignal caption:::::::::: {original_caption}", )
+    logging.info(f"original caption::: {original_caption}", )
 
     for lang in languages:
         try:
@@ -95,8 +84,5 @@ async def edit_channel_text(update: Update, context: CallbackContext):
             await update_text(msg_id, translated_text, lang.lang_key)
         except TelegramError as e:
             if not e.message.startswith("Message is not modified"):
-                await context.bot.send_message(
-                    config.LOG_GROUP,
-                    f"<b>⚠️ Error when trying to edit post in Channel {lang.lang_key}</b>\n"
-                    f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
-                )
+                await log_error("edit text", context, lang, e, update, )
+

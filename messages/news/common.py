@@ -7,13 +7,14 @@ from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
 
-import config
+
 import twitter
+from config import CHANNEL_SOURCE
 from data.db import insert_single3, insert_single2, query_replies3, \
     get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id, \
     update_post, Post
 from data.lang import GERMAN, languages
-from util.helper import get_file
+from util.helper import get_file, log_error
 from util.patterns import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
 from util.translation import flag_to_hashtag, translate_message, segment_text
 
@@ -41,12 +42,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
                                  post_id=de_post_id)
 
         except Exception as e:
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                "<b>⚠️ Error when trying to send single post in Channel "
-                f"{lang.lang_key}</b>\n<code>{e}</code>\n\n"
-                f"<b>Caused by Post</b>\n<code>{update.channel_post.caption}</code>",
-            )
+            await log_error("send single post", context, lang,e, update, )
             pass
 
     formatted_text = flag_to_hashtag(original_caption)
@@ -55,29 +51,17 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         await update.channel_post.edit_caption(formatted_text + GERMAN.footer)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to edit post in Channel de</b>\n"
-                f"<code>{e}</code>"
-                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-            )
+            await log_error("edit Post", context, GERMAN,e, update, )
             pass
 
     try:
-
         # todo: upload photo aswell
-
         await twitter.tweet_file(segment_text(
             flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "", update.channel_post.caption))),
             await get_file(update))
         logging.info(f"-")
     except Exception as e:
-        await context.bot.send_message(
-            config.LOG_GROUP,
-            f"<b>⚠️ Error when trying to post single on Twitter</b>\n"
-            f"<code>{e}</code>\n\n"
-            f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-        )
+        await log_error("edit Caption", context, "Twitter", e, update, )
         pass
 
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
@@ -101,12 +85,8 @@ async def post_channel_english(update: Update, context: CallbackContext):
                 flag_to_hashtag(update.channel_post.caption_html_urled) + GERMAN.footer
             )
         except Exception as e:
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to edit caption in channel DE</b>\n"
-                f"<code>{e}</code>\n\n"
-                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-            )
+            await log_error("edit Caption", context, GERMAN,e, update, )
+
     if update.channel_post.reply_to_message is not None:
         reply_id = update.channel_post.reply_to_message.id
     else:
@@ -172,11 +152,8 @@ async def share_in_other_channels(context: CallbackContext):
                 await insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
                                      post_id=posts[index].post_id)
         except Exception as e:
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to send media group in Channel {lang.lang_key}</b>\n\n"
-                f"<code>{e}</code>",
-            )
+            await log_error("send media group", context,  lang, e)
+
     logging.info("----- done -----")
 
     await twitter.tweet_files(context,
@@ -234,12 +211,7 @@ async def edit_channel(update: Update, context: CallbackContext):
 
         except TelegramError as e:
             if not e.message.startswith("Message is not modified"):
-                await context.bot.send_message(
-                    config.LOG_GROUP,
-                    f"<b>⚠️ Error when trying to edit Caption in Channel {lang.lang_key}</b>\n"
-                    f"<code>{e}</code>\n\n"
-                    f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-                )
+                await log_error("edit Caption", context, lang, e, update)
 
         if file_id != new_file.file_id and GERMAN.breaking not in original_caption:
             try:
@@ -252,12 +224,7 @@ async def edit_channel(update: Update, context: CallbackContext):
 
             except TelegramError as e:
                 if not e.message.startswith("Message is not modified"):
-                    await context.bot.send_message(
-                        config.LOG_GROUP,
-                        f"<b>⚠️ Error when trying to edit Media in Channel {lang.lang_key}</b>\n"
-                        f"<code>{e}</code>\n\n"
-                        f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-                    )
+                    await log_error("edit Media", context,lang,e, update ,)
         if msg is not None:
             await update_post(msg, lang.lang_key)
 
@@ -272,12 +239,7 @@ async def edit_channel(update: Update, context: CallbackContext):
         # todo: update text in db
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
-            await context.bot.send_message(
-                config.LOG_GROUP,
-                f"<b>⚠️ Error when trying to edit post in Channel de</b>\n"
-                f"<code>{e}</code>\n\n"
-                f"<b>Caused by Post</b>\n<code>{update.channel_post}</code>",
-            )
+            await log_error("edit Post", context,GERMAN, e, update, )
 
 
 async def test_del(update: Update, _: CallbackContext):
@@ -322,4 +284,4 @@ async def handle_url(update: Update, context: CallbackContext):
 
     text += f"\n{GERMAN.footer}"
     logging.info(text)
-    await context.bot.send_message(chat_id=config.CHANNEL_SOURCE, text=text, disable_web_page_preview=False)
+    await context.bot.send_message(chat_id=CHANNEL_SOURCE, text=text, disable_web_page_preview=False)

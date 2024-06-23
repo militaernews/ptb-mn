@@ -7,8 +7,7 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
-from config import WARN_LIMIT, ADMINS
-from const import ALLOWED_URLS, RULES
+from config import WARN_LIMIT, ADMINS, RULES, ALLOWED_URLS
 from util.helper import reply_html, reply_photo, CHAT_ID, MSG_REMOVAL_PERIOD, delete, MSG_ID, admin_reply, remove, \
     remove_reply, mention
 

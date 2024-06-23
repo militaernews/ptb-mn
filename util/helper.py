@@ -9,7 +9,7 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 from config import ADMINS, LOG_GROUP
-from data.lang import GERMAN
+from data.lang import GERMAN, Language
 
 MSG_REMOVAL_PERIOD: Final[int] = 1200
 CHAT_ID: Final[str] = "chat_id"
@@ -166,3 +166,14 @@ def export_svg(svg: str, filename: str):
 def mention(update: Update) -> str:
     return mention_html(update.message.reply_to_message.from_user.id,
                         update.message.reply_to_message.from_user.first_name)
+
+async def log_error(action: str,context:CallbackContext,  lang:Language|str,e:Exception,update:Optional[Update]=None ,):
+    if lang is Language:
+        lang = lang.lang_key
+
+    text =  f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n<code>{e}</code>"
+
+    if update is not None:
+        text+=f"\n\n<b>Caused by Post</b>\n<code>{update.channel_post}</code>"
+
+    await context.bot.send_message(LOG_GROUP,text)
