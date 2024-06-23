@@ -57,10 +57,7 @@ async def delete(context: CallbackContext):
 
 def remove_reply(func):
     async def wrapper(update: Update, context: CallbackContext, ):
-        try:
-            await update.message.delete()
-        except TelegramError:
-            logging.warning("Needs admin rights")
+        await delete_msg(update)
         if update.message.reply_to_message is None or update.message.reply_to_message.from_user.id in ADMINS:
             return
 
@@ -71,10 +68,7 @@ def remove_reply(func):
 
 def remove(func):
     async def wrapper(update: Update, *args, **kwargs):
-        try:
-            await update.message.delete()
-        except TelegramError:
-            logging.warning("Needs admin rights")
+        await delete_msg(update)
 
         await func(update, *args, **kwargs)
 
@@ -83,10 +77,7 @@ def remove(func):
 
 def admin_reply(func):
     async def wrapper(update: Update, *args, **kwargs):
-        try:
-            await update.message.delete()
-        except TelegramError:
-            logging.warning("Needs admin rights")
+        await delete_msg(update)
 
         if update.message.from_user.id not in ADMINS or update.message.reply_to_message is None or update.message.reply_to_message.from_user.id in ADMINS:
             return
@@ -97,10 +88,7 @@ def admin_reply(func):
 
 def admin(func):
     async def wrapper(update: Update, *args, **kwargs):
-        try:
-            await update.message.delete()
-        except TelegramError:
-            logging.warning("Needs admin rights")
+        await delete_msg(update)
 
         if update.message.from_user.id not in ADMINS:
             return
@@ -135,10 +123,7 @@ async def reply_html(update: Update, context: CallbackContext, file_name: str, r
 
 
 async def reply_photo(update: Update, context: CallbackContext, file_name: str):
-    try:
-        await update.message.delete()
-    except TelegramError as e:
-        logging.info(f"needs admin: {e}")
+    await delete_msg(update)
 
     try:
         with open(f"res/img/{file_name}", "rb") as f:
@@ -177,3 +162,9 @@ async def log_error(action: str,context:CallbackContext,  lang:Language|str,e:Ex
         text+=f"\n\n<b>Caused by Post</b>\n<code>{update.channel_post}</code>"
 
     await context.bot.send_message(LOG_GROUP,text)
+
+async def delete_msg(update: Update):
+    try:
+        await update.message.delete()
+    except TelegramError as e:
+        logging.warning("Needs admin rights: {e}")

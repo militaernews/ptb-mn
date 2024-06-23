@@ -10,6 +10,7 @@ from telegram.helpers import mention_html
 from config import ALLOWED_URLS, ADMINS, LOG_GROUP
 from messages.chat.bingo import handle_bingo
 from messages.chat.dictionary import handle_putin_dict
+from util.helper import delete_msg
 from util.memo import get_admin_ids
 
 
@@ -86,7 +87,7 @@ async def handle_other_chats(update: Update, context: CallbackContext):
 
 async def remove_command(update: Update, _: CallbackContext):
     await sleep(2)
-    await update.message.delete()
+    await delete_msg(update)
 
 
 async def remove_url(update: Update, context: CallbackContext):
@@ -100,4 +101,5 @@ async def remove_url(update: Update, context: CallbackContext):
         print("NO MATCH ---")
         return
 
-    await update.message.delete()
+    await delete_msg(update)
+
