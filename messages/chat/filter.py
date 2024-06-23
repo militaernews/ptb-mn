@@ -1,24 +1,16 @@
 import logging
-import random
 import re
 from asyncio import sleep
 
 import requests
-from telegram import Update, Poll
+from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
-import config
-from const import whitelist
+from config import ALLOWED_URLS, ADMINS, LOG_GROUP
 from messages.chat.bingo import handle_bingo
 from messages.chat.dictionary import handle_putin_dict
 from util.memo import get_admin_ids
-
-
-def key_exists(context, key):
-    return (
-            key in context.bot_data["users"]
-    )
 
 
 def check_cas(user_id: int):
@@ -34,36 +26,11 @@ def join_member(update: Update, context: CallbackContext):
                 update.effective_chat.id, update.message.from_user.id
             )
 
-            context.bot.send_message(config.LOG_GROUP,
-                                     f"User {member.name} [<code>{member.id}</code>] was banned in chat "
+            context.bot.send_message(LOG_GROUP,
+                                     f"User {mention_html(member.id, member.name)} [<code>{member.id}</code>] was banned in chat "
                                      "<a href='https://t.me/username'>{update.message.chat.title}</a> due"
                                      f" to CAS-ban (<a href='https://cas.chat/check?user_id={member.id}'>reason</a>). ",
                                      )
-            # todo: find out deeplink that works with chat_id
-
-        if not key_exists(context, member.id):
-            # show captcha
-
-            x = random.randrange(1, 20)
-            y = random.randrange(4, 20)
-            result = x + y
-            options = [result * 2, result, result + 7, result - 3]
-            random.shuffle(options)
-
-            poll = update.message.reply_poll(
-                f"✌🏼 Herzlich willkommen im MNChat, {member.first_name}!\n\n"
-                "Um zu verifizieren, dass Sie ein echter "
-                f"Nutzer sind beantworten Sie bitte folgende Frage:\n\nWas ergibt {x} + {y} ?",
-                [str(x) for x in options],
-                is_anonymous=False,
-                type=Poll.QUIZ,
-                correct_option_id=options.index(result),
-                explanation="To prevent this group from spam, answering this captcha incorrectly will get you kicked. "
-                            "If you believe this was an error, please contact @pentexnyx",
-                open_period=60,
-            )
-
-        # hier dann schedulen wo geschaut wird wer poll geantwortet hat??
 
 
 async def filter_message(update: Update, context: CallbackContext):
@@ -75,7 +42,7 @@ async def filter_message(update: Update, context: CallbackContext):
     if re.search(r"@\S*trade\S*|testimony|contact him|Petr Johnson", text) is not None:
         reply_text = "👀 Scammst du? Bitte sei brav!"
 
-        for admin in config.ADMINS:
+        for admin in ADMINS:
             reply_text += mention_html(admin, "​")
 
         await update.message.reply_text(reply_text)
@@ -129,7 +96,7 @@ async def remove_url(update: Update, context: CallbackContext):
     if update.message.from_user.id in await get_admin_ids(context):
         return
 
-    if any(ext in update.message.text for ext in whitelist):
+    if any(ext in update.message.text for ext in ALLOWED_URLS):
         print("NO MATCH ---")
         return
 

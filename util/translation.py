@@ -1,18 +1,17 @@
 import logging
 import os
 import re
+from json import loads
 
 import deepl
 from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
-from orjson import orjson
 from pysbd import Segmenter
 
-from const import PLACEHOLDER
 from data.lang import GERMAN
 from twitter import TWEET_LENGTH
 from util.helper import sanitize_text
-from util.patterns import FLAG_EMOJI, HASHTAG
+from util.patterns import FLAG_EMOJI, HASHTAG, PLACEHOLDER
 
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='de')
@@ -60,7 +59,7 @@ def get_hashtag(key: str, language: str = None) -> str:
 
         with open(filename, 'rb', ) as f:
             # todo: find a way to open this file up just once when iterating through langs
-            return orjson.loads(f.read())[language]
+            return loads(f.read())[language]
     except Exception as e:
         logging.error(f"Error when trying to get hashtag --- {e}")
 

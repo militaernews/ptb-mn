@@ -11,8 +11,7 @@ from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
     CallbackQueryHandler
 
-from config import TOKEN, ADMINS, CHANNEL_MEME, BINGO_ADMINS
-from const import PATTERN_URL, PATTERN_COMMAND
+from config import TOKEN, ADMINS, CHANNEL_MEME
 from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
@@ -27,6 +26,7 @@ from messages.news.text import edit_channel_text, post_channel_text
 from messages.private.advertise import add_advertisement_handler
 from messages.private.promo import start_promo, verify_promo, send_promos
 from messages.private.setup import set_cmd  # , private_setup
+from util.patterns import PATTERN_COMMAND
 
 
 def add_logging():
@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     app.add_handler(add_advertisement_handler)
 
-    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(BINGO_ADMINS)))
+    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
     # app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))
     app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
@@ -126,10 +126,6 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
     # app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
-
-    ##  app.add_handler(MessageHandler(
-    ##   filters.UpdateType.MESSAGE & filters.TEXT & filters.Chat(GERMAN.chat_id) & ~filters.User(ADMINS),
-    ##   filter_message))
 
     #  app.add_handler(CallbackQueryHandler(click_captcha, r"captcha_.+_.+", ))
     #  app.add_handler(ChatMemberHandler(send_captcha, ChatMemberHandler.CHAT_MEMBER))

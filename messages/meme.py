@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 
-import config
+from config import LOG_GROUP
 from data.lang import ENGLISH, GERMAN, languages
 
 
@@ -38,7 +38,7 @@ async def add_footer_meme(update: Update, context: CallbackContext):
         await update.channel_post.forward(chat_id=GERMAN.chat_id)
     except Exception as e:
         await context.bot.send_message(
-            config.LOG_GROUP,
+            LOG_GROUP,
             "<b>⚠️ Error when trying to send media in Channel meme</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )
@@ -63,7 +63,7 @@ async def post_text_meme(update: Update, context: CallbackContext):
         await update.channel_post.forward(chat_id=ENGLISH.chat_id)
     except Exception as e:
         await context.bot.send_message(
-            config.LOG_GROUP,
+            LOG_GROUP,
             "<b>⚠️ Error when trying to send text in Channel meme</b>\n"
             f"<code>{e}</code>\n\n<b>Caused by Update</b>\n<code>{update}</code>",
         )

@@ -46,12 +46,13 @@ async def get_file(update: Update):
 
 
 async def delete(context: CallbackContext):
-    if context.job.data is int:
-        data = context.job.data
-    else:
+    if context.job.data is dict:
         data = context.job.data[CHAT_ID]
 
-    await context.bot.delete_message(data, context.job.data[MSG_ID])
+    else:
+        data = context.job.data
+
+    await context.bot.delete_message(data, data)
 
 
 def remove_reply(func):

@@ -133,10 +133,12 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
 
     await update.message.reply_text("Post sollte nun im deutschen Kanal gesendet worden sein.")
 
-    # fixme
-
     return ConversationHandler.END
 
+    #await advertise_in_other_channels(text, button, media, update, context)
+
+
+async def advertise_in_other_channels(text:str, button: InlineKeyboardMarkup|None, media: Union[Animation, Sequence[PhotoSize], Video, None], update: Update, context: CallbackContext):
     for language in lang.languages:
         translated_text = await translate(language.lang_key, text, language.lang_key_deepl)
 

@@ -1,6 +1,5 @@
 import logging
 from collections import defaultdict
-from typing import List
 
 import requests
 from telegram import Update, ChatPermissions, MessageEntity
@@ -9,19 +8,9 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 from config import WARN_LIMIT, ADMINS
-from const import whitelist
+from const import ALLOWED_URLS, RULES
 from util.helper import reply_html, reply_photo, CHAT_ID, MSG_REMOVAL_PERIOD, delete, MSG_ID, admin_reply, remove, \
     remove_reply, mention
-
-
-def get_rules() -> List[str]:
-    return [
-        "1️⃣ Keine Beleidigung anderer Mitglieder.",
-        "2️⃣ Kein Spam (mehr als drei einzelne Nachrichten oder Alben hintereinander weitergeleitet).",
-        "3️⃣ Keine pornografischen Inhalte.",
-        "4️⃣ Keine Aufnahmen von Leichen oder Schwerverletzen.",
-        "5️⃣ Keine privaten Inhalte anderer Personen teilen."
-    ]
 
 
 def manage_warnings(update: Update, context: CallbackContext, increment: int):
@@ -95,7 +84,7 @@ async def warn_user(update: Update, context: CallbackContext):
                 f"\n\n<i>Mit /rules bekommst du eine Übersicht der Regeln dieser Gruppe.</i>")
 
         elif context.args[0].isnumeric():
-            warn_text = f"{warn_text}\n\nGrund: {get_rules()[int(context.args[0]) - 1]}"
+            warn_text = f"{warn_text}\n\nGrund: {RULES[int(context.args[0]) - 1]}"
         else:
 
             warn_text = f"{warn_text}\n\nGrund: {' '.join(context.args)}"
@@ -221,11 +210,11 @@ async def wissen(update: Update, context: CallbackContext):
 
 
 async def send_rules(update: Update, context: CallbackContext):
-    await reply_html(update, context, "rules", "\n\n".join(get_rules()))
+    await reply_html(update, context, "rules", "\n\n".join(RULES))
 
 
 async def send_whitelist(update: Update, context: CallbackContext):
-    await reply_html(update, context, "whitelist", "\n\n".join(whitelist))
+    await reply_html(update, context, "whitelist", "\n\n".join(ALLOWED_URLS))
 
 
 @remove_reply

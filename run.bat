@@ -1,2 +1,2 @@
 venv\Scripts\python.exe main.py
-set /p "id=Enter ID: "
+set /p "id=Running ptb-mn..."

@@ -1,8 +1,8 @@
 import contextlib
 import logging
+from json import loads
 from typing import Dict
 
-from orjson import orjson
 from telegram import Update, BotCommandScopeChatAdministrators, BotCommandScopeChat
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext
@@ -25,7 +25,7 @@ async def repair_saved_post(update: Update, context: CallbackContext):
     filename = await (await update.message.document.get_file()).download_to_drive()
 
     with open(filename, 'rb') as f:
-        content: Dict[str, int] = orjson.loads(f.read())
+        content: Dict[str, int] = loads(f.read())
         logging.info(content)
 
         for key, value in content.items():
