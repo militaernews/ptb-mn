@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from traceback import format_exc
 from typing import AsyncGenerator
 
-import aiopg
-from aiopg import create_pool
+from asyncpg import create_pool
 from psycopg2 import OperationalError
 from psycopg2.extras import NamedTupleCursor
 from telegram import Message
@@ -52,12 +51,12 @@ async def db_cursor() -> AsyncGenerator:
 
 
 async def get_mg(mg_id: str):
-    pool = await aiopg.connect(DATABASE_URL)
-    c = await pool.cursor()
-    await c.execute("select * from posts")
-    res = await c.fetchone()
+    async with db_cursor() as c:
+        await c.execute("select * from posts p where p.media_group_id = %s and p.lang='de'", [mg_id])
+        res = await c.fetchone()
 
-    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
+        return res
 
 
 PHOTO, VIDEO, ANIMATION = range(3)
