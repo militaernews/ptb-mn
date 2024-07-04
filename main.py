@@ -43,6 +43,34 @@ def add_logging():
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
+def register_img_commands(app):
+    app.add_handler(CommandHandler("sofa", sofa))
+    app.add_handler(CommandHandler("bot", bot))
+    app.add_handler(CommandHandler("mimimi", mimimi))
+    app.add_handler(CommandHandler("cia", cia))
+    app.add_handler(CommandHandler("duden", duden))
+    app.add_handler(CommandHandler("argu", argu))
+    app.add_handler(CommandHandler("vs", vs))
+    app.add_handler(CommandHandler("disso", disso))
+    app.add_handler(CommandHandler("front", front))
+    app.add_handler(CommandHandler("deutsch", deutsch))
+    app.add_handler(CommandHandler("wissen", wissen))
+    app.add_handler(CommandHandler("pali", pali))
+
+
+def register_commands(app):
+    app.add_handler(CommandHandler("maps", maps))
+    app.add_handler(CommandHandler("donbas", donbas))
+    app.add_handler(CommandHandler("cmd", commands))
+    app.add_handler(CommandHandler("loss", loss))
+    app.add_handler(CommandHandler("peace", peace))
+    app.add_handler(CommandHandler("stats", stats))
+    app.add_handler(CommandHandler("short", short))
+    app.add_handler(CommandHandler("bias", bias))
+    app.add_handler(CommandHandler("sold", sold))
+    app.add_handler(CommandHandler("genozid", genozid))
+
+
 if __name__ == "__main__":
     add_logging()
 
@@ -95,29 +123,8 @@ if __name__ == "__main__":
     app.add_handler(MessageHandler(news_edited & media, edit_channel))
     app.add_handler(MessageHandler(news_edited & filters.TEXT, edit_channel_text))
 
-    app.add_handler(CommandHandler("maps", maps))
-    app.add_handler(CommandHandler("donbas", donbas))
-    app.add_handler(CommandHandler("cmd", commands))
-    app.add_handler(CommandHandler("loss", loss))
-    app.add_handler(CommandHandler("peace", peace))
-    app.add_handler(CommandHandler("stats", stats))
-    app.add_handler(CommandHandler("short", short))
-    app.add_handler(CommandHandler("bias", bias))
-    app.add_handler(CommandHandler("sold", sold))
-    app.add_handler(CommandHandler("genozid", genozid))
-
-    app.add_handler(CommandHandler("sofa", sofa))
-    app.add_handler(CommandHandler("bot", bot))
-    app.add_handler(CommandHandler("mimimi", mimimi))
-    app.add_handler(CommandHandler("cia", cia))
-    app.add_handler(CommandHandler("duden", duden))
-    app.add_handler(CommandHandler("argu", argu))
-    app.add_handler(CommandHandler("vs", vs))
-    app.add_handler(CommandHandler("disso", disso))
-    app.add_handler(CommandHandler("front", front))
-    app.add_handler(CommandHandler("deutsch", deutsch))
-    app.add_handler(CommandHandler("wissen", wissen))
-    app.add_handler(CommandHandler("pali", pali))
+    register_commands(app)
+    register_img_commands(app)
 
     app.add_handler(MessageHandler(filters.Regex("/ref.*"), ref))
 
@@ -138,12 +145,13 @@ if __name__ == "__main__":
 
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
+    app.add_handler(MessageHandler(filters.Chat(CHANNEL_BACKUP) & filters.CAPTION & filters.FORWARDED, suggest_post))
+
     app.add_handler(
         MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
                        remove_url))
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
 
-    app.add_handler(MessageHandler(filters.Chat(CHANNEL_BACKUP) & filters.CAPTION, suggest_post))
 
     app.add_handler(
         MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
