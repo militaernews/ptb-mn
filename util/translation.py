@@ -14,7 +14,7 @@ from util.helper import sanitize_text
 from util.patterns import FLAG_EMOJI, HASHTAG, PLACEHOLDER
 
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
-google_translator = GoogleTranslator(source='de')
+google_translator = GoogleTranslator(source='auto')
 
 
 def flag_to_hashtag(text: str, language: str = None):
