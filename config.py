@@ -15,6 +15,10 @@ WARN_LIMIT: Final[int] = 3
 DATABASE_URL: Final[str] = os.getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
 CHANNEL_MEME: Final[int] = int(os.getenv('CHANNEL_MEME'))
 CHANNEL_SOURCE: Final[int] = int(os.getenv('CHANNEL_SOURCE'))
+
+CHANNEL_BACKUP: Final[int] = int(os.getenv('CHANNEL_BACKUP'))
+CHANNEL_SUGGEST: Final[int] = int(os.getenv('CHANNEL_SUGGEST'))
+
 LOG_GROUP: Final[str] = os.getenv('LOG_GROUP')
 ADMINS: Final = loads(os.getenv('ADMINS'))
 
@@ -52,7 +56,8 @@ ALLOWED_URLS: Final[Set[str]] = {
     "dw.com",
     "zeit.de"
     "apnews.com",
-    "tagesschau.de"
+    "tagesschau.de",
+    "statista.com",
 }
 
 RULES: Final[List[str]] =  [

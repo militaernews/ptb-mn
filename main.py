@@ -11,7 +11,7 @@ from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
     CallbackQueryHandler
 
-from config import TOKEN, ADMINS, CHANNEL_MEME
+from config import TOKEN, ADMINS, CHANNEL_MEME, CHANNEL_BACKUP
 from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import bingo_field, reset_bingo
@@ -20,6 +20,7 @@ from messages.chat.command import donbas, commands, sofa, maps, short, report_us
     send_rules, notify_admins, deutsch, send_whitelist, wissen
 from messages.chat.filter import remove_command, remove_url
 from messages.meme import post_media_meme, post_text_meme
+from messages.news.backup import suggest_post
 from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info, advertisement
 from messages.news.text import edit_channel_text, post_channel_text
@@ -141,6 +142,8 @@ if __name__ == "__main__":
         MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
                        remove_url))
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
+
+    app.add_handler(MessageHandler(filters.Chat(CHANNEL_BACKUP) & filters.CAPTION, suggest_post))
 
     app.add_handler(
         MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
