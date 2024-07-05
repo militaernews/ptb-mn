@@ -55,7 +55,7 @@ def generate_captcha(user_id: int):
     print(positions)
 
     ImageDraw.Draw(background)
-    font = ImageFont.truetype(r"AppleColorEmoji.ttf", 137)
+    font = ImageFont.truetype(r"../../res/fonts/AppleColorEmoji.ttf", 137)
 
     for i, emoji in enumerate(paste_image_list):
         text_layer = Image.new('RGBA', (274, 274), (255, 255, 255, 0))

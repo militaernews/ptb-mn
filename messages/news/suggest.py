@@ -1,7 +1,6 @@
 from regex import sub
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import ContextTypes, Application, MessageHandler
-from telegram.ext.filters import Chat, CAPTION, FORWARDED
+from telegram.ext import ContextTypes, Application, MessageHandler, filters
 
 from config import CHANNEL_SUGGEST, CHANNEL_BACKUP
 from util.translation import translate
@@ -27,4 +26,4 @@ async def suggest_single(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.channel_post.copy(chat_id=CHANNEL_SUGGEST, caption=translated_text, reply_markup=keyboard)
 
 def register_suggest(app:Application):
-    app.add_handler(MessageHandler(Chat(CHANNEL_BACKUP) & CAPTION & FORWARDED, suggest_single))
+    app.add_handler(MessageHandler(filters.Chat(CHANNEL_BACKUP) & filters.CAPTION & filters.FORWARDED & filters.ForwardedFrom(), suggest_single))

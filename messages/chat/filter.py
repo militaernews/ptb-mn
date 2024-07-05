@@ -1,17 +1,13 @@
 import logging
 import re
-from asyncio import sleep
 
 import requests
 from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
-from config import ALLOWED_URLS, ADMINS, LOG_GROUP
+from config import ADMINS, LOG_GROUP
 from messages.chat.bingo import handle_bingo
-from messages.chat.dictionary import handle_putin_dict
-from util.helper import delete_msg
-from util.memo import get_admin_ids
 
 
 def check_cas(user_id: int):
@@ -71,19 +67,10 @@ async def filter_message(update: Update, context: CallbackContext):
                 warnings = warnings + 1
                 context.bot_data["users"][update.message.from_user.id]["warn"] = warnings
 
-        # Verstoßes gegen die Regeln dieser Gruppe - siehe /rules ???
+        # Verstoßes gegen die Regeln dieser Gruppe - siehe /rules ?
         await update.message.reply_text(
             f"Wegen Beleidigung hat der Nutzer {mention_html(update.message.from_user.id, update.message.from_user.first_name)} die Warnung {warnings} von 3 erhalten.")
 
     else:
         await handle_bingo(update, context)
-
-
-async def handle_other_chats(update: Update, context: CallbackContext):
-    await handle_bingo(update, context)
-
-    await handle_putin_dict(update, context)
-
-
-
 

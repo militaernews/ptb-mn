@@ -9,7 +9,6 @@ async def maps(update: Update, context: CallbackContext):
 
     # todo: collect list of losses
 
-
 async def loss(update: Update, context: CallbackContext):
     await reply_html(update, context, "loss")
 
@@ -91,13 +90,6 @@ async def pali(update: Update, context: CallbackContext):
 
 async def wissen(update: Update, context: CallbackContext):
     await reply_photo(update, context, "wissen.jpg")
-
-
-
-
-
-
-
 
 def register_commands(app: Application):
     app.add_handler(CommandHandler("maps", maps))

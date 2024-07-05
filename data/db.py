@@ -5,13 +5,14 @@ from dataclasses import dataclass
 from traceback import format_exc
 from typing import AsyncGenerator
 
+import aiopg
 from aiopg import create_pool
 from psycopg2 import OperationalError
 from psycopg2.extras import NamedTupleCursor
 from telegram import Message
 from telegram.ext import CallbackContext
 
-from config import DATABASE_URL
+from config import DATABASE_URL, DATABASE_URL_NN
 from data.lang import GERMAN
 
 logger = logging.getLogger(__name__)
@@ -273,3 +274,11 @@ async def insert_promo(user_id: int, lang: str, promo_id: int):
 
         logging.info(f">> Result: user_id = {res}", )
         return res
+
+async def get_suggested_sources()->[int]:
+    async with aiopg.connect(DATABASE_URL_NN) as conn:
+        async with conn.cursor(cursor_factory=NamedTupleCursor) as c:
+            await c.execute("select s.channel_id from sources s where s.is_spread=false;", )
+            res = await c.fetchall()
+            print(f"SUGGESTED SOURCES: {res}")
+            return res

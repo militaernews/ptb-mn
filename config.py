@@ -1,8 +1,11 @@
 import os
+from asyncio import run
 from json import loads
 from typing import Final, List, Set
 
 from dotenv import load_dotenv
+
+from data.db import get_suggested_sources
 
 load_dotenv()
 
@@ -16,8 +19,10 @@ DATABASE_URL: Final[str] = os.getenv("DATABASE_URL")  # .replace("postgres", "po
 CHANNEL_MEME: Final[int] = int(os.getenv('CHANNEL_MEME'))
 CHANNEL_SOURCE: Final[int] = int(os.getenv('CHANNEL_SOURCE'))
 
+DATABASE_URL_NN: Final[str] = os.getenv("DATABASE_URL_NN")
 CHANNEL_BACKUP: Final[int] = int(os.getenv('CHANNEL_BACKUP'))
 CHANNEL_SUGGEST: Final[int] = int(os.getenv('CHANNEL_SUGGEST'))
+SUGGESTED_SOURCES: Final[List[int]] = run(get_suggested_sources())
 
 LOG_GROUP: Final[str] = os.getenv('LOG_GROUP')
 ADMINS: Final = loads(os.getenv('ADMINS'))
@@ -60,7 +65,7 @@ ALLOWED_URLS: Final[Set[str]] = {
     "statista.com",
 }
 
-RULES: Final[List[str]] =  [
+RULES: Final[List[str]] = [
     "1️⃣ Keine Beleidigung anderer Mitglieder.",
     "2️⃣ Kein Spam (mehr als drei einzelne Nachrichten oder Alben hintereinander weitergeleitet).",
     "3️⃣ Keine pornografischen Inhalte.",
