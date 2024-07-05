@@ -52,6 +52,7 @@ async def delete(context: CallbackContext):
     else:
         data = context.job.data
 
+#try delete
     await context.bot.delete_message(data, data)
 
 
@@ -153,10 +154,10 @@ def mention(update: Update) -> str:
                         update.message.reply_to_message.from_user.first_name)
 
 async def log_error(action: str,context:CallbackContext,  lang:Language|str,e:Exception,update:Optional[Update]=None ,):
-    if lang is Language:
+    if isinstance(lang,Language):
         lang = lang.lang_key
 
-    text =  f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n<code>{e}</code>"
+    text =  f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n\n<code>{e}</code>"
 
     if update is not None:
         text+=f"\n\n<b>Caused by Post</b>\n<code>{repr(update.channel_post)}</code>"

@@ -1,4 +1,5 @@
-import regex as re
+#import regex as re
+import re
 from typing import Final
 
 WHITESPACE = re.compile(r'[\s\n]+$')

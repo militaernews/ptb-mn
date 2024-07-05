@@ -31,7 +31,9 @@ def flag_to_hashtag(text: str, language: str = None):
 
         for fe in list(set(flag_emojis)):
             # todo: filter if valid flag?
-            text += f"#{get_hashtag(fe, language)} "
+            hashtag = get_hashtag(fe, language)
+            if hashtag is not None:
+                text += f"#{get_hashtag(fe, language)} "
 
     logging.info("--- Translated Text ---")
     logging.info(text)
@@ -61,7 +63,7 @@ def get_hashtag(key: str, language: str = None) -> str:
             # todo: find a way to open this file up just once when iterating through langs
             return loads(f.read())[language]
     except Exception as e:
-        logging.error(f"Error when trying to get hashtag --- {e}")
+        logging.warn(f"Error when trying to get hashtag --- {e}")
 
 
 async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:

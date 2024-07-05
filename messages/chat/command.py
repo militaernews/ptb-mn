@@ -226,4 +226,7 @@ async def notify_admins(update: Update, _: CallbackContext):
             if update.message.reply_to_message.is_automatic_forward
             else "‼️ Ein Nutzer hat deine Nachricht gemeldet. Wir Admins prüfen das.\n\nDie Regeln dieser Gruppe findest du unter /rules."
         )
-        await update.message.reply_to_message.reply_text(response)
+        try:
+            await update.message.reply_to_message.reply_text(response)
+        except:
+            logging.warning(f"Could not reply: {update}")

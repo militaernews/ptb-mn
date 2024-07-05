@@ -163,11 +163,9 @@ async def share_in_other_channels(context: CallbackContext):
 
 async def edit_channel(update: Update, context: CallbackContext):
     if update.edited_channel_post.caption is not None:
-        original_caption = re.sub(
-            WHITESPACE,
+        original_caption = WHITESPACE.sub(
             "",
-            re.sub(
-                HASHTAG,
+            HASHTAG.sub(
                 "",
                 update.edited_channel_post.caption_html_urled.replace(
                     GERMAN.footer, ""

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from traceback import format_exc
 from typing import AsyncGenerator
 
-from asyncpg import create_pool
+from aiopg import create_pool
 from psycopg2 import OperationalError
 from psycopg2.extras import NamedTupleCursor
 from telegram import Message
