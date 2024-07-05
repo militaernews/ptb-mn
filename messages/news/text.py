@@ -5,7 +5,6 @@ from telegram import Update, Message
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
-import config
 import twitter
 from data.db import query_replies, insert_single2, update_text, get_msg_id
 from data.lang import languages, GERMAN

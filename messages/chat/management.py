@@ -2,14 +2,14 @@ import logging
 from collections import defaultdict
 
 import requests
-from telegram import Update, ChatPermissions, MessageEntity
+from telegram import Update, ChatPermissions
 from telegram.error import TelegramError
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, MessageHandler, CommandHandler, filters, Application
 from telegram.helpers import mention_html
 
-from config import WARN_LIMIT, ADMINS, RULES, ALLOWED_URLS
-from util.helper import reply_html, reply_photo, CHAT_ID, MSG_REMOVAL_PERIOD, delete, MSG_ID, admin_reply, remove, \
-    remove_reply, mention
+from config import ADMINS, RULES, WARN_LIMIT
+from data.lang import GERMAN
+from util.helper import mention, remove_reply, admin_reply, delete, MSG_REMOVAL_PERIOD, CHAT_ID, MSG_ID, reply_html
 
 
 def manage_warnings(update: Update, context: CallbackContext, increment: int):
@@ -68,7 +68,7 @@ async def warn_user(update: Update, context: CallbackContext):
                                                    update.message.reply_to_message.from_user.id,
                                                    ChatPermissions(can_send_messages=False))
         except TelegramError as e:
-            logging.info(f"needs admin: {e}")
+            logging.warning(f"needs admin: {e}")
 
         await update.message.reply_to_message.reply_text(
             f"Aufgrund wiederholter Verstöße habe ich {mention(update)} die Schreibrechte genommen.")
@@ -103,119 +103,6 @@ async def report_user(update: Update, _: CallbackContext):
     await update.message.reply_to_message.reply_text(
         f"Der Nutzer {mention(update)} wurde Tartaros-Antispam gemeldet.")
 
-
-async def maps(update: Update, context: CallbackContext):
-    await reply_html(update, context, "maps")
-
-    # todo: collect list of losses
-
-
-async def loss(update: Update, context: CallbackContext):
-    await reply_html(update, context, "loss")
-
-
-async def donbas(update: Update, context: CallbackContext):
-    await reply_html(update, context, "donbas")
-
-
-async def commands(update: Update, context: CallbackContext):
-    await reply_html(update, context, "cmd")
-
-
-async def genozid(update: Update, context: CallbackContext):
-    await reply_html(update, context, "genozid")
-
-
-async def peace(update: Update, context: CallbackContext):
-    await reply_html(update, context, "peace")
-
-
-async def short(update: Update, context: CallbackContext):
-    await reply_html(update, context, "short")
-
-
-async def stats(update: Update, context: CallbackContext):
-    await reply_html(update, context, "stats")
-
-
-async def bias(update: Update, context: CallbackContext):
-    await reply_html(update, context, "bias")
-
-
-async def sold(update: Update, context: CallbackContext):
-    await reply_html(update, context, "sold")
-
-
-@remove
-async def ref(update: Update, context: CallbackContext):
-    for ent in update.message.entities:
-        if ent.type is MessageEntity.URL:
-            logging.info(f"link REF: {ent.url}")
-            text = f"Ich habe dir mal was passendes aus unserem Kanal rausgesucht😊\n\n👉🏼 <a href='{ent.url}'>{ent.url}</a>"
-            if update.message.reply_to_message:
-                await update.message.reply_to_message.reply_text(
-                    f"Hey {update.message.reply_to_message.from_user.name}!\n{text}", disable_web_page_preview=False)
-            else:
-                await context.bot.send_message(update.message.chat_id, text, disable_web_page_preview=False)
-            return
-
-
-async def sofa(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "sofa.jpg")
-
-
-async def bot(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "bot.jpg")
-
-
-async def mimimi(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "mimimi.jpg")
-
-
-async def cia(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "cia.jpg")
-
-
-async def duden(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "duden.jpg")
-
-
-async def argu(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "argu.jpg")
-
-
-async def vs(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "vs.jpg")
-
-
-async def disso(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "disso.jpg")
-
-
-async def front(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "front.png")
-
-
-async def deutsch(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "deutsch.png")
-
-
-async def pali(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "pali.jpg")
-
-
-async def wissen(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "wissen.jpg")
-
-
-async def send_rules(update: Update, context: CallbackContext):
-    await reply_html(update, context, "rules", "\n\n".join(RULES))
-
-
-async def send_whitelist(update: Update, context: CallbackContext):
-    await reply_html(update, context, "whitelist", "\n\n".join(ALLOWED_URLS))
-
-
 @remove_reply
 async def notify_admins(update: Update, _: CallbackContext):
     logging.info(f"admin: {update.message}")
@@ -228,5 +115,18 @@ async def notify_admins(update: Update, _: CallbackContext):
         )
         try:
             await update.message.reply_to_message.reply_text(response)
-        except:
-            logging.warning(f"Could not reply: {update}")
+        except Exception as e:
+            logging.warning(f"Could not reply: {update} - {e}")
+
+async def send_rules(update: Update, context: CallbackContext):
+    await reply_html(update, context, "rules", "\n\n".join(RULES))
+
+
+
+def register_management(app:Application):
+    app.add_handler(MessageHandler(filters.Chat(GERMAN.chat_id) & filters.Regex("^@admin"), notify_admins))
+    app.add_handler(CommandHandler("rules", send_rules, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
+    # app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))

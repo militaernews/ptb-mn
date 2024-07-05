@@ -85,21 +85,5 @@ async def handle_other_chats(update: Update, context: CallbackContext):
     await handle_putin_dict(update, context)
 
 
-async def remove_command(update: Update, _: CallbackContext):
-    await sleep(2)
-    await delete_msg(update)
 
-
-async def remove_url(update: Update, context: CallbackContext):
-    logging.info(f"MATCH? {update.message.text}")
-    print(f"MATCH? {update.message.text}")
-
-    if update.message.from_user.id in await get_admin_ids(context):
-        return
-
-    if any(ext in update.message.text for ext in ALLOWED_URLS):
-        print("NO MATCH ---")
-        return
-
-    await delete_msg(update)
 

@@ -5,7 +5,7 @@ from typing import Final, Optional, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from telegram import InlineKeyboardButton, Update, InlineKeyboardMarkup, ChatMemberUpdated, ChatMember
 from telegram.error import TelegramError
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, Application, ChatMemberHandler, CallbackQueryHandler
 
 from data.lang import GERMAN
 from util.helper import MSG_REMOVAL_PERIOD
@@ -177,3 +177,9 @@ async def click_captcha(update: Update, context: CallbackContext):
     else:
         await update.callback_query.edit_message_reply_markup(InlineKeyboardMarkup(create_keyboard(context)))
         await update.callback_query.answer()
+
+def register_captcha(app:Application):
+    app.add_handler(CallbackQueryHandler(click_captcha, r"captcha_.+_.+", ))
+    app.add_handler(ChatMemberHandler(send_captcha, ChatMemberHandler.CHAT_MEMBER))
+    #  app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))
+    #   app.add_handler(CommandHandler("captcha", send_captcha, filters.Chat(ADMINS)))

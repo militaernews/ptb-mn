@@ -17,7 +17,7 @@ MSG_ID: Final[str] = "msg_id"
 
 
 def sanitize_text(text: str = None) -> str:
-    return "" if text is None else re.sub(GERMAN.footer, "", text)
+    return "" if text is None else GERMAN.footer.sub( "", text)
 
 
 def sanitize_hashtag(lang_key: str, text: str) -> str:

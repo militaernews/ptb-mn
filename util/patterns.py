@@ -10,3 +10,8 @@ PATTERN_HTMLTAG = re.compile(r'<[^a>]+>')
 
 PLACEHOLDER: Final[str] = "║"
 PATTERN_COMMAND: Final[str] = r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$"
+
+INFO_PATTERN = re.compile(r"#info", re.IGNORECASE)
+BREAKING_PATTERN = re.compile(r"#eilmeldung", re.IGNORECASE)
+ANNOUNCEMENT_PATTERN = re.compile(r"#mitteilung", re.IGNORECASE)
+ADVERTISEMENT_PATTERN = re.compile(r"#werbung", re.IGNORECASE)

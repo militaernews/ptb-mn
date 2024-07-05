@@ -2,7 +2,8 @@ import logging
 from typing import Sequence, Union
 
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSize, Animation, Video
-from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext, ContextTypes
+from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext, ContextTypes, \
+    Application
 
 from config import ADMINS
 from data import lang
@@ -166,22 +167,21 @@ async def advertise_in_other_channels(text:str, button: InlineKeyboardMarkup|Non
 
         await update.message.reply_text(f"Post sollte nun im Kanal {language.lang_key} gesendet worden sein.")
 
+def register_advertisement(app:Application):
+    app.add_handler(ConversationHandler(
+        entry_points=[CommandHandler("add_advertisement", add_advertisement, filters=filters.Chat(ADMINS))],
+        states={
+            NEEDS_MEDIA: [
+                CommandHandler("skip", skip_media),
+                MessageHandler(filters.PHOTO | filters.VIDEO | filters.ANIMATION, add_advertisement_media),
+            ],
+            NEEDS_TEXT: [MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_text)],
+            NEEDS_BUTTON: [CommandHandler("skip", skip_button),
+                           MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_button),
+                           ],
+            NEEDS_URL: [MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_url)],
+            SAVE_ADVERTISEMENT: [CommandHandler("save", save_advertisement)]
 
-cancel_handler = [CommandHandler("cancel", cancel)]
-add_advertisement_handler = ConversationHandler(
-    entry_points=[CommandHandler("add_advertisement", add_advertisement, filters=filters.Chat(ADMINS))],
-    states={
-        NEEDS_MEDIA: [
-            CommandHandler("skip", skip_media),
-            MessageHandler(filters.PHOTO | filters.VIDEO | filters.ANIMATION, add_advertisement_media),
-        ],
-        NEEDS_TEXT: [MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_text)],
-        NEEDS_BUTTON: [CommandHandler("skip", skip_button),
-                       MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_button),
-                       ],
-        NEEDS_URL: [MessageHandler(filters.TEXT & ~filters.Regex(r"/cancel"), add_advertisement_url)],
-        SAVE_ADVERTISEMENT: [CommandHandler("save", save_advertisement)]
-
-    },
-    fallbacks=cancel_handler,
-)
+        },
+        fallbacks=[CommandHandler("cancel", cancel)],
+    ))

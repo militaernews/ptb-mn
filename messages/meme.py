@@ -34,7 +34,7 @@ async def add_footer_meme(update: Update, context: CallbackContext):
 
         await update.channel_post.edit_caption(format_meme_footer(original_caption))
 
-        # Unfortunately it is not possible for bots to forward a mediagroup as a whole.
+        # Unfortunately it is not possible for bots to forward a media-group as a whole.
         await update.channel_post.forward(chat_id=GERMAN.chat_id)
     except Exception as e:
         await context.bot.send_message(

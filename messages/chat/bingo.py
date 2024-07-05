@@ -6,9 +6,10 @@ from typing import List, Union, Dict
 
 from dotenv import load_dotenv
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, Application, CommandHandler, filters
 from telegram.helpers import mention_html
 
+from config import ADMINS
 from data.lang import GERMAN
 from util.helper import export_svg, admin
 
@@ -319,4 +320,9 @@ async def reset_bingo(update: Update, context: CallbackContext):
     await update.message.reply_text(f"Bingo was reset!\n\n{context.bot_data['bingo']}")
 
 
-create_svg(generate_bingo_field())
+def register_bingo(app:Application):
+    app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
+    # app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
+    app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))
+
+

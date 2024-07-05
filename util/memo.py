@@ -1,9 +1,4 @@
-import logging
 import time
-
-from telegram.ext import CallbackContext
-
-from data.lang import GERMAN
 
 
 class memo(object):
@@ -45,11 +40,3 @@ class memo(object):
         func.func_name = f.__name__
 
         return func
-
-
-
-async def get_admin_ids(context: CallbackContext):
-    admins = [admin.user.id for admin in (await context.bot.get_chat_administrators(GERMAN.chat_id))]
-    print(admins)
-    logging.info(admins)
-    return admins
