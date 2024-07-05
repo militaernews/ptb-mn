@@ -1,14 +1,53 @@
 import logging
 from asyncio import sleep
+from typing import Final, Set
 
 from telegram import Update, MessageEntity
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackContext, Application
 
-from config import ALLOWED_URLS
+
 from data.lang import GERMAN
 from util.helper import delete_msg, reply_html
 from util.patterns import PATTERN_COMMAND
 
+ALLOWED_URLS: Final[Set[str]] = {
+    "t.me/militaernews",
+    "bbc.com",
+    "bbc.co.uk",
+    "nytimes.com",
+    "cnn.com",
+    "theguardian.com",
+    "nypost.com",
+    "forbes.com",
+    "washingtonpost.com",
+    "cnbc.com",
+    "independent.co.uk",
+    "businessinsider.com",
+    "kremlin.ru",
+    "un.org",
+    "icrc.org",
+    "whitehouse.gov",
+    "ntv.de",
+    "n-tv.de",
+    "nzz.ch",
+    "faz.net",
+    "maps.app.goo.gl",
+    "understandingwar.org",
+    "wikipedia.org",
+    "youtube.com",
+    "youtu.be",
+    "spiegel.de",
+    "maps.google.com",
+    "wsj.com",
+    "reuters.com",
+    "bloomberg.com",
+    "dw.com",
+    "zeit.de"
+    "apnews.com",
+    "tagesschau.de",
+    "statista.com",
+    "cbr.ru"
+}
 
 async def get_admin_ids(context: CallbackContext):
     admins = [admin.user.id for admin in (await context.bot.get_chat_administrators(GERMAN.chat_id))]

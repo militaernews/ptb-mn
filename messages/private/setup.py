@@ -79,6 +79,8 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("cmd", "Übersicht aller Befehle"),
         ("maps", "Karten Ukraine-Krieg"),
         ("loss", "Materialverluste in der Ukraine"),
+        ("rules", "Regel der Gruppe"),
+        ("whitelist", "Erlaubte Links"),
         ("donbas", "14.000 Zivilisten im Donbas"),
         ("stats", "Statistiken"),
         ("short", "Abkürzungen"),
@@ -88,13 +90,11 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("genozid", "Kein Genozid der Ukrainer im Donbas"),
         ("sofa", "Waffensystem des Sofa-Kriegers"),
         ("bot", "für Trolle"),
-        ("cia", "Wahrheit über Putin"),
         ("mimimi", "Wenn einer mal wieder heult"),
         ("duden", "Deutsch. Setzen. Sechs."),
         ("argu", "Argumentationspyramide"),
         ("disso", "Kognitive Dissonanz"),
         ("front", "An die Front!"),
-        ("pali", "Karte Palästinas"),
     ]
     await context.bot.set_my_commands(chat_de_commands)
 

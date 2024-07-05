@@ -56,8 +56,7 @@ async def mimimi(update: Update, context: CallbackContext):
     await reply_photo(update, context, "mimimi.jpg")
 
 
-async def cia(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "cia.jpg")
+
 
 
 async def duden(update: Update, context: CallbackContext):
@@ -84,8 +83,7 @@ async def deutsch(update: Update, context: CallbackContext):
     await reply_photo(update, context, "deutsch.png")
 
 
-async def pali(update: Update, context: CallbackContext):
-    await reply_photo(update, context, "pali.jpg")
+
 
 
 async def wissen(update: Update, context: CallbackContext):
@@ -106,7 +104,6 @@ def register_commands(app: Application):
     app.add_handler(CommandHandler("sofa", sofa))
     app.add_handler(CommandHandler("bot", bot))
     app.add_handler(CommandHandler("mimimi", mimimi))
-    app.add_handler(CommandHandler("cia", cia))
     app.add_handler(CommandHandler("duden", duden))
     app.add_handler(CommandHandler("argu", argu))
     app.add_handler(CommandHandler("vs", vs))
@@ -114,4 +111,3 @@ def register_commands(app: Application):
     app.add_handler(CommandHandler("front", front))
     app.add_handler(CommandHandler("deutsch", deutsch))
     app.add_handler(CommandHandler("wissen", wissen))
-    app.add_handler(CommandHandler("pali", pali))

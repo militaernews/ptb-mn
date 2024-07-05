@@ -1,5 +1,6 @@
 import logging
 from collections import defaultdict
+from typing import Final, List
 
 import requests
 from telegram import Update, ChatPermissions
@@ -7,10 +8,17 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext, MessageHandler, CommandHandler, filters, Application
 from telegram.helpers import mention_html
 
-from config import ADMINS, RULES, WARN_LIMIT
+from config import ADMINS, WARN_LIMIT
 from data.lang import GERMAN
 from util.helper import mention, remove_reply, admin_reply, delete, MSG_REMOVAL_PERIOD, CHAT_ID, MSG_ID, reply_html
 
+RULES: Final[List[str]] = [
+    "1️⃣ Keine Beleidigung anderer Mitglieder.",
+    "2️⃣ Kein Spam (mehr als drei einzelne Nachrichten oder Alben hintereinander weitergeleitet).",
+    "3️⃣ Keine pornografischen Inhalte.",
+    "4️⃣ Keine Aufnahmen von Leichen oder Schwerverletzen.",
+    "5️⃣ Keine privaten Inhalte anderer Personen teilen."
+]
 
 def manage_warnings(update: Update, context: CallbackContext, increment: int):
     user_id = update.message.reply_to_message.from_user.id
