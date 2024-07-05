@@ -1,8 +1,12 @@
+from asyncio import get_event_loop
+from typing import Final, List
+
 from regex import sub
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ContextTypes, Application, MessageHandler, filters
 
 from config import CHANNEL_SUGGEST, CHANNEL_BACKUP
+from data.db import get_suggested_sources
 from util.translation import translate
 
 
@@ -26,4 +30,5 @@ async def suggest_single(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.channel_post.copy(chat_id=CHANNEL_SUGGEST, caption=translated_text, reply_markup=keyboard)
 
 def register_suggest(app:Application):
-    app.add_handler(MessageHandler(filters.Chat(CHANNEL_BACKUP) & filters.CAPTION & filters.FORWARDED & filters.ForwardedFrom(), suggest_single))
+    SUGGESTED_SOURCES: Final[List[int]] = get_event_loop().run_until_complete(get_suggested_sources())
+    app.add_handler(MessageHandler(filters.Chat(CHANNEL_BACKUP) & filters.CAPTION & filters.FORWARDED & filters.ForwardedFrom(SUGGESTED_SOURCES), suggest_single))

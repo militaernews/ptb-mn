@@ -1,9 +1,12 @@
+import asyncio
+from sys import platform, version_info
+from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy, run
+
 import logging
 import re
-from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy
 from datetime import datetime
 from os import makedirs, path
-from sys import platform, version_info
+
 from typing import Final
 
 from telegram import LinkPreviewOptions
@@ -40,7 +43,17 @@ def add_logging():
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
-def main():
+
+
+
+if __name__ == "__main__":
+
+
+    add_logging()
+
+    if version_info >= (3, 8) and platform.lower().startswith("win"):
+        set_event_loop_policy(WindowsSelectorEventLoopPolicy())
+
     app = (ApplicationBuilder().token(TOKEN)
            .defaults(Defaults(parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)))
            .persistence(PicklePersistence(filepath="persistence"))
@@ -98,10 +111,3 @@ def main():
     app.run_polling(poll_interval=1, drop_pending_updates=False)
 
 
-if __name__ == "__main__":
-    add_logging()
-
-    if version_info >= (3, 8) and platform.lower().startswith("win"):
-        set_event_loop_policy(WindowsSelectorEventLoopPolicy())
-
-    main()
