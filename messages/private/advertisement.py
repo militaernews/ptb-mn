@@ -136,10 +136,12 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
 
     return ConversationHandler.END
 
-    #await advertise_in_other_channels(text, button, media, update, context)
+    # await advertise_in_other_channels(text, button, media, update, context)
 
 
-async def advertise_in_other_channels(text:str, button: InlineKeyboardMarkup|None, media: Union[Animation, Sequence[PhotoSize], Video, None], update: Update, context: CallbackContext):
+async def advertise_in_other_channels(text: str, button: InlineKeyboardMarkup | None,
+                                      media: Union[Animation, Sequence[PhotoSize], Video, None], update: Update,
+                                      context: CallbackContext):
     for language in lang.languages:
         translated_text = await translate(language.lang_key, text, language.lang_key_deepl)
 
@@ -167,7 +169,8 @@ async def advertise_in_other_channels(text:str, button: InlineKeyboardMarkup|Non
 
         await update.message.reply_text(f"Post sollte nun im Kanal {language.lang_key} gesendet worden sein.")
 
-def register_advertisement(app:Application):
+
+def register_advertisement(app: Application):
     app.add_handler(ConversationHandler(
         entry_points=[CommandHandler("add_advertisement", add_advertisement, filters=filters.Chat(ADMINS))],
         states={

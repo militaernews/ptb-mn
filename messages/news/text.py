@@ -84,4 +84,3 @@ async def edit_channel_text(update: Update, context: CallbackContext):
         except TelegramError as e:
             if not e.message.startswith("Message is not modified"):
                 await log_error("edit text", context, lang, e, update, )
-

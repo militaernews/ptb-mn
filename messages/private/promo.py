@@ -167,7 +167,8 @@ async def verify_promo(update: Update, context: CallbackContext):
         logging.info("not member")
         await update.callback_query.answer(get_text(update, "require"))
 
-def register_promo(app:Application):
+
+def register_promo(app: Application):
     app.add_handler(MessageHandler(filters.Regex(r"\/start promo_\w{2}(_\d+)?"), start_promo))
     app.add_handler(CallbackQueryHandler(verify_promo, r"promo_\w{2}(_\d+)?"))
     app.add_handler(CommandHandler("promo", send_promos, filters.Chat(ADMINS)))

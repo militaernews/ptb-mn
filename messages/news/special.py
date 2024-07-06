@@ -128,4 +128,3 @@ async def post_info(update: Update, context: CallbackContext):
         await msg.pin()
     except Exception as e:
         await log_error("send info", context, GERMAN, e, update, )
-

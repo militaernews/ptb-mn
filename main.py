@@ -1,12 +1,9 @@
-import asyncio
-from sys import platform, version_info
-from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy, run
-
 import logging
 import re
+from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy
 from datetime import datetime
 from os import makedirs, path
-
+from sys import platform, version_info
 from typing import Final
 
 from telegram import LinkPreviewOptions
@@ -43,11 +40,7 @@ def add_logging():
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
-
-
-
 if __name__ == "__main__":
-
 
     add_logging()
 
@@ -109,5 +102,3 @@ if __name__ == "__main__":
 
     print("### RUNNING LOCAL ###")
     app.run_polling(poll_interval=1, drop_pending_updates=False)
-
-

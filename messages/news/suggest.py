@@ -13,11 +13,11 @@ from util.translation import translate
 def debloat_text(text: str) -> str:
     cleaned = sub(r'(https?)://[^\s/$.?#].[^\s]*|@[^\s]+$', '', text)
     cleaned = sub(r'#\w+\s*$', '', cleaned)
-    cleaned  = sub(r'.{,40}$', '', cleaned)
+    cleaned = sub(r'.{,30}$', '', cleaned)
     return cleaned
 
-async def suggest_single(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
+async def suggest_single(update: Update, context: ContextTypes.DEFAULT_TYPE):
     debloated = debloat_text(update.channel_post.caption_html)
 
     if 200 > len(debloated) > 900:
@@ -26,9 +26,12 @@ async def suggest_single(update: Update, context: ContextTypes.DEFAULT_TYPE):
     translated_text = await translate("de", debloated, "de")
 
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🔗 Quelle", url=update.channel_post.link)]])
+        [InlineKeyboardButton("🔗 Original", url=update.channel_post.forward_origin.chat.link), InlineKeyboardButton("💾 Backup", url=update.channel_post.link)]])
     await update.channel_post.copy(chat_id=CHANNEL_SUGGEST, caption=translated_text, reply_markup=keyboard)
 
-def register_suggest(app:Application):
+
+def register_suggest(app: Application):
     SUGGESTED_SOURCES: Final[List[int]] = get_event_loop().run_until_complete(get_suggested_sources())
-    app.add_handler(MessageHandler(filters.Chat(CHANNEL_BACKUP) & filters.CAPTION & filters.FORWARDED & filters.ForwardedFrom(SUGGESTED_SOURCES), suggest_single))
+    app.add_handler(MessageHandler(
+        filters.Chat(CHANNEL_BACKUP) & filters.CAPTION & filters.FORWARDED & filters.ForwardedFrom(SUGGESTED_SOURCES),
+        suggest_single))

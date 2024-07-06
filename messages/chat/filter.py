@@ -73,4 +73,3 @@ async def filter_message(update: Update, context: CallbackContext):
 
     else:
         await handle_bingo(update, context)
-

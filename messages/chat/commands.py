@@ -9,6 +9,7 @@ async def maps(update: Update, context: CallbackContext):
 
     # todo: collect list of losses
 
+
 async def loss(update: Update, context: CallbackContext):
     await reply_html(update, context, "loss")
 
@@ -44,6 +45,7 @@ async def bias(update: Update, context: CallbackContext):
 async def sold(update: Update, context: CallbackContext):
     await reply_html(update, context, "sold")
 
+
 async def sofa(update: Update, context: CallbackContext):
     await reply_photo(update, context, "sofa.jpg")
 
@@ -54,9 +56,6 @@ async def bot(update: Update, context: CallbackContext):
 
 async def mimimi(update: Update, context: CallbackContext):
     await reply_photo(update, context, "mimimi.jpg")
-
-
-
 
 
 async def duden(update: Update, context: CallbackContext):
@@ -83,11 +82,9 @@ async def deutsch(update: Update, context: CallbackContext):
     await reply_photo(update, context, "deutsch.png")
 
 
-
-
-
 async def wissen(update: Update, context: CallbackContext):
     await reply_photo(update, context, "wissen.jpg")
+
 
 def register_commands(app: Application):
     app.add_handler(CommandHandler("maps", maps))

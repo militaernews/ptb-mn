@@ -1,6 +1,6 @@
 import os
 from json import loads
-from typing import Final, List, Set
+from typing import Final
 
 from dotenv import load_dotenv
 
@@ -20,5 +20,3 @@ CHANNEL_SUGGEST: Final[int] = int(os.getenv('CHANNEL_SUGGEST'))
 
 LOG_GROUP: Final[str] = os.getenv('LOG_GROUP')
 ADMINS: Final = loads(os.getenv('ADMINS'))
-
-

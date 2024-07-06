@@ -178,7 +178,8 @@ async def click_captcha(update: Update, context: CallbackContext):
         await update.callback_query.edit_message_reply_markup(InlineKeyboardMarkup(create_keyboard(context)))
         await update.callback_query.answer()
 
-def register_captcha(app:Application):
+
+def register_captcha(app: Application):
     app.add_handler(CallbackQueryHandler(click_captcha, r"captcha_.+_.+", ))
     app.add_handler(ChatMemberHandler(send_captcha, ChatMemberHandler.CHAT_MEMBER))
     #  app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))

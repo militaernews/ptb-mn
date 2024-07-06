@@ -317,7 +317,7 @@ async def reset_bingo(update: Update, context: CallbackContext):
     await update.message.reply_text(f"Bingo was reset!\n\n{context.bot_data['bingo']}")
 
 
-def register_bingo(app:Application):
+def register_bingo(app: Application):
     app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
     # app.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))

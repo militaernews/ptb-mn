@@ -1,6 +1,3 @@
-
-
-
 import inspect
 import logging
 from contextlib import asynccontextmanager
@@ -16,11 +13,11 @@ from psycopg2.extras import NamedTupleCursor
 from telegram import Message
 from telegram.ext import CallbackContext
 
-
 from data.lang import GERMAN
 
 DATABASE_URL: Final[str] = getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
 DATABASE_URL_NN: Final[str] = getenv("DATABASE_URL_NN")
+
 
 def key_exists(context: CallbackContext, key: int) -> bool:
     return key in context.bot_data().keys()
@@ -279,7 +276,8 @@ async def insert_promo(user_id: int, lang: str, promo_id: int):
         logging.info(f">> Result: user_id = {res}", )
         return res
 
-async def get_suggested_sources()->[int]:
+
+async def get_suggested_sources() -> [int]:
     async with aiopg.create_pool(DATABASE_URL_NN) as pool:
         async with pool.acquire() as conn:
             async with conn.cursor() as c:

@@ -1,12 +1,11 @@
 import logging
-import re
+from re import sub, findall
 
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       InputMediaVideo, Message, MessageEntity, MessageId,
                       Update)
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
-
 
 import twitter
 from config import CHANNEL_SOURCE
@@ -42,7 +41,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
                                  post_id=de_post_id)
 
         except Exception as e:
-            await log_error("send single post", context, lang,e, update, )
+            await log_error("send single post", context, lang, e, update, )
             pass
 
     formatted_text = flag_to_hashtag(original_caption)
@@ -51,13 +50,13 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         await update.channel_post.edit_caption(formatted_text + GERMAN.footer)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
-            await log_error("edit Post", context, GERMAN,e, update, )
+            await log_error("edit Post", context, GERMAN, e, update, )
             pass
 
     try:
         # todo: upload photo aswell
         await twitter.tweet_file(segment_text(
-            flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "", update.channel_post.caption))),
+            flag_to_hashtag(PATTERN_HTMLTAG.sub( "", update.channel_post.caption))),
             await get_file(update))
         logging.info(f"-")
     except Exception as e:
@@ -85,7 +84,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
                 flag_to_hashtag(update.channel_post.caption_html_urled) + GERMAN.footer
             )
         except Exception as e:
-            await log_error("edit Caption", context, GERMAN,e, update, )
+            await log_error("edit Caption", context, GERMAN, e, update, )
 
     if update.channel_post.reply_to_message is not None:
         reply_id = update.channel_post.reply_to_message.id
@@ -113,11 +112,11 @@ async def share_in_other_channels(context: CallbackContext):
         logging.info(post)
 
         if original_caption is None and post.text is not None:
-            if len(re.findall(GERMAN.footer, post.text)) == 0:
+            if len(findall(GERMAN.footer, post.text)) == 0:
                 original_caption = post.text
             else:
                 # todo: make it actually filter out footer
-                original_caption = re.sub(fr"\s*({HASHTAG})*\s*{GERMAN.footer}", "", post.text)
+                original_caption = sub(fr"\s*({HASHTAG})*\s*{GERMAN.footer}", "", post.text)
 
         if post.file_type == PHOTO:
             files.append(InputMediaPhoto(post.file_id))
@@ -152,12 +151,12 @@ async def share_in_other_channels(context: CallbackContext):
                 await insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
                                      post_id=posts[index].post_id)
         except Exception as e:
-            await log_error("send media group", context,  lang, e)
+            await log_error("send media group", context, lang, e)
 
     logging.info("----- done -----")
 
     await twitter.tweet_files(context,
-                              segment_text(flag_to_hashtag(re.sub(PATTERN_HTMLTAG, "", original_caption))),
+                              segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub( "", original_caption))),
                               posts)
 
 
@@ -222,7 +221,7 @@ async def edit_channel(update: Update, context: CallbackContext):
 
             except TelegramError as e:
                 if not e.message.startswith("Message is not modified"):
-                    await log_error("edit Media", context,lang,e, update ,)
+                    await log_error("edit Media", context, lang, e, update, )
         if msg is not None:
             await update_post(msg, lang.lang_key)
 
@@ -237,7 +236,7 @@ async def edit_channel(update: Update, context: CallbackContext):
         # todo: update text in db
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
-            await log_error("edit Post", context,GERMAN, e, update, )
+            await log_error("edit Post", context, GERMAN, e, update, )
 
 
 async def test_del(update: Update, _: CallbackContext):

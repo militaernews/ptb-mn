@@ -20,6 +20,7 @@ RULES: Final[List[str]] = [
     "5️⃣ Keine privaten Inhalte anderer Personen teilen."
 ]
 
+
 def manage_warnings(update: Update, context: CallbackContext, increment: int):
     user_id = update.message.reply_to_message.from_user.id
     user_data = context.bot_data.setdefault("users", defaultdict(lambda: {"warn": 0}))
@@ -111,6 +112,7 @@ async def report_user(update: Update, _: CallbackContext):
     await update.message.reply_to_message.reply_text(
         f"Der Nutzer {mention(update)} wurde Tartaros-Antispam gemeldet.")
 
+
 @remove_reply
 async def notify_admins(update: Update, _: CallbackContext):
     logging.info(f"admin: {update.message}")
@@ -126,12 +128,12 @@ async def notify_admins(update: Update, _: CallbackContext):
         except Exception as e:
             logging.warning(f"Could not reply: {update} - {e}")
 
+
 async def send_rules(update: Update, context: CallbackContext):
     await reply_html(update, context, "rules", "\n\n".join(RULES))
 
 
-
-def register_management(app:Application):
+def register_management(app: Application):
     app.add_handler(MessageHandler(filters.Chat(GERMAN.chat_id) & filters.Regex("^@admin"), notify_admins))
     app.add_handler(CommandHandler("rules", send_rules, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
