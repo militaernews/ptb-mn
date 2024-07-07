@@ -2,7 +2,7 @@ from asyncio import get_event_loop
 from typing import Final, List
 
 from regex import sub
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, MessageOrigin
 from telegram.ext import ContextTypes, Application, MessageHandler, filters
 
 from config import CHANNEL_SUGGEST, CHANNEL_BACKUP
@@ -18,6 +18,11 @@ def debloat_text(text: str) -> str:
 
 
 async def suggest_single(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.channel_post.forward_origin is None:
+        return
+
+    source: MessageOrigin = update.channel_post.forward_origin
+
     debloated = debloat_text(update.channel_post.caption_html)
 
     if 200 > len(debloated) > 900:
@@ -25,8 +30,19 @@ async def suggest_single(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     translated_text = await translate("de", debloated, "de")
 
-    keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton("🔗 Original", url=update.channel_post.forward_origin.chat.link), InlineKeyboardButton("💾 Backup", url=update.channel_post.link)]])
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    "🔗 Original",
+                    url=f"{source.chat.ink}/{source.message_id}",
+                ),
+                InlineKeyboardButton(
+                    "💾 Backup", url=update.channel_post.link
+                ),
+            ]
+        ]
+    )
     await update.channel_post.copy(chat_id=CHANNEL_SUGGEST, caption=translated_text, reply_markup=keyboard)
 
 
