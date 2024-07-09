@@ -38,13 +38,13 @@ You can find it [here][bot].
 
 This bot posts to channels with different languages. A language consists of these attributes:
 
-|attribute|type|usage|
-| --- | --- | --- |
-|```lang_key```|```str```|identifies a language, corresponding photos and translation|
-|```channel_id```|```int```|identifier of the corresponding News channel on Telegram|
-|```footer```|```str```|text to appear at the end of channel posts|
-|```breaking```|```str```|hashtag for breaking news|
-|```announce```|```str```|hashtag for announcements|
+| attribute        | type      | usage                                                       |
+|------------------|-----------|-------------------------------------------------------------|
+| ```lang_key```   | ```str``` | identifies a language, corresponding photos and translation |
+| ```channel_id``` | ```int``` | identifier of the corresponding News channel on Telegram    |
+| ```footer```     | ```str``` | text to appear at the end of channel posts                  |
+| ```breaking```   | ```str``` | hashtag for breaking news                                   |
+| ```announce```   | ```str``` | hashtag for announcements                                   |
 
 See [lang.py](/data/lang.py) for the implementation.
 

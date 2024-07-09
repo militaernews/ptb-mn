@@ -9,6 +9,7 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 from config import ADMINS, LOG_GROUP
+from data.db import PHOTO, VIDEO, ANIMATION
 from data.lang import GERMAN, Language
 
 MSG_REMOVAL_PERIOD: Final[int] = 1200
@@ -44,6 +45,22 @@ async def get_file(update: Update):
     elif update.channel_post.animation:
         return await update.channel_post.animation.get_file()
 
+async def get_file_type(update: Update):
+    if update.channel_post.photo:
+        return PHOTO
+    elif update.channel_post.video:
+        return VIDEO
+    elif update.channel_post.animation:
+        return ANIMATION
+
+
+def get_tg_file_id(update: Update):
+    if update.channel_post.photo:
+        return update.channel_post.photo[-1].file_id
+    elif update.channel_post.video:
+        return update.channel_post.video.file_id
+    elif update.channel_post.animation:
+        return update.channel_post.animation.file_id
 
 async def delete(context: CallbackContext):
     if context.job.data is dict:
