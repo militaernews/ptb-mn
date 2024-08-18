@@ -7,6 +7,7 @@ HASHTAG = re.compile(r'#\S+')
 FLAG_EMOJI = re.compile(r'🏴|🏳️|([🇦-🇿]{2})')
 BREAKING = re.compile(r'#eilmeldung[\r\n\s]*', re.IGNORECASE)
 PATTERN_HTMLTAG = re.compile(r'<[^a>]+>')
+FLAG_EMOJI_HTMLTAG = re.compile(FLAG_EMOJI.pattern+r"|"+PATTERN_HTMLTAG.pattern, re.IGNORECASE)
 
 PLACEHOLDER: Final[str] = "║"
 PATTERN_COMMAND: Final[str] = r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$"

@@ -36,7 +36,7 @@ async def suggest_single(update: Update, context: CallbackContext):
         [
             [InlineKeyboardButton(
                 original_button,
-                url=f"{source.chat.ink}/{source.message_id}",
+                url=f"{source.chat.link}/{source.message_id}",
             ),
 
                 InlineKeyboardButton(
