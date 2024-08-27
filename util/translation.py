@@ -71,7 +71,7 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     logging.info(text)
 
     sub_text = sanitize_text(text)
-    emojis = re.findall(FLAG_EMOJI, sub_text)
+    emojis = re.findall(FLAG_EMOJI_HTMLTAG, sub_text)
     text_to_translate = re.sub(FLAG_EMOJI_HTMLTAG, PLACEHOLDER, sub_text)
 
     if target_lang == "fa" or target_lang == "ar":  # or "ru"?

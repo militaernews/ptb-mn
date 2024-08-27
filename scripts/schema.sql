@@ -10,6 +10,7 @@ create table posts
     file_type      int,
     file_id        varchar(120),
     text           text,
+    spoiler boolean default false,
     primary key (msg_id, lang)
 );
 
