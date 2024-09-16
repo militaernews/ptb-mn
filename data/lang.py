@@ -113,4 +113,15 @@ languages: [Language] = [
         "إعلان",
         "MilitaryNewsAR",
     ),
+
+    Language(
+        "id",  # Indonesian
+        -1002089283993,  # https://t.me/MilitaryNewsIDN
+        "🔰 Berlangganan @MilitaryNewsIDN",
+        "BERITA_TERBARU",
+        "KOMUNIKASI",
+        "ADVERTISEMENT",
+        "MilitaryNewsIDN",
+        lang_key_deepl="id"
+    ),
 ]
