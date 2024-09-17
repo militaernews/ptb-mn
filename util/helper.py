@@ -18,7 +18,7 @@ MSG_ID: Final[str] = "msg_id"
 
 
 def sanitize_text(text: str = None) -> str:
-    return "" if text is None else GERMAN.footer.sub("", text)
+    return "" if text is None else re.sub(GERMAN.footer, "", text)
 
 
 def sanitize_hashtag(lang_key: str, text: str) -> str:
@@ -69,7 +69,7 @@ async def delete(context: CallbackContext):
     else:
         data = context.job.data
 
-    # try delete
+#try delete
     await context.bot.delete_message(data, data)
 
 
@@ -170,19 +170,16 @@ def mention(update: Update) -> str:
     return mention_html(update.message.reply_to_message.from_user.id,
                         update.message.reply_to_message.from_user.first_name)
 
-
-async def log_error(action: str, context: CallbackContext, lang: Language | str, e: Exception,
-                    update: Optional[Update] = None, ):
-    if isinstance(lang, Language):
+async def log_error(action: str,context:CallbackContext,  lang:Language|str,e:Exception,update:Optional[Update]=None ,):
+    if isinstance(lang,Language):
         lang = lang.lang_key
 
-    text = f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n\n<code>{e}</code>"
+    text =  f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n\n<code>{e}</code>"
 
     if update is not None:
-        text += f"\n\n<b>Caused by Post</b>\n<code>{repr(update.channel_post)}</code>"
+        text+=f"\n\n<b>Caused by Post</b>\n<code>{repr(update.channel_post)}</code>"
 
-    await context.bot.send_message(LOG_GROUP, text)
-
+    await context.bot.send_message(LOG_GROUP,text)
 
 async def delete_msg(update: Update):
     try:

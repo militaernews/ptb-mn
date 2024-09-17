@@ -136,7 +136,7 @@ async def send_rules(update: Update, context: CallbackContext):
 def register_management(app: Application):
     app.add_handler(MessageHandler(filters.Chat(GERMAN.chat_id) & filters.Regex("^@admin"), notify_admins))
     app.add_handler(CommandHandler("rules", send_rules, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
+   # app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
+  #  app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
     # app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
