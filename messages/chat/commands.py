@@ -45,6 +45,9 @@ async def bias(update: Update, context: CallbackContext):
 async def sold(update: Update, context: CallbackContext):
     await reply_html(update, context, "sold")
 
+async def osint(update: Update, context: CallbackContext):
+    await reply_html(update, context, "osint")
+
 
 async def sofa(update: Update, context: CallbackContext):
     await reply_photo(update, context, "sofa.jpg")
@@ -96,6 +99,7 @@ def register_commands(app: Application):
     app.add_handler(CommandHandler("short", short))
     app.add_handler(CommandHandler("bias", bias))
     app.add_handler(CommandHandler("sold", sold))
+    app.add_handler(CommandHandler("osint", osint))
     app.add_handler(CommandHandler("genozid", genozid))
 
     app.add_handler(CommandHandler("sofa", sofa))
@@ -108,3 +112,4 @@ def register_commands(app: Application):
     app.add_handler(CommandHandler("front", front))
     app.add_handler(CommandHandler("deutsch", deutsch))
     app.add_handler(CommandHandler("wissen", wissen))
+
