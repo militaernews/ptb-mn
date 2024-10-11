@@ -8,7 +8,8 @@ from typing import Final
 
 from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
-from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence
+from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
+    Application
 
 from config import TOKEN, ADMINS, CHANNEL_MEME
 from data.lang import GERMAN
@@ -39,6 +40,37 @@ def add_logging():
     )
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
+def register_news(app: Application):
+    media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+    news_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=GERMAN.channel_id)
+
+    app.add_handler(
+   MessageHandler(news_post & media & filters.CaptionRegex(INFO_PATTERN), post_info))
+
+    app.add_handler(MessageHandler(news_post & media, post_channel_english))
+
+    app.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(BREAKING_PATTERN),
+                                 breaking_news))
+    app.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(ANNOUNCEMENT_PATTERN),
+                                  announcement))
+    app.add_handler(
+       MessageHandler(news_post & filters.TEXT & filters.Regex(ADVERTISEMENT_PATTERN), advertisement))
+    app.add_handler(MessageHandler(news_post & filters.TEXT, post_channel_text))
+
+    news_edited = filters.UpdateType.EDITED_CHANNEL_POST & filters.Chat(
+      chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
+      re.compile(r"🔰 MN-Hauptquartier|#\S+|MN-Team", re.IGNORECASE))
+
+    app.add_handler(MessageHandler(news_edited & media, edit_channel))
+    app.add_handler(MessageHandler(news_edited & filters.TEXT, edit_channel_text))
+
+def register_meme(app: Application):
+    media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+
+    meme_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=CHANNEL_MEME)
+
+    app.add_handler(MessageHandler(meme_post & media, post_media_meme))
+    app.add_handler(MessageHandler(meme_post & filters.TEXT, post_text_meme))
 
 if __name__ == "__main__":
 
@@ -58,34 +90,9 @@ if __name__ == "__main__":
     register_advertisement(app)
     register_promo(app)
 
-    media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+    register_meme(app)
 
-    meme_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=CHANNEL_MEME)
-
-    app.add_handler(MessageHandler(meme_post & media, post_media_meme))
-    app.add_handler(MessageHandler(meme_post & filters.TEXT, post_text_meme))
-
-    news_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=GERMAN.channel_id)
-
-    app.add_handler(
-        MessageHandler(news_post & media & filters.CaptionRegex(INFO_PATTERN), post_info))
-
-    app.add_handler(MessageHandler(news_post & media, post_channel_english))
-
-    app.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(BREAKING_PATTERN),
-                                   breaking_news))
-    app.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(ANNOUNCEMENT_PATTERN),
-                                   announcement))
-    app.add_handler(
-        MessageHandler(news_post & filters.TEXT & filters.Regex(ADVERTISEMENT_PATTERN), advertisement))
-    app.add_handler(MessageHandler(news_post & filters.TEXT, post_channel_text))
-
-    news_edited = filters.UpdateType.EDITED_CHANNEL_POST & filters.Chat(
-        chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
-        re.compile(r"🔰 MN-Hauptquartier|#\S+|MN-Team", re.IGNORECASE))
-
-    app.add_handler(MessageHandler(news_edited & media, edit_channel))
-    app.add_handler(MessageHandler(news_edited & filters.TEXT, edit_channel_text))
+    #register_news(app)
 
     register_commands(app)
     register_management(app)
