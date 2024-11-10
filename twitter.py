@@ -19,7 +19,7 @@ access_token = os.getenv("ACCESS_KEY")
 access_secret = os.getenv("ACCESS_SECRET")
 bearer = os.getenv("BEARER")
 
-ACTIVE = False
+ACTIVE = True
 
 client = tweepy.Client(
     consumer_key=consumer_key,

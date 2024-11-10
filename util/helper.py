@@ -1,8 +1,8 @@
 import logging
 import re
+import subprocess
 from typing import Final, Optional
 
-from resvg_py import svg_to_bytes
 from telegram import Update
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
@@ -45,6 +45,7 @@ async def get_file(update: Update):
     elif update.channel_post.animation:
         return await update.channel_post.animation.get_file()
 
+
 async def get_file_type(update: Update):
     if update.channel_post.photo:
         return PHOTO
@@ -62,6 +63,7 @@ def get_tg_file_id(update: Update):
     elif update.channel_post.animation:
         return update.channel_post.animation.file_id
 
+
 async def delete(context: CallbackContext):
     if context.job.data is dict:
         data = context.job.data[CHAT_ID]
@@ -69,7 +71,7 @@ async def delete(context: CallbackContext):
     else:
         data = context.job.data
 
-#try delete
+    # try delete
     await context.bot.delete_message(data, data)
 
 
@@ -162,24 +164,35 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
 
 def export_svg(svg: str, filename: str):
     logging.info(svg)
-    with open(filename, 'wb') as f:
-        f.write(bytes(svg_to_bytes(svg_string=svg, dpi=300, font_dirs=["../res/fonts"])))
+
+    input_filename = filename.replace(".png", ".svg")
+
+    with open(input_filename, "w", encoding='utf-8') as f:
+        f.write(svg)
+
+    command = fr'./tools/resvg "{input_filename}" "{filename}" --skip-system-fonts --background "#000000" --dpi 300 --font-family "Arial" --use-fonts-dir "./res/fonts"'
+    result = subprocess.run(command, stdout=subprocess.PIPE)
+
+    logging.info(f"RESVG: {result.returncode} - result: {result}")
 
 
 def mention(update: Update) -> str:
     return mention_html(update.message.reply_to_message.from_user.id,
                         update.message.reply_to_message.from_user.first_name)
 
-async def log_error(action: str,context:CallbackContext,  lang:Language|str,e:Exception,update:Optional[Update]=None ,):
-    if isinstance(lang,Language):
+
+async def log_error(action: str, context: CallbackContext, lang: Language | str, e: Exception,
+                    update: Optional[Update] = None, ):
+    if isinstance(lang, Language):
         lang = lang.lang_key
 
-    text =  f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n\n<code>{e}</code>"
+    text = f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n\n<code>{e}</code>"
 
     if update is not None:
-        text+=f"\n\n<b>Caused by Post</b>\n<code>{repr(update.channel_post)}</code>"
+        text += f"\n\n<b>Caused by Post</b>\n<code>{repr(update.channel_post)}</code>"
 
-    await context.bot.send_message(LOG_GROUP,text)
+    await context.bot.send_message(LOG_GROUP, text)
+
 
 async def delete_msg(update: Update):
     try:

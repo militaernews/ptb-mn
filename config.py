@@ -1,6 +1,6 @@
 import os
 from json import loads
-from typing import Final
+from typing import Final, List
 
 from dotenv import load_dotenv
 
@@ -19,4 +19,4 @@ CHANNEL_BACKUP: Final[int] = int(os.getenv('CHANNEL_BACKUP'))
 CHANNEL_SUGGEST: Final[int] = int(os.getenv('CHANNEL_SUGGEST'))
 
 LOG_GROUP: Final[str] = os.getenv('LOG_GROUP')
-ADMINS: Final = loads(os.getenv('ADMINS'))
+ADMINS: Final[List[str]] = loads(os.getenv('ADMINS'))
