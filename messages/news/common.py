@@ -32,18 +32,18 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
 
         try:
-            msg_id: MessageId = await update.channel_post.copy( chat_id=lang.channel_id, caption=caption, reply_to_message_id=reply_id )
+            msg_id: MessageId = await update.channel_post.copy( chat_id=lang.channel_id, caption=f"{caption}\n{lang.footer}", reply_to_message_id=reply_id )
             logging.info(f"---------- MSG ID ::::::::: {msg_id}")
             await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
                                  post_id=de_post_id)
 
         except Exception as e:
-            await log_error("send single post", context, lang, e, update, )
+            await log_error("send single post", context, lang, e, update )
             pass
 
         await tweet_file(segment_text(
             flag_to_hashtag(PATTERN_HTMLTAG.sub("", caption))),
-            await get_file(update))
+            await get_file(update),lang.lang_key)
 
     formatted_text = flag_to_hashtag(original_caption)
 
