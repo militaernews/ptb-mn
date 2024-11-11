@@ -29,7 +29,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
         logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
 
-        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
+        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}"
 
         try:
             msg_id: MessageId = await update.channel_post.copy( chat_id=lang.channel_id, caption=f"{caption}\n{lang.footer}", reply_to_message_id=reply_id )
@@ -41,9 +41,12 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
             await log_error("send single post", context, lang, e, update )
             pass
 
-        await tweet_file(segment_text(
-            flag_to_hashtag(PATTERN_HTMLTAG.sub("", caption))),
-            await get_file(update),lang.lang_key)
+        try:
+            await tweet_file(segment_text(PATTERN_HTMLTAG.sub("", caption)), await get_file(update), lang.lang_key)
+        except Exception as e:
+            await log_error(f"tweet {lang.lang_key}", context, "Twitter", e, update, )
+            pass
+
 
     formatted_text = flag_to_hashtag(original_caption)
 
@@ -55,13 +58,10 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
             pass
 
     try:
-        # todo: upload photo aswell
-        await tweet_file(segment_text(
-            flag_to_hashtag(PATTERN_HTMLTAG.sub("", update.channel_post.caption))),
-            await get_file(update))
+        await tweet_file(segment_text(  flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption))), await get_file(update))
         logging.info(f"-")
     except Exception as e:
-        await log_error("edit Caption", context, "Twitter", e, update, )
+        await log_error("tweet DE", context, "Twitter", e, update, )
         pass
 
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
@@ -131,10 +131,10 @@ async def share_in_other_channels(context: CallbackContext):
     logging.info(f"------------------------------------------- post_id: {post_id}")
 
     for lang in languages:
-        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
+        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}"
         logging.info(f"caption::::::::::: {caption}")
         with files[0]._unfrozen():
-            files[0].caption = caption
+            files[0].caption = f"{caption}\n{lang.footer}"
 
         reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
         logging.info(f"------------------------------------------- reply_id: {reply_id}")
@@ -154,15 +154,24 @@ async def share_in_other_channels(context: CallbackContext):
         except Exception as e:
             await log_error("send media group", context, lang, e)
 
-        await tweet_files(context,
-                          segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", caption))),
-                          posts,lang.lang_key)
+        try:
+            await tweet_files(context,
+                              segment_text(PATTERN_HTMLTAG.sub("", caption)),
+                              posts, lang.lang_key)
+        except Exception as e:
+            await log_error(f"tweet multiple {lang.lang_key}", context, "Twitter", e  )
 
     logging.info("----- done -----")
 
-    await tweet_files(context,
-                      segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption))),
-                      posts)
+    try:
+        await tweet_files(context,
+                          segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption))),
+                          posts)
+    except Exception as e:
+        await log_error("tweet multiple DE", context, "Twitter", e )
+
+
+
 
 
 async def edit_channel(update: Update, context: CallbackContext):
