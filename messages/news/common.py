@@ -29,13 +29,10 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
         logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
 
-        try:
+        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
 
-            msg_id: MessageId = await update.channel_post.copy(
-                chat_id=lang.channel_id,
-                caption=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
-                reply_to_message_id=reply_id
-            )
+        try:
+            msg_id: MessageId = await update.channel_post.copy( chat_id=lang.channel_id, caption=caption, reply_to_message_id=reply_id )
             logging.info(f"---------- MSG ID ::::::::: {msg_id}")
             await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
                                  post_id=de_post_id)
@@ -43,6 +40,10 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         except Exception as e:
             await log_error("send single post", context, lang, e, update, )
             pass
+
+        await tweet_file(segment_text(
+            flag_to_hashtag(PATTERN_HTMLTAG.sub("", caption))),
+            await get_file(update))
 
     formatted_text = flag_to_hashtag(original_caption)
 
@@ -155,7 +156,7 @@ async def share_in_other_channels(context: CallbackContext):
 
         await tweet_files(context,
                           segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", caption))),
-                          posts,lang_key=lang.lang_key)
+                          posts,lang.lang_key)
 
     logging.info("----- done -----")
 
