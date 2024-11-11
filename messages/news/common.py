@@ -153,6 +153,10 @@ async def share_in_other_channels(context: CallbackContext):
         except Exception as e:
             await log_error("send media group", context, lang, e)
 
+        await tweet_files(context,
+                          segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", caption))),
+                          posts,lang_key=lang.lang_key)
+
     logging.info("----- done -----")
 
     await tweet_files(context,

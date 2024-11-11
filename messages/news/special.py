@@ -31,16 +31,17 @@ async def breaking_news(update: Update, context: CallbackContext):
         await log_error("send Breaking", context, GERMAN, e, update, )
 
     for lang in languages:
-        try:
-            msg = await context.bot.send_photo(
-                chat_id=lang.channel_id,
-                photo=open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb"),
-                caption=f"#{lang.breaking} 🚨\n\n{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}",
-            )
-            await insert_single2(msg, lang.lang_key)
-        except Exception as e:
-            await log_error("send breaking", context, lang, e, update, )
+        caption =f"#{lang.breaking} 🚨\n\n{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}\n{lang.footer}"
 
+        with open(f"res/breaking/mn-breaking-{lang.lang_key}.png", "rb") as f:
+
+            try:
+                msg = await context.bot.send_photo(  chat_id=lang.channel_id,photo=f,caption=caption )
+                await insert_single2(msg, lang.lang_key)
+            except Exception as e:
+                await log_error("send breaking", context, lang, e, update, )
+
+            await twitter.tweet_file_3( segment_text(  caption),           f)
     try:
 
         await twitter.tweet_file_3(
