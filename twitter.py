@@ -12,37 +12,43 @@ from data.db import Post
 
 load_dotenv()
 
-def create_instance(consumer_key:str, consumer_secret:str, access_token:str, access_secret:str):
+
+def create_instance(consumer_key: str, consumer_secret: str, access_token: str, access_secret: str, bearer_token: str):
     client = Client(
-     consumer_key,
+        consumer_key,
         consumer_secret,
         access_token,
         access_secret,
+        bearer_token
     )
     api = API(OAuth1UserHandler(
-       consumer_key,
-       consumer_secret,
-      access_token,
-       access_secret,
+        consumer_key,
+        consumer_secret,
+        access_token,
+        access_secret,
     ))
     return client, api
+
 
 client_DE, api_DE = create_instance(
     os.getenv("CONSUMER_KEY_DE"),
     os.getenv("CONSUMER_SECRET_DE"),
     os.getenv("ACCESS_KEY_DE"),
-    os.getenv("ACCESS_SECRET_DE")
+    os.getenv("ACCESS_SECRET_DE"),
+    os.getenv("BEARER_DE"),
 )
 
 client_EN, api_EN = create_instance(
     os.getenv("CONSUMER_KEY_EN"),
     os.getenv("CONSUMER_SECRET_EN"),
     os.getenv("ACCESS_KEY_EN"),
-    os.getenv("ACCESS_SECRET_EN")
+    os.getenv("ACCESS_SECRET_EN"),
+    os.getenv("BEARER_EN"),
 )
 
 ACTIVE = True
 TWEET_LENGTH = 280
+
 
 def supply_twitter_instance(lang_key: Optional[str] = None) -> Union[Tuple[Client, API], None]:
     if not ACTIVE:
@@ -56,7 +62,6 @@ def supply_twitter_instance(lang_key: Optional[str] = None) -> Union[Tuple[Clien
 
 def upload_media(files, api: API):
     return [api.media_upload(file).media_id for file in files]
-
 
 
 def create_tweet(text: str, client: Client, media_ids=None, ):
@@ -108,7 +113,8 @@ async def tweet_files(context: CallbackContext, caption: str, posts: [Post], lan
     for path in upload_files:
         os.remove(path)
 
-async def tweet_text( text: str,  lang_key: Optional[str] = None):
+
+async def tweet_text(text: str, lang_key: Optional[str] = None):
     instance = supply_twitter_instance(lang_key)
     if instance is None:
         return
