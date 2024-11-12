@@ -5,10 +5,11 @@ from telegram import Update, Message
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
-import twitter
+
 from data.db import query_replies, insert_single2, update_text, get_msg_id
 from data.lang import languages, GERMAN
 from messages.news.common import handle_url
+from twitter import tweet_text
 from util.helper import sanitize_text, log_error
 from util.patterns import WHITESPACE, HASHTAG, FLAG_EMOJI
 from util.translation import translate_message, flag_to_hashtag, segment_text
@@ -36,6 +37,11 @@ async def post_channel_text(update: Update, context: CallbackContext):
         except Exception as e:
             await log_error("send text", context, lang, e, update, )
 
+        try:
+            await tweet_text(segment_text(text_ger),lang.lang_key)
+        except Exception as e:
+            await log_error(f"tweet text {lang.lang_key}", context, "Twitter", e, update, )
+
     try:
 
         if len(re.findall(FLAG_EMOJI, text_ger)) == 0:
@@ -46,12 +52,9 @@ async def post_channel_text(update: Update, context: CallbackContext):
             await log_error("send text", context, GERMAN, e, update, )
 
     try:
-        logging.info("tweet")
-        #  await twitter.tweet_text(flag_to_hashtag(sanitize_text(update.channel_post.text)))
-        twitter.create_tweet(segment_text(text_ger))
+        await tweet_text(segment_text(text_ger))
     except Exception as e:
-        await log_error("send text", context, "Twitter", e, update, )
-
+        await log_error("tweet text DE", context, "Twitter", e, update, )
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
 

@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import subprocess
@@ -183,6 +184,7 @@ def mention(update: Update) -> str:
 
 async def log_error(action: str, context: CallbackContext, lang: Language | str, e: Exception,
                     update: Optional[Update] = None, ):
+    logging.exception(e)
     if isinstance(lang, Language):
         lang = lang.lang_key
 
