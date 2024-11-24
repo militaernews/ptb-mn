@@ -9,17 +9,17 @@ from telegram.ext import CallbackContext
 from tweepy import Client, API, OAuth1UserHandler
 
 from data.db import Post
+from data.lang import ENGLISH
 
 load_dotenv()
 
 
 def create_instance(consumer_key: str, consumer_secret: str, access_token: str, access_secret: str, bearer_token: str):
-    client = Client(
+    client = Client( bearer_token,
         consumer_key,
         consumer_secret,
         access_token,
         access_secret,
-        bearer_token
     )
     api = API(OAuth1UserHandler(
         consumer_key,
@@ -54,7 +54,7 @@ def supply_twitter_instance(lang_key: Optional[str] = None) -> Union[Tuple[Clien
     if not ACTIVE:
         return None
     clients = {
-        "en": (client_EN, api_EN),
+        ENGLISH.lang_key: (client_EN, api_EN),
         None: (client_DE, api_DE)
     }
     return clients.get(lang_key)
