@@ -10,8 +10,6 @@ TOKEN: Final[str] = os.getenv('TELEGRAM')
 PORT: Final[int] = int(os.getenv("PORT", 8080))
 TEST_MODE: Final[bool] = os.getenv("TESTING", False)
 
-WARN_LIMIT: Final[int] = 3
-
 CHANNEL_MEME: Final[int] = int(os.getenv('CHANNEL_MEME'))
 CHANNEL_SOURCE: Final[int] = int(os.getenv('CHANNEL_SOURCE'))
 
@@ -21,6 +19,7 @@ CHANNEL_SUGGEST: Final[int] = int(os.getenv('CHANNEL_SUGGEST'))
 LOG_GROUP: Final[str] = os.getenv('LOG_GROUP')
 ADMINS: Final[List[str]] = loads(os.getenv('ADMINS'))
 
-
+WARN_LIMIT: Final[int] = 3
+DIVIDER: Final[str] = "\n\n"
 
 

@@ -5,6 +5,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 import twitter
+from config import DIVIDER
 from data.db import insert_single2
 from data.lang import GERMAN, languages
 from util.helper import log_error
@@ -36,7 +37,7 @@ async def breaking_news(update: Update, context: CallbackContext):
         path = f"res/breaking/mn-breaking-{lang.lang_key}.png"
 
         try:
-            msg = await context.bot.send_photo(chat_id=lang.channel_id, photo=open(path, "rb"), caption=f"{caption}\n{lang.footer}")
+            msg = await context.bot.send_photo(chat_id=lang.channel_id, photo=open(path, "rb"), caption=f"{caption}{DIVIDER}{lang.footer}")
             await insert_single2(msg, lang.lang_key)
 
             await twitter.tweet_file_3(segment_text(caption), path, lang.lang_key)

@@ -5,7 +5,7 @@ from telegram import Update, Message
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
-
+from config import DIVIDER
 from data.db import query_replies, insert_single2, update_text, get_msg_id
 from data.lang import languages, GERMAN
 from messages.news.common import handle_url
@@ -30,7 +30,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
         try:
             msg: Message = await context.bot.send_message(
                 chat_id=lang.channel_id,
-                text=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}",
+                text=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}{DIVIDER}{lang.footer}",
                 reply_to_message_id=reply_id
             )
             await insert_single2(msg, lang.lang_key)
@@ -69,13 +69,13 @@ async def edit_channel_text(update: Update, context: CallbackContext):
         ),
     )
 
-    await update_text(update.edited_channel_post.id, f"{original_caption}\n{GERMAN.footer}")
+    await update_text(update.edited_channel_post.id, f"{original_caption}{DIVIDER}{GERMAN.footer}")
 
     logging.info(f"original caption::: {original_caption}", )
 
     for lang in languages:
         try:
-            translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
+            translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}{DIVIDER}{lang.footer}"
             msg_id = await get_msg_id(update.edited_channel_post.id, lang.lang_key)
             await context.bot.edit_message_text(
                 text=translated_text,

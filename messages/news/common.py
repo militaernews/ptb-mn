@@ -7,7 +7,7 @@ from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
 
-from config import CHANNEL_SOURCE
+from config import CHANNEL_SOURCE, DIVIDER
 from data.db import insert_single3, insert_single2, query_replies3, \
     get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id, \
     update_post, Post
@@ -32,7 +32,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}"
 
         try:
-            msg_id: MessageId = await update.channel_post.copy( chat_id=lang.channel_id, caption=f"{caption}\n{lang.footer}", reply_to_message_id=reply_id )
+            msg_id: MessageId = await update.channel_post.copy( chat_id=lang.channel_id, caption=f"{caption}{DIVIDER}{lang.footer}", reply_to_message_id=reply_id )
             logging.info(f"---------- MSG ID ::::::::: {msg_id}")
             await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
                                  post_id=de_post_id)
@@ -51,7 +51,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     formatted_text = flag_to_hashtag(original_caption)
 
     try:
-        await update.channel_post.edit_caption(formatted_text + GERMAN.footer)
+        await update.channel_post.edit_caption(formatted_text + DIVIDER+GERMAN.footer)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await log_error("edit Post", context, GERMAN, e, update, )
@@ -82,7 +82,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
     if update.channel_post.caption is not None:
         try:
             await update.channel_post.edit_caption(
-                flag_to_hashtag(update.channel_post.caption_html_urled) + GERMAN.footer
+                flag_to_hashtag(update.channel_post.caption_html_urled) + DIVIDER + GERMAN.footer
             )
         except Exception as e:
             await log_error("edit Caption", context, GERMAN, e, update, )
@@ -134,7 +134,7 @@ async def share_in_other_channels(context: CallbackContext):
         caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}"
         logging.info(f"caption::::::::::: {caption}")
         with files[0]._unfrozen():
-            files[0].caption = f"{caption}\n{lang.footer}"
+            files[0].caption = f"{caption}{DIVIDER}{lang.footer}"
 
         reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
         logging.info(f"------------------------------------------- reply_id: {reply_id}")
