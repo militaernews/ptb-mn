@@ -1,11 +1,11 @@
-python-telegram-bot[job-queue]==21.7
+python-telegram-bot[job-queue]==21.8
 deep-translator==1.11.4
 deepl==1.20.0
 python-dotenv==1.0.1
 tweepy==4.14.0
 numpy==2.1.3
 ftfy==6.3.1
-httpx==0.27.2
+httpx==0.28.0
 pysbd==0.3.4
 requests==2.32.3
 pillow==11.0.0

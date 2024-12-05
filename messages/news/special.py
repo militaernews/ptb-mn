@@ -18,7 +18,7 @@ async def breaking_news(update: Update, context: CallbackContext):
 
     text = re.sub(BREAKING, "", update.channel_post.text_html_urled)
     formatted_text = f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(text)}"
-    breaking_photo_path = "res/breaking/mn-breaking-de.png"
+    breaking_photo_path = f"res/{GERMAN.lang_key}/breaking.png"
 
     try:
         # todo: reply??
@@ -34,7 +34,7 @@ async def breaking_news(update: Update, context: CallbackContext):
     for lang in languages:
         caption = f"#{lang.breaking} 🚨\n\n{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}"
 
-        path = f"res/breaking/mn-breaking-{lang.lang_key}.png"
+        path = f"res/{lang.lang_key}/breaking.png"
 
         try:
             msg = await context.bot.send_photo(chat_id=lang.channel_id, photo=open(path, "rb"), caption=f"{caption}{DIVIDER}{lang.footer}")
@@ -64,7 +64,7 @@ async def announcement(update: Update, context: CallbackContext):
     try:
         msg_de = await context.bot.send_photo(
             chat_id=GERMAN.channel_id,
-            photo=open("res/announce/mn-announce-de.png", "rb"),
+            photo=open(f"res/{GERMAN.lang_key}/announce.png", "rb"),
             caption=f"#MITTEILUNG{text}",
         )
         await insert_single2(msg_de)
@@ -77,7 +77,7 @@ async def announcement(update: Update, context: CallbackContext):
         try:
             msg = await context.bot.send_photo(
                 chat_id=lang.channel_id,
-                photo=open(f"res/announce/mn-announce-{lang.lang_key}.png", "rb"),
+                photo=open(f"res/{lang.lang_key}/announce.png", "rb"),
                 caption=f"#{lang.announce}{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}",
 
             )

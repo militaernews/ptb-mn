@@ -34,14 +34,9 @@ async def suggest_single(update: Update, context: CallbackContext):
 
     keyboard = InlineKeyboardMarkup(
         [
-            [InlineKeyboardButton(
-                original_button,
-                url=f"{source.chat.link}/{source.message_id}",
-            ),
-
-                InlineKeyboardButton(
-                    "💾 Backup", url=update.channel_post.link
-                ),
+            [
+                InlineKeyboardButton(original_button, f"{source.chat.link}/{source.message_id}", ),
+                InlineKeyboardButton("💾 Backup", update.channel_post.link),
             ]
         ]
     )
