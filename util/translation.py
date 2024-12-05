@@ -23,7 +23,7 @@ HASHTAG_PATTERN = re.compile(r'(\s{2,})?(#\w+\s)+', re.IGNORECASE)
 FLAG_PATTERN = re.compile(u'[\U0001F1E6-\U0001F1FF]{2}|\U0001F3F4|\U0001F3F3', re.UNICODE)
 
 
-def flag_to_hashtag(text: str, lang_key: str = None):
+def flag_to_hashtag(text: str, lang_key: str = GERMAN.lang_key):
     if not HASHTAG.search(text):
         flags_in_caption = set(FLAG_PATTERN.findall(text))
         flag_names = sorted({
@@ -32,7 +32,7 @@ def flag_to_hashtag(text: str, lang_key: str = None):
             if flag in flags_data[lang_key]
         })
         logging.info(f"flag:::::::::::::: {flags_in_caption} - {flag_names}")
-        hashtags = f"\n#{' #'.join(flag_names)}" if flag_names else "\n"
+        hashtags = f"\n#{' #'.join(flag_names)}" if flag_names else ""
         text = f"{text}\n{hashtags}"
 
     logging.info("--- Translated Text ---")

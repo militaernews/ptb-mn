@@ -207,7 +207,7 @@ async def edit_channel(update: Update, context: CallbackContext):
 
         try:
             if original_caption is not None:
-                translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}\n{lang.footer}"
+                translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}{DIVIDER}{lang.footer}"
             else:
                 translated_text = None
 
@@ -244,7 +244,7 @@ async def edit_channel(update: Update, context: CallbackContext):
         text = None if original_caption is None else flag_to_hashtag(original_caption)
 
         if "#" not in update.edited_channel_post.caption:
-            await update.edited_channel_post.edit_caption(text + GERMAN.footer)
+            await update.edited_channel_post.edit_caption(text +DIVIDER+ GERMAN.footer)
 
         await update_post(update.edited_channel_post)
         # todo: update text in db
