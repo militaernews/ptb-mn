@@ -1,14 +1,14 @@
 import logging
 import os
 import re
-from json import loads
+from json import loads, load
 
 import deepl
 from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 from pysbd import Segmenter
 
-from data.lang import GERMAN
+from data.lang import GERMAN, languages
 from twitter import TWEET_LENGTH
 from util.helper import sanitize_text
 from util.patterns import FLAG_EMOJI, HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
@@ -16,24 +16,24 @@ from util.patterns import FLAG_EMOJI, HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
 
+flags_data = {lang.lang_key: load(open(rf"./res/{lang.lang_key}/flags.json", "r", encoding="utf-8")) for lang in
+              [GERMAN] + languages}
 
-def flag_to_hashtag(text: str, language: str = None):
+HASHTAG_PATTERN = re.compile(r'(\s{2,})?(#\w+\s)+', re.IGNORECASE)
+FLAG_PATTERN = re.compile(u'[\U0001F1E6-\U0001F1FF]{2}|\U0001F3F4|\U0001F3F3', re.UNICODE)
+
+
+def flag_to_hashtag(text: str, lang_key: str = None):
     if not HASHTAG.search(text):
-
-        flag_emojis = re.findall(FLAG_EMOJI, text)
-
-        logging.info(f"flag:::::::::::::: {flag_emojis}")
-
-        if len(flag_emojis) == 0:
-            return f"\n{text}"
-
-        text += "\n\n"
-
-        for fe in list(set(flag_emojis)):
-            # todo: filter if valid flag?
-            hashtag = get_hashtag(fe, language)
-            if hashtag is not None:
-                text += f"#{get_hashtag(fe, language)} "
+        flags_in_caption = set(FLAG_PATTERN.findall(text))
+        flag_names = sorted({
+            flags_data[lang_key][flag]
+            for flag in flags_in_caption
+            if flag in flags_data[lang_key]
+        })
+        logging.info(f"flag:::::::::::::: {flags_in_caption} - {flag_names}")
+        hashtags = f"\n#{' #'.join(flag_names)}" if flag_names else "\n"
+        text = f"{text}\n{hashtags}"
 
     logging.info("--- Translated Text ---")
     logging.info(text)
@@ -50,18 +50,16 @@ async def translate_message(target_lang: str, text: str, target_lang_deepl: str 
 
 
 # could be replaced by using multiple txt-files for the different languages
-def get_hashtag(key: str, language: str = None) -> str:
+def get_hashtag(country_key: str, lang_key: str = GERMAN.lang_key) -> str:
     logging.info("--- hashtag ---")
-    if language is None:
-        language = GERMAN.lang_key
 
     try:
-        filename = f"res/countries/{key}.json"
+        filename = f"res/{lang_key}/flags.json"
         logging.info(filename)
 
         with open(filename, 'rb', ) as f:
             # todo: find a way to open this file up just once when iterating through langs
-            return loads(f.read())[language]
+            return loads(f.read())[country_key]
     except Exception as e:
         logging.warn(f"Error when trying to get hashtag --- {e}")
 
