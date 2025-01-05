@@ -1,12 +1,12 @@
 import logging
 import os
-from typing import Optional, Union, Tuple
+from typing import Optional
 
 import telegram
 from dotenv import load_dotenv
 from lxml.html import fromstring
+from pytwitter import Api
 from telegram.ext import CallbackContext
-from tweepy import Client, API, OAuth1UserHandler
 
 from data.db import Post
 from data.lang import ENGLISH
@@ -15,23 +15,16 @@ load_dotenv()
 
 
 def create_instance(consumer_key: str, consumer_secret: str, access_token: str, access_secret: str, bearer_token: str):
-    client = Client(
-        bearer_token,
+    api = Api(
         consumer_key,
         consumer_secret,
         access_token,
         access_secret,
     )
-    api = API(OAuth1UserHandler(
-        consumer_key,
-        consumer_secret,
-        access_token,
-        access_secret,
-    ))
-    return client, api
+    return api
 
 
-client_DE, api_DE = create_instance(
+api_DE = create_instance(
     os.getenv("CONSUMER_KEY_DE"),
     os.getenv("CONSUMER_SECRET_DE"),
     os.getenv("ACCESS_KEY_DE"),
@@ -39,7 +32,7 @@ client_DE, api_DE = create_instance(
     os.getenv("BEARER_DE"),
 )
 
-client_EN, api_EN = create_instance(
+api_EN = create_instance(
     os.getenv("CONSUMER_KEY_EN"),
     os.getenv("CONSUMER_SECRET_EN"),
     os.getenv("ACCESS_KEY_EN"),
@@ -51,24 +44,24 @@ ACTIVE = False
 TWEET_LENGTH = 280
 
 
-def supply_twitter_instance(lang_key: Optional[str] = None) -> Union[Tuple[Client, API], None]:
+def supply_twitter_instance(lang_key: Optional[str] = None) -> Optional[Api]:
     if not ACTIVE:
         return None
     clients = {
-        ENGLISH.lang_key: (client_EN, api_EN),
-        None: (client_DE, api_DE)
+        ENGLISH.lang_key: api_EN,
+        None:api_DE
     }
     return clients.get(lang_key)
 
 
-def upload_media(files, api: API):
-    return [api.media_upload(file).media_id for file in files]
+def upload_media(files, api: Api):
+    return [api.upload_media_simple(file).media_id for file in files]
 
 
-def create_tweet(text: str, client: Client, media_ids=None, ):
+def create_tweet(text: str, api: Api, media_ids=None, ):
     text = fromstring(text).text_content().strip()
     try:
-        client.create_tweet(text=text.replace("\n", " ").replace("  ", " ")[:TWEET_LENGTH], media_ids=media_ids)
+        api.create_tweet(text=text.replace("\n", " ").replace("  ", " ")[:TWEET_LENGTH], media_media_ids=media_ids)
     except Exception as e:
         logging.error(f"Error when trying to post to twitter: {e}\n\ntext: {text}\n\nmedia_ids: {media_ids}")
 
@@ -92,8 +85,9 @@ async def tweet_file_3(caption: str, path: str, lang_key: Optional[str] = None):
         return
     client, api = instance
 
-    media_id = api.media_upload(path)
-    create_tweet(caption, client, [media_id.media_id])
+    with open(path, "rb") as media:
+        media_id = api.upload_media_simple(media=media).media_id
+    create_tweet(caption, client, [media_id])
 
 
 async def tweet_files(context: CallbackContext, caption: str, posts: [Post], lang_key: Optional[str] = None):
