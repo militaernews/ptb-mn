@@ -15,11 +15,12 @@ load_dotenv()
 
 
 def create_instance(consumer_key: str, consumer_secret: str, access_token: str, access_secret: str, bearer_token: str):
-    api = Api(
+    api = Api(bearer_token,
         consumer_key,
         consumer_secret,
         access_token,
         access_secret,
+
     )
     return api
 
@@ -40,7 +41,7 @@ api_EN = create_instance(
     os.getenv("BEARER_EN"),
 )
 
-ACTIVE = False
+ACTIVE = True
 TWEET_LENGTH = 280
 
 
@@ -55,6 +56,7 @@ def supply_twitter_instance(lang_key: Optional[str] = None) -> Optional[Api]:
 
 
 def upload_media(files, api: Api):
+    print(files)
     return [api.upload_media_simple(file).media_id for file in files]
 
 
@@ -67,34 +69,31 @@ def create_tweet(text: str, api: Api, media_ids=None, ):
 
 
 async def tweet_file(caption: str, file: telegram.File, lang_key: Optional[str] = None):
-    instance = supply_twitter_instance(lang_key)
-    if instance is None:
+    api = supply_twitter_instance(lang_key)
+    if api is None:
         return
-    client, api = instance
 
     path = file.file_path.split('/')[-1]
     await file.download_to_drive(path)
     media_ids = upload_media([path], api)
-    create_tweet(caption, client, media_ids)
+    create_tweet(caption, api, media_ids)
     os.remove(path)
 
 
 async def tweet_file_3(caption: str, path: str, lang_key: Optional[str] = None):
-    instance = supply_twitter_instance(lang_key)
-    if instance is None:
+    api = supply_twitter_instance(lang_key)
+    if api is None:
         return
-    client, api = instance
 
     with open(path, "rb") as media:
         media_id = api.upload_media_simple(media=media).media_id
-    create_tweet(caption, client, [media_id])
+    create_tweet(caption, api, [media_id])
 
 
 async def tweet_files(context: CallbackContext, caption: str, posts: [Post], lang_key: Optional[str] = None):
-    instance = supply_twitter_instance(lang_key)
-    if instance is None:
+    api = supply_twitter_instance(lang_key)
+    if api is None:
         return
-    client, api = instance
 
     upload_files = []
     for post in posts:
@@ -104,15 +103,14 @@ async def tweet_files(context: CallbackContext, caption: str, posts: [Post], lan
         upload_files.append(path)
 
     media_ids = upload_media(upload_files, api)
-    create_tweet(caption, client, media_ids)
+    create_tweet(caption, api, media_ids)
     for path in upload_files:
         os.remove(path)
 
 
 async def tweet_text(text: str, lang_key: Optional[str] = None):
-    instance = supply_twitter_instance(lang_key)
-    if instance is None:
+    api = supply_twitter_instance(lang_key)
+    if api is None:
         return
-    client, api = instance
 
-    create_tweet(text, client)
+    create_tweet(text, api)
