@@ -14,11 +14,11 @@ from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, 
 from config import TOKEN, ADMINS, CHANNEL_MEME
 from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
-from messages.chat.bingo import bingo_field, register_bingo
+from messages.chat.bingo import  register_bingo
 from messages.chat.commands import register_commands
 from messages.chat.management import register_management
 from messages.chat.whitelist import register_whitelist
-from messages.meme import post_media_meme, post_text_meme
+from messages.meme import post_media_meme, post_text_meme, register_meme
 from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info, advertisement
 from messages.news.suggest import register_suggest
@@ -65,13 +65,7 @@ def register_news(app: Application):
     app.add_handler(MessageHandler(news_edited & media, edit_channel))
     app.add_handler(MessageHandler(news_edited & filters.TEXT, edit_channel_text))
 
-def register_meme(app: Application):
-    media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
 
-    meme_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=CHANNEL_MEME)
-
-    app.add_handler(MessageHandler(meme_post & media, post_media_meme))
-    app.add_handler(MessageHandler(meme_post & filters.TEXT, post_text_meme))
 
 if __name__ == "__main__":
 

@@ -1,7 +1,7 @@
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, Application, filters, MessageHandler
 
-from config import LOG_GROUP
+from config import LOG_GROUP, CHANNEL_MEME
 from data.lang import ENGLISH, GERMAN, languages
 
 
@@ -77,3 +77,11 @@ def format_meme_footer(original_text: str) -> str:
         footer = "Subscribe to @MilitaerMemes for more"
 
     return f"{original_text}\n\n🔰 {footer}"
+
+def register_meme(app: Application):
+    media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
+
+    meme_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=CHANNEL_MEME)
+
+    app.add_handler(MessageHandler(meme_post & media, post_media_meme))
+    app.add_handler(MessageHandler(meme_post & filters.TEXT, post_text_meme))
