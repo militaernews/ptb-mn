@@ -17,9 +17,9 @@ CHANNEL_BACKUP: Final[int] = int(os.getenv('CHANNEL_BACKUP'))
 CHANNEL_SUGGEST: Final[int] = int(os.getenv('CHANNEL_SUGGEST'))
 
 LOG_GROUP: Final[str] = os.getenv('LOG_GROUP')
-ADMINS: Final[List[str]] = loads(os.getenv('ADMINS'))
+ADMINS: Final[List[int]] = loads(os.getenv('ADMINS'))
 
 WARN_LIMIT: Final[int] = 3
-DIVIDER: Final[str] = "\n\n"
+DIVIDER: Final[str] = "\n"
 
 

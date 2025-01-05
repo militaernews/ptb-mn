@@ -45,7 +45,9 @@ ALLOWED_URLS: Final[Set[str]] = {
     "apnews.com",
     "tagesschau.de",
     "statista.com",
-    "cbr.ru"
+    "cbr.ru",
+    "t.me/sicherheitskonferenz",
+    "t.me/mnchat"
 }
 
 
@@ -80,9 +82,9 @@ async def send_whitelist(update: Update, context: CallbackContext):
 
 
 def register_whitelist(app: Application):
-    app.add_handler(
-        MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
-                       remove_url))
+ #   app.add_handler(
+     #   MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
+        #               remove_url))
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
     app.add_handler(
         MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),

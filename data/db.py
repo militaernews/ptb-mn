@@ -208,7 +208,7 @@ async def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str =
     else:
         file_type = None
         file_id = None
-    await insert_single(msg_id, meg_id, reply_id, file_type, file_id, lang_key, post_id, msg.has_media_spoiler)
+    await insert_single(msg_id, meg_id, reply_id, file_type, file_id, lang_key, post_id, msg.has_media_spoiler or False)
 
 
 async def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key):
@@ -236,7 +236,7 @@ async def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key):
 
     # add text aswell?
     return await insert_single(msg.id, msg.media_group_id, reply_id, file_type, file_id, lang_key, text=text,
-                               spoiler=msg.has_media_spoiler)
+                               spoiler=msg.has_media_spoiler or False)
 
 
 async def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_type: int = None,

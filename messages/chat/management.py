@@ -109,8 +109,9 @@ async def report_user(update: Update, _: CallbackContext):
                           "account_id": 1
                       })
     logging.info(r)
-    await update.message.reply_to_message.reply_text(
-        f"Der Nutzer {mention(update)} wurde Tartaros-Antispam gemeldet.")
+    if r.status_code == 201:
+        await update.message.reply_to_message.reply_text(
+            f"Hey {mention(update)}!\n\nEin Admin dieser Gruppe hat deinen Account unserem Antispam-System gemeldet. Moderatoren überprüfen diesen Fall nun.\n\nFalls dein Account Betrug oder Spam begangen hat, dann wirst du in allen Gruppen gebannt, wenn unser Antispam-System dort aktiv ist.")
 
 
 @remove_reply
@@ -139,4 +140,4 @@ def register_management(app: Application):
    # app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id)))
   #  app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)))
     # app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("tartaros", report_user, filters.Chat(GERMAN.chat_id)))

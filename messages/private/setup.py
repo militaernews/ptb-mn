@@ -102,6 +102,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("warn", "Nutzer verwarnen"),
         ("unwarn", "Warnung abziehen"),
         #    ("ban", "Nutzer sperren"),
+        ("tartaros", "Tartaros Antispam melden"),
         ("bingo", "Spielfeld des Bullshit-Bingos"),
         ("reset_bingo", "Neue Bingo-Runde")
     ], scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))

@@ -15,7 +15,8 @@ load_dotenv()
 
 
 def create_instance(consumer_key: str, consumer_secret: str, access_token: str, access_secret: str, bearer_token: str):
-    client = Client( bearer_token,
+    client = Client(
+        bearer_token,
         consumer_key,
         consumer_secret,
         access_token,
@@ -46,7 +47,7 @@ client_EN, api_EN = create_instance(
     os.getenv("BEARER_EN"),
 )
 
-ACTIVE = True
+ACTIVE = False
 TWEET_LENGTH = 280
 
 

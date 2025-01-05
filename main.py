@@ -14,6 +14,7 @@ from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, 
 from config import TOKEN, ADMINS, CHANNEL_MEME
 from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
+from messages.chat.bingo import bingo_field, register_bingo
 from messages.chat.commands import register_commands
 from messages.chat.management import register_management
 from messages.chat.whitelist import register_whitelist
@@ -87,17 +88,21 @@ if __name__ == "__main__":
 
     app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
 
-    register_advertisement(app)
-    register_promo(app)
-
-    register_meme(app)
-
-    #register_news(app)
-
     register_commands(app)
     register_management(app)
 
+
+
+
+    register_meme(app)
+    register_bingo(app)
+
+    register_news(app)
+    register_advertisement(app)
+
+    register_promo(app)
     #   register_captcha(app)
+
 
     app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 

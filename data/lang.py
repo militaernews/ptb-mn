@@ -18,7 +18,7 @@ class Language:
 GERMAN = Language(
     "de",  # German
     -1001240262412,  # https://t.me/MilitaerNews
-    "🔰 Verpasse nichts! Abonniere hier: <b>@MilitaerNews</b>",
+    "🔰 <b>Verpasse nichts!</b>\nAbonniere hier: <b>@MilitaerNews</b>",
     "EILMELDUNG",
     "MITTEILUNG",
     "WERBUNG",
@@ -29,7 +29,7 @@ GERMAN = Language(
 ENGLISH = Language(
     "en",  # English - en-us
     -1001258430463,  # https://t.me/MilitaryNewsEN
-    "🔰 Don't miss out! Subscribe here: <b>@MilitaryNewsEN</b>",
+    "🔰 <b>Don't miss out!</b>\nSubscribe here: <b>@MilitaryNewsEN</b>",
     "BREAKING",
     "ANNOUNCEMENT",
     "ADVERTISEMENT",

@@ -253,7 +253,7 @@ def create_svg(field: List[List[Dict[str, Union[str, bool]]]]):
     <text y="{all_height - border_distance}" x="{all_width - border_distance}" font-size="26px" font-family="Arial" dominant-baseline="middle"  text-anchor="end" fill="gray" >zuletzt aktualisiert {datetime.datetime.now().strftime("%d.%m.%Y, %H:%M:%S")}</text>
     </svg>"""
 
-    export_svg(svg, "field.png")
+    export_svg(svg, "bingo.png")
 
 
 async def handle_bingo(update: Update, context: CallbackContext):
@@ -271,7 +271,7 @@ async def handle_bingo(update: Update, context: CallbackContext):
     if found_amount != 0:
         if check_win(context.bot_data["bingo"]):
             create_svg(context.bot_data["bingo"])
-            with open("field.png", "rb") as f:
+            with open("bingo.png", "rb") as f:
                 msg = await  update.message.reply_photo(photo=f,
                                                         caption=f"<b>BINGO! 🥳</b>\n\n{mention_html(update.message.from_user.id, update.message.from_user.first_name)} hat den letzten Begriff beigetragen. Die erratenen Begriffe sind gelb eingefärbt.\n\nEine neue Runde beginnt...\n{GERMAN.footer}")
                 await msg.pin()
@@ -305,8 +305,8 @@ async def bingo_field(update: Update, context: CallbackContext):
         if "bingo" not in context.bot_data:
             context.bot_data["bingo"] = generate_bingo_field()
         create_svg(context.bot_data["bingo"])
-        with open("field.png", "rb") as f:
-            await update.message.reply_photo(photo=f,
+        with open("bingo.png", "rb") as f:
+            await context.bot.send_photo(update.effective_chat.id,photo=f,
                                              caption=f"<b>MilitärNews-Bingo</b>\n\nWenn eine im @MNChat gesendete Nachricht auf dem Spielfeld vorkommendende Begriffe enthält, werden diese rausgestrichen.\n\nIst eine gesamte Zeile oder Spalte durchgestrichen, dann heißt es <b>BINGO!</b> und eine neue Runde startet.\n{GERMAN.footer}")
     except FileNotFoundError:
         logging.info("No field yet")
