@@ -42,7 +42,8 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
             pass
 
         try:
-            await tweet_file(segment_text(PATTERN_HTMLTAG.sub("", caption)), await get_file(update), lang.lang_key)
+            tweet_caption = segment_text(PATTERN_HTMLTAG.sub("", caption))
+            await tweet_file(update,context,tweet_caption,  lang.lang_key)
         except Exception as e:
             await log_error(f"tweet {lang.lang_key}", context, "Twitter", e, update, )
             pass
@@ -58,7 +59,8 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
             pass
 
     try:
-        await tweet_file(segment_text(  flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption))), await get_file(update))
+        tweet_caption = segment_text(  flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption)))
+        await tweet_file(update,context,tweet_caption)
         logging.info(f"-")
     except Exception as e:
         await log_error("tweet DE", context, "Twitter", e, update, )

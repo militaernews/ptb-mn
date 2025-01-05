@@ -69,7 +69,7 @@ def register_news(app: Application):
 
 if __name__ == "__main__":
 
-    add_logging()
+   # add_logging()
 
     if version_info >= (3, 8) and platform.lower().startswith("win"):
         set_event_loop_policy(WindowsSelectorEventLoopPolicy())
@@ -107,4 +107,4 @@ if __name__ == "__main__":
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
 
     print("### RUNNING LOCAL ###")
-    app.run_polling(poll_interval=1, drop_pending_updates=False)
+  #  app.run_polling(poll_interval=1, drop_pending_updates=False)

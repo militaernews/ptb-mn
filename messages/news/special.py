@@ -4,10 +4,11 @@ import re
 from telegram import Update
 from telegram.ext import CallbackContext
 
-import twitter
+
 from config import DIVIDER
 from data.db import insert_single2
 from data.lang import GERMAN, languages
+from twitter import tweet_file
 from util.helper import log_error
 from util.patterns import BREAKING, PATTERN_HTMLTAG
 from util.translation import translate_message, flag_to_hashtag, translate, segment_text
@@ -40,15 +41,15 @@ async def breaking_news(update: Update, context: CallbackContext):
             msg = await context.bot.send_photo(chat_id=lang.channel_id, photo=open(path, "rb"), caption=f"{caption}{DIVIDER}{lang.footer}")
             await insert_single2(msg, lang.lang_key)
 
-            await twitter.tweet_file_3(segment_text(caption), path, lang.lang_key)
+            tweet_caption = segment_text(caption)
+            await tweet_file(update, context, tweet_caption, lang.lang_key, path)
         except Exception as e:
             await log_error("send breaking", context, lang, e, update, )
 
     try:
-        await twitter.tweet_file_3(
-            segment_text(
-                f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(re.sub(PATTERN_HTMLTAG, '', update.channel_post.text))}"),
-            breaking_photo_path)
+        tweet_caption = segment_text(
+                f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(re.sub(PATTERN_HTMLTAG, '', update.channel_post.text))}")
+        await tweet_file(update,context,tweet_caption, None,  breaking_photo_path)
         logging.info("sent breaking to twitter")
     except Exception as e:
         await log_error("post breaking", context, "Twitter", e, update, )

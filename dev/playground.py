@@ -1,9 +1,12 @@
+import asyncio
 import traceback
 
 from telegram import Update
 from telegram.ext import ContextTypes
 
 import config
+import twitter
+
 
 
 async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -28,22 +31,6 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
                 pass
 
         await (await context.bot.get_file(chat.photo.big_file_id)).download_to_drive()
-    # await update.message.reply_photo()
-
-    #    await update.message.reply_text("hi!", reply_markup=ReplyKeyboardMarkup([
-    #        [KeyboardButton("Show me Google!", web_app=WebAppInfo("https://4142-91-33-115-20.ngrok-free.app"))]
-    #     ],resize_keyboard=True, one_time_keyboard=True))
-
-    #    tr = lang.languages[1]
-
-    #    print("LNG ::::::", tr, update.message.forward_from.language_code)
-
-    #   text = await translate_message("tr", update.message.text_html_urled, )
-
-    # await get_hash
-    #     await update.message.reply_text(text)
-
-    #  await handle_putin_dict(update,context)
 
     except Exception as e:
         await update.message.reply_text("-------\n\nTEST FAIL\n\n-------")
@@ -52,3 +39,15 @@ async def flag_to_hashtag_test(update: Update, context: ContextTypes.DEFAULT_TYP
         )
 
 # await update.message.reply_text("-------\n\nTEST DONE\n\n-------")
+
+
+async def local_test():
+    print("run test")
+
+    with open("./res/img/argu.jpg","rb") as f1:
+        with open("./res/img/disso.jpg","rb") as f2:
+       #     print(f1.read(),f2.read())
+           # res=  upload_media([f1,f2], twitter.api_DE)
+            print("res")
+
+asyncio.get_event_loop().run_until_complete(local_test())
