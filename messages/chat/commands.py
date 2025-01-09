@@ -88,6 +88,9 @@ async def deutsch(update: Update, context: CallbackContext):
 async def wissen(update: Update, context: CallbackContext):
     await reply_photo(update, context, "wissen.jpg")
 
+async def hominem(update: Update, context: CallbackContext):
+    await reply_photo(update, context, "hominem.jpg")
+
 
 def register_commands(app: Application):
     app.add_handler(CommandHandler("maps", maps))
@@ -112,4 +115,5 @@ def register_commands(app: Application):
     app.add_handler(CommandHandler("front", front))
     app.add_handler(CommandHandler("deutsch", deutsch))
     app.add_handler(CommandHandler("wissen", wissen))
+    app.add_handler(CommandHandler("hominem", hominem))
 

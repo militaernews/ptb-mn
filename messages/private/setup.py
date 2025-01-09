@@ -94,6 +94,10 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("duden", "Deutsch. Setzen. Sechs."),
         ("argu", "Argumentationspyramide"),
         ("disso", "Kognitive Dissonanz"),
+        ("wissen", "Wissen ist Holschuld"),
+        ("hominem", "Ad hominem"),
+        ("deutsch", "Amtssprache"),
+        ("vs", "Verfassungsschutz"),
         ("front", "An die Front!"),
     ]
     await context.bot.set_my_commands(chat_de_commands)
