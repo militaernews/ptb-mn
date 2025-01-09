@@ -100,7 +100,7 @@ def admin_reply(func):
     async def wrapper(update: Update, *args, **kwargs):
         await delete_msg(update)
 
-        if update.message.from_user.id not in ADMINS or update.message.reply_to_message is None or update.message.reply_to_message.from_user.id in ADMINS:
+        if update.message.from_user.id not in ADMINS or update.message.reply_to_message.from_user.id in ADMINS:
             return
         await func(update, *args, **kwargs)
 
