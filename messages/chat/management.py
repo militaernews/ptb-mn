@@ -199,17 +199,24 @@ async def report_user(update: Update, _: CallbackContext):
 
 
 @admin
-async def report_user_id(update: Update, _: CallbackContext):
-    logging.info(f"reporting {update.message.reply_to_message.from_user.id} !!")
+async def report_user_id(update: Update, context: CallbackContext):
+    if len(context.args) == 0 or not context.args[0].isnumeric():
+        msg = await update.message.reply_text("Bitte gib die ID des Nutzers an.")
+        context.job_queue.run_once(delete, MSG_REMOVAL_PERIOD,
+                                   {CHAT_ID: msg.chat_id, MSG_ID: msg.message_id})
+        return
+
+    user_id = int(context.args[0])
+    logging.info(f"reporting {user_id} !!")
     r = requests.post(url="http://localhost:8080/reports",
                       json={
-                          "user_id": update.message.reply_to_message.from_user.id,
-                          "message": update.message.reply_to_message.text_html_urled,
+                          "user_id": user_id,
+                          "message": "NO MESSAGE",
                           "account_id": 1
                       })
     logging.info(r)
     await update.message.reply_to_message.reply_text(
-        f"Der Nutzer {mention(update)} wurde Tartaros-Antispam gemeldet.")
+        f"Der Nutzer <code>{user_id}</code> wurde Tartaros-Antispam gemeldet.")
 
 
 @remove_reply
@@ -246,6 +253,6 @@ def register_management(app: Application):
     app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
     app.add_handler(CommandHandler("ban", ban_user_id, filters.Chat(GERMAN.chat_id)& filters.REPLY))
 
-    app.add_handler(CommandHandler("tartaros", report_user, filters.Chat(GERMAN.chat_id)))
+    app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
     app.add_handler(
         CommandHandler("report", report_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
