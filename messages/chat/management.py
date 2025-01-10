@@ -21,7 +21,7 @@ RULES: Final[List[str]] = [
     "5️⃣ Keine privaten Inhalte anderer Personen teilen."
 ]
 
-NO_MESSAGE = -1
+NO_MESSAGE:Final[int] = -1
 
 
 def manage_warnings(update: Update, context: CallbackContext, increment: int):
@@ -41,9 +41,10 @@ async def ban_user(update: Update, context: CallbackContext):
     await update.message.reply_to_message.reply_text(
         f"Aufgrund eines gravierenden Verstoßes habe ich {mention(update)} gebannt.")
 
+
 @admin
 async def ban_user_id(update: Update, context: CallbackContext):
-    if len(context.args) == 0 or not context.args[0].isnumeric():
+    if len(context.args) != 1 or not context.args[0].isnumeric():
         msg = await update.message.reply_text("Bitte gib die ID des Nutzers an.")
         context.job_queue.run_once(delete, MSG_REMOVAL_PERIOD,
                                    {CHAT_ID: msg.chat_id, MSG_ID: msg.message_id})
@@ -54,7 +55,7 @@ async def ban_user_id(update: Update, context: CallbackContext):
 
     await context.bot.ban_chat_member(update.message.chat_id, user_id,
                                       until_date=1)
-    await update.message.reply_to_message.reply_text(
+    await context.bot.send_message(update.message.chat_id,
         f"Aufgrund eines gravierenden Verstoßes habe ich <code>{user_id}</code> gebannt.")
 
 
@@ -82,7 +83,7 @@ async def unwarn_user_id(update: Update, context: CallbackContext):
 
     context.bot_data["users"][user_id]["warn"] = []
 
-    await update.message.reply_to_message.reply_text(
+    await context.bot.send_message(update.message.chat_id,
         f"Dem Nutzer <code>{user_id}</code> wurde alle Verwarnungen erlassen.")
 
 
@@ -164,38 +165,43 @@ async def warn_user_id(update: Update, context: CallbackContext):
         try:
             logging.info(f"restricting {user_id} !!")
             await context.bot.restrict_chat_member(update.message.chat_id,
-                                                  user_id,
+                                                   user_id,
                                                    ChatPermissions(can_send_messages=False))
         except TelegramError as e:
             logging.warning(f"needs admin: {e}")
 
-        await update.message.reply_text(
+        await context.bot.send_message(update.message.chat_id,
             f"Aufgrund wiederholter Verstöße habe ich <code>{user_id}</code> die Schreibrechte genommen.")
         return
 
     warn_text = f"Der Nutzer <code>{user_id}</code> hat die Warnung {warn_amount} von {WARN_LIMIT} erhalten."
 
-    if context.args[1].isnumeric():
+    if len(context.args) == 2 and context.args[1].isnumeric():
         warn_text = f"{warn_text}\n\nGrund: {RULES[int(context.args[1]) - 1]}"
-    elif len(context.args) > 2:
+    elif len(context.args) >= 2:
         warn_text = f"{warn_text}\n\nGrund: {' '.join(context.args)}"
 
-    await update.message.reply_text(warn_text)
+    await context.bot.send_message(update.message.chat_id,warn_text)
 
 
 @admin_reply
 async def report_user(update: Update, _: CallbackContext):
-    logging.info(f"reporting {update.message.reply_to_message.from_user.id} !!")
-    r = requests.post(url="http://localhost:8080/reports",
-                      json={
-                          "user_id": update.message.reply_to_message.from_user.id,
-                          "message": update.message.reply_to_message.text_html_urled,
-                          "account_id": 1
-                      })
-    logging.info(r)
-    if r.status_code == 201:
-        await update.message.reply_to_message.reply_text(
-            f"Hey {mention(update)}!\n\nEin Admin dieser Gruppe hat deinen Account unserem Antispam-System gemeldet. Moderatoren überprüfen diesen Fall nun.\n\nFalls dein Account Betrug oder Spam begangen hat, dann wirst du in allen Gruppen gebannt, wenn unser Antispam-System dort aktiv ist.")
+    user_id = update.message.reply_to_message.from_user.id
+    logging.info(f"reporting {user_id} !!")
+    try:
+        r = requests.post(url="http://localhost:8080/reports",
+                          json={
+                              "user_id": user_id,
+                              "message": "NO MESSAGE",
+                              "account_id": 1
+                          }, timeout=8)
+        logging.info(r)
+        if r.status_code == 201:
+            await update.message.reply_to_message.reply_text(
+                f"Hey {mention(update)}!\n\nEin Admin dieser Gruppe hat deinen Account unserem Antispam-System gemeldet. Moderatoren überprüfen diesen Fall nun.\n\nFalls dein Account Betrug oder Spam begangen hat, dann wirst du in allen Gruppen gebannt, wenn unser Antispam-System dort aktiv ist.")
+
+    except requests.exceptions.Timeout as e:
+        logging.error(f"Timed out when reporting {user_id}: {e}")
 
 
 @admin
@@ -208,13 +214,17 @@ async def report_user_id(update: Update, context: CallbackContext):
 
     user_id = int(context.args[0])
     logging.info(f"reporting {user_id} !!")
-    r = requests.post(url="http://localhost:8080/reports",
-                      json={
-                          "user_id": user_id,
-                          "message": "NO MESSAGE",
-                          "account_id": 1
-                      })
-    logging.info(r)
+    try:
+        r = requests.post(url="http://localhost:8080/reports",
+                          json={
+                              "user_id": user_id,
+                              "message": "NO MESSAGE",
+                              "account_id": 1
+                          }, timeout=8)
+        logging.info(r)
+    except requests.exceptions.Timeout as e:
+        logging.error(f"Timed out when reporting {user_id}: {e}")
+
     await update.message.reply_to_message.reply_text(
         f"Der Nutzer <code>{user_id}</code> wurde Tartaros-Antispam gemeldet.")
 
@@ -247,12 +257,12 @@ def register_management(app: Application):
     app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY, has_args=True))
     app.add_handler(CommandHandler("warn", warn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
 
-    app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id)& filters.REPLY))
-    app.add_handler(CommandHandler("unwarn", unwarn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
+    app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
+    app.add_handler(
+        CommandHandler("unwarn", unwarn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
 
     app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("ban", ban_user_id, filters.Chat(GERMAN.chat_id)& filters.REPLY))
+    app.add_handler(CommandHandler("ban", ban_user_id, filters.Chat(GERMAN.chat_id) & filters.REPLY))
 
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
-    app.add_handler(
-        CommandHandler("report", report_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
+    app.add_handler(    CommandHandler("report", report_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
