@@ -1,5 +1,5 @@
-import asyncio
 import logging
+from asyncio import get_event_loop_policy
 from typing import AsyncGenerator
 from unittest.mock import Mock
 
@@ -15,25 +15,15 @@ logger = logging.getLogger(__name__)
 
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    """Create an instance of the default event loop for the test session."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
 
+@pytest_asyncio.fixture(loop_scope='function')
+async def db() -> AsyncGenerator[Connection, None]:
+    conn: Connection = await connect(DATABASE_URL_TEST)
 
-@pytest_asyncio.fixture
-async def db_conn() -> AsyncGenerator[Connection, None]:
-    conn = await connect(DATABASE_URL_TEST)
+    await conn.execute('DROP TABLE IF EXISTS posts CASCADE')
+    await conn.execute('DROP TABLE IF EXISTS promos CASCADE')
 
-    try:
-        # Drop tables if they exist
-        await conn.execute('DROP TABLE IF EXISTS posts CASCADE')
-        await conn.execute('DROP TABLE IF EXISTS promos CASCADE')
-
-        # Create tables
-        await conn.execute('''
+    await conn.execute('''
             CREATE TABLE posts (
                 post_id integer,
                 lang character(2) NOT NULL,
@@ -48,7 +38,7 @@ async def db_conn() -> AsyncGenerator[Connection, None]:
             )
         ''')
 
-        await conn.execute('''
+    await conn.execute('''
             CREATE TABLE promos (
                 user_id bigint NOT NULL,
                 lang character(2),
@@ -57,34 +47,37 @@ async def db_conn() -> AsyncGenerator[Connection, None]:
             )
         ''')
 
-        print("--------- conn: ",conn, "---")
+    print("--------- conn: ", conn, "---")
 
-        yield conn
-    finally:
-        # Cleanup
-        await conn.execute('DROP TABLE IF EXISTS posts CASCADE')
-        await conn.execute('DROP TABLE IF EXISTS promos CASCADE')
-        await conn.close()
+    yield conn
+
+
+ #   await conn.execute('DROP TABLE IF EXISTS posts CASCADE')
+  #  await conn.execute('DROP TABLE IF EXISTS promos CASCADE')
+    await conn.close()
+
 
 @pytest.mark.asyncio
-async def test_get_mg(db_conn: Connection):
-    table_exists = await db_conn.execute(
+async def test_get_mg(db: Connection):
+    table_exists = await db.execute(
         "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'posts')"
     )
     assert table_exists, "Posts table does not exist"
 
     # Insert test data
-    await db_conn.execute(
-        "INSERT INTO posts(post_id, msg_id, media_group_id, lang) VALUES($1, $2, $3, $4)",
+    await db.execute(
+        "INSERT INTO posts(post_id, msg_id, media_group_id, lang) VALUES($1, $2, $3, $4);",
         1, 100, 'test_group', 'de'
     )
 
-    result = await get_mg('test_group', db_conn)
+    result = await get_mg('test_group', db)
+    print(result)
     assert result is not None
     assert result['media_group_id'] == 'test_group'
     assert result['lang'] == 'de'
 
 
+@pytest.mark.asyncio
 async def test_query_files(db):
     test_data = [
         (1, 101, 'group1', 'de'),
@@ -100,6 +93,7 @@ async def test_query_files(db):
     assert all(r['media_group_id'] == 'group1' for r in results)
 
 
+@pytest.mark.asyncio
 async def test_insert_single(db):
     post_id = await insert_single(
         msg_id=200,
@@ -122,6 +116,7 @@ async def test_insert_single(db):
     assert result['text'] == 'Test caption'
 
 
+@pytest.mark.asyncio
 async def test_update_post(db):
     mock_msg = Mock()
     mock_msg.id = 300
@@ -147,6 +142,7 @@ async def test_update_post(db):
     assert result['text'] == 'Test caption'
 
 
+@pytest.mark.asyncio
 async def test_query_replies(db):
     await db.execute(
         "INSERT INTO posts(post_id, msg_id, reply_id, lang) VALUES($1, $2, $3, $4)",
@@ -158,6 +154,7 @@ async def test_query_replies(db):
     assert result['reply_id'] == 401
 
 
+@pytest.mark.asyncio
 async def test_insert_promo(db):
     result = await insert_promo(123, 'en', 456, db)
     assert result is not None
