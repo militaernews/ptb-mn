@@ -1,6 +1,6 @@
 import logging
 import re
-from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy
+from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy, get_event_loop
 from datetime import datetime
 from os import makedirs, path
 from sys import platform, version_info
@@ -11,21 +11,22 @@ from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
     Application
 
-from config import TOKEN, ADMINS, CHANNEL_MEME
+from config import TOKEN, ADMINS
+from data.config import init_db
 from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
-from messages.chat.bingo import  register_bingo
+from messages.chat.bingo import register_bingo
 from messages.chat.commands import register_commands
 from messages.chat.management import register_management
 from messages.chat.whitelist import register_whitelist
-from messages.meme import post_media_meme, post_text_meme, register_meme
+from messages.meme import register_meme
 from messages.news.common import edit_channel, post_channel_english
 from messages.news.special import breaking_news, announcement, post_info, advertisement
 from messages.news.suggest import register_suggest
 from messages.news.text import edit_channel_text, post_channel_text
 from messages.private.advertisement import register_advertisement
 from messages.private.promo import register_promo
-from messages.private.setup import set_cmd  # , private_setup
+from messages.private.setup import set_cmd
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
 
 
@@ -71,6 +72,8 @@ if __name__ == "__main__":
 
    # add_logging()
 
+    get_event_loop().run_until_complete(init_db())
+
     if version_info >= (3, 8) and platform.lower().startswith("win"):
         set_event_loop_policy(WindowsSelectorEventLoopPolicy())
 
@@ -107,4 +110,5 @@ if __name__ == "__main__":
     #  app.add_error_handler( report_error)  # comment this one out for full stacktrace
 
     print("### RUNNING LOCAL ###")
+
   #  app.run_polling(poll_interval=1, drop_pending_updates=False)

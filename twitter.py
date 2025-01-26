@@ -73,8 +73,6 @@ async def tweet_file(update:Update, context:CallbackContext, caption: str, lang_
 
     api, uploader = instance
 
-    api.create_tweet(text="Hi!")
-
     if file_path is not None:
         media_id = uploader.upload_image(file_path)
     else:

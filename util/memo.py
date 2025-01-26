@@ -1,7 +1,7 @@
 import time
 
-
-class memo(object):
+Memo
+class Memo(object):
     """Memoize With Timeout"""
     _caches = {}
     _timeouts = {}

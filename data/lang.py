@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 
 @dataclass
@@ -38,7 +39,7 @@ ENGLISH = Language(
     lang_key_deepl="en-us"
 )
 
-languages: [Language] = [
+languages: List[Language] = [
     ENGLISH,
     Language(
         "tr",  # Turkish
