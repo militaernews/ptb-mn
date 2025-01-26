@@ -1,6 +1,6 @@
 import logging
 import re
-from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy, get_event_loop
+from asyncio import set_event_loop_policy, WindowsSelectorEventLoopPolicy
 from datetime import datetime
 from os import makedirs, path
 from sys import platform, version_info
@@ -41,34 +41,33 @@ def add_logging():
     )
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
+
 def register_news(app: Application):
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
     news_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=GERMAN.channel_id)
 
     app.add_handler(
-   MessageHandler(news_post & media & filters.CaptionRegex(INFO_PATTERN), post_info))
+        MessageHandler(news_post & media & filters.CaptionRegex(INFO_PATTERN), post_info))
 
     app.add_handler(MessageHandler(news_post & media, post_channel_english))
 
     app.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(BREAKING_PATTERN),
-                                 breaking_news))
+                                   breaking_news))
     app.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(ANNOUNCEMENT_PATTERN),
-                                  announcement))
+                                   announcement))
     app.add_handler(
-       MessageHandler(news_post & filters.TEXT & filters.Regex(ADVERTISEMENT_PATTERN), advertisement))
+        MessageHandler(news_post & filters.TEXT & filters.Regex(ADVERTISEMENT_PATTERN), advertisement))
     app.add_handler(MessageHandler(news_post & filters.TEXT, post_channel_text))
 
     news_edited = filters.UpdateType.EDITED_CHANNEL_POST & filters.Chat(
-      chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
-      re.compile(r"🔰 MN-Hauptquartier|#\S+|MN-Team", re.IGNORECASE))
+        chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
+        re.compile(r"🔰 MN-Hauptquartier|#\S+|MN-Team", re.IGNORECASE))
 
     app.add_handler(MessageHandler(news_edited & media, edit_channel))
     app.add_handler(MessageHandler(news_edited & filters.TEXT, edit_channel_text))
 
 
-
 if __name__ == "__main__":
-
     add_logging()
 
     if version_info >= (3, 8) and platform.lower().startswith("win"):
@@ -81,26 +80,20 @@ if __name__ == "__main__":
            .build())
 
     app.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
+    app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
 
-    register_commands(app)
-    register_management(app)
-
-
-
+    register_news(app)
+    register_suggest(app)
+    register_advertisement(app)
+    register_promo(app)
 
     register_meme(app)
     register_bingo(app)
 
-    register_news(app)
-    register_advertisement(app)
-
-    register_promo(app)
+    register_commands(app)
+    register_management(app)
     #   register_captcha(app)
 
-
-    app.add_handler(MessageHandler(filters.Chat(ADMINS), flag_to_hashtag_test))
-
-    register_suggest(app)
     register_whitelist(app)
 
     # Commands have to be added above
@@ -108,4 +101,4 @@ if __name__ == "__main__":
 
     print("### RUNNING LOCAL ###")
 
-  #  app.run_polling(poll_interval=1, drop_pending_updates=False)
+    app.run_polling(poll_interval=1, drop_pending_updates=False)

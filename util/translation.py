@@ -11,7 +11,7 @@ from pysbd import Segmenter
 from data.lang import GERMAN, languages
 from twitter import TWEET_LENGTH
 from util.helper import sanitize_text
-from util.patterns import FLAG_EMOJI, HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
+from util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
 
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
@@ -89,7 +89,7 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
 
         except QuotaExceededException:
             logging.warning("--- Quota exceeded ---")
-            #TODO: switch to other deepl key
+            # TODO: switch to other deepl key
             translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
             pass
         except Exception as e:

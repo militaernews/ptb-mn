@@ -21,7 +21,7 @@ RULES: Final[List[str]] = [
     "5️⃣ Keine privaten Inhalte anderer Personen teilen."
 ]
 
-NO_MESSAGE:Final[int] = -1
+NO_MESSAGE: Final[int] = -1
 
 
 def manage_warnings(update: Update, context: CallbackContext, increment: int):
@@ -56,7 +56,7 @@ async def ban_user_id(update: Update, context: CallbackContext):
     await context.bot.ban_chat_member(update.message.chat_id, user_id,
                                       until_date=1)
     await context.bot.send_message(update.message.chat_id,
-        f"Aufgrund eines gravierenden Verstoßes habe ich <code>{user_id}</code> gebannt.")
+                                   f"Aufgrund eines gravierenden Verstoßes habe ich <code>{user_id}</code> gebannt.")
 
 
 @admin_reply
@@ -84,7 +84,7 @@ async def unwarn_user_id(update: Update, context: CallbackContext):
     context.bot_data["users"][user_id]["warn"] = []
 
     await context.bot.send_message(update.message.chat_id,
-        f"Dem Nutzer <code>{user_id}</code> wurde alle Verwarnungen erlassen.")
+                                   f"Dem Nutzer <code>{user_id}</code> wurde alle Verwarnungen erlassen.")
 
 
 @admin_reply
@@ -171,7 +171,7 @@ async def warn_user_id(update: Update, context: CallbackContext):
             logging.warning(f"needs admin: {e}")
 
         await context.bot.send_message(update.message.chat_id,
-            f"Aufgrund wiederholter Verstöße habe ich <code>{user_id}</code> die Schreibrechte genommen.")
+                                       f"Aufgrund wiederholter Verstöße habe ich <code>{user_id}</code> die Schreibrechte genommen.")
         return
 
     warn_text = f"Der Nutzer <code>{user_id}</code> hat die Warnung {warn_amount} von {WARN_LIMIT} erhalten."
@@ -181,7 +181,7 @@ async def warn_user_id(update: Update, context: CallbackContext):
     elif len(context.args) >= 2:
         warn_text = f"{warn_text}\n\nGrund: {' '.join(context.args)}"
 
-    await context.bot.send_message(update.message.chat_id,warn_text)
+    await context.bot.send_message(update.message.chat_id, warn_text)
 
 
 @admin_reply
@@ -254,15 +254,16 @@ def register_management(app: Application):
 
     app.add_handler(CommandHandler("rules", send_rules, filters.Chat(GERMAN.chat_id)))
 
-    app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY, has_args=True))
-    app.add_handler(CommandHandler("warn", warn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
+    # app.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY, has_args=True))
+    # app.add_handler(CommandHandler("warn", warn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
 
-    app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
-    app.add_handler(
-        CommandHandler("unwarn", unwarn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
+    # app.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
+    # app.add_handler(
+    #    CommandHandler("unwarn", unwarn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
 
-    app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(CommandHandler("ban", ban_user_id, filters.Chat(GERMAN.chat_id) & filters.REPLY))
+    # app.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
+    # app.add_handler(CommandHandler("ban", ban_user_id, filters.Chat(GERMAN.chat_id) & filters.REPLY))
 
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
-    app.add_handler(    CommandHandler("report", report_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
+    app.add_handler(
+        CommandHandler("report", report_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))

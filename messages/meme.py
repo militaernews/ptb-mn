@@ -31,7 +31,6 @@ async def add_footer_meme(update: Update, context: CallbackContext):
         original_caption = update.channel_post.caption_html_urled
 
     try:
-
         await update.channel_post.edit_caption(format_meme_footer(original_caption))
 
         # Unfortunately it is not possible for bots to forward a media-group as a whole.
@@ -77,6 +76,7 @@ def format_meme_footer(original_text: str) -> str:
         footer = "Subscribe to @MilitaerMemes for more"
 
     return f"{original_text}\n\n🔰 {footer}"
+
 
 def register_meme(app: Application):
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)

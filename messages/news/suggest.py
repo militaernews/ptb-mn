@@ -17,7 +17,7 @@ def debloat_text(text: str) -> str:
     return cleaned
 
 
-async def suggest_single(update: Update, context: CallbackContext):
+async def suggest_single(update: Update, _: CallbackContext):
     if update.channel_post.forward_origin is None:
         return
 

@@ -90,7 +90,7 @@ async def test_query_files(db):
 
     results = await query_files('group1', db)
     assert len(results) == 2
-    assert all(r['media_group_id'] == 'group1' for r in results)
+    assert all(r.media_group_id == 'group1' for r in results)
 
 
 @pytest.mark.asyncio
@@ -132,7 +132,7 @@ async def test_update_post(db):
         lang_key='de'
     )
 
-    await update_post(mock_msg, db)
+    await update_post(mock_msg, conn=db)
 
     result = await db.fetchrow(
         "SELECT * FROM posts WHERE msg_id = $1 AND lang = $2",

@@ -63,14 +63,14 @@ def db(func: Callable[..., Awaitable]):
 
 
 @db
-async def get_mg(meg_id: str, conn: Connection=None):
+async def get_mg(meg_id: str, conn: Connection = None):
     res = await conn.fetchrow("select * from posts p where p.media_group_id=$1 and p.lang='de'", meg_id)
     logging.info(f">>> get_mg: {res}")
     return res
 
 
 @db
-async def query_files(meg_id: str,conn: Connection) -> List[Post]:
+async def query_files(meg_id: str, conn: Connection) -> List[Post]:
     res = await conn.fetch("select * from posts p where p.media_group_id=$1 and p.lang='de'", meg_id)
     logging.info(f">>> query_files: {res}")
     return res
@@ -85,7 +85,7 @@ async def query_replies(msg_id: int, lang_key: str, conn: Connection) -> int:
 
 
 @db
-async def query_replies2(post_id: int, lang_key: str, conn: Connection=None):
+async def query_replies2(post_id: int, lang_key: str, conn: Connection = None):
     res = await conn.fetchrow("select p.reply_id from posts p where p.post_id=$1 and p.lang=$2",
                               post_id, lang_key)
 
@@ -94,7 +94,7 @@ async def query_replies2(post_id: int, lang_key: str, conn: Connection=None):
 
 
 @db
-async def get_post_id(msg: Message, conn: Connection=None):
+async def get_post_id(msg: Message, conn: Connection = None):
     if msg.reply_to_message is None:
         return
 
@@ -105,14 +105,14 @@ async def get_post_id(msg: Message, conn: Connection=None):
     return res[0] if res is not None else res
 
 
-async def get_post_id2(msg_id: int, conn: Connection=None):
+async def get_post_id2(msg_id: int, conn: Connection = None):
     res = await conn.fetchrow("select p.post_id from posts p where p.msg_id=$1 and p.lang='de'", msg_id)
 
     return res[0] if res is not None else res
 
 
 @db
-async def query_replies3(post_id: int, lang_key: str, conn: Connection=None):
+async def query_replies3(post_id: int, lang_key: str, conn: Connection = None):
     res = await conn.fetchrow("select p.reply_id from posts p where p.post_id=$1 and p.lang=$2",
                               post_id, lang_key)
 
@@ -121,7 +121,7 @@ async def query_replies3(post_id: int, lang_key: str, conn: Connection=None):
 
 
 @db
-async def query_replies4(msg: Message, lang_key: str, conn: Connection=None):
+async def query_replies4(msg: Message, lang_key: str, conn: Connection = None):
     if msg.reply_to_message is None:
         return
 
@@ -134,7 +134,7 @@ async def query_replies4(msg: Message, lang_key: str, conn: Connection=None):
 
 
 @db
-async def get_msg_id(msg_id: int, lang_key: str, conn: Connection=None):
+async def get_msg_id(msg_id: int, lang_key: str, conn: Connection = None):
     res = await conn.fetchrow(
         "select p.msg_id from posts p where p.lang=$1 and p.post_id = (select pp.post_id from posts pp where pp.msg_id = $2 and pp.lang='de')",
         lang_key, msg_id)
@@ -144,7 +144,7 @@ async def get_msg_id(msg_id: int, lang_key: str, conn: Connection=None):
 
 
 @db
-async def get_file_id(msg_id: int, conn: Connection=None):
+async def get_file_id(msg_id: int, conn: Connection = None):
     res = await conn.fetchrow("select p.file_id from posts p where p.msg_id=$1", msg_id)
 
     logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
@@ -152,13 +152,13 @@ async def get_file_id(msg_id: int, conn: Connection=None):
 
 
 @db
-async def update_text(msg_id: int, text: str,lang_key: str = GERMAN.lang_key,conn: Connection = None):
+async def update_text(msg_id: int, text: str, lang_key: str = GERMAN.lang_key, conn: Connection = None):
     await conn.execute("update posts p set text=$1 where p.msg_id=$2 and p.lang=$3",
                        text, msg_id, lang_key)
 
 
 @db
-async def update_post(msg: Message,  lang_key: str = GERMAN.lang_key,conn: Connection = None):
+async def update_post(msg: Message, lang_key: str = GERMAN.lang_key, conn: Connection = None):
     if len(msg.photo) != 0:
         file_type = PHOTO
         file_id = msg.photo[-1].file_id
@@ -187,7 +187,7 @@ async def update_post(msg: Message,  lang_key: str = GERMAN.lang_key,conn: Conne
 @db
 async def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str = None,
                          lang_key: str = GERMAN.lang_key,
-                         post_id: int = None,conn: Connection = None):  # text=??
+                         post_id: int = None, conn: Connection = None):  # text=??
     if len(msg.photo) != 0:
         file_type = PHOTO
         file_id = msg.photo[-1].file_id
@@ -200,13 +200,14 @@ async def insert_single3(msg_id: int, reply_id: int, msg: Message, meg_id: str =
     else:
         file_type = None
         file_id = None
-    await insert_single(msg_id = msg_id, meg_id = meg_id,reply_id= reply_id, file_type=file_type,file_id= file_id,lang_key= lang_key,post_id= post_id,
-                    spoiler=    msg.has_media_spoiler or False
+    await insert_single(msg_id=msg_id, meg_id=meg_id, reply_id=reply_id, file_type=file_type, file_id=file_id,
+                        lang_key=lang_key, post_id=post_id,
+                        spoiler=msg.has_media_spoiler or False
                         )
 
 
 @db
-async def insert_single2(msg: Message,lang_key: str = GERMAN.lang_key,conn:Connection=None):
+async def insert_single2(msg: Message, lang_key: str = GERMAN.lang_key, conn: Connection = None):
     if len(msg.photo) != 0:
         file_type = PHOTO
         file_id = msg.photo[-1].file_id
@@ -230,14 +231,15 @@ async def insert_single2(msg: Message,lang_key: str = GERMAN.lang_key,conn:Conne
         text = None
 
     # add text aswell?
-    return await insert_single(msg_id=msg.id, meg_id= msg.media_group_id,reply_id= reply_id, file_type=file_type,file_id= file_id,lang_key= lang_key, text=text,
+    return await insert_single(msg_id=msg.id, meg_id=msg.media_group_id, reply_id=reply_id, file_type=file_type,
+                               file_id=file_id, lang_key=lang_key, text=text,
                                spoiler=msg.has_media_spoiler or False)
 
 
 @db
-async def insert_single(msg_id: int,  meg_id: str = None, reply_id: int = None, file_type: int = None,
+async def insert_single(msg_id: int, meg_id: str = None, reply_id: int = None, file_type: int = None,
                         file_id: str = None, lang_key: str = GERMAN.lang_key, post_id: int = None, text: str = None,
-                        spoiler: bool = False,conn: Connection = None):
+                        spoiler: bool = False, conn: Connection = None):
     if post_id is None:
         post_id = int(await conn.fetchval("select max(p.post_id) from posts p") or 0) + 1
 
@@ -250,7 +252,7 @@ async def insert_single(msg_id: int,  meg_id: str = None, reply_id: int = None, 
 
 
 @db
-async def insert_promo(user_id: int, lang: str, promo_id: int,conn: Connection):
+async def insert_promo(user_id: int, lang: str, promo_id: int, conn: Connection):
     res = await conn.fetchrow("select * from promos p where p.user_id=$1;", user_id)
 
     logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> insert_promo: {res}")

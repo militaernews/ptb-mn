@@ -2,7 +2,7 @@ import logging
 from asyncio import sleep
 from typing import Final, Set
 
-from telegram import Update, MessageEntity
+from telegram import Update
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackContext, Application
 
 from data.lang import GERMAN
@@ -82,9 +82,9 @@ async def send_whitelist(update: Update, context: CallbackContext):
 
 
 def register_whitelist(app: Application):
- #   app.add_handler(
-     #   MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
-        #               remove_url))
+    #   app.add_handler(
+    #   MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
+    #               remove_url))
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
     app.add_handler(
         MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),

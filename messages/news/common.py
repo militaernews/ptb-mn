@@ -3,7 +3,7 @@ from re import sub, findall
 from typing import List
 
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
-                      InputMediaVideo, Message, MessageEntity, MessageId,
+                      InputMediaVideo, MessageEntity, MessageId,
                       Update)
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
@@ -14,7 +14,7 @@ from data.db import insert_single3, insert_single2, query_replies3, \
     update_post, Post
 from data.lang import GERMAN, languages
 from twitter import tweet_file, tweet_files
-from util.helper import get_file, log_error
+from util.helper import log_error
 from util.patterns import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
 from util.translation import flag_to_hashtag, translate_message, segment_text
 
@@ -33,35 +33,39 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}"
 
         try:
-            msg_id: MessageId = await update.channel_post.copy( chat_id=lang.channel_id, caption=f"{caption}{DIVIDER}{lang.footer}", reply_to_message_id=reply_id )
+            msg_id: MessageId = await update.channel_post.copy(chat_id=lang.channel_id,
+                                                               caption=f"{caption}{DIVIDER}{lang.footer}",
+                                                               reply_to_message_id=reply_id)
             logging.info(f"---------- MSG ID ::::::::: {msg_id}")
             await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
                                  post_id=de_post_id)
 
         except Exception as e:
-            await log_error("send single post", context, lang, e, update )
+            await log_error("send single post", context, lang, e, update)
             pass
 
         try:
             tweet_caption = segment_text(PATTERN_HTMLTAG.sub("", caption))
-            await tweet_file(update,context,tweet_caption,  lang.lang_key)
+            await tweet_file(update, context, tweet_caption, lang.lang_key)
         except Exception as e:
             await log_error(f"tweet {lang.lang_key}", context, "Twitter", e, update, )
             pass
 
-
     formatted_text = flag_to_hashtag(original_caption)
 
     try:
-        await update.channel_post.edit_caption(formatted_text + DIVIDER+GERMAN.footer)
+        await update.channel_post.edit_caption(formatted_text + DIVIDER + GERMAN.footer)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
             await log_error("edit Post", context, GERMAN, e, update, )
             pass
+    except Exception as e:
+        await log_error(f"adding footer to post", context, GERMAN.lang_key, e, update, )
+        pass
 
     try:
-        tweet_caption = segment_text(  flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption)))
-        await tweet_file(update,context,tweet_caption)
+        tweet_caption = segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption)))
+        await tweet_file(update, context, tweet_caption)
         logging.info(f"-")
     except Exception as e:
         await log_error("tweet DE", context, "Twitter", e, update, )
@@ -162,7 +166,7 @@ async def share_in_other_channels(context: CallbackContext):
                               segment_text(PATTERN_HTMLTAG.sub("", caption)),
                               posts, lang.lang_key)
         except Exception as e:
-            await log_error(f"tweet multiple {lang.lang_key}", context, "Twitter", e  )
+            await log_error(f"tweet multiple {lang.lang_key}", context, "Twitter", e)
 
     logging.info("----- done -----")
 
@@ -171,10 +175,7 @@ async def share_in_other_channels(context: CallbackContext):
                           segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption))),
                           posts)
     except Exception as e:
-        await log_error("tweet multiple DE", context, "Twitter", e )
-
-
-
+        await log_error("tweet multiple DE", context, "Twitter", e)
 
 
 async def edit_channel(update: Update, context: CallbackContext):
@@ -247,7 +248,7 @@ async def edit_channel(update: Update, context: CallbackContext):
         text = None if original_caption is None else flag_to_hashtag(original_caption)
 
         if "#" not in update.edited_channel_post.caption:
-            await update.edited_channel_post.edit_caption(text +DIVIDER+ GERMAN.footer)
+            await update.edited_channel_post.edit_caption(text + DIVIDER + GERMAN.footer)
 
         await update_post(update.edited_channel_post)
         # todo: update text in db
