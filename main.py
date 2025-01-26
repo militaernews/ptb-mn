@@ -12,7 +12,6 @@ from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, 
     Application
 
 from config import TOKEN, ADMINS
-from data.config import init_db
 from data.lang import GERMAN
 from dev.playground import flag_to_hashtag_test
 from messages.chat.bingo import register_bingo
@@ -70,9 +69,7 @@ def register_news(app: Application):
 
 if __name__ == "__main__":
 
-   # add_logging()
-
-    get_event_loop().run_until_complete(init_db())
+    add_logging()
 
     if version_info >= (3, 8) and platform.lower().startswith("win"):
         set_event_loop_policy(WindowsSelectorEventLoopPolicy())

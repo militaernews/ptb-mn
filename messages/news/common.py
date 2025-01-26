@@ -1,5 +1,6 @@
 import logging
 from re import sub, findall
+from typing import List
 
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       InputMediaVideo, Message, MessageEntity, MessageId,
@@ -106,7 +107,7 @@ async def post_channel_english(update: Update, context: CallbackContext):
 async def share_in_other_channels(context: CallbackContext):
     posts = sorted(await query_files(context.job.name), key=lambda x: x.msg_id)
     logging.info(posts)
-    files: [InputMedia] = []
+    files: List[InputMedia] = []
 
     original_caption = None
 
@@ -142,7 +143,7 @@ async def share_in_other_channels(context: CallbackContext):
         logging.info(f"------------------------------------------- reply_id: {reply_id}")
 
         try:
-            msgs: [Message] = await context.bot.send_media_group(
+            msgs = await context.bot.send_media_group(
                 chat_id=lang.channel_id,
                 media=files,
                 reply_to_message_id=reply_id

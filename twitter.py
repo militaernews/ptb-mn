@@ -90,7 +90,7 @@ def upload_media(files: List[IO], api: Api):
 
 
 # todo: migrate to uploader
-async def tweet_files(context: CallbackContext, caption: str, posts: [Post], lang_key: Optional[str] = None):
+async def tweet_files(context: CallbackContext, caption: str, posts: List[Post], lang_key: Optional[str] = None):
     instance = supply_twitter_instance(lang_key)
     print(instance)
     if instance is None:

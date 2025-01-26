@@ -1,6 +1,5 @@
 import time
 
-Memo
 class Memo(object):
     """Memoize With Timeout"""
     _caches = {}
