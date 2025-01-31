@@ -5,7 +5,7 @@ from typing import List
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       InputMediaVideo, MessageEntity, MessageId,
                       Update)
-from telegram.error import TelegramError
+from telegram.error import TelegramError, BadRequest
 from telegram.ext import CallbackContext, ContextTypes
 
 from config import CHANNEL_SOURCE, DIVIDER
@@ -40,7 +40,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
             await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
                                  post_id=de_post_id)
 
-        except Exception as e:
+        except  Exception as e:
             await log_error("send single post", context, lang, e, update)
             pass
 

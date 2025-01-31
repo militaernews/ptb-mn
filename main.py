@@ -44,7 +44,7 @@ def add_logging():
 
 def register_news(app: Application):
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
-    news_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=GERMAN.channel_id)
+    news_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=GERMAN.channel_id) & ~filters.FORWARDED
 
     app.add_handler(
         MessageHandler(news_post & media & filters.CaptionRegex(INFO_PATTERN), post_info))

@@ -71,9 +71,9 @@ async def get_mg(meg_id: str, conn: Connection = None):
 
 @db
 async def query_files(meg_id: str, conn: Connection) -> List[Post]:
-    res = await conn.fetch("select * from posts p where p.media_group_id=$1 and p.lang='de'", meg_id)
-    logging.info(f">>> query_files: {res}")
-    return res
+    rows = await conn.fetch("select * from posts p where p.media_group_id=$1 and p.lang='de'", meg_id)
+    logging.info(f">>> query_files: {rows}")
+    return [Post(**row) for row in rows]
 
 
 @db
