@@ -104,7 +104,7 @@ async def get_post_id(msg: Message, conn: Connection = None):
     logging.info(f">>> get_post_id: {res}")
     return res[0] if res is not None else res
 
-
+@db
 async def get_post_id2(msg_id: int, conn: Connection = None):
     res = await conn.fetchrow("select p.post_id from posts p where p.msg_id=$1 and p.lang='de'", msg_id)
 

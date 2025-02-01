@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from lxml.html import fromstring
 from pytwitter import Api
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, ContextTypes
 
 from data.db import Post
 from data.lang import ENGLISH, GERMAN
@@ -90,25 +90,39 @@ def upload_media(files: List[IO], api: Api):
 
 
 # todo: migrate to uploader
-async def tweet_files(context: CallbackContext, caption: str, posts: List[Post], lang_key: Optional[str] = None):
+async def tweet_files(context: ContextTypes.DEFAULT_TYPE, caption: str, posts: List, lang_key: Optional[str] = None):
+    """Helper function to tweet multiple files with caption."""
     instance = supply_twitter_instance(lang_key)
-    print(instance)
     if instance is None:
         return
 
     api, uploader = instance
+    transfer = TelegramTwitterTransfer(api)
+    media_ids = []
+    temp_files = []
 
-    upload_files = []
-    for post in posts:
-        file = await context.bot.get_file(post.file_id)
-        path = file.file_path.split('/')[-1]
-        await file.download_to_drive(path)
-        upload_files.append(open(path,"rb"))
+    try:
+        for post in posts:
+            file = await context.bot.get_file(post.file_id)
+            filename = file.file_path.split('/')[-1]
+            filepath = Path(filename)
 
-    media_ids = upload_media(upload_files, api)
-    create_tweet(caption, api, media_ids)
- #   for file in upload_files:
-  #      os.remove(Path(file.))
+            await file.download_to_drive(str(filepath))
+            temp_files.append(filepath)
+
+            with open(filepath, 'rb') as media_file:
+                media_type = TelegramTwitterTransfer.MEDIA_TYPES.get(filepath.suffix.lower(), 'video/mp4')
+                media_id = transfer._upload_media(media_file, media_type)
+                media_ids.append(media_id)
+
+        # Create tweet with all media
+        create_tweet(caption, api, media_ids)
+
+    finally:
+        # Cleanup temporary files
+        for filepath in temp_files:
+            if filepath.exists():
+                filepath.unlink()
 
 
 async def tweet_text(text: str, lang_key: Optional[str] = None):
