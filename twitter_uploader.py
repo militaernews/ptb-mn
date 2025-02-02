@@ -1,13 +1,13 @@
+import base64
 import time
-from asyncio import sleep
 from io import BytesIO
 from pathlib import Path
-from typing import List, Optional
-import base64
-import os
+from typing import List
+
 from pytwitter import Api
-from telegram import Update
-from telegram.ext import ContextTypes
+from telegram._bot import Bot
+
+from data.db import get_file_id, query_files
 
 
 class TelegramTwitterTransfer:
@@ -26,13 +26,20 @@ class TelegramTwitterTransfer:
         self.download_path = Path(download_path)
         self.download_path.mkdir(exist_ok=True)
 
-    async def transfer_to_twitter(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
-        """Transfer a single media file from Telegram to Twitter."""
-        file_info = self._get_file_info(update.channel_post)
-        if not file_info:
+    async def transfer_to_twitter(self, msg_id: int, bot: Bot) -> str:
+        """Transfer a single media file from Telegram to Twitter using stored file information."""
+        # Get file_id from database instead of message
+        file_id = await get_file_id(msg_id)
+        if not file_id:
             raise ValueError("No supported media found in the message")
 
-        file, extension, media_type = file_info
+        file = await bot.get_file(file_id)
+        extension = self._get_extension_from_file(file)
+        media_type = self.MEDIA_TYPES.get(extension.lower())
+
+        if not media_type:
+            raise ValueError(f"Unsupported media type: {extension}")
+
         filename = f"{file.file_unique_id}{extension}"
         filepath = self.download_path / filename
 
@@ -47,74 +54,68 @@ class TelegramTwitterTransfer:
             if filepath.exists():
                 filepath.unlink()
 
-    async def transfer_media_group(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> List[str]:
-        """Transfer a group of media files from Telegram to Twitter."""
-        if not update.channel_post.media_group_id:
-            media_id = await self.transfer_to_twitter(update, context)
-            return [media_id]
+    async def transfer_media_group(self, file_ids:List[str], bot: Bot) -> List[str]:
+        """Transfer a group of media files from Telegram to Twitter using stored information."""
 
-        # Initialize media groups storage if needed
-        if not hasattr(context.bot_data, 'media_groups'):
-            context.bot_data.media_groups = {}
+        media_ids=[]
+        for file_id in file_ids:
+            file = await bot.get_file(file_id)
+            extension = self._get_extension_from_file(file)
+            media_type = self.MEDIA_TYPES.get(extension.lower())
 
-        media_group_id = update.channel_post.media_group_id
-        if media_group_id not in context.bot_data.media_groups:
-            context.bot_data.media_groups[media_group_id] = []
+            if not media_type:
+                continue
 
-        context.bot_data.media_groups[media_group_id].append(update.channel_post)
-        await sleep(1)  # Wait for all media in group to be collected
+            filename = f"{file.file_unique_id}{extension}"
+            filepath = self.download_path / filename
 
-        media_messages = context.bot_data.media_groups[media_group_id]
-        media_ids = []
+            try:
+                print(f"Downloading file from Telegram: {filename}")
+                await file.download_to_drive(filepath)
 
-        try:
-            for message in media_messages:
-                file_info = self._get_file_info(message)
-                if not file_info:
-                    continue
-
-                file, extension, media_type = file_info
-                filename = f"{file.file_unique_id}{extension}"
-                filepath = self.download_path / filename
-
-                try:
-                    print(f"Downloading file from Telegram: {filename}")
-                    await file.download_to_drive(filepath)
-
-                    print(f"Uploading to Twitter: {filename}")
-                    with open(filepath, "rb") as media_file:
-                        media_id = self._upload_media(media_file, media_type)
-                        media_ids.append(media_id)
-                finally:
-                    if filepath.exists():
-                        filepath.unlink()
-
-        finally:
-            # Cleanup media group data
-            del context.bot_data.media_groups[media_group_id]
+                print(f"Uploading to Twitter: {filename}")
+                with open(filepath, "rb") as media_file:
+                    media_id = self._upload_media(media_file, media_type)
+                    media_ids.append(media_id)
+            finally:
+                if filepath.exists():
+                    filepath.unlink()
 
         return media_ids
 
-    def _get_file_info(self, message):
-        """Extract file information from a Telegram message."""
-        if message.photo:
-            return (
-                message.bot.get_file(message.photo[-1].file_id),
-                ".jpg",
-                "image/jpeg"
-            )
-        elif message.video:
-            return (
-                message.bot.get_file(message.video.file_id),
-                ".mp4",
-                "video/mp4"
-            )
-        elif message.document:
-            file = message.bot.get_file(message.document.file_id)
-            extension = Path(message.document.file_name).suffix
-            media_type = self.MEDIA_TYPES.get(extension.lower())
-            return (file, extension, media_type) if media_type else None
-        return None
+    def upload_local_file(self, file_path: str) -> str:
+        """Upload a file from local storage to Twitter.
+
+        Args:
+            file_path (str): Path to the local file
+
+        Returns:
+            str: Twitter media ID
+
+        Raises:
+            ValueError: If file type is not supported
+            FileNotFoundError: If file doesn't exist
+        """
+        file_path = Path(file_path)
+        if not file_path.exists():
+            raise FileNotFoundError(f"File not found: {file_path}")
+
+        # Get file extension and media type
+        extension = file_path.suffix.lower()
+        media_type = self.MEDIA_TYPES.get(extension)
+
+        if not media_type:
+            raise ValueError(f"Unsupported file type: {extension}")
+
+        print(f"Uploading local file to Twitter: {file_path.name}")
+        with open(file_path, "rb") as media_file:
+            return self._upload_media(media_file, media_type)
+
+    def _get_extension_from_file(self, file) -> str:
+        """Determine file extension based on file path or mime type."""
+        return Path(file.file_path).suffix if hasattr(file, 'file_path') else '.jpg'
+
+
 
     def _upload_media(self, media_file, media_type: str) -> str:
         """Upload media to Twitter using the appropriate method based on media type."""
@@ -187,5 +188,3 @@ class TelegramTwitterTransfer:
             time.sleep(check_interval)
 
         raise TimeoutError("Video processing timed out")
-
-

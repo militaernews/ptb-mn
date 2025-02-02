@@ -42,14 +42,14 @@ async def breaking_news(update: Update, context: CallbackContext):
             await insert_single2(msg, lang.lang_key)
 
             tweet_caption = segment_text(caption)
-            await tweet_file(update, context, tweet_caption, lang.lang_key, path)
+            await tweet_file(None, context.bot, tweet_caption, lang.lang_key, file_path=path)
         except Exception as e:
             await log_error("send breaking", context, lang, e, update, )
 
     try:
         tweet_caption = segment_text(
                 f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(re.sub(PATTERN_HTMLTAG, '', update.channel_post.text))}")
-        await tweet_file(update,context,tweet_caption, None,  breaking_photo_path)
+        await tweet_file(None,context.bot,tweet_caption, GERMAN.lang_key,  file_path=breaking_photo_path)
         logging.info("sent breaking to twitter")
     except Exception as e:
         await log_error("post breaking", context, "Twitter", e, update, )

@@ -46,7 +46,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
 
         try:
             tweet_caption = segment_text(PATTERN_HTMLTAG.sub("", caption))
-            await tweet_file(update, context, tweet_caption, lang.lang_key)
+            await tweet_file(post_id, context.bot, tweet_caption, lang.lang_key)
         except Exception as e:
             await log_error(f"tweet {lang.lang_key}", context, "Twitter", e, update, )
             pass
@@ -65,7 +65,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     try:
         tweet_caption = segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption)))
-        await tweet_file(update, context, tweet_caption)
+        await tweet_file(post_id, context.bot, tweet_caption, GERMAN.lang_key)
         logging.info(f"-")
     except Exception as e:
         await log_error("tweet DE", context, "Twitter", e, update, )
@@ -112,6 +112,7 @@ async def share_in_other_channels(context: CallbackContext):
     posts = sorted(await query_files(context.job.name), key=lambda x: x.msg_id)
     logging.info(posts)
     files: List[InputMedia] = []
+    file_ids = []
 
     original_caption = None
 
@@ -132,6 +133,7 @@ async def share_in_other_channels(context: CallbackContext):
             files.append(InputMediaVideo(post.file_id, has_spoiler=post.spoiler))
         elif post.file_type == ANIMATION:
             files.append(InputMediaAnimation(post.file_id, has_spoiler=post.spoiler))
+        file_ids.append(post.file_id)
 
     logging.info("::::::::::: share in other ::::::::::")
     post_id = await get_post_id2(context.job.data)  # not mediagroupid??
@@ -162,18 +164,18 @@ async def share_in_other_channels(context: CallbackContext):
             await log_error("send media group", context, lang, e)
 
         try:
-            await tweet_files(context,
+            await tweet_files(file_ids, context.bot,
                               segment_text(PATTERN_HTMLTAG.sub("", caption)),
-                              posts, lang.lang_key)
+                             lang.lang_key)
         except Exception as e:
             await log_error(f"tweet multiple {lang.lang_key}", context, "Twitter", e)
 
     logging.info("----- done -----")
 
     try:
-        await tweet_files(context,
+        await tweet_files(file_ids, context.bot,
                           segment_text(flag_to_hashtag(PATTERN_HTMLTAG.sub("", original_caption))),
-                          posts)
+                          GERMAN.lang_key)
     except Exception as e:
         await log_error("tweet multiple DE", context, "Twitter", e)
 

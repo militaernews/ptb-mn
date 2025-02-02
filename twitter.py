@@ -1,16 +1,13 @@
 import base64
 import logging
 import os
-from pathlib import Path
 from typing import Optional, List, IO, Tuple
 
 from dotenv import load_dotenv
 from lxml.html import fromstring
 from pytwitter import Api
-from telegram import Update
-from telegram.ext import CallbackContext, ContextTypes
+from telegram import Bot
 
-from data.db import Post
 from data.lang import ENGLISH, GERMAN
 from twitter_uploader import TelegramTwitterTransfer
 
@@ -47,7 +44,7 @@ ACTIVE = True
 TWEET_LENGTH = 280
 
 
-def supply_twitter_instance(lang_key: Optional[str] = GERMAN.lang_key) -> Optional[Tuple[Api, TelegramTwitterTransfer]]:
+def supply_twitter_instance(lang_key: str) -> Optional[Tuple[Api, TelegramTwitterTransfer]]:
     if not ACTIVE:
         return None
     clients = {
@@ -65,7 +62,7 @@ def create_tweet(text: str, api: Api, media_ids=None, ):
         logging.error(f"Error when trying to post to twitter: {e}\n\ntext: {text}\n\nmedia_ids: {media_ids}")
 
 
-async def tweet_file(update:Update, context:CallbackContext, caption: str, lang_key: Optional[str] = None, file_path: Optional[str] = None):
+async def tweet_file(msg_id:int|None, bot:Bot, caption: str, lang_key:str, file_path: Optional[str] = None):
     instance = supply_twitter_instance(lang_key)
     print(instance)
     if instance is None:
@@ -74,9 +71,9 @@ async def tweet_file(update:Update, context:CallbackContext, caption: str, lang_
     api, uploader = instance
 
     if file_path is not None:
-        media_id = uploader.upload_image(file_path)
+        media_id = uploader.upload_local_file(file_path)
     else:
-        media_id = await uploader.transfer_to_twitter(update, context)
+        media_id = await uploader.transfer_to_twitter(msg_id, bot)
 
     print(media_id)
     create_tweet(caption, api,[ media_id])
@@ -89,40 +86,21 @@ def upload_media(files: List[IO], api: Api):
     ]
 
 
-# todo: migrate to uploader
-async def tweet_files(context: ContextTypes.DEFAULT_TYPE, caption: str, posts: List, lang_key: Optional[str] = None):
+async def tweet_files(file_ids:List[str],bot:Bot, caption: str, lang_key: str):
     """Helper function to tweet multiple files with caption."""
     instance = supply_twitter_instance(lang_key)
     if instance is None:
         return
 
     api, uploader = instance
-    transfer = TelegramTwitterTransfer(api)
-    media_ids = []
-    temp_files = []
 
-    try:
-        for post in posts:
-            file = await context.bot.get_file(post.file_id)
-            filename = file.file_path.split('/')[-1]
-            filepath = Path(filename)
+    media_ids = await uploader.transfer_media_group(file_ids, bot)
+    logging.info(f"Transferred media group with IDs: {media_ids} - Caption: {caption}")
 
-            await file.download_to_drive(str(filepath))
-            temp_files.append(filepath)
-
-            with open(filepath, 'rb') as media_file:
-                media_type = TelegramTwitterTransfer.MEDIA_TYPES.get(filepath.suffix.lower(), 'video/mp4')
-                media_id = transfer._upload_media(media_file, media_type)
-                media_ids.append(media_id)
-
-        # Create tweet with all media
-        create_tweet(caption, api, media_ids)
-
-    finally:
-        # Cleanup temporary files
-        for filepath in temp_files:
-            if filepath.exists():
-                filepath.unlink()
+    api.create_tweet(
+            text=caption,
+            media_media_ids=media_ids
+    )
 
 
 async def tweet_text(text: str, lang_key: Optional[str] = None):
