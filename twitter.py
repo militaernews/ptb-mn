@@ -1,7 +1,6 @@
-import base64
 import logging
 import os
-from typing import Optional, List, IO, Tuple
+from typing import Optional, List, Tuple
 
 from dotenv import load_dotenv
 from lxml.html import fromstring
@@ -56,13 +55,14 @@ def supply_twitter_instance(lang_key: str) -> Optional[Tuple[Api, TelegramTwitte
 
 def create_tweet(text: str, api: Api, media_ids=None, ):
     text = fromstring(text).text_content().strip()
+    logging.info(f" Creating tweet with text: {text} ::: media_ids: {media_ids}")
     try:
         api.create_tweet(text=text.replace("\n", " ").replace("  ", " ")[:TWEET_LENGTH], media_media_ids=media_ids)
     except Exception as e:
         logging.error(f"Error when trying to post to twitter: {e}\n\ntext: {text}\n\nmedia_ids: {media_ids}")
 
 
-async def tweet_file(msg_id:int|None, bot:Bot, caption: str, lang_key:str, file_path: Optional[str] = None):
+async def tweet_local_file(file_path: str, caption: str, lang_key: str, ):
     instance = supply_twitter_instance(lang_key)
     print(instance)
     if instance is None:
@@ -70,23 +70,11 @@ async def tweet_file(msg_id:int|None, bot:Bot, caption: str, lang_key:str, file_
 
     api, uploader = instance
 
-    if file_path is not None:
-        media_id = uploader.upload_local_file(file_path)
-    else:
-        media_id = await uploader.transfer_to_twitter(msg_id, bot)
-
-    print(media_id)
-    create_tweet(caption, api,[ media_id])
+    media_id = uploader.upload_local_file(file_path)
+    create_tweet(caption, api, [media_id])
 
 
-def upload_media(files: List[IO], api: Api):
-    return [
-        api.upload_media_simple(media_data=base64.b64encode(file.read()).decode("utf-8")).media_id
-        for file in files
-    ]
-
-
-async def tweet_files(file_ids:List[str],bot:Bot, caption: str, lang_key: str):
+async def tweet_files(file_ids: List[str], bot: Bot, caption: str, lang_key: str):
     """Helper function to tweet multiple files with caption."""
     instance = supply_twitter_instance(lang_key)
     if instance is None:
@@ -94,13 +82,8 @@ async def tweet_files(file_ids:List[str],bot:Bot, caption: str, lang_key: str):
 
     api, uploader = instance
 
-    media_ids = await uploader.transfer_media_group(file_ids, bot)
-    logging.info(f"Transferred media group with IDs: {media_ids} - Caption: {caption}")
-
-    api.create_tweet(
-            text=caption,
-            media_media_ids=media_ids
-    )
+    media_ids = await uploader.transfer_files(file_ids, bot)
+    create_tweet(caption, api, media_ids)
 
 
 async def tweet_text(text: str, lang_key: Optional[str] = None):
@@ -110,5 +93,4 @@ async def tweet_text(text: str, lang_key: Optional[str] = None):
         return
 
     api, uploader = instance
-
     create_tweet(text, api)

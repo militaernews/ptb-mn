@@ -7,8 +7,6 @@ from typing import List
 from pytwitter import Api
 from telegram._bot import Bot
 
-from data.db import get_file_id, query_files
-
 
 class TelegramTwitterTransfer:
     CHUNK_SIZE = 1024 * 1024  # 1MB chunks
@@ -26,38 +24,10 @@ class TelegramTwitterTransfer:
         self.download_path = Path(download_path)
         self.download_path.mkdir(exist_ok=True)
 
-    async def transfer_to_twitter(self, msg_id: int, bot: Bot) -> str:
-        """Transfer a single media file from Telegram to Twitter using stored file information."""
-        # Get file_id from database instead of message
-        file_id = await get_file_id(msg_id)
-        if not file_id:
-            raise ValueError("No supported media found in the message")
-
-        file = await bot.get_file(file_id)
-        extension = self._get_extension_from_file(file)
-        media_type = self.MEDIA_TYPES.get(extension.lower())
-
-        if not media_type:
-            raise ValueError(f"Unsupported media type: {extension}")
-
-        filename = f"{file.file_unique_id}{extension}"
-        filepath = self.download_path / filename
-
-        try:
-            print(f"Downloading file from Telegram: {filename}")
-            await file.download_to_drive(filepath)
-
-            print(f"Uploading to Twitter: {filename}")
-            with open(filepath, "rb") as media_file:
-                return self._upload_media(media_file, media_type)
-        finally:
-            if filepath.exists():
-                filepath.unlink()
-
-    async def transfer_media_group(self, file_ids:List[str], bot: Bot) -> List[str]:
+    async def transfer_files(self, file_ids: List[str], bot: Bot) -> List[str]:
         """Transfer a group of media files from Telegram to Twitter using stored information."""
 
-        media_ids=[]
+        media_ids = []
         for file_id in file_ids:
             file = await bot.get_file(file_id)
             extension = self._get_extension_from_file(file)
@@ -114,8 +84,6 @@ class TelegramTwitterTransfer:
     def _get_extension_from_file(self, file) -> str:
         """Determine file extension based on file path or mime type."""
         return Path(file.file_path).suffix if hasattr(file, 'file_path') else '.jpg'
-
-
 
     def _upload_media(self, media_file, media_type: str) -> str:
         """Upload media to Twitter using the appropriate method based on media type."""
