@@ -2,7 +2,6 @@ import json
 import os
 
 from dotenv import load_dotenv
-
 from util.helper import sanitize_hashtag
 
 load_dotenv()
@@ -32,7 +31,7 @@ def split_to_json():
 
 
 def translate_json():
-    filename = "flag_de.json"
+    filename = "res/flag_de.json"
 
     with open(filename, 'rb') as f:
         content = json.load(f)

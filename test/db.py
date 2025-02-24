@@ -1,5 +1,4 @@
 import logging
-from asyncio import get_event_loop_policy
 from typing import AsyncGenerator
 from unittest.mock import Mock
 
@@ -7,13 +6,12 @@ import pytest
 import pytest_asyncio
 from asyncpg import Connection, connect
 
-from config import DATABASE_URL_TEST
-from data.db import insert_promo, query_replies, insert_single, query_files, get_mg, update_post
+
+from src.data.db import insert_promo, query_replies, insert_single, query_files, get_mg, update_post
+from src.settings.config import DATABASE_URL_TEST
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
-
 
 
 @pytest_asyncio.fixture(loop_scope='function')
@@ -51,9 +49,8 @@ async def db() -> AsyncGenerator[Connection, None]:
 
     yield conn
 
-
- #   await conn.execute('DROP TABLE IF EXISTS posts CASCADE')
-  #  await conn.execute('DROP TABLE IF EXISTS promos CASCADE')
+    #   await conn.execute('DROP TABLE IF EXISTS posts CASCADE')
+    #  await conn.execute('DROP TABLE IF EXISTS promos CASCADE')
     await conn.close()
 
 
