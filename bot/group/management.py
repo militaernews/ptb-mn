@@ -9,10 +9,10 @@ from telegram.ext import CallbackContext, MessageHandler, CommandHandler, filter
 from telegram.helpers import mention_html
 
 
-from src.data.lang import GERMAN
-from src.settings.config import ADMINS, MSG_REMOVAL_PERIOD, WARN_LIMIT
-from src.util.helper import mention, remove_reply, admin_reply, delete, CHAT_ID, MSG_ID, reply_html, \
-    admin
+from bot.data.lang import GERMAN
+from bot.settings.config import ADMINS, MSG_REMOVAL_PERIOD, WARN_LIMIT
+from bot.util.helper import (mention, remove_reply, admin_reply, delete, CHAT_ID, MSG_ID, reply_html, 
+    admin)
 
 RULES: Final[List[str]] = [
     "1️⃣ Keine Beleidigung anderer Mitglieder.",
@@ -255,15 +255,15 @@ def register_management(app: Application):
 
     app.add_handler(CommandHandler("rules", send_rules, filters.Chat(GERMAN.chat_id)))
 
-    # src.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY, has_args=True))
-    # src.add_handler(CommandHandler("warn", warn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
+    # bot.add_handler(CommandHandler("warn", warn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY, has_args=True))
+    # bot.add_handler(CommandHandler("warn", warn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
 
-    # src.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
-    # src.add_handler(
+    # bot.add_handler(CommandHandler("unwarn", unwarn_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
+    # bot.add_handler(
     #    CommandHandler("unwarn", unwarn_user_id, filters.Chat(GERMAN.chat_id) & ~filters.REPLY, has_args=True))
 
-    # src.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
-    # src.add_handler(CommandHandler("ban", ban_user_id, filters.Chat(GERMAN.chat_id) & filters.REPLY))
+    # bot.add_handler(CommandHandler("ban", ban_user, filters.Chat(GERMAN.chat_id)))
+    # bot.add_handler(CommandHandler("ban", ban_user_id, filters.Chat(GERMAN.chat_id) & filters.REPLY))
 
     app.add_handler(CommandHandler("report", report_user, filters.Chat(GERMAN.chat_id) & filters.REPLY))
     app.add_handler(

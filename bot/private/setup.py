@@ -7,8 +7,8 @@ from telegram import Update, BotCommandScopeChatAdministrators, BotCommandScopeC
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
-from src import config
-from src.data.lang import LANGUAGES, GERMAN
+from bot.data.lang import LANGUAGES, GERMAN
+from bot.settings.config import ADMINS, LOG_GROUP
 
 
 async def repair_json(update: Update, context: CallbackContext):
@@ -65,7 +65,7 @@ async def repair_saved_post(update: Update, context: CallbackContext):
         await update.message.reply_text(f"Final bot_data: {final_dict}")
 
         await context.bot.send_message(
-            config.LOG_GROUP,
+           LOG_GROUP,
             f"<b>⚠️ Editing bot_data by user {update.message.from_user.first_name} [<code>{update.message.from_user.id}</code>]</b>\n\n<b>Current bot_data:</b>\n<code>{current_dict}</code>\n\n<b>Input</b>\n<code>{content}</code>\n\n<b>Updated bot_data</b>\n<code>{final_dict}</code>",
         )
 
@@ -114,7 +114,7 @@ async def set_cmd(update: Update, context: CallbackContext):
     admin_commands = chat_de_commands + [
         ("add_advertisement", "Werbung erstellen"),
     ]
-    for chat_id in config.ADMINS:
+    for chat_id in ADMINS:
         with contextlib.suppress(BadRequest):
             await context.bot.set_my_commands(admin_commands, scope=BotCommandScopeChat(chat_id=chat_id))
     await update.message.reply_text("Commands updated!")

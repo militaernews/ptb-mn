@@ -5,13 +5,13 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 
-from src.data.db import insert_single2
-from src.data.lang import GERMAN, LANGUAGES
-from src.settings.config import DIVIDER
-from src.social.twitter import tweet_local_file
-from src.util.helper import log_error
-from src.util.patterns import BREAKING, PATTERN_HTMLTAG
-from src.util.translation import translate_message, flag_to_hashtag, translate, segment_text
+from bot.data.db import insert_single2
+from bot.data.lang import GERMAN, LANGUAGES
+from bot.settings.config import DIVIDER
+from bot.social.twitter import tweet_local_file
+from bot.util.helper import log_error
+from bot.util.patterns import BREAKING, PATTERN_HTMLTAG
+from bot.util.translation import translate_message, flag_to_hashtag, translate, segment_text
 
 
 async def breaking_news(update: Update, context: CallbackContext):

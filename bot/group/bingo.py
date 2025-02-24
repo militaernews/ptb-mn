@@ -9,9 +9,9 @@ from telegram.ext import CallbackContext, Application, CommandHandler, filters
 from telegram.helpers import mention_html
 
 
-from src.data.lang import GERMAN
-from src.settings.config import ADMINS
-from src.util.helper import export_svg, admin
+from bot.data.lang import GERMAN
+from bot.settings.config import ADMINS
+from bot.util.helper import export_svg, admin
 
 ENTRIES = {
     "Israel": None,
@@ -160,7 +160,7 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
         for item in row:
             if not item["checked"] and re.findall(item["regex"], text, re.IGNORECASE):
                 item["checked"] = True
-                found.append(item["text"])
+                foundend(item["text"])
                 logging.info(f"{text} is a valid bingo entry")
     return found
 
@@ -320,5 +320,5 @@ async def reset_bingo(update: Update, context: CallbackContext):
 
 def register_bingo(app: Application):
     app.add_handler(CommandHandler("bingo", bingo_field, filters.User(ADMINS)))
-    # src.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
+    # bot.add_handler(MessageHandler(filters.ATTACHMENT & filters.Chat(ADMINS), private_setup))
     app.add_handler(CommandHandler("reset_bingo", reset_bingo, filters.Chat(ADMINS)))

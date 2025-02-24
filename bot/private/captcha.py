@@ -7,8 +7,8 @@ from telegram import InlineKeyboardButton, Update, InlineKeyboardMarkup, ChatMem
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, Application, ChatMemberHandler, CallbackQueryHandler
 
-from src.data.lang import GERMAN
-from src.settings.config import MSG_REMOVAL_PERIOD
+from bot.data.lang import GERMAN
+from bot.settings.config import MSG_REMOVAL_PERIOD
 
 KEYBOARD: Final[str] = "keyboard"
 
@@ -55,7 +55,7 @@ def generate_captcha(user_id: int):
     print(positions)
 
     ImageDraw.Draw(background)
-    font = ImageFont.truetype(r"../res/fonts/AppleColorEmoji.ttf", 137)
+    font = ImageFont.truetype(r"../../res/fonts/AppleColorEmoji.ttf", 137)
 
     for i, emoji in enumerate(paste_image_list):
         text_layer = Image.new('RGBA', (274, 274), (255, 255, 255, 0))
@@ -84,8 +84,8 @@ def create_keyboard(context: CallbackContext):
         btn_row = []
         for y, btn in enumerate(row):
             text = "✅" if btn[1] else btn[0]
-            btn_row.append(InlineKeyboardButton(text, callback_data=f"captcha_{x}_{y}"))
-        keyboard.append(btn_row)
+            btn_rowend(InlineKeyboardButton(text, callback_data=f"captcha_{x}_{y}"))
+        keyboardend(btn_row)
 
     return keyboard
 
@@ -182,5 +182,5 @@ async def click_captcha(update: Update, context: CallbackContext):
 def register_captcha(app: Application):
     app.add_handler(CallbackQueryHandler(click_captcha, r"captcha_.+_.+", ))
     app.add_handler(ChatMemberHandler(send_captcha, ChatMemberHandler.CHAT_MEMBER))
-    #  src.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))
-    #   src.add_handler(CommandHandler("captcha", send_captcha, filters.Chat(ADMINS)))
+    #  bot.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS & filters.Chat(GERMAN.chat_id), send_captcha))
+    #   bot.add_handler(CommandHandler("captcha", send_captcha, filters.Chat(ADMINS)))

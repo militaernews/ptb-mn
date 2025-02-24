@@ -9,9 +9,9 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 
-from src.data.db import PHOTO, VIDEO, ANIMATION
-from src.data.lang import GERMAN, Language
-from src.settings.config import LOG_GROUP, ADMINS, MSG_REMOVAL_PERIOD
+from bot.data.db import PHOTO, VIDEO, ANIMATION
+from bot.data.lang import GERMAN, Language
+from bot.settings.config import LOG_GROUP, ADMINS, MSG_REMOVAL_PERIOD
 
 CHAT_ID: Final[str] = "chat_id"
 MSG_ID: Final[str] = "msg_id"

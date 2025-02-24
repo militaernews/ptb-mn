@@ -12,9 +12,9 @@ from asyncpg import create_pool, Connection
 from telegram import Message
 
 
-from src.data.lang import GERMAN
-from src.data.model import Post, ANIMATION, VIDEO, PHOTO
-from src.settings.config import DATABASE_URL_NN, DATABASE_URL
+from bot.data.lang import GERMAN
+from bot.data.model import Post, ANIMATION, VIDEO, PHOTO
+from bot.settings.config import DATABASE_URL_NN, DATABASE_URL
 
 
 def get_ssl():

@@ -7,9 +7,9 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMem
 from telegram.ext import CallbackContext, Application, filters, MessageHandler, CallbackQueryHandler, CommandHandler
 
 
-from src.data.db import insert_promo
-from src.data.lang import LANGUAGES, GERMAN, LANG_DICT
-from src.settings.config import ADMINS
+from bot.data.db import insert_promo
+from bot.data.lang import LANG_DICT
+from bot.settings.config import ADMINS
 
 
 

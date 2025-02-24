@@ -13,14 +13,14 @@ You can find it [here][bot].
     * reposts in all News channels after 20 seconds
 * if a posted text (i.e. no photo, animation, video etc.) contains ```#eilmeldung```:
     * remove this message
-    * send [German Breaking News photo](/src/res/breaking/mn-breaking-de.png) with caption being the text of the initial
+    * send [German Breaking News photo](/bot/res/breaking/mn-breaking-de.png) with caption being the text of the initial
       channel post
     * translates to all given languages
     * prepends the language's ```breaking``` attribute to given text
     * reposts in all News channels
 * if a posted text (i.e. no photo, animation, video etc.) contains ```#mitteilung```:
     * remove this message
-    * send [German Announcement photo](/src/res/announce/mn-announce-de.png) with caption being the text of the initial
+    * send [German Announcement photo](/bot/res/announce/mn-announce-de.png) with caption being the text of the initial
       channel post
     * translates to all given languages
     * prepends the language's ```announce``` attribute to given text
@@ -46,7 +46,7 @@ This bot posts to channels with different languages. A language consists of thes
 | ```breaking```   | ```str``` | hashtag for breaking news                                   |
 | ```announce```   | ```str``` | hashtag for announcements                                   |
 
-See [lang.py](/src/data/lang.py) for the implementation.
+See [lang.py](/bot/app/data/lang.py) for the implementation.
 
 ## Contribute
 

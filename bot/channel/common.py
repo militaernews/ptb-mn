@@ -8,16 +8,16 @@ from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
 
-from src.data.db import insert_single3, insert_single2, query_replies3, \
-    get_post_id, query_files, PHOTO, VIDEO, ANIMATION, get_post_id2, query_replies4, get_msg_id, get_file_id, \
-    update_post
-from src.data.lang import GERMAN, LANGUAGES
-from src.data.model import Post
-from src.settings.config import DIVIDER, CHANNEL_SOURCE
-from src.social.twitter import tweet_files
-from src.util.helper import log_error, get_tg_file_id
-from src.util.patterns import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
-from src.util.translation import flag_to_hashtag, translate_message, segment_text
+from bot.data.db import (insert_single3, insert_single2, query_replies3,
+    get_post_id, query_files,get_post_id2, query_replies4, get_msg_id, get_file_id,
+    update_post)
+from bot.data.lang import GERMAN, LANGUAGES
+from bot.data.model import Post
+from bot.settings.config import DIVIDER, CHANNEL_SOURCE
+from bot.social.twitter import tweet_files
+from bot.util.helper import log_error, get_tg_file_id
+from bot.util.patterns import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
+from bot.util.translation import flag_to_hashtag, translate_message, segment_text
 
 
 # TODO: make method more generic

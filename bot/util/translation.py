@@ -8,15 +8,15 @@ from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 from pysbd import Segmenter
 
-from src.data.lang import GERMAN, LANGUAGES
-from src.social.twitter import TWEET_LENGTH
-from src.util.helper import sanitize_text
-from src.util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
+from bot.data.lang import GERMAN, LANGUAGES
+from bot.social.twitter import TWEET_LENGTH
+from bot.util.helper import sanitize_text
+from bot.util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
 
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
 
-flags_data = {lang.lang_key: load(open(rf"./res/{lang.lang_key}/flags.json", "r", encoding="utf-8")) for lang in
+flags_data = {lang.lang_key: load(open(rf"./bot/res/{lang.lang_key}/flags.json", "r", encoding="utf-8")) for lang in
               [GERMAN] + LANGUAGES}
 
 HASHTAG_PATTERN = re.compile(r'(\s{2,})?(#\w+\s)+', re.IGNORECASE)

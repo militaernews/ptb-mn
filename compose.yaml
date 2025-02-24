@@ -1,9 +1,10 @@
 services:
-  bot:
+  telegram-bot:
     build: .
     container_name: ptb-mn
     restart: unless-stopped
-    volumes:
-      - ./logs:/src/logs
     env_file:
       - .env
+    volumes:
+      - ./bot:/app/bot
+      - ./logs:/bot/logs

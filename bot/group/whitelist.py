@@ -5,9 +5,9 @@ from typing import Final, Set
 from telegram import Update
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackContext, Application
 
-from src.data.lang import GERMAN
-from src.util.helper import delete_msg, reply_html
-from src.util.patterns import PATTERN_COMMAND
+from bot.data.lang import GERMAN
+from bot.util.helper import delete_msg, reply_html
+from bot.util.patterns import PATTERN_COMMAND
 
 ALLOWED_URLS: Final[Set[str]] = {
     "t.me/militaernews",
@@ -30,7 +30,7 @@ ALLOWED_URLS: Final[Set[str]] = {
     "n-tv.de",
     "nzz.ch",
     "faz.net",
-    "maps.src.goo.gl",
+    "maps.bot.goo.gl",
     "understandingwar.org",
     "wikipedia.org",
     "youtube.com",
@@ -82,7 +82,7 @@ async def send_whitelist(update: Update, context: CallbackContext):
 
 
 def register_whitelist(app: Application):
-    #   src.add_handler(
+    #   bot.add_handler(
     #   MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
     #               remove_url))
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
