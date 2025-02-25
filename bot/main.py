@@ -1,6 +1,10 @@
 import logging
 import re
+from typing import Final
+from datetime import datetime
+from os import path, makedirs, environ
 
+from pip._internal.utils import subprocess
 from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
@@ -20,24 +24,35 @@ from bot.group.whitelist import register_whitelist
 from bot.private.advertisement import register_advertisement
 from bot.private.promo import register_promo
 from bot.private.setup import set_cmd
-from bot.settings.config import ADMINS,TOKEN
+from bot.settings.config import ADMINS, TOKEN, CONTAINER
 from bot.util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
 
 
 def add_logging():
-    #  log_filename: Final[str] = rf"./logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
-    #  makedirs(path.dirname(log_filename), exist_ok=True)
-    logging.basicConfig(
-        format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
-        encoding="utf-8",
-        #  filename=log_filename,
-        level=logging.INFO,
-        datefmt='%Y-%m-%d %H:%M:%S',
-        handlers=[
-            logging.StreamHandler(),
-            logging.FileHandler('logs/bot.log')
-        ]
-    )
+    if CONTAINER:
+        logging.basicConfig(
+            format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
+            encoding="utf-8",
+
+            level=logging.INFO,
+            datefmt='%Y-%m-%d %H:%M:%S',
+            handlers=[
+                logging.StreamHandler(),
+                logging.FileHandler('logs/bot.log')
+            ]
+        )
+
+    else:
+        log_filename: Final[str] = rf"./logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
+        makedirs(path.dirname(log_filename), exist_ok=True)
+        logging.basicConfig(
+            format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
+            encoding="utf-8",
+            filename=log_filename,
+            level=logging.INFO,
+            datefmt='%Y-%m-%d %H:%M:%S',
+        )
+
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
@@ -65,10 +80,7 @@ def register_news(application: Application):
     application.add_handler(MessageHandler(news_edited & media, edit_channel))
     application.add_handler(MessageHandler(news_edited & filters.TEXT, edit_channel_text))
 
-
-if __name__ == "__main__":
-    add_logging()
-
+def main():
     #    if version_info >= (3, 8) and platform.lower().startswith("win"):
     #      set_event_loop_policy(WindowsSelectorEventLoopPolicy())
 
@@ -102,3 +114,9 @@ if __name__ == "__main__":
     logging.info("### RUNNING LOCAL ###")
 
     application.run_polling(poll_interval=1, drop_pending_updates=False)
+
+if __name__ == "__main__":
+    add_logging()
+
+    main()
+

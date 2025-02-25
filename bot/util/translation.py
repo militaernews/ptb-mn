@@ -9,6 +9,7 @@ from deepl import QuotaExceededException
 from pysbd import Segmenter
 
 from bot.data.lang import GERMAN, LANGUAGES
+from bot.settings.config import RES_PATH
 from bot.social.twitter import TWEET_LENGTH
 from bot.util.helper import sanitize_text
 from bot.util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
@@ -16,7 +17,7 @@ from bot.util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
 
-flags_data = {lang.lang_key: load(open(rf"./bot/res/{lang.lang_key}/flags.json", "r", encoding="utf-8")) for lang in
+flags_data = {lang.lang_key: load(open(rf"{RES_PATH}/{lang.lang_key}/flags.json", "r", encoding="utf-8")) for lang in
               [GERMAN] + LANGUAGES}
 
 HASHTAG_PATTERN = re.compile(r'(\s{2,})?(#\w+\s)+', re.IGNORECASE)
@@ -54,7 +55,7 @@ def get_hashtag(country_key: str, lang_key: str = GERMAN.lang_key) -> str:
     logging.info("--- hashtag ---")
 
     try:
-        filename = f"res/{lang_key}/flags.json"
+        filename = f"{RES_PATH}/{lang_key}/flags.json"
         logging.info(filename)
 
         with open(filename, 'rb', ) as f:

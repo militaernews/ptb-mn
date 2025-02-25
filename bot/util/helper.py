@@ -11,7 +11,7 @@ from telegram.helpers import mention_html
 
 from bot.data.db import PHOTO, VIDEO, ANIMATION
 from bot.data.lang import GERMAN, Language
-from bot.settings.config import LOG_GROUP, ADMINS, MSG_REMOVAL_PERIOD
+from bot.settings.config import LOG_GROUP, ADMINS, MSG_REMOVAL_PERIOD, RES_PATH
 
 CHAT_ID: Final[str] = "chat_id"
 MSG_ID: Final[str] = "msg_id"
@@ -120,7 +120,7 @@ def admin(func):
 @remove
 async def reply_html(update: Update, context: CallbackContext, file_name: str, replacement: Optional[str] = None):
     try:
-        with open(f"res/de/{file_name}.html", "r", encoding='utf-8') as f:
+        with open(f"{RES_PATH}/de/{file_name}.html", "r", encoding='utf-8') as f:
             text = f.read()
 
         if "{}" in text:

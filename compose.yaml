@@ -8,3 +8,5 @@ services:
     volumes:
       - ./bot:/app/bot
       - ./logs:/bot/logs
+    environment:
+      CONTAINER: "true"
