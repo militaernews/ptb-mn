@@ -146,7 +146,7 @@ async def reply_photo(update: Update, context: CallbackContext, file_name: str):
     await delete_msg(update)
 
     try:
-        with open(f"res/img/{file_name}", "rb") as f:
+        with open(f"{RES_PATH}/img/{file_name}", "rb") as f:
             if update.message.reply_to_message is not None:
                 msg = await update.message.reply_to_message.reply_photo(f)
             else:
