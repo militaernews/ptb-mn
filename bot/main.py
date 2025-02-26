@@ -38,7 +38,7 @@ def add_logging():
             datefmt='%Y-%m-%d %H:%M:%S',
             handlers=[
                 logging.StreamHandler(),
-                logging.FileHandler('logs/bot.log')
+           #     logging.FileHandler('logs/bot.log')
             ]
         )
 
