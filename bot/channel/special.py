@@ -4,14 +4,16 @@ import re
 from telegram import Update
 from telegram.ext import CallbackContext
 
-
 from bot.data.db import insert_single2
 from bot.data.lang import GERMAN, LANGUAGES
-from bot.settings.config import DIVIDER
+from bot.settings.config import DIVIDER, RES_PATH
 from bot.social.twitter import tweet_local_file
 from bot.util.helper import log_error
 from bot.util.patterns import BREAKING, PATTERN_HTMLTAG
 from bot.util.translation import translate_message, flag_to_hashtag, translate, segment_text
+
+AD_PATTERN = re.compile(r"#werbung", re.IGNORECASE)
+INFO_PATTERN = re.compile(r"#info", re.IGNORECASE)
 
 
 async def breaking_news(update: Update, context: CallbackContext):
@@ -19,7 +21,7 @@ async def breaking_news(update: Update, context: CallbackContext):
 
     text = re.sub(BREAKING, "", update.channel_post.text_html_urled)
     formatted_text = f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(text)}"
-    breaking_photo_path = f"res/{GERMAN.lang_key}/breaking.png"
+    breaking_photo_path = f"{RES_PATH}/{GERMAN.lang_key}/breaking.png"
 
     try:
         # todo: reply??
@@ -35,7 +37,7 @@ async def breaking_news(update: Update, context: CallbackContext):
     for lang in LANGUAGES:
         caption = f"#{lang.breaking} 🚨\n\n{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}"
 
-        path = f"res/{lang.lang_key}/breaking.png"
+        path = f"{RES_PATH}/{lang.lang_key}/breaking.png"
 
         try:
             msg = await context.bot.send_photo(chat_id=lang.channel_id, photo=open(path, "rb"),
@@ -66,7 +68,7 @@ async def announcement(update: Update, context: CallbackContext):
     try:
         msg_de = await context.bot.send_photo(
             chat_id=GERMAN.channel_id,
-            photo=open(f"res/{GERMAN.lang_key}/announce.png", "rb"),
+            photo=open(f"{RES_PATH}/{GERMAN.lang_key}/announce.png", "rb"),
             caption=f"#MITTEILUNG{text}",
         )
         await insert_single2(msg_de)
@@ -79,7 +81,7 @@ async def announcement(update: Update, context: CallbackContext):
         try:
             msg = await context.bot.send_photo(
                 chat_id=lang.channel_id,
-                photo=open(f"res/{lang.lang_key}/announce.png", "rb"),
+                photo=open(f"{RES_PATH}/{lang.lang_key}/announce.png", "rb"),
                 caption=f"#{lang.announce}{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}",
 
             )
@@ -93,7 +95,7 @@ async def advertisement(update: Update, context: CallbackContext):
     await update.channel_post.delete()
 
     text = re.sub(
-        re.compile(r"#werbung", re.IGNORECASE), "", update.channel_post.text_html_urled
+        AD_PATTERN, "", update.channel_post.text_html_urled
     )
 
     try:
@@ -124,7 +126,7 @@ async def advertisement(update: Update, context: CallbackContext):
 async def post_info(update: Update, context: CallbackContext):
     logging.info("---- post info ----")
     text = "🔰 MN-Hauptquartier\n\n" + re.sub(
-        re.compile(r"#info", re.IGNORECASE), "", update.channel_post.caption_html_urled
+        INFO_PATTERN, "", update.channel_post.caption_html_urled
     )
 
     try:

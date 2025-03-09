@@ -1,5 +1,5 @@
 services:
-  telegram-bot:
+  ptb-mn:
     build: .
     container_name: ptb-mn
     restart: unless-stopped
