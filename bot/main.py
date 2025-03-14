@@ -1,31 +1,29 @@
 import logging
 import re
-from typing import Final
 from datetime import datetime
-from os import path, makedirs, environ
+from os import path, makedirs
+from typing import Final
 
-from pip._internal.utils import subprocess
 from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
     Application
 
-from bot.channel.common import edit_channel, post_channel_english
-from bot.channel.meme import register_meme
-from bot.channel.special import breaking_news, announcement, post_info, advertisement
-from bot.channel.suggest import register_suggest
-from bot.channel.text import edit_channel_text, post_channel_text
-
-from bot.data.lang import GERMAN
-from bot.group.bingo import register_bingo
-from bot.group.commands import register_commands
-from bot.group.management import register_management
-from bot.group.whitelist import register_whitelist
-from bot.private.advertisement import register_advertisement
-from bot.private.promo import register_promo
-from bot.private.setup import set_cmd
-from bot.settings.config import ADMINS, TOKEN, CONTAINER
-from bot.util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
+from channel.common import edit_channel, post_channel_english
+from channel.meme import register_meme
+from channel.special import breaking_news, announcement, post_info, advertisement
+from channel.suggest import register_suggest
+from channel.text import edit_channel_text, post_channel_text
+from data.lang import GERMAN
+from group.bingo import register_bingo
+from group.commands import register_commands
+from group.management import register_management
+from group.whitelist import register_whitelist
+from private.advertisement import register_advertisement
+from private.promo import register_promo
+from private.setup import set_cmd
+from settings.config import ADMINS, TOKEN, CONTAINER
+from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
 
 
 def add_logging():
@@ -38,12 +36,12 @@ def add_logging():
             datefmt='%Y-%m-%d %H:%M:%S',
             handlers=[
                 logging.StreamHandler(),
-           #     logging.FileHandler('logs/bot.log')
+                #     logging.FileHandler('logs/log')
             ]
         )
 
     else:
-        log_filename: Final[str] = rf"./logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
+        log_filename: Final[str] = rf"../logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
         makedirs(path.dirname(log_filename), exist_ok=True)
         logging.basicConfig(
             format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
@@ -80,6 +78,7 @@ def register_news(application: Application):
     application.add_handler(MessageHandler(news_edited & media, edit_channel))
     application.add_handler(MessageHandler(news_edited & filters.TEXT, edit_channel_text))
 
+
 def main():
     #    if version_info >= (3, 8) and platform.lower().startswith("win"):
     #      set_event_loop_policy(WindowsSelectorEventLoopPolicy())
@@ -115,8 +114,8 @@ def main():
 
     application.run_polling(poll_interval=1, drop_pending_updates=False)
 
+
 if __name__ == "__main__":
     add_logging()
 
     main()
-

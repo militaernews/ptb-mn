@@ -1,12 +1,11 @@
 services:
-  ptb-mn:
+  bot:
     build: .
     container_name: ptb-mn
     restart: unless-stopped
     env_file:
       - .env
     volumes:
-      - ./bot:/app/bot
-      - ./logs:/bot/logs
+      - ./bot:/bot
     environment:
       CONTAINER: "true"

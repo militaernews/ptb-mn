@@ -13,9 +13,9 @@ DATABASE_URL_TEST: Final[str] = getenv("DATABASE_URL_TEST")
 TOKEN: Final[str] = getenv('TELEGRAM')
 PORT: Final[int] = int(getenv("PORT", 8080))
 TEST_MODE: Final[bool] = getenv("TESTING", False)
-CONTAINER: Final[bool] =bool(getenv('CONTAINER',False), )
+CONTAINER: Final[bool] = bool(getenv('CONTAINER', False), )
 
-RES_PATH:Final[str] = "./bot/res" if CONTAINER else "./res"
+RES_PATH: Final[str] = "./bot/res" if CONTAINER else "./res"
 
 CHANNEL_MEME: Final[int] = int(getenv('CHANNEL_MEME'))
 CHANNEL_SOURCE: Final[int] = int(getenv('CHANNEL_SOURCE'))
@@ -30,9 +30,3 @@ WARN_LIMIT: Final[int] = 3
 MSG_REMOVAL_PERIOD: Final[int] = 1200
 
 DIVIDER: Final[str] = "\n"
-
-
-
-
-
-

@@ -8,7 +8,6 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
-
 from bot.data.db import PHOTO, VIDEO, ANIMATION
 from bot.data.lang import GERMAN, Language
 from bot.settings.config import LOG_GROUP, ADMINS, MSG_REMOVAL_PERIOD, RES_PATH

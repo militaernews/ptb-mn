@@ -1,5 +1,5 @@
 import logging
-from typing import Sequence, Union,Final
+from typing import Sequence, Union, Final
 
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSize, Animation, Video
 from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext, ContextTypes, \

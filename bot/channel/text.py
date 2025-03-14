@@ -6,7 +6,6 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
 from bot.channel.common import handle_url
-
 from bot.data.db import query_replies, insert_single2, update_text, get_msg_id
 from bot.data.lang import LANGUAGES, GERMAN
 from bot.settings.config import DIVIDER

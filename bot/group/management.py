@@ -8,11 +8,10 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext, MessageHandler, CommandHandler, filters, Application
 from telegram.helpers import mention_html
 
-
 from bot.data.lang import GERMAN
 from bot.settings.config import ADMINS, MSG_REMOVAL_PERIOD, WARN_LIMIT
-from bot.util.helper import (mention, remove_reply, admin_reply, delete, CHAT_ID, MSG_ID, reply_html, 
-    admin)
+from bot.util.helper import (mention, remove_reply, admin_reply, delete, CHAT_ID, MSG_ID, reply_html,
+                             admin)
 
 RULES: Final[List[str]] = [
     "1️⃣ Keine Beleidigung anderer Mitglieder.",

@@ -9,8 +9,8 @@ from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
 
 from bot.data.db import (insert_single3, insert_single2, query_replies3,
-    get_post_id, query_files,get_post_id2, query_replies4, get_msg_id, get_file_id,
-    update_post)
+                         get_post_id, query_files, get_post_id2, query_replies4, get_msg_id, get_file_id,
+                         update_post)
 from bot.data.lang import GERMAN, LANGUAGES
 from bot.data.model import Post, PHOTO, VIDEO, ANIMATION
 from bot.settings.config import DIVIDER, CHANNEL_SOURCE

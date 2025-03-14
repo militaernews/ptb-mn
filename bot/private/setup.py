@@ -65,7 +65,7 @@ async def repair_saved_post(update: Update, context: CallbackContext):
         await update.message.reply_text(f"Final bot_data: {final_dict}")
 
         await context.bot.send_message(
-           LOG_GROUP,
+            LOG_GROUP,
             f"<b>⚠️ Editing bot_data by user {update.message.from_user.first_name} [<code>{update.message.from_user.id}</code>]</b>\n\n<b>Current bot_data:</b>\n<code>{current_dict}</code>\n\n<b>Input</b>\n<code>{content}</code>\n\n<b>Updated bot_data</b>\n<code>{final_dict}</code>",
         )
 
