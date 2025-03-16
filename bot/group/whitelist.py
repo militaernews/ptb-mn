@@ -5,9 +5,9 @@ from typing import Final, Set
 from telegram import Update
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackContext, Application
 
-from bot.data.lang import GERMAN
-from bot.util.helper import delete_msg, reply_html
-from bot.util.patterns import PATTERN_COMMAND
+from ..data.lang import GERMAN
+from ..util.helper import delete_msg, reply_html
+from ..util.patterns import PATTERN_COMMAND
 
 ALLOWED_URLS: Final[Set[str]] = {
     "t.me/militaernews",

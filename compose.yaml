@@ -4,7 +4,8 @@ services:
     container_name: ptb-mn
     restart: unless-stopped
     env_file:
-      - .env
+      - path: .env
+        required: true
     volumes:
       - ./bot:/bot
     environment:

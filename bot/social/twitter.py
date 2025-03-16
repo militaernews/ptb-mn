@@ -7,8 +7,8 @@ from lxml.html import fromstring
 from pytwitter import Api
 from telegram import Bot
 
-from bot.data.lang import ENGLISH, GERMAN
-from bot.social.twitter_uploader import TelegramTwitterTransfer
+from ..data.lang import ENGLISH, GERMAN
+from twitter_uploader import TelegramTwitterTransfer
 
 load_dotenv()
 

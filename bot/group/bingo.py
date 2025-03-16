@@ -8,9 +8,9 @@ from telegram import Update
 from telegram.ext import CallbackContext, Application, CommandHandler, filters
 from telegram.helpers import mention_html
 
-from bot.data.lang import GERMAN
-from bot.settings.config import ADMINS
-from bot.util.helper import export_svg, admin
+from ..data.lang import GERMAN
+from ..settings.config import ADMINS
+from ..util.helper import export_svg, admin
 
 ENTRIES = {
     "Israel": None,
@@ -159,7 +159,7 @@ def set_checked(text: str, fields: List[List[Dict[str, Union[str, bool]]]]):
         for item in row:
             if not item["checked"] and re.findall(item["regex"], text, re.IGNORECASE):
                 item["checked"] = True
-                foundend(item["text"])
+                found.append(item["text"])
                 logging.info(f"{text} is a valid bingo entry")
     return found
 

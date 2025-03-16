@@ -7,8 +7,8 @@ from telegram import InlineKeyboardButton, Update, InlineKeyboardMarkup, ChatMem
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, Application, ChatMemberHandler, CallbackQueryHandler
 
-from bot.data.lang import GERMAN
-from bot.settings.config import MSG_REMOVAL_PERIOD
+from ..data.lang import GERMAN
+from ..settings.config import MSG_REMOVAL_PERIOD
 
 KEYBOARD: Final[str] = "keyboard"
 
@@ -84,8 +84,8 @@ def create_keyboard(context: CallbackContext):
         btn_row = []
         for y, btn in enumerate(row):
             text = "✅" if btn[1] else btn[0]
-            btn_rowend(InlineKeyboardButton(text, callback_data=f"captcha_{x}_{y}"))
-        keyboardend(btn_row)
+            btn_row.append(InlineKeyboardButton(text, callback_data=f"captcha_{x}_{y}"))
+        keyboard.append(btn_row)
 
     return keyboard
 

@@ -4,13 +4,13 @@ import re
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from bot.data.db import insert_single2
-from bot.data.lang import GERMAN, LANGUAGES
-from bot.settings.config import DIVIDER, RES_PATH
-from bot.social.twitter import tweet_local_file
-from bot.util.helper import log_error
-from bot.util.patterns import BREAKING, PATTERN_HTMLTAG
-from bot.util.translation import translate_message, flag_to_hashtag, translate, segment_text
+from ..data.db import insert_single2
+from ..data.lang import GERMAN, LANGUAGES
+from ..settings.config import DIVIDER, RES_PATH
+from ..social.twitter import tweet_local_file
+from ..util.helper import log_error
+from ..util.patterns import BREAKING, PATTERN_HTMLTAG
+from ..util.translation import translate_message, flag_to_hashtag, translate, segment_text
 
 AD_PATTERN = re.compile(r"#werbung", re.IGNORECASE)
 INFO_PATTERN = re.compile(r"#info", re.IGNORECASE)

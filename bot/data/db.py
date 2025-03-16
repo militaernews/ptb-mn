@@ -11,9 +11,9 @@ from asyncpg import Pool
 from asyncpg import create_pool, Connection
 from telegram import Message
 
-from bot.data.lang import GERMAN
-from bot.data.model import Post, ANIMATION, VIDEO, PHOTO
-from bot.settings.config import DATABASE_URL_NN, DATABASE_URL
+from lang import GERMAN
+from model import Post, ANIMATION, VIDEO, PHOTO
+from ..settings.config import DATABASE_URL_NN, DATABASE_URL
 
 
 def get_ssl():

@@ -8,11 +8,11 @@ from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 from pysbd import Segmenter
 
-from bot.data.lang import GERMAN, LANGUAGES
-from bot.settings.config import RES_PATH
-from bot.social.twitter import TWEET_LENGTH
-from bot.util.helper import sanitize_text
-from bot.util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
+from ..data.lang import GERMAN, LANGUAGES
+from ..settings.config import RES_PATH
+from ..social.twitter import TWEET_LENGTH
+from helper import sanitize_text
+from patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
 
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')

@@ -5,9 +5,9 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSi
 from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext, ContextTypes, \
     Application
 
-from bot.data import lang
-from bot.settings.config import ADMINS
-from bot.util.translation import translate
+from ..data import lang
+from ..settings.config import ADMINS
+from ..util.translation import translate
 
 ADVERTISEMENT_MEDIA: Final[str] = "new_ADVERTISEMENT_MEDIA"
 ADVERTISEMENT_TEXT: Final[str] = "new_ADVERTISEMENT_TEXT"

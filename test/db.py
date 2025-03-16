@@ -7,8 +7,8 @@ import pytest_asyncio
 from asyncpg import Connection, connect
 
 
-from bot.app.data.db import insert_promo, query_replies, insert_single, query_files, get_mg, update_post
-from bot.app.settings.config import DATABASE_URL_TEST
+from bot.data.db import insert_promo, query_replies, insert_single, query_files, get_mg, update_post
+from bot.settings.config import DATABASE_URL_TEST
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)

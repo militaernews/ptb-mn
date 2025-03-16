@@ -6,9 +6,9 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMem
     ChatMemberAdministrator, ChatMemberMember
 from telegram.ext import CallbackContext, Application, filters, MessageHandler, CallbackQueryHandler, CommandHandler
 
-from bot.data.db import insert_promo
-from bot.data.lang import LANG_DICT
-from bot.settings.config import ADMINS
+from ..data.db import insert_promo
+from ..data.lang import LANG_DICT
+from ..settings.config import ADMINS
 
 
 def get_text(update: Update, file: str):
