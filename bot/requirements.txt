@@ -1,4 +1,4 @@
-python-telegram-bot[job-queue]==21.11.1
+python-telegram-bot[job-queue]==22.0
 deep-translator==1.11.4
 deepl==1.21.1
 python-dotenv==1.0.1
