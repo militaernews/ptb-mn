@@ -1,4 +1,4 @@
-from ..data.lang import LANG_DICT
+from bot.data.lang import LANG_DICT
 from telegram import Update
 from telegram.ext import CallbackContext
 

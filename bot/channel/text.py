@@ -5,14 +5,14 @@ from telegram import Update, Message
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
-from common import handle_url
-from ..data.db import query_replies, insert_single2, update_text, get_msg_id
-from ..data.lang import LANGUAGES, GERMAN
-from ..settings.config import DIVIDER
-from ..social.twitter import tweet_text
-from ..util.helper import sanitize_text, log_error
-from ..util.patterns import WHITESPACE, HASHTAG, FLAG_EMOJI
-from ..util.translation import translate_message, flag_to_hashtag, segment_text
+from bot.channel.common import handle_url
+from bot.data.db import query_replies, insert_single2, update_text, get_msg_id
+from bot.data.lang import LANGUAGES, GERMAN
+from bot.settings.config import DIVIDER
+from bot.social.twitter import tweet_text
+from bot.util.helper import sanitize_text, log_error
+from bot.util.patterns import WHITESPACE, HASHTAG, FLAG_EMOJI
+from bot.util.translation import translate_message, flag_to_hashtag, segment_text
 
 
 async def post_channel_text(update: Update, context: CallbackContext):

@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler, Application
 
-from ..util.helper import reply_html, reply_photo
+from bot.util.helper import reply_html, reply_photo
 
 
 async def maps(update: Update, context: CallbackContext):

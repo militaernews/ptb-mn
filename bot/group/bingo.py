@@ -8,9 +8,9 @@ from telegram import Update
 from telegram.ext import CallbackContext, Application, CommandHandler, filters
 from telegram.helpers import mention_html
 
-from ..data.lang import GERMAN
-from ..settings.config import ADMINS
-from ..util.helper import export_svg, admin
+from bot.data.lang import GERMAN
+from bot.settings.config import ADMINS
+from bot.util.helper import export_svg, admin
 
 ENTRIES = {
     "Israel": None,

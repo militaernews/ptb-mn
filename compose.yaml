@@ -4,9 +4,6 @@ services:
     container_name: ptb-mn
     restart: unless-stopped
     env_file:
-      - path: .env
-        required: true
-    volumes:
-      - ./bot:/bot
+      - .env # .env is only read with "compose up"
     environment:
       CONTAINER: "true"

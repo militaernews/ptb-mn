@@ -7,8 +7,8 @@ from telegram import InlineKeyboardButton, Update, InlineKeyboardMarkup, ChatMem
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, Application, ChatMemberHandler, CallbackQueryHandler
 
-from ..data.lang import GERMAN
-from ..settings.config import MSG_REMOVAL_PERIOD
+from bot.data.lang import GERMAN
+from bot.settings.config import MSG_REMOVAL_PERIOD
 
 KEYBOARD: Final[str] = "keyboard"
 

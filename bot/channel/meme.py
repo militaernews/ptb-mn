@@ -1,8 +1,8 @@
 from telegram import Update
 from telegram.ext import CallbackContext, Application, filters, MessageHandler
 
-from ..data.lang import GERMAN, ENGLISH, LANGUAGES
-from ..settings.config import CHANNEL_MEME, LOG_GROUP
+from bot. data.lang import GERMAN, ENGLISH, LANGUAGES
+from bot.settings.config import CHANNEL_MEME, LOG_GROUP
 
 
 async def post_media_meme(update: Update, context: CallbackContext):

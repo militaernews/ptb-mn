@@ -5,9 +5,9 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSi
 from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext, ContextTypes, \
     Application
 
-from ..data import lang
-from ..settings.config import ADMINS
-from ..util.translation import translate
+from bot.data.lang import GERMAN,LANGUAGES
+from bot.settings.config import ADMINS
+from bot.util.translation import translate
 
 ADVERTISEMENT_MEDIA: Final[str] = "new_ADVERTISEMENT_MEDIA"
 ADVERTISEMENT_TEXT: Final[str] = "new_ADVERTISEMENT_TEXT"
@@ -122,13 +122,13 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
             InlineKeyboardButton(context.chat_data[ADVERTISEMENT_BUTTON], url=context.chat_data[ADVERTISEMENT_URL]))
 
     if isinstance(media, Animation):
-        msg = await context.bot.send_animation(lang.GERMAN.channel_id, media, caption=text, reply_markup=button)
+        msg = await context.bot.send_animation(GERMAN.channel_id, media, caption=text, reply_markup=button)
     elif isinstance(media, Sequence):
-        msg = await context.bot.send_photo(lang.GERMAN.channel_id, media[-1], caption=text, reply_markup=button)
+        msg = await context.bot.send_photo(GERMAN.channel_id, media[-1], caption=text, reply_markup=button)
     elif isinstance(media, Video):
-        msg = await context.bot.send_video(lang.GERMAN.channel_id, media, caption=text, reply_markup=button)
+        msg = await context.bot.send_video(GERMAN.channel_id, media, caption=text, reply_markup=button)
     else:
-        msg = await context.bot.send_text(lang.GERMAN.channel_id, text, reply_markup=button)
+        msg = await context.bot.send_text(GERMAN.channel_id, text, reply_markup=button)
 
     await msg.pin()
 
@@ -142,7 +142,7 @@ async def save_advertisement(update: Update, context: CallbackContext) -> int:
 async def advertise_in_other_channels(text: str, button: InlineKeyboardMarkup | None,
                                       media: Union[Animation, Sequence[PhotoSize], Video, None], update: Update,
                                       context: CallbackContext):
-    for language in lang.LANGUAGES:
+    for language in LANGUAGES:
         translated_text = await translate(language.lang_key, text, language.lang_key_deepl)
 
         if button is None:
