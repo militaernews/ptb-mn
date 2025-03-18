@@ -5,7 +5,7 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, PhotoSi
 from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHandler, CallbackContext, ContextTypes, \
     Application
 
-from bot.data.lang import GERMAN,LANGUAGES
+from bot.data.lang import GERMAN, LANGUAGES
 from bot.settings.config import ADMINS
 from bot.util.translation import translate
 

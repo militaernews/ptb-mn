@@ -36,7 +36,7 @@ def get_caption(update: Update):
     return ""
 
 
-async def get_file(update: Update)->File:
+async def get_file(update: Update) -> File:
     if update.channel_post.photo:
         return await update.channel_post.photo[-1].get_file()
     elif update.channel_post.video:

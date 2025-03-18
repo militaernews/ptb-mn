@@ -2,6 +2,7 @@ import json
 import os
 
 from dotenv import load_dotenv
+
 from bot.util.helper import sanitize_hashtag
 
 load_dotenv()

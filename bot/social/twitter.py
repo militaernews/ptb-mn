@@ -2,15 +2,12 @@ import logging
 import os
 from typing import Optional, List, Tuple
 
-
 from lxml.html import fromstring
 from pytwitter import Api
 from telegram import Bot
 
 from bot.data.lang import ENGLISH, GERMAN
 from bot.social.twitter_uploader import TelegramTwitterTransfer
-
-
 
 
 def create_instance(consumer_key: str, consumer_secret: str, access_token: str, access_secret: str) -> tuple[

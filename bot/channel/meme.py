@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext, Application, filters, MessageHandler
 
-from bot. data.lang import GERMAN, ENGLISH, LANGUAGES
+from bot.data.lang import GERMAN, ENGLISH, LANGUAGES
 from bot.settings.config import CHANNEL_MEME, LOG_GROUP
 
 

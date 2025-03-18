@@ -1,4 +1,3 @@
-import os
 from json import loads
 from os import getenv
 from typing import Final, List

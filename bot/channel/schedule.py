@@ -1,6 +1,7 @@
-from bot.data.lang import LANG_DICT
 from telegram import Update
 from telegram.ext import CallbackContext
+
+from bot.data.lang import LANG_DICT
 
 
 async def join_folder(_: Update, context: CallbackContext):

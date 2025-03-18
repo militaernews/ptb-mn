@@ -6,7 +6,6 @@ import pytest
 import pytest_asyncio
 from asyncpg import Connection, connect
 
-
 from bot.data.db import insert_promo, query_replies, insert_single, query_files, get_mg, update_post
 from bot.settings.config import DATABASE_URL_TEST
 
