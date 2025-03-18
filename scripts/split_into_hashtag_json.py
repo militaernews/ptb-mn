@@ -3,12 +3,12 @@ import os
 
 from dotenv import load_dotenv
 
-from bot.util.helper import sanitize_hashtag
+from util.helper import sanitize_hashtag
 
 load_dotenv()
 
-from bot.data.lang import languages, GERMAN
-from bot.util.translation import translate
+from data.lang import languages, GERMAN
+from util.translation import translate
 
 
 def split_to_json():

@@ -5,9 +5,9 @@ from regex import sub
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, MessageOrigin
 from telegram.ext import Application, MessageHandler, filters, CallbackContext
 
-from bot.data.db import get_suggested_sources
-from bot.settings.config import CHANNEL_SUGGEST, CHANNEL_BACKUP
-from bot.util.translation import translate
+from data.db import get_suggested_sources
+from settings.config import CHANNEL_SUGGEST, CHANNEL_BACKUP
+from util.translation import translate
 
 
 def debloat_text(text: str) -> str:

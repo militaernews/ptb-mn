@@ -7,8 +7,8 @@ from telegram import Update, BotCommandScopeChatAdministrators, BotCommandScopeC
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
-from bot.data.lang import LANGUAGES, GERMAN
-from bot.settings.config import ADMINS, LOG_GROUP
+from data.lang import LANGUAGES, GERMAN
+from settings.config import ADMINS, LOG_GROUP
 
 
 async def repair_json(update: Update, context: CallbackContext):

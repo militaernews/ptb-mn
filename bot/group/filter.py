@@ -6,8 +6,8 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
-from bot.group.bingo import handle_bingo
-from bot.settings.config import ADMINS, LOG_GROUP
+from group.bingo import handle_bingo
+from settings.config import ADMINS, LOG_GROUP
 
 
 def check_cas(user_id: int):
