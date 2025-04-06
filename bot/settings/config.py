@@ -1,3 +1,4 @@
+import os
 from json import loads
 from os import getenv
 from typing import Final, List
@@ -5,6 +6,8 @@ from typing import Final, List
 from dotenv import load_dotenv
 
 load_dotenv()
+
+print(os.environ)
 
 DATABASE_URL: Final[str] = getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
 DATABASE_URL_NN: Final[str] = getenv("DATABASE_URL_NN")

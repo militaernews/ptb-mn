@@ -268,8 +268,9 @@ async def insert_promo(user_id: int, lang: str, promo_id: int, conn: Connection)
 
 @db
 async def truncate_promo(conn: Connection):
+    res = await conn.execute("truncate promos")
     logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> truncate_promo: {res}")
-    await conn.execute("truncate promos")
+
 
 
 
