@@ -1,13 +1,13 @@
-import os
+import logging
 from json import loads
-from os import getenv
+from os import getenv, environ
 from typing import Final, List
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
-print(os.environ)
+logging.info(environ)
 
 DATABASE_URL: Final[str] = getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
 DATABASE_URL_NN: Final[str] = getenv("DATABASE_URL_NN")
@@ -18,7 +18,7 @@ PORT: Final[int] = int(getenv("PORT", 8080))
 TEST_MODE: Final[bool] = getenv("TESTING", False)
 CONTAINER: Final[bool] = bool(getenv('CONTAINER', False), )
 
-RES_PATH: Final[str] =  "./res"
+RES_PATH: Final[str] = "./res"
 
 CHANNEL_MEME: Final[int] = int(getenv('CHANNEL_MEME'))
 CHANNEL_SOURCE: Final[int] = int(getenv('CHANNEL_SOURCE'))
