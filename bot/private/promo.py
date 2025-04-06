@@ -4,12 +4,10 @@ import os
 import telegram
 from data.db import insert_promo, truncate_promo
 from data.lang import LANG_DICT
-from settings.config import ADMINS
+from settings.config import ADMINS, RES_PATH
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMemberOwner, \
     ChatMemberAdministrator, ChatMemberMember
 from telegram.ext import CallbackContext, Application, filters, MessageHandler, CallbackQueryHandler, CommandHandler
-
-from bot.settings.config import RES_PATH
 
 
 def get_text(update: Update, file: str):
