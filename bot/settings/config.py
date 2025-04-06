@@ -18,6 +18,7 @@ TOKEN: Final[str] = getenv('TELEGRAM')
 PORT: Final[int] = int(getenv("PORT", 8080))
 TEST_MODE: Final[bool] = getenv("TESTING", False)
 CONTAINER: Final[bool] = bool(getenv('CONTAINER', False), )
+print("container -- ", CONTAINER)
 
 RES_PATH: Final[str] = "./res"
 
