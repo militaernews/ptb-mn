@@ -109,8 +109,8 @@ def main():
     # Commands have to be added above
     #  application.add_error_handler( report_error)  # comment this one out for full stacktrace
 
-    print("### RUNNING LOCAL ###")
-    logging.info("### RUNNING LOCAL ###")
+    print("### RUNNING LOCAL ### - print")
+    logging.info("### RUNNING LOCAL ### - logging")
 
     application.run_polling(poll_interval=1, drop_pending_updates=False)
 

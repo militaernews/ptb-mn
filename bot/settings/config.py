@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+print(environ)
 logging.info(environ)
 
 DATABASE_URL: Final[str] = getenv("DATABASE_URL")  # .replace("postgres", "postgresql", 1)
