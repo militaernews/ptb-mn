@@ -266,6 +266,12 @@ async def insert_promo(user_id: int, lang: str, promo_id: int, conn: Connection)
     logging.info(f">> Result: user_id = {res}")
     return res["user_id"]
 
+@db
+async def truncate_promo(conn: Connection):
+    logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> truncate_promo: {res}")
+    await conn.execute("truncate promos")
+
+
 
 async def get_suggested_sources() -> List[int]:
     pool_nn = await create_pool(DATABASE_URL_NN, ssl=get_ssl())

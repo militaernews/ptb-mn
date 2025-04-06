@@ -6,7 +6,7 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMem
     ChatMemberAdministrator, ChatMemberMember
 from telegram.ext import CallbackContext, Application, filters, MessageHandler, CallbackQueryHandler, CommandHandler
 
-from data.db import insert_promo
+from data.db import insert_promo,truncate_promo
 from data.lang import LANG_DICT
 from settings.config import ADMINS
 
@@ -166,7 +166,13 @@ async def verify_promo(update: Update, context: CallbackContext):
         await update.callback_query.answer(get_text(update, "require"))
 
 
+async def clear_promo(update: Update, context: CallbackContext):
+    await truncate_promo()
+    await update.message.reply_text("cleared promos. you can now start a new promo with /promo.")
+
+
 def register_promo(app: Application):
     app.add_handler(MessageHandler(filters.Regex(r"\/start promo_\w{2}(_\d+)?"), start_promo))
     app.add_handler(CallbackQueryHandler(verify_promo, r"promo_\w{2}(_\d+)?"))
     app.add_handler(CommandHandler("promo", send_promos, filters.Chat(ADMINS)))
+    app.add_handler(CommandHandler("clear_promo", clear_promo, filters.Chat(ADMINS)))
