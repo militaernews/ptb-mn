@@ -9,38 +9,40 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMem
     ChatMemberAdministrator, ChatMemberMember
 from telegram.ext import CallbackContext, Application, filters, MessageHandler, CallbackQueryHandler, CommandHandler
 
+from bot.settings.config import RES_PATH
+
 
 def get_text(update: Update, file: str):
     lang = update.effective_user.language_code
-    path = f"res/{lang}/promo/{file}.html"
+    path = f"{RES_PATH}/{lang}/promo/{file}.html"
 
     if os.path.exists(path):
         with open(path, "r", encoding='utf-8') as f:
             return f.read()
 
-    with open(f"res/en/promo/{file}.html", "r", encoding='utf-8') as f:
+    with open(f"{RES_PATH}/en/promo/{file}.html", "r", encoding='utf-8') as f:
         return f.read()
 
 
 def get_img(update: Update):
     lang = update.effective_user.language_code
-    path = f"res/img/mn-tg-promo-{lang}.png"
+    path = f"{RES_PATH}/img/mn-tg-promo-{lang}.png"
 
     if os.path.exists(path):
         return open(path, "rb")
 
-    return open("res/img/mn-tg-promo-en.png", "rb")
+    return open(f"{RES_PATH}/img/mn-tg-promo-en.png", "rb")
 
 
 async def send_promos(_: Update, context: CallbackContext):
     for lang in LANG_DICT.values():
-        with open(f"res/{lang.lang_key}/promo/announce.html", "r", encoding='utf-8') as f:
+        with open(f"{RES_PATH}/{lang.lang_key}/promo/announce.html", "r", encoding='utf-8') as f:
             text = f.read()
-        with open(f"res/{lang.lang_key}/promo/verify.html", "r", encoding='utf-8') as f:
+        with open(f"{RES_PATH}/{lang.lang_key}/promo/verify.html", "r", encoding='utf-8') as f:
             btn = f.read()
 
         msg = await context.bot.send_photo(lang.channel_id,
-                                           open(f"res/img/mn-tg-promo-{lang.lang_key}.png", "rb"),
+                                           open(f"{RES_PATH}/img/mn-tg-promo-{lang.lang_key}.png", "rb"),
                                            text,
                                            reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
                                                btn,
