@@ -2,13 +2,12 @@ import logging
 import os
 
 import telegram
+from data.db import insert_promo, truncate_promo
+from data.lang import LANG_DICT
+from settings.config import ADMINS
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMemberOwner, \
     ChatMemberAdministrator, ChatMemberMember
 from telegram.ext import CallbackContext, Application, filters, MessageHandler, CallbackQueryHandler, CommandHandler
-
-from data.db import insert_promo,truncate_promo
-from data.lang import LANG_DICT
-from settings.config import ADMINS
 
 
 def get_text(update: Update, file: str):
@@ -77,7 +76,7 @@ async def start_promo(update: Update, context: CallbackContext):
 
         text = get_text(update, "done")
 
-        res = insert_promo(update.message.from_user.id, data[0], promo_id)
+        res = await insert_promo(update.message.from_user.id, data[0], promo_id)
         if res is not None:
             return await update.message.reply_text("\n".join(get_text(update, "already").split("\n")[2:]),
                                                    reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
@@ -126,7 +125,7 @@ async def verify_promo(update: Update, context: CallbackContext):
         else:
             promo_id = None
 
-        res = insert_promo(update.callback_query.from_user.id, data[0], promo_id)
+        res = await insert_promo(update.callback_query.from_user.id, data[0], promo_id)
 
         payload = get_text(update, "payload") + f"{data[0]}_"
 
