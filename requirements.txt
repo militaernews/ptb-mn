@@ -6,7 +6,7 @@ numpy==2.2.4
 ftfy==6.3.1
 pysbd==0.3.4
 requests==2.32.3
-pillow==11.1.0
+pillow==11.2.0
 regex==2024.11.6
 asyncpg==0.30.0
 lxml==5.3.2
