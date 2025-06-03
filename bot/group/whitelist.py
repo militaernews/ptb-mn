@@ -80,6 +80,9 @@ async def remove_url(update: Update, context: CallbackContext):
 async def send_whitelist(update: Update, context: CallbackContext):
     await reply_html(update, context, "whitelist", "\n\n".join(ALLOWED_URLS))
 
+async def log_msg(update: Update, _: CallbackContext):
+    logging.info(f"log_msg - {update.message.from_user.id} [{update.message.id}]: {update.message.text}")
+
 
 def register_whitelist(app: Application):
     #   bot.add_handler(
@@ -89,3 +92,6 @@ def register_whitelist(app: Application):
     app.add_handler(
         MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
                        remove_command))
+    app.add_handler(
+        MessageHandler(filters.TEXT & filters.Chat(GERMAN.chat_id),
+                       log_msg))

@@ -86,7 +86,7 @@ def main():
     application = (ApplicationBuilder().token(TOKEN)
                    .defaults(
         Defaults(parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)))
-                   .persistence(PicklePersistence(filepath="../../persistence"))
+              .persistence(PicklePersistence(filepath="persistence"))
                    .read_timeout(50).get_updates_read_timeout(50)
                    .build())
 

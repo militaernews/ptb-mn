@@ -62,7 +62,7 @@ def get_hashtag(country_key: str, lang_key: str = GERMAN.lang_key) -> str:
             # todo: find a way to open this file up just once when iterating through langs
             return loads(f.read())[country_key]
     except Exception as e:
-        logging.warn(f"Error when trying to get hashtag --- {e}")
+        logging.warning(f"Error when trying to get hashtag --- {e}")
 
 
 async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
