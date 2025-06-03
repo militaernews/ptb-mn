@@ -2,10 +2,9 @@ import logging
 from asyncio import sleep
 from typing import Final, Set
 
+from data.lang import GERMAN
 from telegram import Update
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackContext, Application
-
-from data.lang import GERMAN
 from util.helper import delete_msg, reply_html
 from util.patterns import PATTERN_COMMAND
 
@@ -80,7 +79,10 @@ async def remove_url(update: Update, context: CallbackContext):
 async def send_whitelist(update: Update, context: CallbackContext):
     await reply_html(update, context, "whitelist", "\n\n".join(ALLOWED_URLS))
 
+
 async def log_msg(update: Update, _: CallbackContext):
+    if not update.message:
+        return
     logging.info(f"log_msg - {update.message.from_user.id} [{update.message.id}]: {update.message.text}")
 
 
@@ -93,5 +95,5 @@ def register_whitelist(app: Application):
         MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
                        remove_command))
     app.add_handler(
-        MessageHandler(filters.TEXT & filters.Message & filters.Chat(GERMAN.chat_id),
+        MessageHandler(filters.TEXT & filters.Chat(GERMAN.chat_id),
                        log_msg))
