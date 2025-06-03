@@ -102,6 +102,8 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     for emoji in emojis:
         translated_text = re.sub(PLACEHOLDER, emoji, translated_text, 1)
 
+    translated_text = translated_text.replace(r"& quot;", r'"').replace(r"& amp;", r'&')
+
     logging.info(f"translated text ----------------- {text, emojis, sub_text, text_to_translate, translated_text}")
     return translated_text
 

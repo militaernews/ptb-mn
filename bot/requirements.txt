@@ -8,7 +8,7 @@ pysbd==0.3.4
 requests==2.32.3
 pillow==11.2.1
 regex==2024.11.6
-asyncpg==0.30.0v
+asyncpg==0.30.0
 lxml==5.4.0
 
 # social
