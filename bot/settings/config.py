@@ -28,7 +28,7 @@ CHANNEL_BACKUP: Final[int] = int(getenv('CHANNEL_BACKUP'))
 CHANNEL_SUGGEST: Final[int] = int(getenv('CHANNEL_SUGGEST'))
 
 LOG_GROUP: Final[str] = getenv('LOG_GROUP')
-ADMINS: Final[List[int]] = loads(getenv('ADMINS'))
+ADMINS: Final[List[int]] = [int(admin_id) for admin_id in loads(getenv('ADMINS'))]
 
 WARN_LIMIT: Final[int] = 3
 MSG_REMOVAL_PERIOD: Final[int] = 1200

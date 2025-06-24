@@ -3,14 +3,13 @@ import re
 import subprocess
 from typing import Final, Optional
 
+from data.db import PHOTO, VIDEO, ANIMATION
+from data.lang import GERMAN, Language
+from settings.config import LOG_GROUP, ADMINS, MSG_REMOVAL_PERIOD, RES_PATH
 from telegram import Update, File
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
-
-from data.db import PHOTO, VIDEO, ANIMATION
-from data.lang import GERMAN, Language
-from settings.config import LOG_GROUP, ADMINS, MSG_REMOVAL_PERIOD, RES_PATH
 
 CHAT_ID: Final[str] = "chat_id"
 MSG_ID: Final[str] = "msg_id"
@@ -36,7 +35,7 @@ def get_caption(update: Update):
     return ""
 
 
-async def get_file(update: Update) -> File:
+async def get_file(update: Update) -> File | None:
     if update.channel_post.photo:
         return await update.channel_post.photo[-1].get_file()
     elif update.channel_post.video:
