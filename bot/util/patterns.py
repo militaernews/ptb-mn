@@ -11,6 +11,9 @@ FLAG_EMOJI_HTMLTAG = re.compile(
     f"{FLAG_EMOJI.pattern}|{PATTERN_HTMLTAG.pattern}", re.IGNORECASE
 )
 
+QUOT_PATTERN = re.compile(r'& quot;',re.IGNORECASE)
+AMP_PATTERN = re.compile(r'& amp;',re.IGNORECASE)
+
 PLACEHOLDER: Final[str] = "║"
 PATTERN_COMMAND: Final[str] = r"^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]*)$"
 

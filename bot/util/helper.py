@@ -43,6 +43,7 @@ async def get_file(update: Update) -> File:
         return await update.channel_post.video.get_file()
     elif update.channel_post.animation:
         return await update.channel_post.animation.get_file()
+    return None
 
 
 async def get_file_type(update: Update):
@@ -52,6 +53,7 @@ async def get_file_type(update: Update):
         return VIDEO
     elif update.channel_post.animation:
         return ANIMATION
+    return None
 
 
 def get_tg_file_id(update: Update):
@@ -61,6 +63,7 @@ def get_tg_file_id(update: Update):
         return update.channel_post.video.file_id
     elif update.channel_post.animation:
         return update.channel_post.animation.file_id
+    return None
 
 
 async def delete(context: CallbackContext):

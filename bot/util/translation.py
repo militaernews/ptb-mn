@@ -12,7 +12,7 @@ from data.lang import GERMAN, LANGUAGES
 from settings.config import RES_PATH
 from social.twitter import TWEET_LENGTH
 from util.helper import sanitize_text
-from util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG
+from util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG,AMP_PATTERN, QUOT_PATTERN
 
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
@@ -102,7 +102,8 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     for emoji in emojis:
         translated_text = re.sub(PLACEHOLDER, emoji, translated_text, 1)
 
-    translated_text = translated_text.replace(r"& quot;", r'"').replace(r"& amp;", r'&')
+    translated_text= AMP_PATTERN.sub(r"&",translated_text)
+    translated_text= QUOT_PATTERN.sub(r'"',translated_text)
 
     logging.info(f"translated text ----------------- {text, emojis, sub_text, text_to_translate, translated_text}")
     return translated_text
