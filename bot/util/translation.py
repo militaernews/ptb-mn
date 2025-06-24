@@ -14,6 +14,8 @@ from social.twitter import TWEET_LENGTH
 from util.helper import sanitize_text
 from util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG,AMP_PATTERN, QUOT_PATTERN
 
+from bot.util.dictionary import replace_name
+
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
 
@@ -38,6 +40,7 @@ def flag_to_hashtag(text: str, lang_key: str = GERMAN.lang_key):
 
     logging.info("--- Translated Text ---")
     logging.info(text)
+
     return text
 
 

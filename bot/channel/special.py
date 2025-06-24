@@ -1,13 +1,13 @@
 import logging
 import re
 
-from telegram import Update
-from telegram.ext import CallbackContext
-
 from data.db import insert_single2
 from data.lang import GERMAN, LANGUAGES
 from settings.config import DIVIDER, RES_PATH
 from social.twitter import tweet_local_file
+from telegram import Update
+from telegram.ext import CallbackContext
+from util.dictionary import replace_name
 from util.helper import log_error
 from util.patterns import BREAKING, PATTERN_HTMLTAG
 from util.translation import translate_message, flag_to_hashtag, translate, segment_text
@@ -19,7 +19,7 @@ INFO_PATTERN = re.compile(r"#info", re.IGNORECASE)
 async def breaking_news(update: Update, context: CallbackContext):
     await update.channel_post.delete()
 
-    text = re.sub(BREAKING, "", update.channel_post.text_html_urled)
+    text = replace_name(re.sub(BREAKING, "", update.channel_post.text_html_urled))
     formatted_text = f"#{GERMAN.breaking} 🚨\n\n{flag_to_hashtag(text)}"
     breaking_photo_path = f"{RES_PATH}/{GERMAN.lang_key}/breaking.png"
 

@@ -14,15 +14,17 @@ from util.helper import sanitize_text, log_error
 from util.patterns import WHITESPACE, HASHTAG, FLAG_EMOJI
 from util.translation import translate_message, flag_to_hashtag, segment_text
 
+from util.dictionary import replace_name
+
 
 async def post_channel_text(update: Update, context: CallbackContext):
-    original_caption = sanitize_text(update.channel_post.text_html_urled)
+    text = sanitize_text(update.channel_post.text_html_urled)
 
     await insert_single2(update.channel_post)
 
-    logging.info(f"original caption::: {original_caption}", )
+    logging.info(f"original caption::: {text}", )
 
-    text_ger = flag_to_hashtag(original_caption)
+    text_ger = flag_to_hashtag(replace_name(text))
 
     for lang in LANGUAGES:
         reply_id = await query_replies(update.channel_post.message_id, lang.lang_key)
@@ -30,7 +32,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
         try:
             msg: Message = await context.bot.send_message(
                 chat_id=lang.channel_id,
-                text=f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}{DIVIDER}{lang.footer}",
+                text=f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}{DIVIDER}{lang.footer}",
                 reply_to_message_id=reply_id
             )
             await insert_single2(msg, lang.lang_key)
@@ -59,7 +61,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
 
 async def edit_channel_text(update: Update, context: CallbackContext):
-    original_caption = re.sub(
+    text =replace_name( re.sub(
         WHITESPACE,
         "",
         re.sub(
@@ -67,15 +69,15 @@ async def edit_channel_text(update: Update, context: CallbackContext):
             "",
             update.edited_channel_post.text_html_urled.replace(GERMAN.footer, ""),
         ),
-    )
+    ))
 
-    await update_text(update.edited_channel_post.id, f"{original_caption}{DIVIDER}{GERMAN.footer}")
+    await update_text(update.edited_channel_post.id, f"{text}{DIVIDER}{GERMAN.footer}")
 
-    logging.info(f"original caption::: {original_caption}", )
+    logging.info(f"original caption::: {text}", )
 
     for lang in LANGUAGES:
         try:
-            translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}{DIVIDER}{lang.footer}"
+            translated_text = f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}{DIVIDER}{lang.footer}"
             msg_id = await get_msg_id(update.edited_channel_post.id, lang.lang_key)
             await context.bot.edit_message_text(
                 text=translated_text,

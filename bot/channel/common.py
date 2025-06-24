@@ -2,19 +2,19 @@ import logging
 from re import sub, findall
 from typing import List
 
+from data.db import (insert_single3, insert_single2, query_replies3,
+                     get_post_id, query_files, get_post_id2, query_replies4, get_msg_id, get_file_id,
+                     update_post)
+from data.lang import GERMAN, LANGUAGES
+from data.model import Post, PHOTO, VIDEO, ANIMATION
+from settings.config import DIVIDER, CHANNEL_SOURCE
+from social.twitter import tweet_files
 from telegram import (InputMedia, InputMediaAnimation, InputMediaPhoto,
                       InputMediaVideo, MessageEntity, MessageId,
                       Update)
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, ContextTypes
-
-from data.db import (insert_single3, insert_single2, query_replies3,
-                         get_post_id, query_files, get_post_id2, query_replies4, get_msg_id, get_file_id,
-                         update_post)
-from data.lang import GERMAN, LANGUAGES
-from data.model import Post, PHOTO, VIDEO, ANIMATION
-from settings.config import DIVIDER, CHANNEL_SOURCE
-from social.twitter import tweet_files
+from util.dictionary import replace_name
 from util.helper import log_error, get_tg_file_id
 from util.patterns import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
 from util.translation import flag_to_hashtag, translate_message, segment_text
@@ -54,7 +54,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
             await log_error(f"tweet {lang.lang_key}", context, "Twitter", e, update, )
             pass
 
-    formatted_text = flag_to_hashtag(original_caption)
+    formatted_text = flag_to_hashtag(replace_name(original_caption))
 
     try:
         await update.channel_post.edit_caption(formatted_text + DIVIDER + GERMAN.footer)
