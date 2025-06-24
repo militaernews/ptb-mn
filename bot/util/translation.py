@@ -4,17 +4,14 @@ import re
 from json import loads, load
 
 import deepl
+from data.lang import GERMAN, LANGUAGES
 from deep_translator import GoogleTranslator
 from deepl import QuotaExceededException
 from pysbd import Segmenter
-
-from data.lang import GERMAN, LANGUAGES
 from settings.config import RES_PATH
 from social.twitter import TWEET_LENGTH
 from util.helper import sanitize_text
-from util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG,AMP_PATTERN, QUOT_PATTERN
-
-from bot.util.dictionary import replace_name
+from util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG, AMP_PATTERN, QUOT_PATTERN
 
 deepl_translator = deepl.Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
