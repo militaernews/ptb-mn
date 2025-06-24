@@ -3,24 +3,34 @@ import os
 import re
 from json import loads, load
 
-import deepl
 from data.lang import GERMAN, LANGUAGES
 from deep_translator import GoogleTranslator
-from deepl import QuotaExceededException
+from deepl import QuotaExceededException, Translator
 from pysbd import Segmenter
 from settings.config import RES_PATH
 from social.twitter import TWEET_LENGTH
 from util.helper import sanitize_text
 from util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG, AMP_PATTERN, QUOT_PATTERN
 
-deepl_translator = deepl.Translator(os.environ['DEEPL'])
+deepl_translator = Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
 
 flags_data = {lang.lang_key: load(open(rf"{RES_PATH}/{lang.lang_key}/flags.json", "r", encoding="utf-8")) for lang in
               [GERMAN] + LANGUAGES}
 
 HASHTAG_PATTERN = re.compile(r'(\s{2,})?(#\w+\s)+', re.IGNORECASE)
-FLAG_PATTERN = re.compile(u'[\U0001F1E6-\U0001F1FF]{2}|\U0001F3F4|\U0001F3F3', re.UNICODE)
+FLAG_PATTERN = re.compile(
+    r'(?:'
+    r'🏳️‍🌈|'  # LGBT flag (white flag + ZWJ + rainbow)
+    r'🏳️‍⚧️|'  # Transgender flag (white flag + ZWJ + transgender symbol)  
+    r'🏴‍☠️|'  # Pirate flag (black flag + ZWJ + skull and crossbones)
+    r'🏴󠁧󠁢(?:󠁥󠁮󠁧|󠁳󠁣󠁴|󠁷󠁬󠁳)󠁿|'  # England, Scotland, Wales flags
+    r'[\U0001F1E6-\U0001F1FF]{2}|'  # Country flags (regional indicators)
+    r'🏴|'  # Black flag
+    r'🏳'   # White flag
+    r')',
+    re.UNICODE
+)
 
 
 def flag_to_hashtag(text: str, lang_key: str = GERMAN.lang_key):
