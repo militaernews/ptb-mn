@@ -49,12 +49,12 @@ Das Posten in all diesen Destinationen findet automatisiert statt, basierend auf
 ```mermaid
 flowchart TD
     A[Nutzer postet in TG_DE] --> B[Post auf Twitter_DE]
-    B --> C[TG_EN erhält übersetzten Post inkl. Footer, Städtenamen werden korrigiert]
+    B --> C[TG_EN erhält übersetzten Post inkl. Footer, Namen werden nicht korrigiert]
     C --> D[Post auf Twitter_EN]
-    D --> E[TG_TR erhält übersetzten Post inkl. Footer, Städtenamen werden korrigiert]
+    D --> E[TG_TR erhält übersetzten Post inkl. Footer, Namen werden nicht korrigiert]
     E --> F[Weitere Sprachen...]
-    F --> G[TG_ID erhält übersetzten Post inkl. Footer, Städtenamen werden korrigiert]
-    G --> H[TG_DE erhält Footer, Städtenamen werden korrigiert]
+    F --> G[TG_ID erhält übersetzten Post inkl. Footer, Namen werden nicht korrigiert]
+    G --> H[TG_DE erhält Footer, Namen werden korrigiert]
     
     style A fill:#e1f5fe
 ```
@@ -71,7 +71,7 @@ Wenn eine Nachricht auch in den anderen Telegram-Kanälen editiert werden soll, 
 
 ```mermaid
 flowchart TD
-    A[Nutzer editiert Nachricht in TG_DE ohne Footer] --> B[TG_EN erhält bearbeitete Nachricht inkl. Hashtags + Footer]
+    A[Nutzer editiert Nachricht in TG_DE ohne Footer] --> B[TG_EN erhält bearbeitete Nachricht inkl. Footer]
     B --> C[Weitere Sprachen...]
     C --> D[TG_ID erhält bearbeitete Nachricht inkl. Footer]
     D --> E[TG_DE erhält Footer]
@@ -79,11 +79,17 @@ flowchart TD
     style A fill:#e1f5fe
 ```
 
-Städtenamen werden beim Editieren einer Nachricht nicht korrigiert.
+* Städtenamen werden beim Editieren einer Nachricht nicht korrigiert.
 
-Die Posts auf Twitter können nicht nachträglich bearbeitet werden.
+* Die Posts auf Twitter können nicht nachträglich bearbeitet werden.
 
-## 
+* Bei einer Mediagroup ist darauf zu achten, dass du nur die Nachricht editierst, die eine Caption hat.
+
+## Eilmeldung
+
+- Text wird als _Bild mit Caption_ neu gepostet
+- Zeichenlimit gilt für gesamten Inhalt
+- Kurze, prägnante Texte verwenden
 
 ## Wichtige Funktionen
 
@@ -131,10 +137,7 @@ Beim Senden mehrerer Medien gleichzeitig:
 - Grund: Footer wird automatisch hinzugefügt
 - Footer kann bei mehreren Flaggen-Emojis sehr lang werden
 
-#### Besondere Vorsicht bei #eilmeldung
-- Text wird als _Bild mit Caption_ neu gepostet
-- Zeichenlimit gilt für gesamten Inhalt
-- Kurze, prägnante Texte verwenden
+
 
 ## Best Practices
 
