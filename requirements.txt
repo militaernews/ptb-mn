@@ -1,19 +1,19 @@
-python-telegram-bot[job-queue]==22.0
+python-telegram-bot[job-queue]==22.1
 deep-translator==1.11.4
 deepl==1.22.0
-python-dotenv==1.1.0
-numpy==2.2.5
+python-dotenv==1.1.1
+numpy==2.3.1
 ftfy==6.3.1
 pysbd==0.3.4
-requests==2.32.3
+requests==2.32.4
 pillow==11.2.1
 regex==2024.11.6
 asyncpg==0.30.0
-lxml==5.4.0
+lxml==6.0.0
 
 # social
 python-twitter-v2==0.9.2
 
 # test
-pytest==8.3.5
-pytest-asyncio==0.26.0
+pytest==8.4.1
+pytest-asyncio==1.0.0
