@@ -24,7 +24,7 @@ Haben mehrere Nachrichten derselben Mediagroup eine Caption, so wird keine Capti
 
 ![Mediagroup caption](mg2.jpeg "Mediagroup caption")
 
-* Die Caption ist auf eine Länge von 1024 Symbole beschränkt ([Übersicht zu Telegrams Limits](https://limits.tginfo.me/de-DE)). Mit Premium erhöht sich dieses Limit für Nutzer auf 4096 Symbole, für Bots jedoch nicht. Da Hashtags und Footer hinzukommen, empfiehlt sich eine maximale Länge des Contents von rund 900 Zeichen. Dies kannst du mit [CharacterCountOnline](https://www.charactercountonline.com/) nachzählen lassen.
+* Die Caption ist auf eine Länge von 1024 Symbole beschränkt ([Übersicht zu Telegrams Limits](https://limits.tginfo.me/de-DE)). Mit Premium erhöht sich dieses Limit für Nutzer auf 2048 Symbole, für Bots jedoch nicht. Da Hashtags und Footer hinzukommen, empfiehlt sich eine maximale Länge des Contents von rund 940 Zeichen. Dies kannst du mit [CharacterCountOnline](https://www.charactercountonline.com/) nachzählen lassen.
 
 ## Posting-Pipeline
 
@@ -56,7 +56,7 @@ flowchart TD
     F --> G[TG_ID erhält übersetzten Post inkl. Footer, Namen werden nicht korrigiert]
     G --> H[TG_DE erhält Footer, Namen werden korrigiert]
     
-    style A fill:#e1f5fe
+    style A fill:#000000,color:#00FF00
 ```
 
 Der Bot reagiert auf einzelne Updates, bspw. ein Nutzer tritt einer Gruppe bei, der Titel eines Chats wird geändert oder eben auch: Eine neue Nachricht wird in einem Chat gesendet. In unserem Fall in TG_DE.
@@ -76,7 +76,7 @@ flowchart TD
     C --> D[TG_ID erhält bearbeitete Nachricht inkl. Footer]
     D --> E[TG_DE erhält Footer]
     
-    style A fill:#e1f5fe
+    style A fill:#000000,color:#00FF00
 ```
 
 * Städtenamen werden beim Editieren einer Nachricht nicht korrigiert.
