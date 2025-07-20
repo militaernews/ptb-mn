@@ -5,6 +5,8 @@ REPLACEMENTS = {
     "Lemberg": r"L[wv][io][wv]",
     "Königsberg": r"Kaliningrad",
     "Selenskij": r"Zelensky",
+    "Charkiw": r"Charkow",
+    "Odesa": r"Odessa"
 }
 
 

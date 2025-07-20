@@ -19,7 +19,7 @@ PORT: Final[int] = int(getenv("PORT", 8080))
 TEST_MODE: Final[bool] = getenv("TESTING", False)
 CONTAINER: Final[bool] = bool(getenv('CONTAINER', False), )
 
-RES_PATH: Final[str] = "./res"
+RES_PATH: Final[str] = getenv("RES_PATH", "./res")
 
 CHANNEL_MEME: Final[int] = int(getenv('CHANNEL_MEME'))
 CHANNEL_SOURCE: Final[int] = int(getenv('CHANNEL_SOURCE'))

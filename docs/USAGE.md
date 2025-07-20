@@ -24,7 +24,7 @@ Haben mehrere Nachrichten derselben Mediagroup eine Caption, so wird keine Capti
 
 ![Mediagroup caption](mg2.jpeg "Mediagroup caption")
 
-* Die Caption ist auf eine Länge von 1024 Symbole beschränkt ([Übersicht zu Telegrams Limits](https://limits.tginfo.me/de-DE)). Mit Premium erhöht sich dieses Limit für Nutzer auf 2048 Symbole, für Bots jedoch nicht. Da Hashtags und Footer hinzukommen, empfiehlt sich eine maximale Länge des Contents von rund 940 Zeichen. Dies kannst du mit [CharacterCountOnline](https://www.charactercountonline.com/) nachzählen lassen.
+* Die Caption ist auf eine Länge von 1024 Symbolen beschränkt ([Übersicht zu Telegrams Limits](https://limits.tginfo.me/de-DE)). Mit Premium erhöht sich dieses Limit für Nutzer auf 2048 Symbole, für Bots jedoch nicht. Da Hashtags und Footer hinzukommen, empfiehlt sich eine maximale Länge des Contents von rund 940 Zeichen. Dies kannst du mit [CharacterCountOnline](https://www.charactercountonline.com/) nachzählen lassen.
 
 ## Posting-Pipeline
 
