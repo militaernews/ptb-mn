@@ -173,3 +173,11 @@ Beim Senden mehrerer Medien gleichzeitig:
 * Die Caption ist auf eine Länge von 1024 Zeichen beschränkt. Da Hashtags und Footer hinzukommen, empfiehlt sich eine maximale Länge des Contents von rund 900 Zeichen. Dies kannst du mit [CharacterCountOnline](https://www.charactercountonline.com/) nachzählen lassen.
 * Inhalten die [Telegrams TOS](https://telegram.org/tos/de) widersprechen könnten, versuchen wir im Kanal zu vermeiden. Die Verbreitung solcher Inhalte könnte zur Meldung des Kanals durch Nutzer führen und sofern legitim zur Sperrung seitens Telegram.
 * Replies auf vorige Posts werden in den anderen Kanälen übernommen.
+
+## Tools
+
+Neben diesem Bot gibt es ein paar Webtools, die dir als Redaktur, aber auch al Leser unseres Kanals, helfen werden.
+
+* Erstellung von Charts: https://chart-mn.vercel.app/
+* Erstellung von Karten: https://geo-mn.vercel.app/
+* Übersicht zu Quellen auf Telegram: https://mix-sv.vercel.app/
