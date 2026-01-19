@@ -1,5 +1,6 @@
-import base64
 import logging
+import base64
+from io import BytesIO
 
 from httpx import AsyncClient
 from settings.config import OPENROUTER_API_KEY
@@ -147,12 +148,16 @@ Antworte auf Deutsch und sei präzise."""
                     "Content-Type": "application/json"
                 },
                 json={
-                    # Using :online suffix enables real-time web search via Exa.ai
-                    # This costs $4 per 1000 results (default 5 results = $0.02 per request)
-                    "model": "allenai/molmo-2-8b:free:online",
+                    "model": "allenai/molmo-2-8b:free",
                     "messages": messages,
                     "temperature": 0.3,
                     "max_tokens": 1500,
+                    "tools": [
+                        {
+                            "type": "web_search",
+                            "max_results": 5
+                        }
+                    ]
                 }
             )
             response.raise_for_status()
@@ -229,7 +234,7 @@ async def fact(update: Update, context: CallbackContext):
             "💬 <b>Mit zusätzlichem Kontext:</b>\n"
             "• Antworte auf eine Nachricht mit /fact <zusätzlicher Kontext>\n\n"
             "<i>Beispiel: /fact Die Erde ist eine Scheibe</i>",
-
+            parse_mode='HTML'
         )
         return
 
@@ -277,10 +282,10 @@ async def fact(update: Update, context: CallbackContext):
 
         # Reply to the original message being fact-checked
         if update.message.reply_to_message:
-            await update.message.reply_to_message.reply_text(response,
+            await update.message.reply_to_message.reply_text(response, parse_mode='HTML',
                                                              disable_web_page_preview=False)
         else:
-            await update.message.reply_text(response, disable_web_page_preview=False)
+            await update.message.reply_text(response, parse_mode='HTML', disable_web_page_preview=False)
 
     except Exception as e:
         logging.error(f"Error in fact command: {e}", exc_info=True)
