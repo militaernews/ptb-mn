@@ -1,6 +1,5 @@
-import logging
 import base64
-from io import BytesIO
+import logging
 
 from httpx import AsyncClient
 from settings.config import OPENROUTER_API_KEY
@@ -102,23 +101,14 @@ https://www.example.com/article2
 
 Antworte auf Deutsch und sei präzise."""
 
-    # Build the user message based on what's provided
-    message_content = []
-
+    # Some models don't support system messages or require alternating roles
+    # Combine system prompt with user message
     if image_base64:
-        # Add image to message
-        message_content.append({
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/jpeg;base64,{image_base64}"
-            }
-        })
-
-        # Add text prompt
+        # Add system prompt as text before the image analysis request
         if caption:
-            text_prompt = f"Analysiere dieses Bild und überprüfe die folgende Bildunterschrift:\n\n{caption}\n\nPrüfe: Ist das Bild authentisch? Passt die Bildunterschrift zum Inhalt? Gibt es Anzeichen von Manipulation?"
+            text_prompt = f"{system_prompt}\n\nAnalysiere dieses Bild und überprüfe die folgende Bildunterschrift:\n\n{caption}\n\nPrüfe: Ist das Bild authentisch? Passt die Bildunterschrift zum Inhalt? Gibt es Anzeichen von Manipulation?"
         else:
-            text_prompt = "Analysiere dieses Bild. Prüfe: Ist es authentisch? Gibt es Anzeichen von Manipulation? Was zeigt es wirklich? Suche nach dem Originalkontext."
+            text_prompt = f"{system_prompt}\n\nAnalysiere dieses Bild. Prüfe: Ist es authentisch? Gibt es Anzeichen von Manipulation? Was zeigt es wirklich? Suche nach dem Originalkontext."
 
         message_content.append({
             "type": "text",
@@ -128,13 +118,12 @@ Antworte auf Deutsch und sei präzise."""
         # Text-only fact check
         message_content.append({
             "type": "text",
-            "text": f"Überprüfe folgende Behauptung und nutze aktuelle Online-Quellen:\n\n{claim}"
+            "text": f"{system_prompt}\n\nÜberprüfe folgende Behauptung und nutze aktuelle Online-Quellen:\n\n{claim}"
         })
     else:
         return "❌ Keine Behauptung oder Bild zum Überprüfen angegeben."
 
     messages = [
-        {"role": "system", "content": system_prompt},
         {"role": "user", "content": message_content}
     ]
 
@@ -231,19 +220,6 @@ async def fact(update: Update, context: CallbackContext):
 
     # No content to check
     else:
-        await update.message.reply_text(
-            "❓ <b>Faktencheck - Nutzung:</b>\n\n"
-            "📝 <b>Text prüfen:</b>\n"
-            "• Antworte auf eine Nachricht mit /fact\n"
-            "• Oder: /fact <Behauptung>\n\n"
-            "🖼️ <b>Bild prüfen:</b>\n"
-            "• Antworte auf ein Bild mit /fact\n"
-            "• Funktioniert auch mit Bildunterschriften\n\n"
-            "💬 <b>Mit zusätzlichem Kontext:</b>\n"
-            "• Antworte auf eine Nachricht mit /fact <zusätzlicher Kontext>\n\n"
-            "<i>Beispiel: /fact Die Erde ist eine Scheibe</i>",
-            parse_mode='HTML'
-        )
         return
 
     # Validate input
@@ -290,10 +266,10 @@ async def fact(update: Update, context: CallbackContext):
 
         # Reply to the original message being fact-checked
         if update.message.reply_to_message:
-            await update.message.reply_to_message.reply_text(response, parse_mode='HTML',
+            await update.message.reply_to_message.reply_text(response,
                                                              disable_web_page_preview=False)
         else:
-            await update.message.reply_text(response, parse_mode='HTML', disable_web_page_preview=False)
+            await update.message.reply_text(response, disable_web_page_preview=False)
 
     except Exception as e:
         logging.error(f"Error in fact command: {e}", exc_info=True)
