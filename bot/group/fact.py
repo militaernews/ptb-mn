@@ -138,6 +138,12 @@ Antworte auf Deutsch und sei präzise."""
         {"role": "user", "content": message_content}
     ]
 
+    # Log request details for debugging
+    logging.info(f"Making request to OpenRouter with model: allenai/molmo-2-8b:free:online")
+    logging.info(f"Message content types: {[type(c).__name__ for c in message_content]}")
+    if image_base64:
+        logging.info(f"Image data length: {len(image_base64)} chars")
+
     try:
         async with AsyncClient(timeout=120.0) as client:
             response = await client.post(
@@ -156,6 +162,12 @@ Antworte auf Deutsch und sei präzise."""
                     "max_tokens": 1500,
                 }
             )
+
+            # Log the response for debugging
+            logging.info(f"OpenRouter response status: {response.status_code}")
+            if response.status_code != 200:
+                logging.error(f"OpenRouter error response: {response.text}")
+
             response.raise_for_status()
             data = response.json()
             return data['choices'][0]['message']['content']
@@ -219,6 +231,19 @@ async def fact(update: Update, context: CallbackContext):
 
     # No content to check
     else:
+        await update.message.reply_text(
+            "❓ <b>Faktencheck - Nutzung:</b>\n\n"
+            "📝 <b>Text prüfen:</b>\n"
+            "• Antworte auf eine Nachricht mit /fact\n"
+            "• Oder: /fact <Behauptung>\n\n"
+            "🖼️ <b>Bild prüfen:</b>\n"
+            "• Antworte auf ein Bild mit /fact\n"
+            "• Funktioniert auch mit Bildunterschriften\n\n"
+            "💬 <b>Mit zusätzlichem Kontext:</b>\n"
+            "• Antworte auf eine Nachricht mit /fact <zusätzlicher Kontext>\n\n"
+            "<i>Beispiel: /fact Die Erde ist eine Scheibe</i>",
+            parse_mode='HTML'
+        )
         return
 
     # Validate input
