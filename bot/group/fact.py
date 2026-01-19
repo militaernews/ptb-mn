@@ -1,10 +1,10 @@
 import logging
-import httpx
-from telegram import Update
-from telegram.ext import CallbackContext
-from telegram.constants import ChatAction, ParseMode
 
+from httpx import AsyncClient
 from settings.config import OPENROUTER_API_KEY
+from telegram import Update
+from telegram.constants import ChatAction
+from telegram.ext import CallbackContext
 
 
 async def fact_check_with_llm(claim: str) -> str:
@@ -54,7 +54,7 @@ Antworte auf Deutsch und sei präzise."""
     ]
 
     try:
-        async with httpx.AsyncClient(timeout=90.0) as client:
+        async with AsyncClient(timeout=90.0) as client:
             response = await client.post(
                 "https://openrouter.ai/api/v1/chat/completions",
                 headers={
@@ -90,13 +90,14 @@ async def fact(update: Update, context: CallbackContext):
     # Check if replying to a message
     if update.message.reply_to_message and update.message.reply_to_message.text:
         claim = update.message.reply_to_message.text
+        await update.message.delete()
     # Check if claim provided as command argument
     elif context.args:
         claim = " ".join(context.args)
     else:
         await update.message.reply_text(
             "❓ Bitte antworte auf eine Nachricht mit /fact oder gib eine Behauptung an\n\n"
-            "Beispiel: /fact Die Ukraine greift russisches Territorium an"
+            "Beispiel: /fact Die Erde ist eine Scheibe"
         )
         return
 
@@ -117,7 +118,7 @@ async def fact(update: Update, context: CallbackContext):
 
         logging.info(f"Fact check completed: {len(result)} chars")
 
-        await update.message.reply_text(response, parse_mode=ParseMode.HTML, disable_web_page_preview=False)
+        await update.message.reply_text(response,  disable_web_page_preview=False)
     except Exception as e:
         logging.error(f"Error in fact command: {e}", exc_info=True)
         await update.message.reply_text("❌ Fehler beim Faktencheck. Bitte versuch's nochmal.")
