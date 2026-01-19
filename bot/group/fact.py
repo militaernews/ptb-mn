@@ -151,13 +151,8 @@ Antworte auf Deutsch und sei präzise."""
                     "model": "allenai/molmo-2-8b:free",
                     "messages": messages,
                     "temperature": 0.3,
-                    "max_tokens": 1500,
-                    "tools": [
-                        {
-                            "type": "web_search",
-                            "max_results": 5
-                        }
-                    ]
+                    "max_tokens": 1200,
+                    "plugins": [{ "id": "web" }]
                 }
             )
             response.raise_for_status()
