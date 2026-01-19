@@ -151,8 +151,14 @@ Antworte auf Deutsch und sei präzise."""
                     "model": "allenai/molmo-2-8b:free",
                     "messages": messages,
                     "temperature": 0.3,
-                    "max_tokens": 1200,
-                    "plugins": [{ "id": "web" }]
+                    "max_tokens": 1500,
+                    "plugins": [
+                        {
+                            "id": "web",
+                            "max_results": 5,
+                            "search_prompt": "Verwende folgende aktuelle Web-Suchergebnisse für deine Analyse:"
+                        }
+                    ]
                 }
             )
             response.raise_for_status()
@@ -218,19 +224,7 @@ async def fact(update: Update, context: CallbackContext):
 
     # No content to check
     else:
-        await update.message.reply_text(
-            "❓ <b>Faktencheck - Nutzung:</b>\n\n"
-            "📝 <b>Text prüfen:</b>\n"
-            "• Antworte auf eine Nachricht mit /fact\n"
-            "• Oder: /fact <Behauptung>\n\n"
-            "🖼️ <b>Bild prüfen:</b>\n"
-            "• Antworte auf ein Bild mit /fact\n"
-            "• Funktioniert auch mit Bildunterschriften\n\n"
-            "💬 <b>Mit zusätzlichem Kontext:</b>\n"
-            "• Antworte auf eine Nachricht mit /fact <zusätzlicher Kontext>\n\n"
-            "<i>Beispiel: /fact Die Erde ist eine Scheibe</i>",
-            parse_mode='HTML'
-        )
+
         return
 
     # Validate input
