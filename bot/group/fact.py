@@ -155,7 +155,7 @@ Antworte auf Deutsch und sei präzise."""
                 json={
                     # Using :online suffix enables real-time web search via Exa.ai
                     # Costs $4 per 1000 results (default 5 results = $0.02 per request)
-                    "model": "allenai/molmo-2-8b:free:online",
+                    "model": "xiaomi/mimo-v2-flash:free:online",
                     "messages": messages,
                     "temperature": 0.3,
                     "max_tokens": 1500,
