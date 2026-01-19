@@ -1,3 +1,4 @@
+import base64
 import logging
 
 from httpx import AsyncClient
@@ -7,9 +8,43 @@ from telegram.constants import ChatAction
 from telegram.ext import CallbackContext
 
 
-async def fact_check_with_llm(claim: str) -> str:
+async def encode_image_to_base64(photo_file) -> str:
+    """
+    Convert telegram photo to base64 string
+    """
+    try:
+        # Download the photo
+        photo_bytes = await photo_file.download_as_bytearray()
+        # Convert to base64
+        base64_image = base64.b64encode(photo_bytes).decode('utf-8')
+        return base64_image
+    except Exception as e:
+        logging.error(f"Error encoding image: {e}")
+        raise
+
+
+def format_fact_check_result(result: str) -> str:
+    """
+    Format the LLM result with proper HTML formatting for Telegram
+    """
+    import re
+
+    # Bold verdict keywords
+    result = re.sub(r'\b(WAHR|TEILWEISE WAHR|FALSCH|MANIPULIERT|NICHT VERIFIZIERBAR)\b',
+                    r'<b>\1</b>', result)
+
+    # Format sources section if present
+    if 'Quellen:' in result or 'Sources:' in result:
+        result = result.replace('Quellen:', '\n<b>📚 Quellen:</b>')
+        result = result.replace('Sources:', '\n<b>📚 Sources:</b>')
+
+    return result
+
+
+async def fact_check_with_llm(claim: str = None, image_base64: str = None, caption: str = None) -> str:
     """
     Perform fact-checking using LLM with web search capabilities
+    Supports text claims, images, or images with captions
     """
     system_prompt = """Du bist ein Faktenprüfer mit einer klaren pro-europäischen, demokratischen Perspektive.
 
@@ -33,28 +68,74 @@ VERMEIDE:
 - Iranische Staatsmedien (Press TV)
 - Verschwörungstheoretische Quellen
 
+BEI BILDANALYSE:
+- Analysiere den visuellen Inhalt sorgfältig
+- Prüfe auf Anzeichen von Manipulation, Deepfakes oder Photoshop
+- Suche nach der Originalquelle des Bildes (Reverse Image Search Kontext)
+- Überprüfe Datum, Ort und Kontext
+- Achte auf irreführende Bildunterschriften
+- Erkenne aus dem Kontext gerissene Bilder
+
 VORGEHEN:
-1. Analysiere die Behauptung
+1. Analysiere die Behauptung/das Bild/die Bildunterschrift
 2. Suche nach aktuellen, verlässlichen Quellen
 3. Bewerte die Faktenlage
-4. Gib eine klare Einschätzung: WAHR, TEILWEISE WAHR, FALSCH, oder NICHT VERIFIZIERBAR
+4. Gib eine klare Einschätzung: WAHR, TEILWEISE WAHR, FALSCH, MANIPULIERT, oder NICHT VERIFIZIERBAR
 5. Verlinke deine Quellen mit vollständigen URLs
 
 FORMAT:
 - Sei SEHR prägnant und direkt (maximal 3-4 Sätze)
 - Keine langen Erklärungen
-- Verlinke Quellen direkt im Text oder als Liste am Ende
-- Nutze klare Emojis: ✅ WAHR, ⚠️ TEILWEISE WAHR, ❌ FALSCH, ❓ NICHT VERIFIZIERBAR
+- Nutze klare Emojis: ✅ WAHR, ⚠️ TEILWEISE WAHR, ❌ FALSCH, 🖼️ MANIPULIERT, ❓ NICHT VERIFIZIERBAR
+- Gib am Ende eine "Quellen:" Sektion an
+- Liste Quellen als reine URLs auf, jede URL in einer neuen Zeile mit Leerzeile dazwischen
+- Beispiel für Quellen:
+
+Quellen:
+https://www.example.com/article1
+
+https://www.example.com/article2
 
 Antworte auf Deutsch und sei präzise."""
 
+    # Build the user message based on what's provided
+    message_content = []
+
+    if image_base64:
+        # Add image to message
+        message_content.append({
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{image_base64}"
+            }
+        })
+
+        # Add text prompt
+        if caption:
+            text_prompt = f"Analysiere dieses Bild und überprüfe die folgende Bildunterschrift:\n\n{caption}\n\nPrüfe: Ist das Bild authentisch? Passt die Bildunterschrift zum Inhalt? Gibt es Anzeichen von Manipulation?"
+        else:
+            text_prompt = "Analysiere dieses Bild. Prüfe: Ist es authentisch? Gibt es Anzeichen von Manipulation? Was zeigt es wirklich? Suche nach dem Originalkontext."
+
+        message_content.append({
+            "type": "text",
+            "text": text_prompt
+        })
+    elif claim:
+        # Text-only fact check
+        message_content.append({
+            "type": "text",
+            "text": f"Überprüfe folgende Behauptung und nutze aktuelle Online-Quellen:\n\n{claim}"
+        })
+    else:
+        return "❌ Keine Behauptung oder Bild zum Überprüfen angegeben."
+
     messages = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"Überprüfe folgende Behauptung und nutze aktuelle Online-Quellen:\n\n{claim}"}
+        {"role": "user", "content": message_content}
     ]
 
     try:
-        async with AsyncClient(timeout=90.0) as client:
+        async with AsyncClient(timeout=120.0) as client:
             response = await client.post(
                 "https://openrouter.ai/api/v1/chat/completions",
                 headers={
@@ -74,46 +155,93 @@ Antworte auf Deutsch und sei präzise."""
             return data['choices'][0]['message']['content']
     except Exception as e:
         logging.error(f"Fact check failed: {e}", exc_info=True)
-        return f"❌ Fehler beim Faktencheck: {str(e)}"
+        raise
 
 
 async def fact(update: Update, context: CallbackContext):
     """
-    Fact-check a claim using LLM with web search
-    Usage: /fact <claim> or reply to a message with /fact
+    Fact-check a claim, image, or image with caption using LLM with web search
+    Usage:
+    - /fact <claim> - check text claim
+    - Reply to a text message with /fact - check that message
+    - Reply to an image with /fact - check the image
+    - Reply to an image with caption with /fact - check both
     """
     await update.message.chat.send_chat_action(ChatAction.TYPING)
 
-    await update.message.delete()
+    claim = None
+    image_base64 = None
+    caption = None
 
     # Check if replying to a message
-    if update.message.reply_to_message and update.message.reply_to_message.text:
-        claim = update.message.reply_to_message.text
+    if update.message.reply_to_message:
+        replied_msg = update.message.reply_to_message
 
-    # Check if claim provided as command argument
+        # Check for image
+        if replied_msg.photo:
+            # Get the highest resolution photo
+            photo = replied_msg.photo[-1]
+            photo_file = await photo.get_file()
+
+            try:
+                image_base64 = await encode_image_to_base64(photo_file)
+                logging.info(f"Image encoded successfully: {len(image_base64)} chars")
+            except Exception as e:
+                await update.message.reply_text("❌ Fehler beim Laden des Bildes.")
+                return
+
+            # Get caption if exists
+            if replied_msg.caption:
+                caption = replied_msg.caption
+
+        # Check for text
+        elif replied_msg.text:
+            claim = replied_msg.text
+
+        # Delete the /fact command message for cleaner chat
+        await update.message.delete()
+
+    # Check if claim provided as command argument (only for text claims)
+    elif context.args:
+        claim = " ".join(context.args)
+
+    # No content to check
     else:
         return
 
-    if not claim or len(claim.strip()) < 10:
+    # Validate input
+    if not image_base64 and (not claim or len(claim.strip()) < 10):
         await update.message.reply_text("❌ Die Behauptung ist zu kurz. Bitte gib mehr Details an.")
         return
 
-    logging.info(f"Fact-checking claim: {claim[:100]}...")
+    # Log what we're checking
+    if image_base64:
+        log_msg = f"Image with caption: {caption[:50] if caption else 'no caption'}"
+    else:
+        log_msg = f"Text claim: {claim[:100]}"
+    logging.info(f"Fact-checking {log_msg}...")
 
     try:
         # Perform fact check
-        result = await fact_check_with_llm(claim)
+        result = await fact_check_with_llm(claim=claim, image_base64=image_base64, caption=caption)
 
-        # Format response
-        response = f"🔍 <b>FAKTENCHECK</b>\n\n"
-        response += f"<b>Behauptung:</b>\n<i>{claim[:200]}{'...' if len(claim) > 200 else ''}</i>\n\n"
-        response += f"{result}"
+        # Format response with proper HTML
+        response = "🔍 <b>FAKTENCHECK</b>\n\n"
+
+        if image_base64:
+            response += "🖼️ <b>Bildanalyse</b>\n"
+            if caption:
+                response += f"<b>Bildunterschrift:</b>\n<i>{caption[:200]}{'...' if len(caption) > 200 else ''}</i>\n\n"
+        else:
+            response += f"<b>Behauptung:</b>\n<i>{claim[:200]}{'...' if len(claim) > 200 else ''}</i>\n\n"
+
+        # Format the LLM result with proper HTML
+        formatted_result = format_fact_check_result(result)
+        response += formatted_result
 
         logging.info(f"Fact check completed: {len(result)} chars")
 
-        await update.message.reply_to_message.reply_text(response,  disable_web_page_preview=False)
+        await update.message.reply_text(response, parse_mode='HTML', disable_web_page_preview=False)
+
     except Exception as e:
         logging.error(f"Error in fact command: {e}", exc_info=True)
-
-
-
