@@ -84,21 +84,14 @@ async def fact(update: Update, context: CallbackContext):
     """
     await update.message.chat.send_chat_action(ChatAction.TYPING)
 
-    # Get the claim to check
-    claim = None
+    await update.message.delete()
 
     # Check if replying to a message
     if update.message.reply_to_message and update.message.reply_to_message.text:
         claim = update.message.reply_to_message.text
-        await update.message.delete()
+
     # Check if claim provided as command argument
-    elif context.args:
-        claim = " ".join(context.args)
     else:
-        await update.message.reply_text(
-            "❓ Bitte antworte auf eine Nachricht mit /fact oder gib eine Behauptung an\n\n"
-            "Beispiel: /fact Die Erde ist eine Scheibe"
-        )
         return
 
     if not claim or len(claim.strip()) < 10:
