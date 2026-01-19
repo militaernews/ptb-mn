@@ -148,17 +148,12 @@ Antworte auf Deutsch und sei präzise."""
                     "Content-Type": "application/json"
                 },
                 json={
-                    "model": "allenai/molmo-2-8b:free",
+                    # Using :online suffix enables real-time web search via Exa.ai
+                    # Costs $4 per 1000 results (default 5 results = $0.02 per request)
+                    "model": "allenai/molmo-2-8b:free:online",
                     "messages": messages,
                     "temperature": 0.3,
                     "max_tokens": 1500,
-                    "plugins": [
-                        {
-                            "id": "web",
-                            "max_results": 5,
-                            "search_prompt": "Verwende folgende aktuelle Web-Suchergebnisse für deine Analyse:"
-                        }
-                    ]
                 }
             )
             response.raise_for_status()
@@ -224,7 +219,6 @@ async def fact(update: Update, context: CallbackContext):
 
     # No content to check
     else:
-
         return
 
     # Validate input
