@@ -35,3 +35,6 @@ WARN_LIMIT: Final[int] = 3
 MSG_REMOVAL_PERIOD: Final[int] = 1200
 
 DIVIDER: Final[str] = "\n"
+
+OPENROUTER_API_KEY: Final[str] = getenv('OPENROUTER_API_KEY')
+

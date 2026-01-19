@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.constants import ChatAction, ParseMode
 
-from config import OPENROUTER_API_KEY
+from settings.config import OPENROUTER_API_KEY
 
 
 async def fact_check_with_llm(claim: str) -> str:
