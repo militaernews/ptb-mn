@@ -63,7 +63,7 @@ Antworte auf Deutsch und sei präzise."""
                     "Content-Type": "application/json"
                 },
                 json={
-                    "model": "allenai/olmo-3.1-32b-think:free",
+                    "model": "allenai/molmo-2-8b:free",
                     "messages": messages,
                     "temperature": 0.3,
                     "max_tokens": 1200,
