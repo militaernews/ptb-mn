@@ -7,7 +7,7 @@ from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
 
 from group.bingo import handle_bingo
-from settings.config import ADMINS, LOG_GROUP
+from bot.settings.config import ADMINS, LOG_GROUP
 
 
 def check_cas(user_id: int):
