@@ -241,7 +241,7 @@ async def fact(update: Update, context: CallbackContext):
 
         logging.info(f"Fact check completed: {len(result)} chars")
 
-        await update.message.reply_text(response, parse_mode='HTML', disable_web_page_preview=False)
+        await update.message.reply_to_message.reply_text(response, disable_web_page_preview=False)
 
     except Exception as e:
         logging.error(f"Error in fact command: {e}", exc_info=True)
