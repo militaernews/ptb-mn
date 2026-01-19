@@ -1,6 +1,5 @@
-import logging
 import base64
-from io import BytesIO
+import logging
 
 from httpx import AsyncClient
 from settings.config import OPENROUTER_API_KEY
@@ -230,7 +229,7 @@ async def fact(update: Update, context: CallbackContext):
             "💬 <b>Mit zusätzlichem Kontext:</b>\n"
             "• Antworte auf eine Nachricht mit /fact <zusätzlicher Kontext>\n\n"
             "<i>Beispiel: /fact Die Erde ist eine Scheibe</i>",
-            parse_mode='HTML'
+
         )
         return
 
@@ -278,10 +277,10 @@ async def fact(update: Update, context: CallbackContext):
 
         # Reply to the original message being fact-checked
         if update.message.reply_to_message:
-            await update.message.reply_to_message.reply_text(response, parse_mode='HTML',
+            await update.message.reply_to_message.reply_text(response,
                                                              disable_web_page_preview=False)
         else:
-            await update.message.reply_text(response, parse_mode='HTML', disable_web_page_preview=False)
+            await update.message.reply_text(response, disable_web_page_preview=False)
 
     except Exception as e:
         logging.error(f"Error in fact command: {e}", exc_info=True)
