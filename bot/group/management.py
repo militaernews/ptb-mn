@@ -9,7 +9,7 @@ from telegram.ext import CallbackContext, MessageHandler, CommandHandler, filter
 from telegram.helpers import mention_html
 
 from data.lang import GERMAN
-from bot.settings.config import ADMINS, MSG_REMOVAL_PERIOD, WARN_LIMIT
+from settings.config import ADMINS, MSG_REMOVAL_PERIOD, WARN_LIMIT
 from util.helper import (mention, remove_reply, admin_reply, delete, CHAT_ID, MSG_ID, reply_html,
                              admin)
 
