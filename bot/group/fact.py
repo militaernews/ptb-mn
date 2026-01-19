@@ -46,7 +46,7 @@ async def fact_check_with_llm(claim: str = None, image_base64: str = None, capti
     Perform fact-checking using LLM with web search capabilities
     Supports text claims, images, or images with captions
     """
-    system_prompt = """Du bist ein Faktenprüfer mit einer klaren pro-europäischen, demokratischen Perspektive.
+    system_instructions = """Du bist ein Faktenprüfer mit einer klaren pro-europäischen, demokratischen Perspektive.
 
 DEINE HALTUNG:
 - Pro-Europäisch und pro-demokratisch
@@ -101,14 +101,23 @@ https://www.example.com/article2
 
 Antworte auf Deutsch und sei präzise."""
 
-    # Some models don't support system messages or require alternating roles
-    # Combine system prompt with user message
+    # Build the user message based on what's provided
+    message_content = []
+
     if image_base64:
-        # Add system prompt as text before the image analysis request
+        # Add image to message
+        message_content.append({
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/jpeg;base64,{image_base64}"
+            }
+        })
+
+        # Add text prompt
         if caption:
-            text_prompt = f"{system_prompt}\n\nAnalysiere dieses Bild und überprüfe die folgende Bildunterschrift:\n\n{caption}\n\nPrüfe: Ist das Bild authentisch? Passt die Bildunterschrift zum Inhalt? Gibt es Anzeichen von Manipulation?"
+            text_prompt = f"{system_instructions}\n\nAnalysiere dieses Bild und überprüfe die folgende Bildunterschrift:\n\n{caption}\n\nPrüfe: Ist das Bild authentisch? Passt die Bildunterschrift zum Inhalt? Gibt es Anzeichen von Manipulation?"
         else:
-            text_prompt = f"{system_prompt}\n\nAnalysiere dieses Bild. Prüfe: Ist es authentisch? Gibt es Anzeichen von Manipulation? Was zeigt es wirklich? Suche nach dem Originalkontext."
+            text_prompt = f"{system_instructions}\n\nAnalysiere dieses Bild. Prüfe: Ist es authentisch? Gibt es Anzeichen von Manipulation? Was zeigt es wirklich? Suche nach dem Originalkontext."
 
         message_content.append({
             "type": "text",
@@ -118,11 +127,12 @@ Antworte auf Deutsch und sei präzise."""
         # Text-only fact check
         message_content.append({
             "type": "text",
-            "text": f"{system_prompt}\n\nÜberprüfe folgende Behauptung und nutze aktuelle Online-Quellen:\n\n{claim}"
+            "text": f"{system_instructions}\n\nÜberprüfe folgende Behauptung und nutze aktuelle Online-Quellen:\n\n{claim}"
         })
     else:
         return "❌ Keine Behauptung oder Bild zum Überprüfen angegeben."
 
+    # Simple user message only - no system role
     messages = [
         {"role": "user", "content": message_content}
     ]
