@@ -84,11 +84,14 @@ VORGEHEN:
 5. Verlinke deine Quellen mit vollständigen URLs
 
 FORMAT:
+- Beginne direkt mit dem Urteil (✅ WAHR, ⚠️ TEILWEISE WAHR, ❌ FALSCH, 🖼️ MANIPULIERT, ❓ NICHT VERIFIZIERBAR)
+- Keine Überschriften wie "FAKTENCHECK" - komm direkt zur Sache
 - Sei SEHR prägnant und direkt (maximal 3-4 Sätze)
-- Keine langen Erklärungen
-- Nutze klare Emojis: ✅ WAHR, ⚠️ TEILWEISE WAHR, ❌ FALSCH, 🖼️ MANIPULIERT, ❓ NICHT VERIFIZIERBAR
+- Erkläre kurz WARUM die Behauptung wahr/falsch ist
+- Untersuche mögliche Hintergründe: Was könnte der wahre Grund oder Kontext sein?
 - Gib am Ende eine "Quellen:" Sektion an
 - Liste Quellen als reine URLs auf, jede URL in einer neuen Zeile mit Leerzeile dazwischen
+- **NUR funktionierende URLs angeben** - keine toten Links
 - Beispiel für Quellen:
 
 Quellen:
@@ -147,7 +150,7 @@ Antworte auf Deutsch und sei präzise."""
                     "model": "allenai/molmo-2-8b:free",
                     "messages": messages,
                     "temperature": 0.3,
-                    "max_tokens": 1200,
+                    "max_tokens": 1500,
                 }
             )
             response.raise_for_status()
@@ -166,16 +169,22 @@ async def fact(update: Update, context: CallbackContext):
     - Reply to a text message with /fact - check that message
     - Reply to an image with /fact - check the image
     - Reply to an image with caption with /fact - check both
+    - Reply to a message with /fact <additional context> - check with extra context
     """
     await update.message.chat.send_chat_action(ChatAction.TYPING)
 
     claim = None
     image_base64 = None
     caption = None
+    additional_context = None
 
     # Check if replying to a message
     if update.message.reply_to_message:
         replied_msg = update.message.reply_to_message
+
+        # Get additional context if provided
+        if context.args:
+            additional_context = " ".join(context.args)
 
         # Check for image
         if replied_msg.photo:
@@ -207,6 +216,19 @@ async def fact(update: Update, context: CallbackContext):
 
     # No content to check
     else:
+        await update.message.reply_text(
+            "❓ <b>Faktencheck - Nutzung:</b>\n\n"
+            "📝 <b>Text prüfen:</b>\n"
+            "• Antworte auf eine Nachricht mit /fact\n"
+            "• Oder: /fact <Behauptung>\n\n"
+            "🖼️ <b>Bild prüfen:</b>\n"
+            "• Antworte auf ein Bild mit /fact\n"
+            "• Funktioniert auch mit Bildunterschriften\n\n"
+            "💬 <b>Mit zusätzlichem Kontext:</b>\n"
+            "• Antworte auf eine Nachricht mit /fact <zusätzlicher Kontext>\n\n"
+            "<i>Beispiel: /fact Die Erde ist eine Scheibe</i>",
+
+        )
         return
 
     # Validate input
@@ -214,9 +236,17 @@ async def fact(update: Update, context: CallbackContext):
         await update.message.reply_text("❌ Die Behauptung ist zu kurz. Bitte gib mehr Details an.")
         return
 
+    # Combine claim with additional context if provided
+    if additional_context and claim:
+        claim = f"{claim}\n\nZusätzlicher Kontext: {additional_context}"
+    elif additional_context and caption:
+        caption = f"{caption}\n\nZusätzlicher Kontext: {additional_context}"
+
     # Log what we're checking
     if image_base64:
         log_msg = f"Image with caption: {caption[:50] if caption else 'no caption'}"
+        if additional_context:
+            log_msg += f" + context: {additional_context[:30]}"
     else:
         log_msg = f"Text claim: {claim[:100]}"
     logging.info(f"Fact-checking {log_msg}...")
@@ -226,14 +256,16 @@ async def fact(update: Update, context: CallbackContext):
         result = await fact_check_with_llm(claim=claim, image_base64=image_base64, caption=caption)
 
         # Format response with proper HTML
-        response = "🔍 <b>FAKTENCHECK</b>\n\n"
+        response = ""
 
         if image_base64:
             response += "🖼️ <b>Bildanalyse</b>\n"
             if caption:
-                response += f"<b>Bildunterschrift:</b>\n<i>{caption[:200]}{'...' if len(caption) > 200 else ''}</i>\n\n"
+                response += f"<b>Bildunterschrift:</b> <i>{caption[:150]}{'...' if len(caption) > 150 else ''}</i>\n\n"
+            else:
+                response += "\n"
         else:
-            response += f"<b>Behauptung:</b>\n<i>{claim[:200]}{'...' if len(claim) > 200 else ''}</i>\n\n"
+            response += f"<b>Behauptung:</b> <i>{claim[:150]}{'...' if len(claim) > 150 else ''}</i>\n\n"
 
         # Format the LLM result with proper HTML
         formatted_result = format_fact_check_result(result)
@@ -241,7 +273,12 @@ async def fact(update: Update, context: CallbackContext):
 
         logging.info(f"Fact check completed: {len(result)} chars")
 
-        await update.message.reply_to_message.reply_text(response, disable_web_page_preview=False)
+        # Reply to the original message being fact-checked
+        if update.message.reply_to_message:
+            await update.message.reply_to_message.reply_text(response,
+                                                             disable_web_page_preview=False)
+        else:
+            await update.message.reply_text(response, disable_web_page_preview=False)
 
     except Exception as e:
         logging.error(f"Error in fact command: {e}", exc_info=True)
