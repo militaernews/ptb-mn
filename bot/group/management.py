@@ -1,5 +1,4 @@
 import logging
-import re
 from collections import defaultdict
 from typing import Final, List
 
@@ -10,7 +9,7 @@ from telegram.ext import CallbackContext, MessageHandler, CommandHandler, filter
 from telegram.helpers import mention_html
 
 from data.lang import GERMAN
-from settings.config import ADMINS, MSG_REMOVAL_PERIOD, WARN_LIMIT
+from bot.settings.config import ADMINS, MSG_REMOVAL_PERIOD, WARN_LIMIT
 from util.helper import (mention, remove_reply, admin_reply, delete, CHAT_ID, MSG_ID, reply_html,
                              admin)
 
@@ -19,7 +18,8 @@ RULES: Final[List[str]] = [
     "2️⃣ Kein Spam (mehr als drei einzelne Nachrichten oder Alben hintereinander weitergeleitet).",
     "3️⃣ Keine pornografischen Inhalte.",
     "4️⃣ Keine Aufnahmen von Leichen oder Schwerverletzen.",
-    "5️⃣ Keine privaten Inhalte anderer Personen teilen."
+    "5️⃣ Keine privaten Inhalte anderer Personen teilen.",
+    "6️⃣ Amtssprache ist Deutsch."
 ]
 
 NO_MESSAGE: Final[int] = -1

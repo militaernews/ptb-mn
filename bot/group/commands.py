@@ -1,6 +1,7 @@
+from data.lang import GERMAN
+from group.fact import fact
 from telegram import Update
-from telegram.ext import CallbackContext, CommandHandler, Application
-
+from telegram.ext import CallbackContext, CommandHandler, Application, filters
 from util.helper import reply_html, reply_photo
 
 
@@ -118,3 +119,5 @@ def register_commands(app: Application):
     app.add_handler(CommandHandler("deutsch", deutsch))
     app.add_handler(CommandHandler("wissen", wissen))
     app.add_handler(CommandHandler("hominem", hominem))
+
+    app.add_handler(CommandHandler("fact", fact, filters=filters.Chat(GERMAN.chat_id)))
