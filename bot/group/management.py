@@ -15,11 +15,12 @@ from util.helper import (mention, remove_reply, admin_reply, delete, CHAT_ID, MS
 
 RULES: Final[List[str]] = [
     "1️⃣ Keine Beleidigung anderer Mitglieder.",
-    "2️⃣ Kein Spam (mehr als drei einzelne Nachrichten oder Alben hintereinander weitergeleitet).",
+    "2️⃣ Kein Spam, bspw. mehr als drei einzelne Nachrichten oder Alben hintereinander weitergeleitet oder mehrere GIFs oder Sticker hintereinander.",
     "3️⃣ Keine pornografischen Inhalte.",
     "4️⃣ Keine Aufnahmen von Leichen oder Schwerverletzen.",
     "5️⃣ Keine privaten Inhalte anderer Personen teilen.",
-    "6️⃣ Amtssprache ist Deutsch."
+    "6️⃣ Amtssprache ist Deutsch.",
+    "7️⃣ Entmenschlichungen, bspw. Ork oder Ukronazi, sind inakzeptabel."
 ]
 
 NO_MESSAGE: Final[int] = -1
