@@ -2,7 +2,7 @@ import logging
 from telegram import Update
 from telegram.ext import ContextTypes, CommandHandler, filters
 from data.db import get_user_stats, get_warnings
-from settings.config import GERMAN
+from data.lang import GERMAN
 
 logger = logging.getLogger(__name__)
 

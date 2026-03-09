@@ -2,7 +2,8 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, MessageHandler, CallbackQueryHandler, filters
 from data.db import get_warnings, increment_warnings, reset_warnings
-from settings.config import ADMINS, GERMAN
+from settings.config import ADMINS
+from data.lang import GERMAN
 
 logger = logging.getLogger(__name__)
 
