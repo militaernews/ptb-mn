@@ -145,6 +145,19 @@ async def get_msg_id(msg_id: int, lang_key: str, conn: Connection = None):
 
 
 @db
+async def get_media_group_msg_ids(media_group_id: str, lang_key: str, conn: Connection = None) -> List[int]:
+    """Return all msg_ids for a given media group in the specified language, ordered by msg_id."""
+    rows = await conn.fetch(
+        "select p.msg_id from posts p "
+        "where p.lang=$1 and p.post_id in "
+        "(select pp.post_id from posts pp where pp.media_group_id=$2 and pp.lang='de') "
+        "order by p.msg_id",
+        lang_key, media_group_id)
+    logging.info(f">>> get_media_group_msg_ids: {rows}")
+    return [row[0] for row in rows]
+
+
+@db
 async def get_file_id(msg_id: int, conn: Connection = None):
     res = await conn.fetchrow("select p.file_id from posts p where p.msg_id=$1", msg_id)
 

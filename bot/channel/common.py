@@ -4,7 +4,7 @@ from typing import List
 
 from data.db import (insert_single3, insert_single2, query_replies3,
                      get_post_id, query_files, get_post_id2, query_replies4, get_msg_id, get_file_id,
-                     update_post)
+                     update_post, get_media_group_msg_ids)
 from data.lang import GERMAN, LANGUAGES
 from data.model import Post, PHOTO, VIDEO, ANIMATION
 from settings.config import DIVIDER, CHANNEL_SOURCE
@@ -184,35 +184,59 @@ async def share_in_other_channels(context: CallbackContext):
 
 
 async def edit_channel(update: Update, context: CallbackContext):
-    if update.edited_channel_post.caption is not None:
+    edited = update.edited_channel_post
+
+    if edited.caption is not None:
         original_caption = WHITESPACE.sub(
             "",
             HASHTAG.sub(
                 "",
-                update.edited_channel_post.caption_html_urled.replace(
-                    GERMAN.footer, ""
-                ),
+                edited.caption_html_urled.replace(GERMAN.footer, ""),
             ),
         )
     else:
         original_caption = None
 
-    file_id = await get_file_id(update.edited_channel_post.id)
-
-    if len(update.edited_channel_post.photo) > 0:
-        new_file = await update.edited_channel_post.photo[-1].get_file()
+    # Determine the new file from the edited post
+    if len(edited.photo) > 0:
+        new_file = await edited.photo[-1].get_file()
         input_media = InputMediaPhoto(new_file.file_id)
-    elif update.edited_channel_post.video is not None:
+    elif edited.video is not None:
         # todo: file is too big
-        new_file = await update.edited_channel_post.video.get_file()
+        new_file = await edited.video.get_file()
         input_media = InputMediaVideo(new_file.file_id)
-    elif update.edited_channel_post.animation is not None:
-        new_file = await update.edited_channel_post.animation.get_file()
+    elif edited.animation is not None:
+        new_file = await edited.animation.get_file()
         input_media = InputMediaAnimation(new_file.file_id)
+    else:
+        new_file = None
+        input_media = None
+
+    old_file_id = await get_file_id(edited.id)
+    file_changed = new_file is not None and old_file_id != new_file.file_id
+
+    # Determine whether this post belongs to a media group
+    media_group_id = edited.media_group_id
 
     for lang in LANGUAGES:
         msg = None
-        msg_id = await get_msg_id(update.edited_channel_post.id, lang.lang_key)
+
+        if media_group_id is not None:
+            # For media groups, retrieve all message IDs in this album for the target language
+            # and find the position of the edited DE message within the album so we can edit
+            # the corresponding message in the other language channels.
+            de_msg_ids = await get_media_group_msg_ids(media_group_id, GERMAN.lang_key)
+            lang_msg_ids = await get_media_group_msg_ids(media_group_id, lang.lang_key)
+            try:
+                position = de_msg_ids.index(edited.id)
+                msg_id = lang_msg_ids[position] if position < len(lang_msg_ids) else None
+            except ValueError:
+                msg_id = None
+        else:
+            msg_id = await get_msg_id(edited.id, lang.lang_key)
+
+        if msg_id is None:
+            continue
 
         try:
             if original_caption is not None:
@@ -220,8 +244,9 @@ async def edit_channel(update: Update, context: CallbackContext):
             else:
                 translated_text = None
 
-            with input_media._unfrozen():
-                input_media.caption = translated_text
+            if input_media is not None:
+                with input_media._unfrozen():
+                    input_media.caption = translated_text
 
             msg = await context.bot.edit_message_caption(
                 chat_id=lang.channel_id,
@@ -233,7 +258,9 @@ async def edit_channel(update: Update, context: CallbackContext):
             if not e.message.startswith("Message is not modified"):
                 await log_error("edit Caption", context, lang, e, update)
 
-        if file_id != new_file.file_id and GERMAN.breaking not in original_caption:
+        if file_changed and input_media is not None and (
+            original_caption is None or GERMAN.breaking not in original_caption
+        ):
             try:
                 logging.info(f"- edit file -------------------------------------------------- {input_media}")
                 msg = await context.bot.edit_message_media(
@@ -241,10 +268,10 @@ async def edit_channel(update: Update, context: CallbackContext):
                     chat_id=lang.channel_id,
                     message_id=msg_id
                 )
-
             except TelegramError as e:
                 if not e.message.startswith("Message is not modified"):
-                    await log_error("edit Media", context, lang, e, update, )
+                    await log_error("edit Media", context, lang, e, update)
+
         if msg is not None:
             await update_post(msg, lang.lang_key)
 
@@ -252,14 +279,13 @@ async def edit_channel(update: Update, context: CallbackContext):
         # not sure if this will cause eternal triggering, hopefully not
         text = None if original_caption is None else flag_to_hashtag(original_caption)
 
-        if "#" not in update.edited_channel_post.caption:
-            await update.edited_channel_post.edit_caption(text + DIVIDER + GERMAN.footer)
+        if edited.caption is not None and "#" not in edited.caption:
+            await edited.edit_caption(text + DIVIDER + GERMAN.footer)
 
-        await update_post(update.edited_channel_post)
-        # todo: update text in db
+        await update_post(edited)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
-            await log_error("edit Post", context, GERMAN, e, update, )
+            await log_error("edit Post", context, GERMAN, e, update)
 
 
 async def handle_url(update: Update, context: CallbackContext):
