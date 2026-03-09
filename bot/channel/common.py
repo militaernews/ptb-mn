@@ -32,7 +32,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
         logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
 
-        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}"
+        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}"
 
         try:
             msg_id: MessageId = await update.channel_post.copy(chat_id=lang.channel_id,
@@ -143,7 +143,7 @@ async def share_in_other_channels(context: CallbackContext):
     logging.info(f"------------------------------------------- post_id: {post_id}")
 
     for lang in LANGUAGES:
-        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}"
+        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}"
         logging.info(f"caption::::::::::: {caption}")
         with files[0]._unfrozen():
             files[0].caption = f"{caption}{DIVIDER}{lang.footer}"
@@ -240,7 +240,7 @@ async def edit_channel(update: Update, context: CallbackContext):
 
         try:
             if original_caption is not None:
-                translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl)}{DIVIDER}{lang.footer}"
+                translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}"
             else:
                 translated_text = None
 

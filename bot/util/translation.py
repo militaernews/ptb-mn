@@ -23,7 +23,7 @@ import logging
 import os
 import re
 from json import loads, load
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from data.lang import GERMAN, LANGUAGES
 from deep_translator import GoogleTranslator
@@ -109,13 +109,28 @@ def flag_to_hashtag(text: str, lang_key: str = GERMAN.lang_key):
     return text
 
 
-async def translate_message(target_lang: str, text: str, target_lang_deepl: str = None) -> str | None:
+async def translate_message(
+    target_lang: str,
+    text: str,
+    target_lang_deepl: str = None,
+    lang_username: str = None,
+) -> str | None:
+    """Translate *text* to *target_lang* and post-process the result.
+
+    If *lang_username* is provided, any internal t.me/<GERMAN.username>/<id>
+    links in the translated text are rewritten to point to the equivalent
+    message in the destination language channel (Issue #9).
+    """
     if not text or text is None:
         return None
 
     translated_text = await translate(target_lang, text, target_lang_deepl)
+    translated_text = flag_to_hashtag(translated_text, target_lang)
 
-    return flag_to_hashtag(translated_text, target_lang)
+    if lang_username is not None:
+        translated_text = await rewrite_internal_links(translated_text, target_lang, lang_username)
+
+    return translated_text
 
 
 # could be replaced by using multiple txt-files for the different languages
@@ -176,6 +191,48 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
 
     logging.info(f"translated text ----------------- {text, tokens, sub_text, text_to_translate, translated_text}")
     return translated_text
+
+
+# Pattern that matches t.me/<username>/<message_id> links (plain URL or inside href="...")
+_INTERNAL_LINK_RE = re.compile(
+    r'(https://t\.me/)' + re.escape(GERMAN.username) + r'/(\d+)',
+    re.IGNORECASE,
+)
+
+
+async def rewrite_internal_links(
+    text: str,
+    lang_key: str,
+    lang_username: str,
+) -> str:
+    """Replace t.me/<GERMAN.username>/<de_msg_id> links with the equivalent link
+    in the destination language channel.
+
+    For every match the DB is queried for the corresponding message ID in
+    *lang_key*.  If a mapping is found the link is rewritten to
+    t.me/<lang_username>/<lang_msg_id>; otherwise the original link is kept.
+    """
+    # Import here to avoid circular imports at module load time
+    from data.db import get_lang_msg_id_for_de_msg_id
+
+    if not _INTERNAL_LINK_RE.search(text):
+        return text
+
+    async def _replace(m: re.Match) -> str:
+        de_msg_id = int(m.group(2))
+        lang_msg_id: Optional[int] = await get_lang_msg_id_for_de_msg_id(de_msg_id, lang_key)
+        if lang_msg_id is not None:
+            return f"{m.group(1)}{lang_username}/{lang_msg_id}"
+        # No mapping found – keep the original DE link
+        return m.group(0)
+
+    # re.sub does not support async callbacks; iterate manually
+    result = text
+    for m in list(_INTERNAL_LINK_RE.finditer(text)):
+        replacement = await _replace(m)
+        result = result.replace(m.group(0), replacement, 1)
+
+    return result
 
 
 def segment_text(text: str) -> str:

@@ -139,9 +139,25 @@ async def get_msg_id(msg_id: int, lang_key: str, conn: Connection = None):
     res = await conn.fetchrow(
         "select p.msg_id from posts p where p.lang=$1 and p.post_id = (select pp.post_id from posts pp where pp.msg_id = $2 and pp.lang='de')",
         lang_key, msg_id)
-
     logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {res}")
     return res[0] if res is not None else res
+
+
+@db
+async def get_lang_msg_id_for_de_msg_id(de_msg_id: int, lang_key: str, conn: Connection = None) -> Optional[int]:
+    """Given a DE channel message ID, return the corresponding message ID in the target language channel.
+
+    Used to rewrite t.me/<german_username>/<de_msg_id> links in translated posts so they point
+    to the equivalent message in the destination language channel.
+    Returns None if no mapping exists (caller should keep the original link).
+    """
+    res = await conn.fetchval(
+        "select p.msg_id from posts p "
+        "where p.lang=$1 and p.post_id = ("
+        "  select pp.post_id from posts pp where pp.msg_id=$2 and pp.lang='de'"
+        ")",
+        lang_key, de_msg_id)
+    return res
 
 
 @db

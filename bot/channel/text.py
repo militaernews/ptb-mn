@@ -32,7 +32,7 @@ async def post_channel_text(update: Update, context: CallbackContext):
         try:
             msg: Message = await context.bot.send_message(
                 chat_id=lang.channel_id,
-                text=f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}{DIVIDER}{lang.footer}",
+                text=f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}",
                 reply_to_message_id=reply_id
             )
             await insert_single2(msg, lang.lang_key)
@@ -77,7 +77,7 @@ async def edit_channel_text(update: Update, context: CallbackContext):
 
     for lang in LANGUAGES:
         try:
-            translated_text = f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl)}{DIVIDER}{lang.footer}"
+            translated_text = f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}"
             msg_id = await get_msg_id(update.edited_channel_post.id, lang.lang_key)
             await context.bot.edit_message_text(
                 text=translated_text,
