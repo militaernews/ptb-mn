@@ -416,18 +416,26 @@ async def init_db():
     if pool is None:
         return
 
-    # Path to schema.sql (relative to the project root)
-    # In Docker, the project root is /app, and bot/data/db.py is /app/bot/data/db.py
-    # Locally, it might be different. Let's try to find it relative to the project root.
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-    schema_path = os.path.join(base_dir, "scripts", "schema.sql")
+    # Path to schema.sql
+    # Based on PXNX/quadlets, the bot is mounted as:
+    # Volume=%h/projects/ptb-mn/bot:/app:Z
+    # This means /app is the 'bot' directory.
+    # The 'scripts' directory is at the same level as 'bot', so it's at /app/../scripts/schema.sql
+    
+    # Try relative to this file first (works locally and in container if structure is preserved)
+    schema_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "scripts", "schema.sql"))
     
     if not os.path.exists(schema_path):
-        # Fallback for Docker environment if base_dir logic fails
-        schema_path = "/app/scripts/schema.sql"
+        # Fallback for the specific Docker mount: /app is 'bot' folder
+        # scripts is at /app/../scripts
+        schema_path = "/app/../scripts/schema.sql"
         
     if not os.path.exists(schema_path):
-        logging.error(f"Schema file not found at {schema_path}")
+        # Another fallback: maybe it's just /scripts/schema.sql if mounted differently
+        schema_path = "/scripts/schema.sql"
+
+    if not os.path.exists(schema_path):
+        logging.error(f"Schema file not found. Tried: {schema_path} and others.")
         return
 
     with open(schema_path, "r") as f:
