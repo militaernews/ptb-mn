@@ -1,7 +1,7 @@
 import logging
 import re
 
-import requests
+import httpx
 from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.helpers import mention_html
@@ -10,16 +10,18 @@ from group.bingo import handle_bingo
 from bot.settings.config import ADMINS, LOG_GROUP
 
 
-def check_cas(user_id: int):
-    response = requests.get(f"https://api.cas.chat/check?user_id={user_id}")
-    logging.info(f"{user_id} --- {response.json()}")
-    return response.json()["ok"] == "True"
+async def check_cas(user_id: int):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"https://api.cas.chat/check?user_id={user_id}")
+        data = response.json()
+        logging.info(f"{user_id} --- {data}")
+        return data["ok"] == "True"
 
 
-def join_member(update: Update, context: CallbackContext):
+async def join_member(update: Update, context: CallbackContext):
     for member in update.message.new_chat_members:
-        if check_cas(member.id):
-            context.bot.ban_chat_member(
+        if await check_cas(member.id):
+            await context.bot.ban_chat_member(
                 update.effective_chat.id, update.message.from_user.id
             )
 

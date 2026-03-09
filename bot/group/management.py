@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from typing import Final, List
 
-import requests
+import httpx
 from telegram import Update, ChatPermissions
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext, MessageHandler, CommandHandler, filters, Application
@@ -191,18 +191,19 @@ async def report_user(update: Update, _: CallbackContext):
     user_id = update.message.reply_to_message.from_user.id
     logging.info(f"reporting {user_id} !!")
     try:
-        r = requests.post(url="http://localhost:8080/reports",
-                          json={
-                              "user_id": user_id,
-                              "message": "NO MESSAGE",
-                              "account_id": 1
-                          }, timeout=8)
-        logging.info(r)
-        if r.status_code == 201:
-            await update.message.reply_to_message.reply_text(
-                f"Hey {mention(update)}!\n\nEin Admin dieser Gruppe hat deinen Account unserem Antispam-System gemeldet. Moderatoren überprüfen diesen Fall nun.\n\nFalls dein Account Betrug oder Spam begangen hat, dann wirst du in allen Gruppen gebannt, wenn unser Antispam-System dort aktiv ist.")
+        async with httpx.AsyncClient() as client:
+            r = await client.post(url="http://localhost:8080/reports",
+                                json={
+                                    "user_id": user_id,
+                                    "message": "NO MESSAGE",
+                                    "account_id": 1
+                                }, timeout=8.0)
+            logging.info(r)
+            if r.status_code == 201:
+                await update.message.reply_to_message.reply_text(
+                    f"Hey {mention(update)}!\n\nEin Admin dieser Gruppe hat deinen Account unserem Antispam-System gemeldet. Moderatoren überprüfen diesen Fall nun.\n\nFalls dein Account Betrug oder Spam begangen hat, dann wirst du in allen Gruppen gebannt, wenn unser Antispam-System dort aktiv ist.")
 
-    except requests.exceptions.Timeout as e:
+    except httpx.TimeoutException as e:
         logging.error(f"Timed out when reporting {user_id}: {e}")
 
 
@@ -217,14 +218,15 @@ async def report_user_id(update: Update, context: CallbackContext):
     user_id = int(context.args[0])
     logging.info(f"reporting {user_id} !!")
     try:
-        r = requests.post(url="http://localhost:8080/reports",
-                          json={
-                              "user_id": user_id,
-                              "message": "NO MESSAGE",
-                              "account_id": 1
-                          }, timeout=8)
-        logging.info(r)
-    except requests.exceptions.Timeout as e:
+        async with httpx.AsyncClient() as client:
+            r = await client.post(url="http://localhost:8080/reports",
+                                json={
+                                    "user_id": user_id,
+                                    "message": "NO MESSAGE",
+                                    "account_id": 1
+                                }, timeout=8.0)
+            logging.info(r)
+    except httpx.TimeoutException as e:
         logging.error(f"Timed out when reporting {user_id}: {e}")
 
     await update.message.reply_to_message.reply_text(

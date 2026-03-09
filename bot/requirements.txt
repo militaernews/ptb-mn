@@ -9,7 +9,6 @@ asyncpg==0.30.0
 lxml==6.0.2
 httpx==0.28.1
 yt-dlp==2026.3.3
-requests==2.32.4
 
 # translation
 deep-translator==1.11.4
