@@ -1,9 +1,9 @@
 ---
 layout: default
-title: MilitaerNews Posting Bot
+title: 🔰 MilitaerNews Posting Bot
 ---
 
-# 🔰 MilitaerNews Posting Bot
+# Willkommen bei MilitaerNews
 
 Willkommen zur Dokumentation des **MilitaerNews Posting Bots** – ein automatisiertes System zur Verwaltung und Verbreitung von Inhalten über mehrsprachige Telegram-Kanäle und Social Media.
 

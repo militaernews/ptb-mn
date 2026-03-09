@@ -1,3 +1,8 @@
+---
+layout: default
+title: 🔰 Redakteur-Handbuch
+---
+
 # 🔰 Handbuch für MilitaerNews-Redakteure
 
 Willkommen zum offiziellen Handbuch für Redakteure von MilitaerNews! Dieses Dokument ist Ihr zentraler Leitfaden für die Erstellung und Verwaltung von Inhalten mit unserem automatisierten **Posting Bot**. Ziel ist es, den Prozess so einfach und effizient wie möglich zu gestalten.
