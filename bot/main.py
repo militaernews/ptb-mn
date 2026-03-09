@@ -20,6 +20,7 @@ from group.bingo import register_bingo
 from group.commands import register_commands
 from group.management import register_management
 from group.whitelist import register_whitelist
+from group.admin_actions import register_admin_actions
 from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
@@ -107,6 +108,7 @@ def main():
 
     register_commands(application)
     register_management(application)
+    register_admin_actions(application)
     #   register_captcha(application)
 
     register_whitelist(application)
