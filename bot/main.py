@@ -16,6 +16,7 @@ from channel.crawler import register_crawler
 from channel.suggest import register_suggest
 from channel.text import edit_channel_text, post_channel_text
 from data.lang import GERMAN
+from data.db import init_db
 from group.bingo import register_bingo
 from group.commands import register_commands
 from group.management import register_management
@@ -125,6 +126,17 @@ def main():
         logging.error("Exception while handling an update:", exc_info=context.error)
 
     application.add_error_handler(error_handler)
+
+    # Initialize database schema
+    import asyncio
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            loop.create_task(init_db())
+        else:
+            loop.run_until_complete(init_db())
+    except Exception as e:
+        logging.error(f"Could not initialize database: {e}")
 
     print("### RUNNING LOCAL ### - print")
     logging.info("### RUNNING LOCAL ### - logging")

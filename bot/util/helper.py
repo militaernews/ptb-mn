@@ -198,7 +198,8 @@ async def log_error(action: str, context: CallbackContext, lang: Language | str,
 
 async def delete_msg(update: Update):
     try:
-        await update.message.delete()
+        if update and update.message:
+            await update.message.delete()
     except TelegramError as e:
         logging.warning(f"Needs admin rights: {e}")
     except Exception as e:

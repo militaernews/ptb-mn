@@ -10,6 +10,7 @@ from typing import Optional, Callable, Awaitable
 from asyncpg import Pool
 from asyncpg import create_pool, Connection
 from telegram import Message
+import os
 
 from data.lang import GERMAN
 from data.model import Post, ANIMATION, VIDEO, PHOTO
@@ -408,3 +409,36 @@ async def log_user_event(user_id: int, chat_id: int, event_type: str, conn: Conn
         "insert into user_events(user_id, chat_id, event_type) values ($1, $2, $3)",
         user_id, chat_id, event_type
     )
+
+async def init_db():
+    """Initialize the database schema from schema.sql if tables don't exist."""
+    pool = await DBPool.get_pool()
+    if pool is None:
+        return
+
+    # Path to schema.sql (relative to bot/data/db.py)
+    schema_path = os.path.join(os.path.dirname(__file__), "..", "..", "scripts", "schema.sql")
+    if not os.path.exists(schema_path):
+        logging.error(f"Schema file not found at {schema_path}")
+        return
+
+    with open(schema_path, "r") as f:
+        schema_sql = f.read()
+
+    # We need to be careful with 'drop table' and 'create table' without 'if not exists'
+    # Let's modify the SQL in memory to be safer for auto-init
+    safe_sql = ""
+    for line in schema_sql.splitlines():
+        if line.strip().lower().startswith("drop table"):
+            continue # Skip drops
+        if line.strip().lower().startswith("create table"):
+            if "if not exists" not in line.lower():
+                line = line.replace("create table", "create table if not exists", 1)
+        safe_sql += line + "\n"
+
+    async with pool.acquire() as conn:
+        try:
+            await conn.execute(safe_sql)
+            logging.info("Database schema initialized successfully.")
+        except Exception as e:
+            logging.error(f"Failed to initialize database schema: {e}")
