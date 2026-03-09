@@ -411,50 +411,84 @@ async def log_user_event(user_id: int, chat_id: int, event_type: str, conn: Conn
     )
 
 async def init_db():
-    """Initialize the database schema from schema.sql if tables don't exist."""
+    """Initialize the database schema if tables don't exist."""
     pool = await DBPool.get_pool()
     if pool is None:
         return
 
-    # Path to schema.sql
-    # Based on PXNX/quadlets, the bot is mounted as:
-    # Volume=%h/projects/ptb-mn/bot:/app:Z
-    # This means /app is the 'bot' directory.
-    # The 'scripts' directory is at the same level as 'bot', so it's at /app/../scripts/schema.sql
-    
-    # Try relative to this file first (works locally and in container if structure is preserved)
-    schema_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "scripts", "schema.sql"))
-    
-    if not os.path.exists(schema_path):
-        # Fallback for the specific Docker mount: /app is 'bot' folder
-        # scripts is at /app/../scripts
-        schema_path = "/app/../scripts/schema.sql"
-        
-    if not os.path.exists(schema_path):
-        # Another fallback: maybe it's just /scripts/schema.sql if mounted differently
-        schema_path = "/scripts/schema.sql"
+    # Embedded schema to avoid path issues in Docker/Quadlet environments
+    schema_sql = """
+    create table if not exists posts
+    (
+        post_id        int,
+        lang           char(2) not null,
+        msg_id         int     not null,
+        media_group_id varchar(120),
+        reply_id       int,
+        file_type      int,
+        file_id        varchar(120),
+        text           text,
+        spoiler boolean default false,
+        primary key (msg_id, lang)
+    );
 
-    if not os.path.exists(schema_path):
-        logging.error(f"Schema file not found. Tried: {schema_path} and others.")
-        return
+    create table if not exists promos
+    (
+        user_id bigint not null,
+        lang char(2),
+        promo_id bigint,
+        primary key (user_id)
+    );
 
-    with open(schema_path, "r") as f:
-        schema_sql = f.read()
+    create table if not exists suggest_posts
+    (
+        source_channel_id  bigint       not null,
+        source_message_id  int          not null,
+        suggest_message_id int          not null,
+        text               text,
+        created_at         timestamptz  not null default now(),
+        primary key (source_channel_id, source_message_id)
+    );
 
-    # We need to be careful with 'drop table' and 'create table' without 'if not exists'
-    # Let's modify the SQL in memory to be safer for auto-init
-    safe_sql = ""
-    for line in schema_sql.splitlines():
-        if line.strip().lower().startswith("drop table"):
-            continue # Skip drops
-        if line.strip().lower().startswith("create table"):
-            if "if not exists" not in line.lower():
-                line = line.replace("create table", "create table if not exists", 1)
-        safe_sql += line + "\n"
+    create table if not exists whitelist
+    (
+        id serial primary key,
+        link text not null unique,
+        created_at timestamptz not null default now()
+    );
+
+    create table if not exists warnings
+    (
+        user_id bigint not null,
+        chat_id bigint not null,
+        count int not null default 0,
+        last_warned_at timestamptz not null default now(),
+        primary key (user_id, chat_id)
+    );
+
+    create table if not exists user_stats
+    (
+        user_id bigint not null,
+        chat_id bigint not null,
+        karma int not null default 0,
+        message_count int not null default 0,
+        joined_at timestamptz not null default now(),
+        primary key (user_id, chat_id)
+    );
+
+    create table if not exists user_events
+    (
+        id serial primary key,
+        user_id bigint not null,
+        chat_id bigint not null,
+        event_type varchar(20) not null,
+        created_at timestamptz not null default now()
+    );
+    """
 
     async with pool.acquire() as conn:
         try:
-            await conn.execute(safe_sql)
+            await conn.execute(schema_sql)
             logging.info("Database schema initialized successfully.")
         except Exception as e:
             logging.error(f"Failed to initialize database schema: {e}")
