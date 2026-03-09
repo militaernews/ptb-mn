@@ -113,6 +113,7 @@ async def set_cmd(update: Update, context: CallbackContext):
 
     admin_commands = chat_de_commands + [
         ("add_advertisement", "Werbung erstellen"),
+        ("ai_post", "KI-Post-Assistent starten"),
     ]
     for chat_id in ADMINS:
         with contextlib.suppress(BadRequest):

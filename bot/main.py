@@ -23,6 +23,8 @@ from group.whitelist import register_whitelist
 from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
+from private.ai_assistant import register_ai_assistant
+from util.media_handler import register_media_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
 
@@ -107,6 +109,8 @@ def main():
     #   register_captcha(application)
 
     register_whitelist(application)
+    register_ai_assistant(application)
+    register_media_downloader(application)
 
     # Commands have to be added above
     #  application.add_error_handler( report_error)  # comment this one out for full stacktrace
