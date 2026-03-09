@@ -287,6 +287,47 @@ async def truncate_promo(conn: Connection):
 
 
 
+@db
+async def suggest_is_posted(source_channel_id: int, source_message_id: int, conn: Connection = None) -> bool:
+    """Return True if this source message has already been forwarded to the suggest channel."""
+    res = await conn.fetchval(
+        "select 1 from suggest_posts where source_channel_id=$1 and source_message_id=$2",
+        source_channel_id, source_message_id)
+    return res is not None
+
+
+@db
+async def suggest_insert(source_channel_id: int, source_message_id: int,
+                         suggest_message_id: int, text: str = None,
+                         conn: Connection = None) -> None:
+    """Record a newly forwarded suggest post."""
+    await conn.execute(
+        "insert into suggest_posts(source_channel_id, source_message_id, suggest_message_id, text) "
+        "values ($1,$2,$3,$4) on conflict do nothing",
+        source_channel_id, source_message_id, suggest_message_id, text)
+
+
+@db
+async def suggest_get_message_id(source_channel_id: int, source_message_id: int,
+                                  conn: Connection = None) -> Optional[int]:
+    """Return the suggest channel message ID for a previously forwarded post."""
+    res = await conn.fetchval(
+        "select suggest_message_id from suggest_posts "
+        "where source_channel_id=$1 and source_message_id=$2",
+        source_channel_id, source_message_id)
+    return res
+
+
+@db
+async def suggest_update_text(source_channel_id: int, source_message_id: int,
+                               text: str, conn: Connection = None) -> None:
+    """Update the stored text for an already-forwarded suggest post."""
+    await conn.execute(
+        "update suggest_posts set text=$3 "
+        "where source_channel_id=$1 and source_message_id=$2",
+        source_channel_id, source_message_id, text)
+
+
 async def get_suggested_sources() -> List[int]:
     pool_nn = await create_pool(DATABASE_URL_NN, ssl=get_ssl())
     async with pool_nn.acquire() as conn:

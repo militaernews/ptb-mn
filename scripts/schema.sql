@@ -23,3 +23,15 @@ create table promos
     promo_id bigint,
     primary key (user_id)
 );
+
+-- Tracks posts that have already been forwarded to the suggest channel
+-- to prevent duplicates and to support text-edit propagation.
+create table if not exists suggest_posts
+(
+    source_channel_id  bigint       not null,
+    source_message_id  int          not null,
+    suggest_message_id int          not null,
+    text               text,
+    created_at         timestamptz  not null default now(),
+    primary key (source_channel_id, source_message_id)
+);
