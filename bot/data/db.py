@@ -416,8 +416,16 @@ async def init_db():
     if pool is None:
         return
 
-    # Path to schema.sql (relative to bot/data/db.py)
-    schema_path = os.path.join(os.path.dirname(__file__), "..", "..", "scripts", "schema.sql")
+    # Path to schema.sql (relative to the project root)
+    # In Docker, the project root is /app, and bot/data/db.py is /app/bot/data/db.py
+    # Locally, it might be different. Let's try to find it relative to the project root.
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    schema_path = os.path.join(base_dir, "scripts", "schema.sql")
+    
+    if not os.path.exists(schema_path):
+        # Fallback for Docker environment if base_dir logic fails
+        schema_path = "/app/scripts/schema.sql"
+        
     if not os.path.exists(schema_path):
         logging.error(f"Schema file not found at {schema_path}")
         return
