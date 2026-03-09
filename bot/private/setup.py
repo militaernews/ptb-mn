@@ -99,6 +99,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         ("deutsch", "Amtssprache"),
         ("vs", "Verfassungsschutz"),
         ("front", "An die Front!"),
+        ("info", "Nutzer-Statistiken anzeigen"),
     ]
     await context.bot.set_my_commands(chat_de_commands)
 

@@ -53,3 +53,14 @@ create table if not exists warnings
     last_warned_at timestamptz not null default now(),
     primary key (user_id, chat_id)
 );
+
+-- User statistics for MNChat
+create table if not exists user_stats
+(
+    user_id bigint not null,
+    chat_id bigint not null,
+    karma int not null default 0,
+    message_count int not null default 0,
+    joined_at timestamptz not null default now(),
+    primary key (user_id, chat_id)
+);

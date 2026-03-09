@@ -14,6 +14,7 @@ For a comprehensive guide on how to use the bot for posting and editing content,
 - **AI Post Assistant** – Create news articles from multiple media files using LLMs (Llama 3.1, Gemini, Mistral)
 - **Social Media Downloader** – Automatic download of media from Twitter/X, Instagram, and YouTube links
 - **Interactive Admin Tools** – `@admin` mention triggers a menu for warning (with warning history) or banning users
+- **Karma & Stats System** – Track user karma (via reactions), message count, and join dates; view stats with `/info`
 - **Fact-Checking** – LLM-powered fact-checker with web search capabilities and model fallback
 - **Database-backed Whitelist** – Admin-managed link whitelist stored in PostgreSQL
 - **Media Group Support** – Full album handling across all channels
@@ -104,6 +105,8 @@ The bot uses a PostgreSQL database. The schema is defined in [scripts/schema.sql
 **`whitelist`** — stores links/domains allowed in groups.
 
 **`warnings`** — tracks user warning counts per chat.
+
+**`user_stats`** — stores user karma, message counts, and join dates for MNChat.
 
 ### Running Locally
 

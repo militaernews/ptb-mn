@@ -385,3 +385,18 @@ async def increment_warnings(user_id: int, chat_id: int, conn: Connection = None
 @db
 async def reset_warnings(user_id: int, chat_id: int, conn: Connection = None):
     await conn.execute("delete from warnings where user_id=$1 and chat_id=$2", user_id, chat_id)
+
+
+@db
+async def update_user_stats(user_id: int, chat_id: int, karma_delta: int = 0, msg_delta: int = 0, conn: Connection = None):
+    await conn.execute(
+        "insert into user_stats(user_id, chat_id, karma, message_count) values ($1, $2, $3, $4) "
+        "on conflict (user_id, chat_id) do update set "
+        "karma = user_stats.karma + $3, "
+        "message_count = user_stats.message_count + $4",
+        user_id, chat_id, karma_delta, msg_delta
+    )
+
+@db
+async def get_user_stats(user_id: int, chat_id: int, conn: Connection = None):
+    return await conn.fetchrow("select * from user_stats where user_id=$1 and chat_id=$2", user_id, chat_id)
