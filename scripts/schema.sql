@@ -64,3 +64,13 @@ create table if not exists user_stats
     joined_at timestamptz not null default now(),
     primary key (user_id, chat_id)
 );
+
+-- Log of user join/leave events for MNChat
+create table if not exists user_events
+(
+    id serial primary key,
+    user_id bigint not null,
+    chat_id bigint not null,
+    event_type varchar(20) not null, -- 'joined', 'left', 'kicked', 'banned'
+    created_at timestamptz not null default now()
+);

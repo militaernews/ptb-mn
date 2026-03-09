@@ -1,7 +1,7 @@
 import logging
 from telegram import Update
 from telegram.ext import ContextTypes, MessageHandler, filters, ChatMemberHandler
-from data.db import update_user_stats
+from data.db import update_user_stats, log_user_event
 from settings.config import GERMAN
 
 logger = logging.getLogger(__name__)
@@ -65,18 +65,28 @@ async def handle_reaction_karma(update: Update, context: ContextTypes.DEFAULT_TY
     except Exception as e:
         logger.error(f"Error tracking reaction karma: {e}")
 
-async def handle_member_join(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Initialize user stats when a member joins for the first time."""
+async def handle_chat_member_update(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Log when a member joins or leaves the chat."""
     result = update.chat_member
-    if not result or result.new_chat_member.status != 'member':
+    if not result or result.chat.id != GERMAN.chat_id:
         return
 
-    if result.chat.id != GERMAN.chat_id:
-        return
+    user_id = result.from_user.id
+    old_status = result.old_chat_member.status
+    new_status = result.new_chat_member.status
 
-    user_id = result.new_chat_member.user.id
-    # update_user_stats with 0 deltas will create the record with joined_at = now() if it doesn't exist
-    await update_user_stats(user_id, result.chat.id)
+    # Join events
+    if old_status in ('left', 'kicked') and new_status == 'member':
+        await log_user_event(user_id, result.chat.id, 'joined')
+        # update_user_stats with 0 deltas will create the record with joined_at = now() if it doesn't exist
+        await update_user_stats(user_id, result.chat.id)
+        logger.info(f"User {user_id} joined chat {result.chat.id}")
+
+    # Leave/Kick/Ban events
+    elif old_status == 'member' and new_status in ('left', 'kicked', 'kicked'):
+        event_type = 'left' if new_status == 'left' else 'kicked'
+        await log_user_event(user_id, result.chat.id, event_type)
+        logger.info(f"User {user_id} {event_type} chat {result.chat.id}")
 
 def register_karma_tracking(application):
     # Track messages
@@ -86,5 +96,5 @@ def register_karma_tracking(application):
     # PTB 22.x uses MessageReactionHandler, let's check if it exists or use raw update
     from telegram.ext import MessageReactionHandler
     application.add_handler(MessageReactionHandler(handle_reaction_karma))
-    # Track joins
-    application.add_handler(ChatMemberHandler(handle_member_join, ChatMemberHandler.CHAT_MEMBER))
+    # Track joins and leaves
+    application.add_handler(ChatMemberHandler(handle_chat_member_update, ChatMemberHandler.CHAT_MEMBER))

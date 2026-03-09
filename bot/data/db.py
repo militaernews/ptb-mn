@@ -400,3 +400,11 @@ async def update_user_stats(user_id: int, chat_id: int, karma_delta: int = 0, ms
 @db
 async def get_user_stats(user_id: int, chat_id: int, conn: Connection = None):
     return await conn.fetchrow("select * from user_stats where user_id=$1 and chat_id=$2", user_id, chat_id)
+
+
+@db
+async def log_user_event(user_id: int, chat_id: int, event_type: str, conn: Connection = None):
+    await conn.execute(
+        "insert into user_events(user_id, chat_id, event_type) values ($1, $2, $3)",
+        user_id, chat_id, event_type
+    )
