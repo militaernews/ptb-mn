@@ -10,7 +10,7 @@ Willkommen zur Dokumentation des **MilitaerNews Posting Bots** – ein automatis
 ## 📚 Dokumentation
 
 ### Für Redakteure
-- **[Redakteur-Übersicht](./USAGE.md)** – Alles, was Sie zum Posten und Bearbeiten von Inhalten wissen müssen
+- **[Redakteur-Handbuch](./handbuch.md)** – Alles, was Sie zum Posten und Bearbeiten von Inhalten wissen müssen
   - Posting-Pipeline und Workflow
   - Nachricht editieren
   - Eilmeldungen
@@ -44,7 +44,7 @@ Der Bot verwaltet Telegram-Kanäle in 11 Sprachen:
 1. Öffnen Sie den [Posting Bot](https://t.me/militaernews_posting_bot)
 2. Erstellen Sie einen neuen Post im deutschen Kanal
 3. Der Bot übersetzt und verteilt den Inhalt automatisch auf alle Kanäle
-4. Weitere Details finden Sie in der [Redakteur-Übersicht](./USAGE.md)
+4. Weitere Details finden Sie im [Redakteur-Handbuch](./handbuch.md)
 
 ### Als Entwickler
 1. Klonen Sie das [Repository](https://github.com/militaernews/ptb-mn)
@@ -70,7 +70,7 @@ Der Bot verwaltet Telegram-Kanäle in 11 Sprachen:
 
 ## ❓ Hilfe und Support
 
-- Fragen zur Redaktion? Siehe [Redakteur-Übersicht](./USAGE.md)
+- Fragen zur Redaktion? Siehe [Redakteur-Handbuch](./handbuch.md)
 - Technische Probleme? Öffnen Sie ein [Issue](https://github.com/militaernews/ptb-mn/issues)
 - Fehler melden? Kontaktieren Sie das Entwickler-Team
 

@@ -4,7 +4,11 @@ This Telegram bot helps admins of [@MilitaerNews][channel-de] publish content ac
 
 You can find the bot [here][bot].
 
-## Features
+## 🚀 Getting Started
+
+For a comprehensive guide on how to use the bot for posting and editing content, please refer to the [MilitaerNews Editor's Handbook](./docs/handbuch.md).
+
+## ✨ Features
 
 - Automatic translation of posts into 10+ languages via DeepL and Google Translate
 - Hashtag generation from flag emojis
@@ -15,70 +19,9 @@ You can find the bot [here][bot].
 - Reply threading across all language channels
 - City/country name normalization (e.g. Kyiv, Lemberg)
 
-## Usage
+## 🛠️ Development
 
-### German Channel ([@MilitaerNews][channel-de])
-
-#### Text Posts
-
-- If a text post is sent without special hashtags:
-  - Translates the text to all configured languages
-  - Appends the language's `footer` attribute
-  - Reposts in all language channels
-  - Cross-posts to Twitter/X (DE and EN)
-
-- If a text post contains `#eilmeldung`:
-  - Removes the original message
-  - Sends the [German Breaking News image](/bot/res/de/breaking.png) with the text as caption
-  - Prepends the language's `breaking` attribute
-  - Translates and reposts in all language channels
-
-- If a text post contains `#mitteilung`:
-  - Removes the original message
-  - Sends the [German Announcement image](/bot/res/de/announce.png) with the text as caption
-  - Prepends the language's `announce` attribute
-  - Translates and reposts in all language channels, pinning them
-
-- If a text post contains `#werbung`:
-  - Handles as advertisement
-  - Reposts in all language channels
-
-#### Media Posts (Photo / Video / Animation)
-
-- If a photo, video, or animation (including media groups/albums) is posted:
-  - Translates the caption of the first entry in a media group
-  - If no hashtag is present: appends hashtags for each [flag emoji](/scripts/res/flag_de.json) to the caption
-  - Appends the language's `footer` attribute
-  - Reposts in all language channels after a short delay (to collect all album items)
-  - Cross-posts to Twitter/X (DE and EN)
-
-- If the caption contains `#info`:
-  - Handled as an info post (no translation, no Twitter cross-post)
-
-#### Editing Posts
-
-To trigger an edit across all language channels, edit the post in the German channel and **remove the footer and hashtags**. The bot will then:
-- Re-translate the edited text
-- Update the post in all language channels
-- Re-add the footer to the German post
-
-> Note: City name replacements are not applied when editing. Twitter posts cannot be edited retroactively. For media groups, only edit the entry that contains a caption.
-
-### Memes Channel ([@MilitaerMemes][channel_meme])
-
-- Default behaviour: appends the English footer to each photo, animation, or video
-- If the caption contains `#de`: the footer will be in German instead
-- Posts are forwarded to the [German][chat-de] and [English][chat-en] discussion groups
-
-### Suggest Pipeline
-
-The bot monitors a configurable backup channel for forwarded posts from whitelisted source channels. Qualifying posts are:
-- Debloated (URLs, handles, hashtags and trailing short fragments removed)
-- Translated to German
-- Forwarded to the suggest channel with inline buttons linking to the original post and the backup
-
-## Languages
-
+### Languages
 The bot posts to channels in the following languages:
 
 | Language   | Key  | Channel                        |
@@ -111,7 +54,7 @@ Each language is configured with the following attributes:
 
 See [lang.py](/bot/data/lang.py) for the full implementation.
 
-## Configuration
+### Configuration
 
 The bot is configured via environment variables (`.env` file or container environment):
 
@@ -134,11 +77,11 @@ The bot is configured via environment variables (`.env` file or container enviro
 | `RES_PATH`           | Path to resource directory (default: `./res`)    |
 | `TESTING`            | Set to `true` to enable test mode                |
 
-## Database
+### Database
 
 The bot uses a PostgreSQL database. The schema is defined in [scripts/schema.sql](/scripts/schema.sql).
 
-### Tables
+#### Tables
 
 **`posts`** — stores every post sent across all channels:
 
@@ -156,10 +99,11 @@ The bot uses a PostgreSQL database. The schema is defined in [scripts/schema.sql
 
 **`promos`** — tracks promo participation per user.
 
-## Running Locally
+### Running Locally
 
 ```bash
 # Install dependencies
+
 pip install -r bot/requirements.txt
 
 # Copy and fill in environment variables
@@ -169,7 +113,7 @@ cp .env.example .env
 cd bot && python main.py
 ```
 
-## Running with Docker
+### Running with Docker
 
 ```bash
 docker compose up --build
@@ -177,15 +121,7 @@ docker compose up --build
 
 See [compose.yaml](/compose.yaml) for the full Docker Compose configuration.
 
-## Tools
-
-In addition to the bot, several web tools are available:
-
-- Chart creation: <https://chart-mn.vercel.app/>
-- Map creation: <https://geo-mn.vercel.app/>
-- Source overview: <https://mix-sv.vercel.app/>
-
-## Contribute
+## 🤝 Contribute
 
 Contributions are welcome! Feel free to open an issue clearly describing what should be added or changed.
 
