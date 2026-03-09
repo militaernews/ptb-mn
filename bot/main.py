@@ -7,7 +7,7 @@ from typing import Final
 from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
-    Application
+    Application, ContextTypes
 
 from channel.common import edit_channel, post_channel_english
 from channel.meme import register_meme
@@ -121,7 +121,10 @@ def main():
     register_media_downloader(application)
 
     # Commands have to be added above
-    #  application.add_error_handler( report_error)  # comment this one out for full stacktrace
+    async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+        logging.error("Exception while handling an update:", exc_info=context.error)
+
+    application.add_error_handler(error_handler)
 
     print("### RUNNING LOCAL ### - print")
     logging.info("### RUNNING LOCAL ### - logging")
