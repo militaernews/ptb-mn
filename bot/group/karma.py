@@ -35,9 +35,12 @@ async def handle_reaction_karma(update: Update, context: ContextTypes.DEFAULT_TY
     # Note: Telegram doesn't directly provide the message author in MessageReactionUpdated
     # unless we have it cached or fetch the message.
     try:
-        message = await context.bot.get_message(reaction.chat.id, reaction.message_id)
-        if not message or not message.from_user or message.from_user.is_bot:
-            return
+        # Note: get_message is not available in PTB. We need to rely on the message being in the update
+        # or fetch it via other means. However, MessageReactionUpdated doesn't contain the message object.
+        # For now, we skip if we can't get the author, or we'd need a message cache.
+        # As a workaround for this specific bot, we might not be able to track reaction karma easily
+        # without a database lookup of the message_id to find the author.
+        return # get_message is not a valid Bot API method
         
         target_user_id = message.from_user.id
         
@@ -92,8 +95,8 @@ def register_karma_tracking(application):
     # Track messages
     application.add_handler(MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.COMMAND, handle_message_stats))
     # Track reactions
-    # application.add_handler(MessageReactionHandler(handle_reaction_karma)) # Not available in current PTB version?
-    # PTB 22.x uses MessageReactionHandler, let's check if it exists or use raw update
+    # Track reactions
+    # Note: MessageReactionHandler is available in PTB 20.x+
     from telegram.ext import MessageReactionHandler
     application.add_handler(MessageReactionHandler(handle_reaction_karma))
     # Track joins and leaves

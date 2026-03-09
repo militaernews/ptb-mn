@@ -392,8 +392,8 @@ async def update_user_stats(user_id: int, chat_id: int, karma_delta: int = 0, ms
     await conn.execute(
         "insert into user_stats(user_id, chat_id, karma, message_count) values ($1, $2, $3, $4) "
         "on conflict (user_id, chat_id) do update set "
-        "karma = user_stats.karma + $3, "
-        "message_count = user_stats.message_count + $4",
+        "karma = user_stats.karma + excluded.karma, "
+        "message_count = user_stats.message_count + excluded.message_count",
         user_id, chat_id, karma_delta, msg_delta
     )
 
