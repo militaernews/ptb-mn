@@ -1,5 +1,7 @@
+import json
+import os
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -11,120 +13,45 @@ class Language:
     announce: str
     advertise: str
     username: str
-    chat_id: int = None
-    lang_key_deepl: str = None
+    chat_id: Optional[int] = None
+    lang_key_deepl: Optional[str] = None
     # captcha:str
 
 
-GERMAN = Language(
-    "de",  # German
-    -1001240262412,  # https://t.me/MilitaerNews
-    "🔰 <b>Verpasse nichts!</b>\nAbonniere hier: <b>@MilitaerNews</b>",
-    "EILMELDUNG",
-    "MITTEILUNG",
-    "WERBUNG",
-    "MilitaerNews",
-    -1001526741474,  # https://t.me/MNChat
-)
+def _load_languages() -> tuple["Language", List["Language"]]:
+    """Load language configuration from languages.json, falling back to env vars for IDs."""
+    config_path = os.path.join(os.path.dirname(__file__), "languages.json")
+    with open(config_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-ENGLISH = Language(
-    "en",  # English - en-us
-    -1001258430463,  # https://t.me/MilitaryNewsEN
-    "🔰 <b>Don't miss out!</b>\nSubscribe here: <b>@MilitaryNewsEN</b>",
-    "BREAKING",
-    "ANNOUNCEMENT",
-    "ADVERTISEMENT",
-    "MilitaryNewsEN",
-    -1001382962633,  # https://t.me/MilitaryChatEN
-    lang_key_deepl="en-us"
-)
+    def _make(entry: dict) -> "Language":
+        # Allow individual channel IDs to be overridden via environment variables.
+        # E.g. CHANNEL_ID_DE, CHANNEL_ID_EN, CHAT_ID_DE, CHAT_ID_EN …
+        key = entry["lang_key"].upper()
+        channel_id = int(os.getenv(f"CHANNEL_ID_{key}", entry["channel_id"]))
+        chat_id = entry.get("chat_id")
+        if chat_id is not None:
+            chat_id = int(os.getenv(f"CHAT_ID_{key}", chat_id))
+        return Language(
+            lang_key=entry["lang_key"],
+            channel_id=channel_id,
+            footer=entry["footer"],
+            breaking=entry["breaking"],
+            announce=entry["announce"],
+            advertise=entry["advertise"],
+            username=entry["username"],
+            chat_id=chat_id,
+            lang_key_deepl=entry.get("lang_key_deepl"),
+        )
 
-LANGUAGES: List[Language] = [
-    ENGLISH,
-    Language(
-        "tr",  # Turkish
-        -1001712502236,  # https://t.me/MilitaryNewsTR
-        "🔰 @MilitaryNewsTR'e abone olun",
-        "SON_DAKİKA",
-        "DUYURU",
-        "ADVERTISING",
-        "MilitaryNewsTR",
-    ),
-    Language(
-        "fa",  # Persian
-        -1001568841775,  # https://t.me/MilitaryNewsFA
-        "\nعضو شوید:\n🔰 @MilitaryNewsFA",
-        "خبرفوری",
-        "اعلامیه",
-        "تبلیغات",
-        "MilitaryNewsFA",
-    ),
-    Language(
-        "ru",  # Russian
-        -1001330302325,  # https://t.me/MilitaryNewsRU
-        "🔰 Подписывайтесь на @MilitaryNewsRU",
-        "СРОЧНЫЕ_НОВОСТИ",
-        "ОБЪЯВЛЕНИЕ",
-        "РЕКЛАМА",
-        "MilitaryNewsRU",
-    ),
-    Language(
-        "pt",  # Portugese - pt-br
-        -1001614849485,  # https://t.me/MilitaryNewsBR
-        "🔰 Se inscreva no @MilitaryNewsBR",
-        "NOTÍCIAS_URGENTES",
-        "MENSAGEM",
-        "PUBLICIDADE",
-        "MilitaryNewsBR",
-        lang_key_deepl="pt-br"
-    ),
-    Language(
-        "es",  # Spanish
-        -1001715032604,  # https://t.me/MilitaryNewsES
-        "🔰 Suscríbete a @MilitaryNewsES",
-        "ÚLTIMA_HORA",
-        "ANUNCIO",
-        "PUBLICIDAD",
-        "MilitaryNewsES",
-    ),
-    Language(
-        "fr",  # French
-        -1001337262241,  # https://t.me/MilitaryNewsFR
-        "🔰 Abonnez-vous à @MilitaryNewsFR",
-        "BREAKING_NEWS",
-        "ANNONCE",
-        "PUBLICITÉ",
-        "MilitaryNewsFR",
-    ),
-    Language(
-        "it",  # Italian
-        -1001632091535,  # https://t.me/MilitaryNewsITA
-        "🔰 iscriviti a @MilitaryNewsITA",
-        "ULTIME_NOTIZIE",
-        "ANNUNCIO",
-        "PUBBLICITÀ",
-        "MilitaryNewsITA",
-    ),
-    Language(
-        "ar",  # Arabic
-        -1001972272205,  # https://t.me/MilitaryNewsAR
-        "@MilitaryNewsAR اشترك ب أخبار عسكرية بالعربية 🔰\n",
-        "معلومات",
-        "إشعار",
-        "إعلان",
-        "MilitaryNewsAR",
-    ),
+    german = _make(data["german"])
+    languages = [_make(e) for e in data["languages"]]
+    return german, languages
 
-    Language(
-        "id",  # Indonesian
-        -1002089283993,  # https://t.me/MilitaryNewsIDN
-        "🔰 Berlangganan @MilitaryNewsIDN",
-        "BERITA_TERBARU",
-        "KOMUNIKASI",
-        "ADVERTISEMENT",
-        "MilitaryNewsIDN",
-        lang_key_deepl="id"
-    ),
-]
+
+GERMAN, LANGUAGES = _load_languages()
+
+# Keep ENGLISH as a convenience alias (first entry in LANGUAGES)
+ENGLISH = LANGUAGES[0]
 
 LANG_DICT = {language.lang_key: language for language in [GERMAN] + LANGUAGES}
