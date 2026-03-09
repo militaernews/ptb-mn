@@ -3,19 +3,15 @@ theme: jekyll-theme-minimal
 title: "MilitaerNews Posting Bot"
 description: "Dokumentation für Redakteure und Entwickler"
 show_downloads: false
-github:
-  is_project_page: true
-  repository_url: https://github.com/militaernews/ptb-mn
 
 # Site settings
-url: "https://militaernews.github.io/ptb-mn"
+url: "https://militaernews.github.io"
 baseurl: "/ptb-mn"
 
 # Build settings
 markdown: kramdown
 plugins:
   - jekyll-seo-tag
-  - jekyll-sitemap
 
 # Exclude files
 exclude:
