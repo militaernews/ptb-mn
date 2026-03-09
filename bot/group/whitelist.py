@@ -3,6 +3,7 @@ from asyncio import sleep
 from typing import Final, Set
 
 from data.lang import GERMAN
+from data.db import get_whitelist
 from telegram import Update
 from telegram.ext import MessageHandler, filters, CommandHandler, CallbackContext, Application
 from util.helper import delete_msg, reply_html
@@ -64,20 +65,23 @@ async def remove_command(update: Update, _: CallbackContext):
 
 async def remove_url(update: Update, context: CallbackContext):
     logging.info(f"MATCH? {update.message.text}")
-    print(f"MATCH? {update.message.text}")
-
+    
     if update.message.from_user.id in await get_admin_ids(context):
         return
 
-    if any(ext in update.message.text for ext in ALLOWED_URLS):
-        print("NO MATCH ---")
+    db_urls = await get_whitelist()
+    all_urls = ALLOWED_URLS.union(set(db_urls))
+
+    if any(ext in update.message.text for ext in all_urls):
         return
 
     await delete_msg(update)
 
 
 async def send_whitelist(update: Update, context: CallbackContext):
-    await reply_html(update, context, "whitelist", "\n\n".join(ALLOWED_URLS))
+    db_urls = await get_whitelist()
+    all_urls = ALLOWED_URLS.union(set(db_urls))
+    await reply_html(update, context, "whitelist", "\n\n".join(sorted(all_urls)))
 
 
 async def log_msg(update: Update, _: CallbackContext):

@@ -35,3 +35,21 @@ create table if not exists suggest_posts
     created_at         timestamptz  not null default now(),
     primary key (source_channel_id, source_message_id)
 );
+
+-- Whitelisted domains/links that are not to be deleted
+create table if not exists whitelist
+(
+    id serial primary key,
+    link text not null unique,
+    created_at timestamptz not null default now()
+);
+
+-- User warnings
+create table if not exists warnings
+(
+    user_id bigint not null,
+    chat_id bigint not null,
+    count int not null default 0,
+    last_warned_at timestamptz not null default now(),
+    primary key (user_id, chat_id)
+);

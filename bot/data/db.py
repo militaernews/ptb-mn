@@ -352,3 +352,36 @@ async def get_suggested_sources() -> List[int]:
     channel_ids = [record["channel_id"] for record in res]
     print(f"SUGGESTED SOURCES: {channel_ids}")
     return channel_ids
+
+
+@db
+async def get_whitelist(conn: Connection = None) -> List[str]:
+    rows = await conn.fetch("select link from whitelist order by created_at desc")
+    return [row['link'] for row in rows]
+
+@db
+async def add_whitelist(link: str, conn: Connection = None):
+    await conn.execute("insert into whitelist(link) values ($1) on conflict (link) do nothing", link)
+
+@db
+async def remove_whitelist(link: str, conn: Connection = None):
+    await conn.execute("delete from whitelist where link=$1", link)
+
+@db
+async def get_warnings(user_id: int, chat_id: int, conn: Connection = None) -> int:
+    res = await conn.fetchval("select count from warnings where user_id=$1 and chat_id=$2", user_id, chat_id)
+    return res if res is not None else 0
+
+@db
+async def increment_warnings(user_id: int, chat_id: int, conn: Connection = None) -> int:
+    res = await conn.fetchval(
+        "insert into warnings(user_id, chat_id, count) values ($1, $2, 1) "
+        "on conflict (user_id, chat_id) do update set count = warnings.count + 1, last_warned_at = now() "
+        "returning count",
+        user_id, chat_id
+    )
+    return res
+
+@db
+async def reset_warnings(user_id: int, chat_id: int, conn: Connection = None):
+    await conn.execute("delete from warnings where user_id=$1 and chat_id=$2", user_id, chat_id)
