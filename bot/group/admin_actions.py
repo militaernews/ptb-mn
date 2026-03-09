@@ -4,9 +4,11 @@ from telegram.ext import ContextTypes, MessageHandler, CallbackQueryHandler, fil
 from data.db import get_warnings, increment_warnings, reset_warnings
 from settings.config import ADMINS
 from data.lang import GERMAN
+from util.helper import remove_reply
 
 logger = logging.getLogger(__name__)
 
+@remove_reply
 async def handle_admin_mention(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Detect @admin mention and show warn/ban buttons if replying to a message."""
     message = update.message
@@ -17,7 +19,8 @@ async def handle_admin_mention(update: Update, context: ContextTypes.DEFAULT_TYP
         return
 
     replied_user = message.reply_to_message.from_user
-    if not replied_user or replied_user.is_bot:
+    # Don't show buttons for bots or if replying to an admin
+    if not replied_user or replied_user.is_bot or replied_user.id in ADMINS:
         return
 
     # Check current warnings
@@ -32,6 +35,10 @@ async def handle_admin_mention(update: Update, context: ContextTypes.DEFAULT_TYP
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
+    # We don't delete the original @admin message here because notify_admins might want to handle it
+    # or we let the user see their report. Actually, notify_admins in management.py already handles @admin.
+    # To avoid double responses, we should probably integrate this better.
+    
     await message.reply_text(
         f"🛡️ <b>Admin-Aktion für {replied_user.mention_html()}</b>\n"
         f"Aktuelle Verwarnungen: {warn_count}",

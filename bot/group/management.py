@@ -254,7 +254,8 @@ async def send_rules(update: Update, context: CallbackContext):
 
 
 def register_management(app: Application):
-    app.add_handler(MessageHandler(filters.Chat(GERMAN.chat_id) & filters.Regex("^@admin"), notify_admins))
+    # app.add_handler(MessageHandler(filters.Chat(GERMAN.chat_id) & filters.Regex("^@admin"), notify_admins))
+    # Deactivated notify_admins because admin_actions.py now handles @admin with interactive buttons
 
     app.add_handler(CommandHandler("rules", send_rules, filters.Chat(GERMAN.chat_id)))
 
