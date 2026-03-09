@@ -167,6 +167,11 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
         try:
             google_translator.target = target_lang
             translated_text = google_translator.translate(text=text_to_translate)
+            # Check for specific Google Translate 500 error message
+            if translated_text and "Error 500 (Server Error)" in translated_text:
+                logging.error(f"Google Translate returned 500 error for text: {text_to_translate[:100]}...")
+                # Fallback to original text if translation fails with specific error
+                translated_text = text_to_translate
             # DeepL alternative (kept for reference):
             # translated_text = deepl_translator.translate_text(
             #     text_to_translate,
