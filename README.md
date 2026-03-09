@@ -10,14 +10,16 @@ For a comprehensive guide on how to use the bot for posting and editing content,
 
 ## ✨ Features
 
-- Automatic translation of posts into 10+ languages via DeepL and Google Translate
-- Hashtag generation from flag emojis
-- Breaking news and announcement workflows
-- Media group (album) support
-- Twitter/X cross-posting
-- Suggest pipeline for curated source channels
-- Reply threading across all language channels
-- City/country name normalization (e.g. Kyiv, Lemberg)
+- **Automatic Translation** – Posts into 10+ languages via DeepL and Google Translate
+- **AI Post Assistant** – Create news articles from multiple media files using LLMs (Llama 3.1, Gemini, Mistral)
+- **Social Media Downloader** – Automatic download of media from Twitter/X, Instagram, and YouTube links
+- **Interactive Admin Tools** – `@admin` mention triggers a menu for warning (with warning history) or banning users
+- **Fact-Checking** – LLM-powered fact-checker with web search capabilities and model fallback
+- **Database-backed Whitelist** – Admin-managed link whitelist stored in PostgreSQL
+- **Media Group Support** – Full album handling across all channels
+- **Twitter/X Integration** – Automatic cross-posting
+- **Suggest Pipeline** – Curated source channel management
+- **City/Country Normalization** – Consistent naming (e.g., Kyiv, Lemberg)
 
 ## 🛠️ Development
 
@@ -98,6 +100,10 @@ The bot uses a PostgreSQL database. The schema is defined in [scripts/schema.sql
 | `spoiler`        | `bool`         | Whether the media has a spoiler overlay   |
 
 **`promos`** — tracks promo participation per user.
+
+**`whitelist`** — stores links/domains allowed in groups.
+
+**`warnings`** — tracks user warning counts per chat.
 
 ### Running Locally
 
