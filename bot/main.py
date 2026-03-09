@@ -12,6 +12,7 @@ from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, 
 from channel.common import edit_channel, post_channel_english
 from channel.meme import register_meme
 from channel.special import breaking_news, announcement, post_info, advertisement
+from channel.crawler import register_crawler
 from channel.suggest import register_suggest
 from channel.text import edit_channel_text, post_channel_text
 from data.lang import GERMAN
@@ -94,6 +95,7 @@ def main():
 
     register_news(application)
     register_suggest(application)
+    register_crawler(application)
     register_advertisement(application)
     register_promo(application)
 
