@@ -1,7 +1,29 @@
+"""
+Translation utilities.
+
+Issue #8 – Handle formatting with translation better
+-----------------------------------------------------
+The previous approach used a single unnamed placeholder (║) to protect
+HTML tags and flag emojis from being mangled by the translation engine.
+This caused two problems:
+
+1. The pattern `<[^a>]+>` intentionally skipped `<a href=...>` anchor
+   tags, so hyperlinks were passed to the translator and often broken.
+2. Using a single repeated placeholder meant that if the translator
+   reordered, duplicated, or dropped placeholders, the wrong tokens
+   were restored at the wrong positions.
+
+Fix: replace every HTML tag (including `<a …>` / `</a>`) and every flag
+emoji with a *numbered* placeholder `║N║` before translation and restore
+them by index afterwards.  This makes restoration order-independent and
+ensures that hyperlinks survive translation intact.
+"""
+
 import logging
 import os
 import re
 from json import loads, load
+from typing import List, Tuple
 
 from data.lang import GERMAN, LANGUAGES
 from deep_translator import GoogleTranslator
@@ -10,7 +32,7 @@ from pysbd import Segmenter
 from settings.config import RES_PATH
 from social.twitter import TWEET_LENGTH
 from util.helper import sanitize_text
-from util.patterns import HASHTAG, PLACEHOLDER, FLAG_EMOJI_HTMLTAG, AMP_PATTERN, QUOT_PATTERN
+from util.patterns import HASHTAG, AMP_PATTERN, QUOT_PATTERN
 
 deepl_translator = Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
@@ -22,7 +44,7 @@ HASHTAG_PATTERN = re.compile(r'(\s{2,})?(#\w+\s)+', re.IGNORECASE)
 FLAG_PATTERN = re.compile(
     r'(?:'
     r'🏳️‍🌈|'  # LGBT flag (white flag + ZWJ + rainbow)
-    r'🏳️‍⚧️|'  # Transgender flag (white flag + ZWJ + transgender symbol)  
+    r'🏳️‍⚧️|'  # Transgender flag (white flag + ZWJ + transgender symbol)
     r'🏴‍☠️|'  # Pirate flag (black flag + ZWJ + skull and crossbones)
     r'🏴󠁧󠁢(?:󠁥󠁮󠁧|󠁳󠁣󠁴|󠁷󠁬󠁳)󠁿|'  # England, Scotland, Wales flags
     r'[\U0001F1E6-\U0001F1FF]{2}|'  # Country flags (regional indicators)
@@ -31,6 +53,42 @@ FLAG_PATTERN = re.compile(
     r')',
     re.UNICODE
 )
+
+# Combined pattern: ALL HTML tags (including <a href=...> and </a>) plus flag emojis.
+# Using <[^>]+> instead of the old <[^a>]+> so that anchor tags are also protected.
+_PROTECT_PATTERN = re.compile(
+    r'<[^>]+>|' + FLAG_PATTERN.pattern,
+    re.IGNORECASE | re.UNICODE,
+)
+
+# Numbered placeholder template – must not appear in normal text
+_PLACEHOLDER_TMPL = "║{n}║"
+_PLACEHOLDER_RE = re.compile(r'║(\d+)║')
+
+
+def _extract_tokens(text: str) -> Tuple[str, List[str]]:
+    """Replace all HTML tags and flag emojis with numbered placeholders.
+
+    Returns the processed text and the list of extracted tokens in order.
+    """
+    tokens: List[str] = []
+
+    def _replace(m: re.Match) -> str:
+        idx = len(tokens)
+        tokens.append(m.group(0))
+        return _PLACEHOLDER_TMPL.format(n=idx)
+
+    processed = _PROTECT_PATTERN.sub(_replace, text)
+    return processed, tokens
+
+
+def _restore_tokens(text: str, tokens: List[str]) -> str:
+    """Restore numbered placeholders back to their original tokens."""
+    def _replace(m: re.Match) -> str:
+        idx = int(m.group(1))
+        return tokens[idx] if idx < len(tokens) else m.group(0)
+
+    return _PLACEHOLDER_RE.sub(_replace, text)
 
 
 def flag_to_hashtag(text: str, lang_key: str = GERMAN.lang_key):
@@ -80,42 +138,43 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     logging.info(text)
 
     sub_text = sanitize_text(text)
-    emojis = re.findall(FLAG_EMOJI_HTMLTAG, sub_text)
-    text_to_translate = re.sub(FLAG_EMOJI_HTMLTAG, PLACEHOLDER, sub_text)
+
+    # Extract HTML tags and flag emojis as numbered placeholders so the
+    # translator never sees them and cannot corrupt formatting or hyperlinks.
+    text_to_translate, tokens = _extract_tokens(sub_text)
 
     if target_lang == "fa" or target_lang == "ar":  # or "ru"?
-        # text.replace: if bot was down and footer got added manually
-
-        # I'm uncertain, whether replacing emojis for Right-to-left languages like Persian butchers the order
+        # I'm uncertain whether replacing emojis for RTL languages like Persian
+        # butchers the order – keeping the same branch as before.
         google_translator.target = target_lang
         translated_text = google_translator.translate(text=text_to_translate)
     else:
         try:
             google_translator.target = target_lang
             translated_text = google_translator.translate(text=text_to_translate)
-        # translator.translate_text(text_to_translate,
-        #   target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
-        #     tag_handling="html",
-        #      preserve_formatting=True).text
+            # DeepL alternative (kept for reference):
+            # translated_text = deepl_translator.translate_text(
+            #     text_to_translate,
+            #     target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
+            #     tag_handling="html",
+            #     preserve_formatting=True,
+            # ).text
 
         except QuotaExceededException:
             logging.warning("--- Quota exceeded ---")
             # TODO: switch to other deepl key
             translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
-            pass
         except Exception as e:
             logging.error(f"--- other error translating --- {e}")
-
             translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
-            pass
 
-    for emoji in emojis:
-        translated_text = re.sub(PLACEHOLDER, emoji, translated_text, 1)
+    # Restore HTML tags and emojis by index
+    translated_text = _restore_tokens(translated_text, tokens)
 
-    translated_text= AMP_PATTERN.sub(r"&",translated_text)
-    translated_text= QUOT_PATTERN.sub(r'"',translated_text)
+    translated_text = AMP_PATTERN.sub(r"&", translated_text)
+    translated_text = QUOT_PATTERN.sub(r'"', translated_text)
 
-    logging.info(f"translated text ----------------- {text, emojis, sub_text, text_to_translate, translated_text}")
+    logging.info(f"translated text ----------------- {text, tokens, sub_text, text_to_translate, translated_text}")
     return translated_text
 
 
