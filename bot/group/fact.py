@@ -415,39 +415,58 @@ Antworte auf Deutsch und sei präzise."""
         {"role": "user", "content": message_content}
     ]
 
-    try:
-        logger.info("Calling OpenRouter API...")
-        async with AsyncClient(timeout=120.0) as client:
-            response = await client.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                    "HTTP-Referer": "https://telegram.org",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "model": "meta-llama/llama-3.1-8b-instruct:free",
-                    "messages": messages,
-                    "temperature": 0.3,
-                    "max_tokens": 1500,
-                }
-            )
+    # Step 2: Call OpenRouter with fallback models
+    models = [
+        "meta-llama/llama-3.1-8b-instruct:free",
+        "google/gemini-flash-1.5-8b",
+        "mistralai/mistral-7b-instruct:free",
+        "google/gemini-pro-1.5",
+        "anthropic/claude-3-haiku",
+    ]
 
-            if response.status_code != 200:
-                logger.error(f"OpenRouter error {response.status_code}: {response.text[:200]}")
-                response.raise_for_status()
+    last_error = None
+    for model in models:
+        try:
+            logger.info(f"Calling OpenRouter API with model: {model}...")
+            async with AsyncClient(timeout=120.0) as client:
+                response = await client.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                        "HTTP-Referer": "https://telegram.org",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": model,
+                        "messages": messages,
+                        "temperature": 0.3,
+                        "max_tokens": 1500,
+                    }
+                )
 
-            data = response.json()
-            result = data['choices'][0]['message']['content']
-            
-            elapsed = (datetime.now() - start_time).total_seconds()
-            logger.info(f"✓ Fact-check completed in {elapsed:.1f}s ({len(result)} chars, {len(source_urls)} sources)")
-            
-            return result, source_urls
-            
-    except Exception as e:
-        logger.error(f"Fact check API call failed: {e}")
-        raise
+                if response.status_code != 200:
+                    logger.warning(f"Model {model} failed with status {response.status_code}: {response.text[:100]}")
+                    continue
+
+                data = response.json()
+                if 'choices' not in data or not data['choices']:
+                    logger.warning(f"Model {model} returned no choices: {data}")
+                    continue
+
+                result = data['choices'][0]['message']['content']
+                
+                elapsed = (datetime.now() - start_time).total_seconds()
+                logger.info(f"✓ Fact-check completed with {model} in {elapsed:.1f}s ({len(result)} chars, {len(source_urls)} sources)")
+                
+                return result, source_urls
+                
+        except Exception as e:
+            logger.warning(f"Attempt with model {model} failed: {e}")
+            last_error = e
+            continue
+
+    logger.error(f"All models failed. Last error: {last_error}")
+    raise last_error if last_error else Exception("All models failed to return a result")
 
 
 async def fact(update: Update, context: CallbackContext):
