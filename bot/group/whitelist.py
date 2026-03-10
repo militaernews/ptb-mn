@@ -111,11 +111,14 @@ async def send_whitelist(update: Update, context: CallbackContext):
     db_urls = await get_whitelist()
     all_urls = sorted(list(ALLOWED_URLS.union(set(db_urls))))
     
+    # Format URLs into a more readable list/table-like structure
+    formatted_urls = "\n".join([f"• <code>{url}</code>" for url in all_urls])
+    
     text = (
         "🔗 <b>In dieser Gruppe erlaubte Links</b>\n\n"
         "Um Mitglieder vor Scam-Versuchen etc. zu schützen, sind nur folgende Links und deren Subdomains erlaubt:\n\n"
-        + "\n\n".join(all_urls) +
-        "\n\nNachrichten, die andere Links enthalten, werden automatisch gelöscht."
+        f"{formatted_urls}\n\n"
+        "<i>Nachrichten, die andere Links enthalten, werden automatisch gelöscht.</i>"
     )
     
     await update.message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
