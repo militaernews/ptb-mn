@@ -1,5 +1,6 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.error import BadRequest
 from telegram.ext import ContextTypes, MessageHandler, CallbackQueryHandler, filters
 from data.db import get_warnings, increment_warnings, reset_warnings
 from settings.config import ADMINS
@@ -35,16 +36,31 @@ async def handle_admin_mention(update: Update, context: ContextTypes.DEFAULT_TYP
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # We don't delete the original @admin message here because notify_admins might want to handle it
-    # or we let the user see their report. Actually, notify_admins in management.py already handles @admin.
-    # To avoid double responses, we should probably integrate this better.
-    
-    await message.reply_text(
-        f"🛡️ <b>Admin-Aktion für {replied_user.mention_html()}</b>\n"
-        f"Aktuelle Verwarnungen: {warn_count}",
-        reply_markup=reply_markup,
-        parse_mode="HTML"
-    )
+    # Send the admin-action message. We use send_message instead of reply_text because
+    # the @admin message itself is deleted by the remove_reply decorator before this point,
+    # which would cause a "Message to be replied not found" BadRequest error.
+    try:
+        await context.bot.send_message(
+            chat_id=message.chat_id,
+            text=(
+                f"🛡️ <b>Admin-Aktion für {replied_user.mention_html()}</b>\n"
+                f"Aktuelle Verwarnungen: {warn_count}"
+            ),
+            reply_markup=reply_markup,
+            parse_mode="HTML",
+            reply_to_message_id=message.reply_to_message.message_id,
+        )
+    except BadRequest:
+        # Fallback: reply_to_message was deleted – send without quote
+        await context.bot.send_message(
+            chat_id=message.chat_id,
+            text=(
+                f"🛡️ <b>Admin-Aktion für {replied_user.mention_html()}</b>\n"
+                f"Aktuelle Verwarnungen: {warn_count}"
+            ),
+            reply_markup=reply_markup,
+            parse_mode="HTML",
+        )
 
 async def admin_action_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle the button clicks for warn/ban."""
