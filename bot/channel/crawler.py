@@ -126,8 +126,17 @@ _seen_urls: set = set()
 
 async def _fetch_feed(url: str) -> str:
     """Fetch an RSS feed URL and return the raw XML text."""
-    async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
-        response = await client.get(url, headers={"User-Agent": "ptb-mn-crawler/1.0"})
+    # Using a common browser User-Agent to avoid 403 Forbidden from sites like hartpunkt.de
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+        "DNT": "1",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+    }
+    async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
+        response = await client.get(url, headers=headers)
         response.raise_for_status()
         return response.text
 
