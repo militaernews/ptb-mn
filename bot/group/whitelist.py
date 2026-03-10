@@ -142,9 +142,9 @@ def register_whitelist(app: Application):
         )
     )
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
-    app.add_handler(
-        MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
-                       remove_command))
+    # app.add_handler(
+    #     MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
+    #                    remove_command))
     app.add_handler(
         MessageHandler(filters.TEXT & filters.Chat(GERMAN.chat_id),
                        log_msg))
