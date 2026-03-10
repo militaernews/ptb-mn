@@ -64,20 +64,28 @@ async def remove_command(update: Update, _: CallbackContext):
 
 
 async def remove_url(update: Update, context: CallbackContext):
-    if not update.message or not update.message.text:
+    if not update.message:
         return
 
     # Skip for admins
     if update.message.from_user.id in await get_admin_ids(context):
         return
 
-    # Extract all URLs from the message
+    # Extract all URLs from the message (text and caption)
     from telegram.constants import MessageEntityType
-    urls = [
-        update.message.text[e.offset : e.offset + e.length]
-        for e in update.message.entities
-        if e.type in (MessageEntityType.URL, MessageEntityType.TEXT_LINK)
-    ]
+    
+    entities = update.message.entities or update.message.caption_entities
+    text = update.message.text or update.message.caption
+    
+    if not entities or not text:
+        return
+
+    urls = []
+    for e in entities:
+        if e.type == MessageEntityType.URL:
+            urls.append(text[e.offset : e.offset + e.length])
+        elif e.type == MessageEntityType.TEXT_LINK:
+            urls.append(e.url)
 
     if not urls:
         return
@@ -86,16 +94,20 @@ async def remove_url(update: Update, context: CallbackContext):
     all_allowed = ALLOWED_URLS.union(set(db_urls))
 
     for url in urls:
-        url_lower = url.lower().replace("https://", "").replace("http://", "").split("/")[0]
+        # Clean URL to get domain
+        url_clean = url.lower().replace("https://", "").replace("http://", "")
+        domain = url_clean.split("/")[0].split("?")[0].split("#")[0]
+        
         # Check if the domain or any parent domain is allowed
         is_allowed = False
         for allowed in all_allowed:
-            if url_lower == allowed or url_lower.endswith("." + allowed):
+            allowed_clean = allowed.lower().strip()
+            if domain == allowed_clean or domain.endswith("." + allowed_clean):
                 is_allowed = True
                 break
         
         if not is_allowed:
-            logging.info(f"Deleting message due to unauthorized link: {url}")
+            logging.info(f"Deleting message due to unauthorized link: {url} (Domain: {domain})")
             await delete_msg(update)
             return
 

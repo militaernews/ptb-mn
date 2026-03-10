@@ -116,8 +116,8 @@ def main():
     register_info_command(application)
     #   register_captcha(application)
 
-    register_whitelist(application)
     register_whitelist_admin(application)
+    register_whitelist(application)
     register_ai_assistant(application)
     register_media_downloader(application)
 
