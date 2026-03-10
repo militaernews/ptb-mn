@@ -98,7 +98,12 @@ async def process_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     try:
         # Fallback models like in fact.py
-        models = ["meta-llama/llama-3.1-8b-instruct:free", "google/gemini-flash-1.5-8b", "mistralai/mistral-7b-instruct:free"]
+        models = [
+            "meta-llama/llama-3.3-70b-instruct:free",
+            "google/gemini-flash-1.5-8b",
+            "mistralai/mistral-7b-instruct:free",
+            "google/gemini-flash-1.5"
+        ]
         result = None
         error_details = []
         

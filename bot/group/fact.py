@@ -417,9 +417,10 @@ Antworte auf Deutsch und sei präzise."""
 
     # Step 2: Call OpenRouter with fallback models
     models = [
-        "meta-llama/llama-3.1-8b-instruct:free",
+        "meta-llama/llama-3.3-70b-instruct:free",
         "google/gemini-flash-1.5-8b",
         "mistralai/mistral-7b-instruct:free",
+        "google/gemini-flash-1.5",
         "google/gemini-pro-1.5",
         "anthropic/claude-3-haiku",
     ]
