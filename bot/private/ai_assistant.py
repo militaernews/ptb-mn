@@ -100,6 +100,7 @@ async def process_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         # Fallback models like in fact.py
         models = ["meta-llama/llama-3.1-8b-instruct:free", "google/gemini-flash-1.5-8b", "mistralai/mistral-7b-instruct:free"]
         result = None
+        error_details = []
         
         for model in models:
             try:
@@ -121,18 +122,35 @@ async def process_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                         data = response.json()
                         result = data['choices'][0]['message']['content']
                         break
+                    else:
+                        error_msg = f"Model {model}: Status {response.status_code}"
+                        try:
+                            error_json = response.json()
+                            if 'error' in error_json:
+                                error_msg += f" - {error_json['error'].get('message', 'Unknown error')}"
+                        except:
+                            pass
+                        error_details.append(error_msg)
             except Exception as e:
-                logger.warning(f"AI Post Assistant: Model {model} failed: {e}")
+                err_str = f"Model {model}: {str(e)}"
+                logger.warning(f"AI Post Assistant: {err_str}")
+                error_details.append(err_str)
                 continue
 
         if result:
             await update.message.reply_text(f"📝 <b>Vorschlag für Nachrichtenartikel:</b>\n\n{result}", parse_mode="HTML")
         else:
-            await update.message.reply_text("❌ Fehler bei der KI-Verarbeitung. Bitte versuche es später erneut.")
+            detailed_error = "\n".join([f"• {err}" for err in error_details])
+            await update.message.reply_text(
+                f"❌ <b>Fehler bei der KI-Verarbeitung</b>\n\n"
+                f"Alle versuchten Modelle sind fehlgeschlagen:\n{detailed_error}\n\n"
+                f"Bitte versuche es später erneut.",
+                parse_mode="HTML"
+            )
 
     except Exception as e:
         logger.error(f"AI Post Assistant failed: {e}")
-        await update.message.reply_text("❌ Ein kritischer Fehler ist aufgetreten.")
+        await update.message.reply_text(f"❌ <b>Ein kritischer Fehler ist aufgetreten:</b>\n<code>{str(e)}</code>", parse_mode="HTML")
 
     # Cleanup
     context.user_data.clear()
