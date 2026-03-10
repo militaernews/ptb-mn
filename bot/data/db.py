@@ -379,9 +379,18 @@ async def increment_warnings(user_id: int, chat_id: int, conn: Connection = None
         "insert into warnings(user_id, chat_id, count) values ($1, $2, 1) "
         "on conflict (user_id, chat_id) do update set count = warnings.count + 1, last_warned_at = now() "
         "returning count",
-        user_id, chat_id
-    )
+        user_id, chat_id)
     return res
+
+
+@db
+async def decrement_warnings(user_id: int, chat_id: int, conn: Connection = None) -> int:
+    res = await conn.fetchval(
+        "update warnings set count = greatest(0, count - 1) where user_id=$1 and chat_id=$2 "
+        "returning count",
+        user_id, chat_id)
+    return res if res is not None else 0
+
 
 @db
 async def reset_warnings(user_id: int, chat_id: int, conn: Connection = None):
