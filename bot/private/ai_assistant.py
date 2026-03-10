@@ -93,12 +93,13 @@ async def process_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     message_content = [{"role": "user", "content": prompt_content}]
 
     try:
-        # Updated models for OpenRouter (avoiding 404s and 429s)
+        # Updated models for OpenRouter (strictly free models)
         models = [
             "google/gemini-2.0-flash-lite-preview-02-05:free",
-            "meta-llama/llama-3.3-70b-instruct",
-            "google/gemini-2.0-flash-001",
-            "mistralai/mistral-7b-instruct-v0.1"
+            "deepseek/deepseek-chat-v3:free",
+            "qwen/qwen-2.5-72b-instruct:free",
+            "meta-llama/llama-3.3-70b-instruct:free",
+            "mistralai/mistral-7b-instruct:free"
         ]
         result = None
         error_details = []

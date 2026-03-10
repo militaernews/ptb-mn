@@ -415,14 +415,13 @@ Antworte auf Deutsch und sei präzise."""
         {"role": "user", "content": message_content}
     ]
 
-    # Step 2: Call OpenRouter with fallback models
+    # Step 2: Call OpenRouter with fallback models (strictly free models)
     models = [
+        "google/gemini-2.0-flash-lite-preview-02-05:free",
+        "deepseek/deepseek-chat-v3:free",
+        "qwen/qwen-2.5-72b-instruct:free",
         "meta-llama/llama-3.3-70b-instruct:free",
-        "google/gemini-flash-1.5-8b",
-        "mistralai/mistral-7b-instruct:free",
-        "google/gemini-flash-1.5",
-        "google/gemini-pro-1.5",
-        "anthropic/claude-3-haiku",
+        "mistralai/mistral-7b-instruct:free"
     ]
 
     last_error = None
