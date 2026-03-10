@@ -1,5 +1,4 @@
 import logging
-import base64
 from typing import List, Dict, Any, Optional
 from telegram import Update, Message
 from telegram.ext import (
@@ -12,12 +11,11 @@ from telegram.ext import (
 from telegram.constants import ChatAction
 from httpx import AsyncClient
 from settings.config import ADMINS, OPENROUTER_API_KEY
-from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
 # States for the conversation
-COLLECTING_MEDIA = 1
+COLLECTING_TEXT = 1
 
 async def start_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Start the AI post creation assistant."""
@@ -26,78 +24,61 @@ async def start_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
     await update.message.reply_text(
         "🤖 <b>KI-Post-Assistent gestartet</b>\n\n"
-        "Bitte sende mir bis zu 10 Bilder oder Videos (oder leite sie weiter), "
+        "Bitte sende mir die Texte oder Informationen (oder leite sie weiter), "
         "aus denen ich einen zusammenfassenden Nachrichtenartikel erstellen soll.\n\n"
         "Wenn du fertig bist, sende /done. Mit /cancel kannst du abbrechen.",
         parse_mode="HTML"
     )
-    context.user_data["media_files"] = []
     context.user_data["media_captions"] = []
-    return COLLECTING_MEDIA
+    return COLLECTING_TEXT
 
-async def collect_media(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Collect media sent by the admin."""
-    if "media_files" not in context.user_data:
-        context.user_data["media_files"] = []
+async def collect_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Collect text sent by the admin."""
+    if "media_captions" not in context.user_data:
         context.user_data["media_captions"] = []
 
-    if len(context.user_data["media_files"]) >= 10:
-        await update.message.reply_text("⚠️ Du hast bereits 10 Medien hochgeladen. Sende /done zum Erstellen des Posts.")
-        return COLLECTING_MEDIA
-
     message = update.message
-    caption = message.caption or ""
+    text = message.text or message.caption or ""
     
-    if message.photo:
-        photo_file = await message.photo[-1].get_file()
-        photo_bytes = await photo_file.download_as_bytearray()
-        base64_image = base64.b64encode(photo_bytes).decode('utf-8')
-        context.user_data["media_files"].append({"type": "image", "data": base64_image})
-    elif message.video:
-        # We can't easily process video content with LLM unless we take frames, 
-        # for now we'll just use the caption if available or a placeholder.
-        context.user_data["media_files"].append({"type": "video", "info": "Video file provided"})
-    
-    if caption:
-        context.user_data["media_captions"].append(caption)
+    if text:
+        context.user_data["media_captions"].append(text)
+        count = len(context.user_data["media_captions"])
+        await update.message.reply_text(f"✅ Textabschnitt {count} empfangen. Sende weitere oder /done.")
+    else:
+        await update.message.reply_text("⚠️ Bitte sende einen Text oder eine Bildunterschrift.")
 
-    count = len(context.user_data["media_files"])
-    await update.message.reply_text(f"✅ Medium {count}/10 empfangen. Sende weitere oder /done.")
-    return COLLECTING_MEDIA
+    return COLLECTING_TEXT
 
 async def process_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Process the collected media with LLM and return a summary."""
-    if not context.user_data.get("media_files"):
-        await update.message.reply_text("❌ Du hast keine Medien gesendet. Abbruch.")
+    """Process the collected text with LLM and return a summary."""
+    if not context.user_data.get("media_captions"):
+        await update.message.reply_text("❌ Du hast keine Texte gesendet. Abbruch.")
         return ConversationHandler.END
 
     await update.message.reply_text("⏳ Erstelle Nachrichtenartikel... Bitte warten.")
     await update.message.chat.send_chat_action(ChatAction.TYPING)
 
-    media_files = context.user_data["media_files"]
     captions = context.user_data["media_captions"]
 
     # Build prompt for LLM
     system_prompt = (
         "Du bist ein erfahrener Nachrichtenredakteur für einen Militär-Informationskanal. "
-        "Deine Aufgabe ist es, aus den bereitgestellten Bildern und Bildunterschriften "
-        "einen professionellen, sachlichen und informativen Nachrichtenartikel zu verfassen. "
-        "Der Artikel sollte auf Deutsch sein, eine klare Struktur haben und die wichtigsten Fakten zusammenfassen. "
-        "Vermeide Spekulationen, bleib bei den Fakten."
+        "Deine Aufgabe ist es, aus den bereitgestellten Texten einen professionellen, sachlichen "
+        "und informativen Nachrichtenartikel zu verfassen.\n\n"
+        "REGELN:\n"
+        "1. Der Artikel MUSS mit passenden Flaggen-Emojis beginnen (z. B. 🇷🇺 🇺🇦).\n"
+        "2. Der Artikel muss auf Deutsch sein.\n"
+        "3. Der gesamte Text darf MAXIMAL 900 Zeichen lang sein.\n"
+        "4. Fasse die wichtigsten Fakten prägnant zusammen.\n"
+        "5. Vermeide Spekulationen, bleib bei den Fakten."
     )
 
-    message_content = [{"type": "text", "text": f"{system_prompt}\n\nHier sind die Informationen aus den Medien:\n" + "\n".join(captions)}]
+    prompt_content = f"{system_prompt}\n\nHier sind die zu verarbeitenden Informationen:\n\n" + "\n---\n".join(captions)
     
-    # Add images to content (up to limit)
-    for m in media_files:
-        if m["type"] == "image":
-            message_content.append({
-                "type": "image_url",
-                "image_url": {"url": f"data:image/jpeg;base64,{m['data']}"}
-            })
+    message_content = [{"role": "user", "content": prompt_content}]
 
     try:
-        # Fallback models like in fact.py
+        # Reliable text models on OpenRouter
         models = [
             "meta-llama/llama-3.3-70b-instruct:free",
             "google/gemini-flash-1.5-8b",
@@ -119,8 +100,9 @@ async def process_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                         },
                         json={
                             "model": model,
-                            "messages": [{"role": "user", "content": message_content}],
+                            "messages": message_content,
                             "temperature": 0.5,
+                            "max_tokens": 1000,
                         }
                     )
                     if response.status_code == 200:
@@ -143,6 +125,10 @@ async def process_ai_post(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 continue
 
         if result:
+            # Ensure character limit (soft check by LLM, hard check here)
+            if len(result) > 950: # small buffer
+                result = result[:900] + "..."
+                
             await update.message.reply_text(f"📝 <b>Vorschlag für Nachrichtenartikel:</b>\n\n{result}", parse_mode="HTML")
         else:
             detailed_error = "\n".join([f"• {err}" for err in error_details])
@@ -171,8 +157,9 @@ def register_ai_assistant(application):
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("ai_post", start_ai_post)],
         states={
-            COLLECTING_MEDIA: [
-                MessageHandler(filters.PHOTO | filters.VIDEO, collect_media),
+            COLLECTING_TEXT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, collect_text),
+                MessageHandler(filters.PHOTO | filters.VIDEO, collect_text), # Also collect caption from media
                 CommandHandler("done", process_ai_post),
             ],
         },
