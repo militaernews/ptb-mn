@@ -10,44 +10,44 @@ from util.helper import delete_msg, reply_html
 from util.patterns import PATTERN_COMMAND
 
 ALLOWED_URLS: Final[Set[str]] = {
-    "t.me/militaernews",
-    "bbc.com",
     "bbc.co.uk",
-    "nytimes.com",
-    "cnn.com",
-    "theguardian.com",
-    "nypost.com",
-    "forbes.com",
-    "washingtonpost.com",
-    "cnbc.com",
-    "independent.co.uk",
-    "businessinsider.com",
-    "kremlin.ru",
-    "un.org",
-    "icrc.org",
-    "whitehouse.gov",
-    "ntv.de",
-    "n-tv.de",
-    "nzz.ch",
-    "faz.net",
-    "maps.bot.goo.gl",
-    "understandingwar.org",
-    "wikipedia.org",
-    "youtube.com",
-    "youtu.be",
-    "spiegel.de",
-    "maps.google.com",
-    "wsj.com",
-    "reuters.com",
+    "bbc.com",
     "bloomberg.com",
-    "dw.com",
-    "zeit.de"
-    "apnews.com",
-    "tagesschau.de",
-    "statista.com",
+    "businessinsider.com",
     "cbr.ru",
+    "cnbc.com",
+    "cnn.com",
+    "dw.com",
+    "faz.net",
+    "forbes.com",
+    "icrc.org",
+    "independent.co.uk",
+    "kremlin.ru",
+    "maps.bot.goo.gl",
+    "maps.google.com",
+    "n-tv.de",
+    "ntv.de",
+    "nypost.com",
+    "nytimes.com",
+    "nzz.ch",
+    "reuters.com",
+    "spiegel.de",
+    "statista.com",
+    "t.me/militaernews",
+    "t.me/mnchat",
     "t.me/sicherheitskonferenz",
-    "t.me/mnchat"
+    "tagesschau.de",
+    "theguardian.com",
+    "un.org",
+    "understandingwar.org",
+    "washingtonpost.com",
+    "whitehouse.gov",
+    "wikipedia.org",
+    "wsj.com",
+    "youtu.be",
+    "youtube.com",
+    "zeit.de",
+    "apnews.com"
 }
 
 
@@ -64,24 +64,54 @@ async def remove_command(update: Update, _: CallbackContext):
 
 
 async def remove_url(update: Update, context: CallbackContext):
-    logging.info(f"MATCH? {update.message.text}")
-    
+    if not update.message or not update.message.text:
+        return
+
+    # Skip for admins
     if update.message.from_user.id in await get_admin_ids(context):
         return
 
-    db_urls = await get_whitelist()
-    all_urls = ALLOWED_URLS.union(set(db_urls))
+    # Extract all URLs from the message
+    from telegram.constants import MessageEntityType
+    urls = [
+        update.message.text[e.offset : e.offset + e.length]
+        for e in update.message.entities
+        if e.type in (MessageEntityType.URL, MessageEntityType.TEXT_LINK)
+    ]
 
-    if any(ext in update.message.text for ext in all_urls):
+    if not urls:
         return
 
-    await delete_msg(update)
+    db_urls = await get_whitelist()
+    all_allowed = ALLOWED_URLS.union(set(db_urls))
+
+    for url in urls:
+        url_lower = url.lower().replace("https://", "").replace("http://", "").split("/")[0]
+        # Check if the domain or any parent domain is allowed
+        is_allowed = False
+        for allowed in all_allowed:
+            if url_lower == allowed or url_lower.endswith("." + allowed):
+                is_allowed = True
+                break
+        
+        if not is_allowed:
+            logging.info(f"Deleting message due to unauthorized link: {url}")
+            await delete_msg(update)
+            return
 
 
 async def send_whitelist(update: Update, context: CallbackContext):
     db_urls = await get_whitelist()
-    all_urls = ALLOWED_URLS.union(set(db_urls))
-    await reply_html(update, context, "whitelist", "\n\n".join(sorted(all_urls)))
+    all_urls = sorted(list(ALLOWED_URLS.union(set(db_urls))))
+    
+    text = (
+        "🔗 <b>In dieser Gruppe erlaubte Links</b>\n\n"
+        "Um Mitglieder vor Scam-Versuchen etc. zu schützen, sind nur folgende Links und deren Subdomains erlaubt:\n\n"
+        + "\n\n".join(all_urls) +
+        "\n\nNachrichten, die andere Links enthalten, werden automatisch gelöscht."
+    )
+    
+    await update.message.reply_text(text, parse_mode="HTML", disable_web_page_preview=True)
 
 
 async def log_msg(update: Update, _: CallbackContext):
@@ -91,9 +121,14 @@ async def log_msg(update: Update, _: CallbackContext):
 
 
 def register_whitelist(app: Application):
-    #   bot.add_handler(
-    #   MessageHandler(filters.Chat(GERMAN.chat_id) & ~filters.SenderChat.ALL & filters.Entity(MessageEntity.URL),
-    #               remove_url))
+    from telegram.constants import MessageEntityType
+    app.add_handler(
+        MessageHandler(
+            filters.Chat(GERMAN.chat_id) & 
+            (filters.Entity(MessageEntityType.URL) | filters.Entity(MessageEntityType.TEXT_LINK)),
+            remove_url
+        )
+    )
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
     app.add_handler(
         MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),

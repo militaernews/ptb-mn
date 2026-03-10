@@ -490,5 +490,24 @@ async def init_db():
         try:
             await conn.execute(schema_sql)
             logging.info("Database schema initialized successfully.")
+            
+            # Seed initial whitelist if empty
+            count = await conn.fetchval("select count(*) from whitelist")
+            if count == 0:
+                initial_links = [
+                    "bbc.co.uk", "bbc.com", "bloomberg.com", "businessinsider.com",
+                    "cbr.ru", "cnbc.com", "cnn.com", "dw.com", "faz.net", "forbes.com",
+                    "icrc.org", "independent.co.uk", "kremlin.ru", "maps.bot.goo.gl",
+                    "maps.google.com", "n-tv.de", "ntv.de", "nypost.com", "nytimes.com",
+                    "nzz.ch", "reuters.com", "spiegel.de", "statista.com",
+                    "t.me/militaernews", "t.me/mnchat", "t.me/sicherheitskonferenz",
+                    "tagesschau.de", "theguardian.com", "un.org", "understandingwar.org",
+                    "washingtonpost.com", "whitehouse.gov", "wikipedia.org", "wsj.com",
+                    "youtu.be", "youtube.com", "zeit.de", "apnews.com"
+                ]
+                for link in initial_links:
+                    await conn.execute("insert into whitelist(link) values ($1) on conflict do nothing", link)
+                logging.info("Initial whitelist seeded.")
+                
         except Exception as e:
             logging.error(f"Failed to initialize database schema: {e}")
