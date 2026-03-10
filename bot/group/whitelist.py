@@ -58,11 +58,6 @@ async def get_admin_ids(context: CallbackContext):
     return admins
 
 
-async def remove_command(update: Update, _: CallbackContext):
-    await sleep(2)
-    await delete_msg(update)
-
-
 async def remove_url(update: Update, context: CallbackContext):
     if not update.message:
         return
@@ -142,9 +137,7 @@ def register_whitelist(app: Application):
         )
     )
     app.add_handler(CommandHandler("whitelist", send_whitelist, filters.Chat(GERMAN.chat_id)))
-    # app.add_handler(
-    #     MessageHandler(filters.Regex(PATTERN_COMMAND) & filters.Chat(GERMAN.chat_id),
-    #                    remove_command))
+
     app.add_handler(
         MessageHandler(filters.TEXT & filters.Chat(GERMAN.chat_id),
                        log_msg))

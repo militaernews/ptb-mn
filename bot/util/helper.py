@@ -78,7 +78,9 @@ async def delete(context: CallbackContext):
 
 def remove_reply(func):
     async def wrapper(update: Update, context: CallbackContext, ):
-        await delete_msg(update)
+        if update.message and update.message.text and "@admin" in update.message.text.lower():
+            await delete_msg(update)
+            
         if update.message.reply_to_message is None or update.message.reply_to_message.from_user.id in ADMINS:
             return
 
