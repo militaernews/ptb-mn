@@ -28,6 +28,7 @@ CHANNEL_BACKUP: Final[int] = int(getenv('CHANNEL_BACKUP'))
 CHANNEL_SUGGEST: Final[int] = int(getenv('CHANNEL_SUGGEST'))
 
 LOG_GROUP: Final[str] = getenv('LOG_GROUP')
+PROTOCOL_CHAT: Final[int] = int(getenv('PROTOCOL_CHAT', 0))
 logging.warning(getenv('ADMINS', '[]'))
 ADMINS: Final[List[int]] = loads(getenv('ADMINS', '[]'))
 

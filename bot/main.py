@@ -24,6 +24,7 @@ from group.whitelist import register_whitelist
 from group.admin_actions import register_admin_actions
 from group.karma import register_karma_tracking
 from group.info import register_info_command
+from group.protocol import register_protocol
 from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
@@ -115,6 +116,7 @@ def main():
     register_admin_actions(application)
     register_karma_tracking(application)
     register_info_command(application)
+    register_protocol(application)
     #   register_captcha(application)
 
     register_whitelist_admin(application)

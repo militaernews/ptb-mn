@@ -12,6 +12,7 @@ from data.lang import GERMAN
 from settings.config import ADMINS, MSG_REMOVAL_PERIOD, WARN_LIMIT
 from util.helper import (mention, remove_reply, admin_reply, delete, CHAT_ID, MSG_ID, reply_html,
                              admin)
+from group.protocol import log_admin_action
 
 RULES: Final[List[str]] = [
     "1️⃣ Keine Beleidigung anderer Mitglieder.",
@@ -42,6 +43,7 @@ async def ban_user(update: Update, context: CallbackContext):
                                       until_date=1)
     await update.message.reply_to_message.reply_text(
         f"Aufgrund eines gravierenden Verstoßes habe ich {mention(update)} gebannt.")
+    await log_admin_action(context, update.message.from_user, user_id, "ban", "Per Befehl gebannt")
 
 
 @admin
@@ -59,6 +61,7 @@ async def ban_user_id(update: Update, context: CallbackContext):
                                       until_date=1)
     await context.bot.send_message(update.message.chat_id,
                                    f"Aufgrund eines gravierenden Verstoßes habe ich <code>{user_id}</code> gebannt.")
+    await log_admin_action(context, update.message.from_user, user_id, "ban", f"Per ID-Befehl gebannt (ID: {user_id})")
 
 
 @admin_reply
@@ -70,6 +73,7 @@ async def unwarn_user(update: Update, context: CallbackContext):
 
     await update.message.reply_to_message.reply_text(
         f"Dem Nutzer {mention(update)} wurde alle Verwarnungen erlassen.")
+    await log_admin_action(context, update.message.from_user, user_id, "unwarn", "Alle Verwarnungen erlassen")
 
 
 @admin
@@ -87,6 +91,7 @@ async def unwarn_user_id(update: Update, context: CallbackContext):
 
     await context.bot.send_message(update.message.chat_id,
                                    f"Dem Nutzer <code>{user_id}</code> wurde alle Verwarnungen erlassen.")
+    await log_admin_action(context, update.message.from_user, user_id, "unwarn", f"Alle Verwarnungen erlassen (ID: {user_id})")
 
 
 @admin_reply
@@ -124,6 +129,7 @@ async def warn_user(update: Update, context: CallbackContext):
 
         await update.message.reply_to_message.reply_text(
             f"Aufgrund wiederholter Verstöße habe ich {mention(update)} die Schreibrechte genommen.")
+        await log_admin_action(context, update.message.from_user, user_id, "restrict", "Schreibrechte entzogen (Warnlimit erreicht)")
         return
     else:
 
@@ -140,6 +146,7 @@ async def warn_user(update: Update, context: CallbackContext):
 
             warn_text = f"{warn_text}\n\nGrund: {' '.join(context.args)}"
         await update.message.reply_to_message.reply_text(warn_text)
+        await log_admin_action(context, update.message.from_user, user_id, "warn", f"Verwarnung {warn_amount}/{WARN_LIMIT}")
 
 
 @admin
@@ -174,6 +181,7 @@ async def warn_user_id(update: Update, context: CallbackContext):
 
         await context.bot.send_message(update.message.chat_id,
                                        f"Aufgrund wiederholter Verstöße habe ich <code>{user_id}</code> die Schreibrechte genommen.")
+        await log_admin_action(context, update.message.from_user, user_id, "restrict", f"Schreibrechte entzogen (ID: {user_id}, Warnlimit erreicht)")
         return
 
     warn_text = f"Der Nutzer <code>{user_id}</code> hat die Warnung {warn_amount} von {WARN_LIMIT} erhalten."
@@ -184,6 +192,7 @@ async def warn_user_id(update: Update, context: CallbackContext):
         warn_text = f"{warn_text}\n\nGrund: {' '.join(context.args)}"
 
     await context.bot.send_message(update.message.chat_id, warn_text)
+    await log_admin_action(context, update.message.from_user, user_id, "warn", f"Verwarnung {warn_amount}/{WARN_LIMIT} (ID: {user_id})")
 
 
 @admin_reply

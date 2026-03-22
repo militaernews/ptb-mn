@@ -6,6 +6,7 @@ from data.db import get_warnings, increment_warnings, decrement_warnings, reset_
 from settings.config import ADMINS
 from data.lang import GERMAN
 from util.helper import remove_reply
+from group.protocol import log_admin_action
 
 logger = logging.getLogger(__name__)
 
@@ -100,6 +101,7 @@ async def admin_action_callback(update: Update, context: ContextTypes.DEFAULT_TY
         if action == "warn":
             new_count = await increment_warnings(target_user_id, chat_id)
             await query.answer(f"Nutzer verwarnt. Neue Anzahl: {new_count}")
+            await log_admin_action(context, query.from_user, target_user_id, "warn", f"Neue Verwarnungen: {new_count}")
             
             # Update the existing message instead of sending a new one
             # Get user mention for the message (we can try to get it from the text or context if needed, 
@@ -140,6 +142,7 @@ async def admin_action_callback(update: Update, context: ContextTypes.DEFAULT_TY
         elif action == "unwarn":
             new_count = await decrement_warnings(target_user_id, chat_id)
             await query.answer(f"Verwarnung entfernt. Neue Anzahl: {new_count}")
+            await log_admin_action(context, query.from_user, target_user_id, "unwarn", f"Neue Verwarnungen: {new_count}")
             
             current_text = query.message.text_html
             lines = current_text.split("\n")
@@ -158,6 +161,7 @@ async def admin_action_callback(update: Update, context: ContextTypes.DEFAULT_TY
             await context.bot.send_message(chat_id, f"🚫 Nutzer wurde gesperrt.")
             await reset_warnings(target_user_id, chat_id)
             await query.message.delete()
+            await log_admin_action(context, query.from_user, target_user_id, "ban", "Dauerhaft gesperrt")
 
     except Exception as e:
         logger.error(f"Admin action failed: {e}")
