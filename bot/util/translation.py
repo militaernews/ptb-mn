@@ -57,7 +57,7 @@ FLAG_PATTERN = re.compile(
 # Combined pattern: ALL HTML tags (including <a href=...> and </a>) plus flag emojis.
 # Using <[^>]+> instead of the old <[^a>]+> so that anchor tags are also protected.
 _PROTECT_PATTERN = re.compile(
-    r'<[^>]+>|' + FLAG_PATTERN.pattern,
+    r'<tg-emoji[^>]+>.*?</tg-emoji>|<[^>]+>|' + FLAG_PATTERN.pattern,
     re.IGNORECASE | re.UNICODE,
 )
 
