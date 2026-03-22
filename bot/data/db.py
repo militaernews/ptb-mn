@@ -419,8 +419,23 @@ async def log_user_event(user_id: int, chat_id: int, event_type: str, conn: Conn
         user_id, chat_id, event_type
     )
 
-async def init_db():
-    """Initialize the database schema if tables don't exist."""
+@db
+async def save_message_author(message_id: int, chat_id: int, user_id: int, conn: Connection = None):
+    await conn.execute(
+        "insert into message_authors(message_id, chat_id, user_id) values ($1, $2, $3) "
+        "on conflict (message_id, chat_id) do nothing",
+        message_id, chat_id, user_id
+    )
+
+@db
+async def get_message_author(message_id: int, chat_id: int, conn: Connection = None) -> Optional[int]:
+    return await conn.fetchval(
+        "select user_id from message_authors where message_id=$1 and chat_id=$2",
+        message_id, chat_id
+    )
+
+
+async def init_db():    """Initialize the database schema if tables don't exist."""
     pool = await DBPool.get_pool()
     if pool is None:
         return
@@ -492,6 +507,15 @@ async def init_db():
         chat_id bigint not null,
         event_type varchar(20) not null,
         created_at timestamptz not null default now()
+    );
+
+    create table if not exists message_authors
+    (
+        message_id bigint not null,
+        chat_id bigint not null,
+        user_id bigint not null,
+        created_at timestamptz not null default now(),
+        primary key (message_id, chat_id)
     );
     """
 

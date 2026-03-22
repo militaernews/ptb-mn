@@ -1,7 +1,7 @@
 import logging
 from telegram import Update
 from telegram.ext import ContextTypes, CommandHandler, filters
-from data.db import get_user_stats, get_warnings
+from data.db import get_user_stats, get_warnings, update_user_stats
 from data.lang import GERMAN
 
 logger = logging.getLogger(__name__)
@@ -30,8 +30,7 @@ async def show_user_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     warn_count = await get_warnings(target_user.id, message.chat_id)
 
     if not stats:
-        # Initialize if not present (this should rarely happen if tracking is active)
-        from data.db import update_user_stats
+        # Initialize if not present
         await update_user_stats(target_user.id, message.chat_id)
         stats = await get_user_stats(target_user.id, message.chat_id)
 
