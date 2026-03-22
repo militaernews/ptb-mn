@@ -435,7 +435,8 @@ async def get_message_author(message_id: int, chat_id: int, conn: Connection = N
     )
 
 
-async def init_db():    """Initialize the database schema if tables don't exist."""
+async def init_db():
+    """Initialize the database schema if tables don't exist."""
     pool = await DBPool.get_pool()
     if pool is None:
         return
