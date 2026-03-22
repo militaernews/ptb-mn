@@ -28,6 +28,7 @@ from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
 from private.ai_assistant import register_ai_assistant
+from private.compose import register_compose
 from private.whitelist_admin import register_whitelist_admin
 from util.media_handler import register_media_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
@@ -119,6 +120,7 @@ def main():
     register_whitelist_admin(application)
     register_whitelist(application)
     register_ai_assistant(application)
+    register_compose(application)
     register_media_downloader(application)
 
     # Commands have to be added above
