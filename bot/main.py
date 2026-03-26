@@ -22,6 +22,7 @@ from private.setup import set_cmd
 from util.media_handler import register_media_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
+from util.error_logger import get_error_logger
 
 
 def add_logging():
@@ -110,9 +111,12 @@ def main():
     # Register media downloader for social media content
     register_media_downloader(application)
 
-    # Error handler
+    # Error handler - logs to both console and Telegram group
     async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.error("Exception while handling an update:", exc_info=context.error)
+        # Also log to Telegram group
+        error_logger = get_error_logger()
+        await error_logger.log_error(context.error, "Error in update handler")
 
     application.add_error_handler(error_handler)
 

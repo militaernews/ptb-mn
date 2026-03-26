@@ -27,7 +27,8 @@ CHANNEL_SOURCE: Final[int] = int(getenv('CHANNEL_SOURCE'))
 CHANNEL_BACKUP: Final[int] = int(getenv('CHANNEL_BACKUP'))
 CHANNEL_SUGGEST: Final[int] = int(getenv('CHANNEL_SUGGEST'))
 
-LOG_GROUP: Final[str] = getenv('LOG_GROUP')
+LOG_GROUP_ID: Final[int] = int(getenv('LOG_GROUP_ID', -1001338514957))
+THREAD_ID: Final[int] = int(getenv('THREAD_ID', 2))  # PTB-MN topic
 PROTOCOL_CHAT: Final[int] = int(getenv('PROTOCOL_CHAT', 0))
 logging.warning(getenv('ADMINS', '[]'))
 ADMINS: Final[List[int]] = loads(getenv('ADMINS', '[]'))

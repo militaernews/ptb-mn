@@ -13,6 +13,7 @@ EnvironmentFile=%h/projects/ptb-mn/.env
 Environment=CONTAINER=true
 Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=PYTHONUNBUFFERED=1
+Environment=LOG_GROUP_ID=-1001338514957
 
 
 [Service]
