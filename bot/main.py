@@ -29,15 +29,10 @@ def add_logging():
         logging.basicConfig(
             format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
             encoding="utf-8",
-
             level=logging.INFO,
             datefmt='%Y-%m-%d %H:%M:%S',
-            handlers=[
-                logging.StreamHandler(),
-                #     logging.FileHandler('logs/log')
-            ]
+            handlers=[logging.StreamHandler()]
         )
-
     else:
         log_filename: Final[str] = rf"../logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
         makedirs(path.dirname(log_filename), exist_ok=True)
@@ -53,22 +48,33 @@ def add_logging():
 
 
 def register_news(application: Application):
+    """Register handlers for the core posting pipeline."""
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
     news_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=GERMAN.channel_id) & ~filters.FORWARDED
 
+    # Handle posts with INFO pattern (special formatting)
     application.add_handler(
         MessageHandler(news_post & media & filters.CaptionRegex(INFO_PATTERN), post_info))
 
+    # Handle media posts (photos/videos) - translate and post to other languages
     application.add_handler(MessageHandler(news_post & media, post_channel_english))
 
+    # Handle breaking news posts
     application.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(BREAKING_PATTERN),
                                            breaking_news))
+    
+    # Handle announcement posts
     application.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(ANNOUNCEMENT_PATTERN),
                                            announcement))
+    
+    # Handle advertisement posts
     application.add_handler(
         MessageHandler(news_post & filters.TEXT & filters.Regex(ADVERTISEMENT_PATTERN), advertisement))
+    
+    # Handle regular text posts
     application.add_handler(MessageHandler(news_post & filters.TEXT, post_channel_text))
 
+    # Handle edited posts - sync changes across language channels
     news_edited = filters.UpdateType.EDITED_CHANNEL_POST & filters.Chat(
         chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
         re.compile(r"🔰 MN-Hauptquartier|#\S+|MN-Team", re.IGNORECASE))
@@ -85,16 +91,26 @@ def main():
                    .read_timeout(50).get_updates_read_timeout(50)
                    .build())
 
+    # Admin command for setting up custom commands
     application.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
 
+    # Register core posting pipeline handlers
     register_news(application)
+    
+    # Register crawler for external sources
     register_crawler(application)
+    
+    # Register advertisement and promo handlers
     register_advertisement(application)
     register_promo(application)
+    
+    # Register meme posting handler
     register_meme(application)
+    
+    # Register media downloader for social media content
     register_media_downloader(application)
 
-    # Commands have to be added above
+    # Error handler
     async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.error("Exception while handling an update:", exc_info=context.error)
 
