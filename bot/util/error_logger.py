@@ -37,17 +37,21 @@ class ErrorLogger:
         logger.error(f"[ERROR] {context_msg or 'Unhandled exception'}\n{error_trace}")
         
         # Attempt to post to Telegram group topic
-        if self.log_group_id and self.thread_id:
+        if self.log_group_id:
             try:
                 error_msg = self._format_error_message(error, context_msg, error_trace)
+                
+                # If thread_id is 0 or None, don't use message_thread_id (sends to General topic)
+                thread_id = self.thread_id if self.thread_id and self.thread_id != 0 else None
+                
                 await self.bot.send_message(
                     chat_id=self.log_group_id,
-                    message_thread_id=self.thread_id,
+                    message_thread_id=thread_id,
                     text=error_msg,
                     parse_mode="HTML"
                 )
             except TelegramError as tg_error:
-                logger.error(f"Failed to post error to Telegram group topic: {tg_error}")
+                logger.error(f"Failed to post error to Telegram group topic ({self.log_group_id}): {tg_error}")
             except Exception as e:
                 logger.error(f"Unexpected error while logging to Telegram: {e}")
     
