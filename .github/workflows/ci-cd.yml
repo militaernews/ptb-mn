@@ -26,8 +26,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r bot/requirements.txt
 
-    - name: Run tests (Placeholder)
-      run: echo "No specific tests defined for PTB-MN yet."
+    - name: Run unit tests
+      run: |
+        cd bot
+        python -m pytest ../test/ -v --tb=short
 
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
