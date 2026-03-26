@@ -3,7 +3,7 @@ name: CI/CD Pipeline - PTB-MN
 on: 
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-and-publish:
