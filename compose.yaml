@@ -1,0 +1,11 @@
+services:
+  bot:
+    build: .
+    container_name: ptb-mn
+    restart: unless-stopped
+    env_file:
+      - .env # .env is only read with "compose up"
+    volumes:
+      - ./bot:/bot
+    environment:
+      CONTAINER: "true"

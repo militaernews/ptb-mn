@@ -1,0 +1,22 @@
+[Unit]
+Description="ptb-mn (Posting Pipeline)"
+After=local-fs.target
+
+[Container]
+Image=docker.io/library/python:3.12-slim
+AutoUpdate=registry
+ContainerName=ptb-mn
+LogDriver=journald
+WorkingDir=/app
+Volume=%h/projects/ptb-mn/bot:/app:Z
+EnvironmentFile=%h/projects/ptb-mn/.env
+Environment=CONTAINER=true
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+Exec=sh -c "pip install --no-cache-dir -r requirements.txt && python -u main.py"
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

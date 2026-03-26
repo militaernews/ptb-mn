@@ -1,0 +1,108 @@
+{
+  "german": {
+    "lang_key": "de",
+    "channel_id": -1001240262412,
+    "footer": "🔰 <b>Verpasse nichts!</b>\nAbonniere hier: <b>@MilitaerNews</b>",
+    "breaking": "EILMELDUNG",
+    "announce": "MITTEILUNG",
+    "advertise": "WERBUNG",
+    "username": "MilitaerNews",
+    "chat_id": -1001526741474
+  },
+  "languages": [
+    {
+      "lang_key": "en",
+      "channel_id": -1001258430463,
+      "footer": "🔰 <b>Don't miss out!</b>\nSubscribe here: <b>@MilitaryNewsEN</b>",
+      "breaking": "BREAKING",
+      "announce": "ANNOUNCEMENT",
+      "advertise": "ADVERTISEMENT",
+      "username": "MilitaryNewsEN",
+      "chat_id": -1001382962633,
+      "lang_key_deepl": "en-us"
+    },
+    {
+      "lang_key": "tr",
+      "channel_id": -1001712502236,
+      "footer": "🔰 @MilitaryNewsTR'e abone olun",
+      "breaking": "SON_DAKİKA",
+      "announce": "DUYURU",
+      "advertise": "ADVERTISING",
+      "username": "MilitaryNewsTR"
+    },
+    {
+      "lang_key": "fa",
+      "channel_id": -1001568841775,
+      "footer": "\nعضو شوید:\n🔰 @MilitaryNewsFA",
+      "breaking": "خبرفوری",
+      "announce": "اعلامیه",
+      "advertise": "تبلیغات",
+      "username": "MilitaryNewsFA"
+    },
+    {
+      "lang_key": "ru",
+      "channel_id": -1001330302325,
+      "footer": "🔰 Подписывайтесь на @MilitaryNewsRU",
+      "breaking": "СРОЧНЫЕ_НОВОСТИ",
+      "announce": "ОБЪЯВЛЕНИЕ",
+      "advertise": "РЕКЛАМА",
+      "username": "MilitaryNewsRU"
+    },
+    {
+      "lang_key": "pt",
+      "channel_id": -1001614849485,
+      "footer": "🔰 Se inscreva no @MilitaryNewsBR",
+      "breaking": "NOTÍCIAS_URGENTES",
+      "announce": "MENSAGEM",
+      "advertise": "PUBLICIDADE",
+      "username": "MilitaryNewsBR",
+      "lang_key_deepl": "pt-br"
+    },
+    {
+      "lang_key": "es",
+      "channel_id": -1001715032604,
+      "footer": "🔰 Suscríbete a @MilitaryNewsES",
+      "breaking": "ÚLTIMA_HORA",
+      "announce": "ANUNCIO",
+      "advertise": "PUBLICIDAD",
+      "username": "MilitaryNewsES"
+    },
+    {
+      "lang_key": "fr",
+      "channel_id": -1001337262241,
+      "footer": "🔰 Abonnez-vous à @MilitaryNewsFR",
+      "breaking": "BREAKING_NEWS",
+      "announce": "ANNONCE",
+      "advertise": "PUBLICITÉ",
+      "username": "MilitaryNewsFR"
+    },
+    {
+      "lang_key": "it",
+      "channel_id": -1001632091535,
+      "footer": "🔰 iscriviti a @MilitaryNewsITA",
+      "breaking": "ULTIME_NOTIZIE",
+      "announce": "ANNUNCIO",
+      "advertise": "PUBBLICITÀ",
+      "username": "MilitaryNewsITA"
+    },
+    {
+      "lang_key": "ar",
+      "channel_id": -1001972272205,
+      "footer": "@MilitaryNewsAR اشترك ب أخبار عسكرية بالعربية 🔰\n",
+      "breaking": "معلومات",
+      "announce": "إشعار",
+      "advertise": "إعلان",
+      "username": "MilitaryNewsAR"
+    },
+    {
+      "lang_key": "id",
+      "channel_id": -1002089283993,
+      "footer": "🔰 Berlangganan @MilitaryNewsIDN",
+      "breaking": "BERITA_TERBARU",
+      "announce": "KOMUNIKASI",
+      "advertise": "ADVERTISEMENT",
+      "username": "MilitaryNewsIDN",
+      "lang_key_deepl": "id"
+    }
+  ]
+}
