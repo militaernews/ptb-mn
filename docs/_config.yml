@@ -1,25 +1,17 @@
 # GitHub Pages Jekyll Configuration
 theme: jekyll-theme-minimal
-title: "🔰 MilitaerNews Posting Bot"
-description: "Handbuch für Redakteure und Entwickler"
+title: "MilitaerNews Posting Bot"
+description: "Dokumentation für Redakteure und Entwickler"
 show_downloads: false
 
 # Site settings
 url: "https://militaernews.github.io"
-baseurl: ""
+baseurl: "/ptb-mn"
 
 # Build settings
 markdown: kramdown
-kramdown:
-  input: GFM
-  hard_wrap: false
-  syntax_highlighter: rouge
-
 plugins:
   - jekyll-seo-tag
-
-# Navigation
-nav_order: 1
 
 # Exclude files
 exclude:
@@ -32,18 +24,3 @@ exclude:
   - ".git*"
   - "node_modules/"
   - "*.egg-info"
-  - "USAGE.md"
-
-# Include files
-include:
-  - "_pages"
-
-# Sass
-sass:
-  style: compressed
-
-# Collections
-collections:
-  pages:
-    output: true
-    permalink: /:name/
