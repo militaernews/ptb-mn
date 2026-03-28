@@ -5,8 +5,8 @@ description: "Dokumentation für Redakteure und Entwickler"
 show_downloads: false
 
 # Site settings
-url: "https://militaernews.github.io"
-baseurl: "/ptb-mn"
+url: "https://militaernews.github.io/ptb-mn"
+baseurl: ""
 
 # Build settings
 markdown: kramdown
