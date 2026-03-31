@@ -1,0 +1,23 @@
+[Unit]
+Description="ptb-mn (Posting Pipeline)"
+After=local-fs.target
+
+[Container]
+Image=ghcr.io/militaernews/ptb-mn:latest
+AutoUpdate=registry
+ContainerName=ptb-mn
+LogDriver=journald
+WorkingDir=/app
+Volume=%h/projects/ptb-mn/bot:/app:Z
+EnvironmentFile=%h/projects/ptb-mn/.env
+Environment=CONTAINER=true
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+Environment=LOG_GROUP_ID=-1001338514957
+
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -13,25 +13,16 @@ from channel.common import edit_channel, post_channel_english
 from channel.meme import register_meme
 from channel.special import breaking_news, announcement, post_info, advertisement
 from channel.crawler import register_crawler
-from channel.suggest import register_suggest
 from channel.text import edit_channel_text, post_channel_text
 from data.lang import GERMAN
 from data.db import init_db
-from group.bingo import register_bingo
-from group.commands import register_commands
-from group.management import register_management
-from group.whitelist import register_whitelist
-from group.admin_actions import register_admin_actions
-from group.karma import register_karma_tracking
-from group.info import register_info_command
 from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
-from private.ai_assistant import register_ai_assistant
-from private.whitelist_admin import register_whitelist_admin
 from util.media_handler import register_media_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
+from util.error_logger import get_error_logger
 
 
 def add_logging():
@@ -39,15 +30,10 @@ def add_logging():
         logging.basicConfig(
             format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
             encoding="utf-8",
-
             level=logging.INFO,
             datefmt='%Y-%m-%d %H:%M:%S',
-            handlers=[
-                logging.StreamHandler(),
-                #     logging.FileHandler('logs/log')
-            ]
+            handlers=[logging.StreamHandler()]
         )
-
     else:
         log_filename: Final[str] = rf"../logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
         makedirs(path.dirname(log_filename), exist_ok=True)
@@ -63,22 +49,33 @@ def add_logging():
 
 
 def register_news(application: Application):
+    """Register handlers for the core posting pipeline."""
     media = (filters.PHOTO | filters.VIDEO | filters.ANIMATION)
     news_post = filters.UpdateType.CHANNEL_POST & filters.Chat(chat_id=GERMAN.channel_id) & ~filters.FORWARDED
 
+    # Handle posts with INFO pattern (special formatting)
     application.add_handler(
         MessageHandler(news_post & media & filters.CaptionRegex(INFO_PATTERN), post_info))
 
+    # Handle media posts (photos/videos) - translate and post to other languages
     application.add_handler(MessageHandler(news_post & media, post_channel_english))
 
+    # Handle breaking news posts
     application.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(BREAKING_PATTERN),
                                            breaking_news))
+    
+    # Handle announcement posts
     application.add_handler(MessageHandler(news_post & filters.TEXT & filters.Regex(ANNOUNCEMENT_PATTERN),
                                            announcement))
+    
+    # Handle advertisement posts
     application.add_handler(
         MessageHandler(news_post & filters.TEXT & filters.Regex(ADVERTISEMENT_PATTERN), advertisement))
+    
+    # Handle regular text posts
     application.add_handler(MessageHandler(news_post & filters.TEXT, post_channel_text))
 
+    # Handle edited posts - sync changes across language channels
     news_edited = filters.UpdateType.EDITED_CHANNEL_POST & filters.Chat(
         chat_id=GERMAN.channel_id) & ~filters.CaptionRegex(
         re.compile(r"🔰 MN-Hauptquartier|#\S+|MN-Team", re.IGNORECASE))
@@ -88,9 +85,6 @@ def register_news(application: Application):
 
 
 def main():
-    #    if version_info >= (3, 8) and platform.lower().startswith("win"):
-    #      set_event_loop_policy(WindowsSelectorEventLoopPolicy())
-
     application = (ApplicationBuilder().token(TOKEN)
                    .defaults(
         Defaults(parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)))
@@ -98,32 +92,31 @@ def main():
                    .read_timeout(50).get_updates_read_timeout(50)
                    .build())
 
+    # Admin command for setting up custom commands
     application.add_handler(CommandHandler("set_cmd", set_cmd, filters.Chat(ADMINS)))
 
+    # Register core posting pipeline handlers
     register_news(application)
-    register_suggest(application)
+    
+    # Register crawler for external sources
     register_crawler(application)
+    
+    # Register advertisement and promo handlers
     register_advertisement(application)
     register_promo(application)
-
+    
+    # Register meme posting handler
     register_meme(application)
-    register_bingo(application)
-
-    register_commands(application)
-    register_management(application)
-    register_admin_actions(application)
-    register_karma_tracking(application)
-    register_info_command(application)
-    #   register_captcha(application)
-
-    register_whitelist_admin(application)
-    register_whitelist(application)
-    register_ai_assistant(application)
+    
+    # Register media downloader for social media content
     register_media_downloader(application)
 
-    # Commands have to be added above
+    # Error handler - logs to both console and Telegram group
     async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.error("Exception while handling an update:", exc_info=context.error)
+        # Also log to Telegram group
+        error_logger = get_error_logger()
+        await error_logger.log_error(context.error, "Error in update handler")
 
     application.add_error_handler(error_handler)
 
@@ -138,13 +131,11 @@ def main():
     except Exception as e:
         logging.error(f"Could not initialize database: {e}")
 
-    print("### RUNNING LOCAL ### - print")
-    logging.info("### RUNNING LOCAL ### - logging")
+    logging.info("### PTB-MN (Posting Pipeline) RUNNING ###")
 
     application.run_polling(poll_interval=1, drop_pending_updates=False)
 
 
 if __name__ == "__main__":
     add_logging()
-
     main()

@@ -1,151 +1,103 @@
-# ptb-mn — MilitaerNews Telegram Bot
+# PTB-MN: Posting-Pipeline-Bot
 
-This Telegram bot helps admins of [@MilitaerNews][channel-de] publish content across multiple language channels automatically. It translates posts, manages media groups, handles breaking news, and integrates with Twitter/X.
+Der **PTB-MN Bot** ist das Herzstück der Nachrichtenverbreitung im MilitärNews-System. Er automatisiert den Prozess des Postens und Editierens von Inhalten in den MilitärNews-Kanälen und synchronisiert diese über mehrere Sprachkanäle hinweg.
 
-You can find the bot [here][bot].
+## Kernfunktionen
 
-## 🚀 Getting Started
+Der Bot konzentriert sich ausschließlich auf die Kern-Posting-Pipeline:
 
-For a comprehensive guide on how to use the bot for posting and editing content, please refer to the [MilitaerNews Editor's Handbook](./docs/handbuch.md).
+*   **Automatisches Posten:** Verarbeitet und veröffentlicht Nachrichtenartikel und Medien in den Hauptkanälen.
+*   **Multi-Sprachen-Synchronisation:** Übersetzt Posts automatisch in 10+ Sprachen und verteilt sie auf entsprechende Kanäle.
+*   **Editier-Synchronisation:** Stellt sicher, dass Änderungen an Quell-Posts auch in den veröffentlichten Kanal-Posts widergespiegelt werden.
+*   **Breaking News & Announcements:** Spezialbehandlung für Eilmeldungen und Ankündigungen mit entsprechenden Formatierungen.
+*   **Medien-Handling:** Automatischer Download und Verarbeitung von Bildern und Videos aus sozialen Netzwerken (Twitter/X, Instagram, YouTube).
+*   **Crawler-Integration:** Sammelt automatisch Informationen aus vordefinierten externen Quellen.
+*   **Promotion & Werbung:** Steuert die Veröffentlichung von Werbeinhalten und Promo-Aktionen.
+*   **Meme-Posting:** Automatisches Posten von Memes in den Meme-Kanal.
 
-## ✨ Features
+## Installation & Deployment
 
-- **Automatic Translation** – Posts into 10+ languages via DeepL and Google Translate
-- **AI Post Assistant** – Create news articles from multiple media files using LLMs (Llama 3.1, Gemini, Mistral)
-- **Social Media Downloader** – Automatic download of media from Twitter/X, Instagram, and YouTube links
-- **Interactive Admin Tools** – `@admin` mention triggers a menu for warning (with warning history) or banning users
-- **Karma & Stats System** – Track user karma (via reactions), message count, and join dates; view stats with `/info`
-- **Fact-Checking** – LLM-powered fact-checker with web search capabilities and model fallback
-- **Database-backed Whitelist** – Admin-managed link whitelist stored in PostgreSQL
-- **Media Group Support** – Full album handling across all channels
-- **Twitter/X Integration** – Automatic cross-posting
-- **Suggest Pipeline** – Curated source channel management
-- **City/Country Normalization** – Consistent naming (e.g., Kyiv, Lemberg)
+Dieser Bot ist für den Betrieb als **Quadlet-Container** mit automatischen Updates über die GitHub Container Registry (GHCR) optimiert.
 
-## 🛠️ Development
-
-### Languages
-The bot posts to channels in the following languages:
-
-| Language   | Key  | Channel                        |
-|------------|------|--------------------------------|
-| German     | `de` | [@MilitaerNews][channel-de]    |
-| English    | `en` | [@MilitaryNewsEN][channel-en]  |
-| Turkish    | `tr` | [@MilitaryNewsTR][channel-tr]  |
-| Persian    | `fa` | [@MilitaryNewsFA][channel-fa]  |
-| Russian    | `ru` | [@MilitaryNewsRU][channel-ru]  |
-| Portuguese | `pt` | [@MilitaryNewsBR][channel-br]  |
-| Spanish    | `es` | [@MilitaryNewsES][channel-es]  |
-| French     | `fr` | [@MilitaryNewsFR][channel-fr]  |
-| Italian    | `it` | [@MilitaryNewsITA][channel-it] |
-| Arabic     | `ar` | [@MilitaryNewsAR][channel-ar]  |
-| Indonesian | `id` | [@MilitaryNewsIDN][channel-id] |
-
-Each language is configured with the following attributes:
-
-| Attribute        | Type      | Description                                                       |
-|------------------|-----------|-------------------------------------------------------------------|
-| `lang_key`       | `str`     | Identifies the language; used for translation and resource lookup |
-| `channel_id`     | `int`     | Telegram channel ID                                               |
-| `footer`         | `str`     | Text appended to every post                                       |
-| `breaking`       | `str`     | Hashtag/label prepended to breaking news posts                    |
-| `announce`       | `str`     | Hashtag/label prepended to announcement posts                     |
-| `advertise`      | `str`     | Hashtag/label for advertisement posts                             |
-| `username`       | `str`     | Telegram channel username (without `@`)                           |
-| `chat_id`        | `int`     | Telegram discussion group ID (optional)                           |
-| `lang_key_deepl` | `str`     | DeepL-specific language code, if different from `lang_key`        |
-
-See [lang.py](/bot/data/lang.py) for the full implementation.
-
-### Configuration
-
-The bot is configured via environment variables (`.env` file or container environment):
-
-| Variable             | Description                                      |
-|----------------------|--------------------------------------------------|
-| `TELEGRAM`           | Telegram bot token                               |
-| `DATABASE_URL`       | PostgreSQL connection URL                        |
-| `DATABASE_URL_NN`    | PostgreSQL connection URL (non-nullable variant) |
-| `DATABASE_URL_TEST`  | PostgreSQL connection URL for tests              |
-| `DEEPL`              | DeepL API key                                    |
-| `OPENROUTER_API_KEY` | OpenRouter API key                               |
-| `CHANNEL_MEME`       | Telegram channel ID for the memes channel        |
-| `CHANNEL_SOURCE`     | Telegram channel ID for the source/link channel  |
-| `CHANNEL_BACKUP`     | Telegram channel ID for the backup channel       |
-| `CHANNEL_SUGGEST`    | Telegram channel ID for the suggest channel      |
-| `LOG_GROUP`          | Telegram chat ID for error logs                  |
-| `ADMINS`             | JSON array of admin Telegram user IDs            |
-| `PORT`               | HTTP port (default: `8080`)                      |
-| `CONTAINER`          | Set to `true` when running in a container        |
-| `RES_PATH`           | Path to resource directory (default: `./res`)    |
-| `TESTING`            | Set to `true` to enable test mode                |
-
-### Database
-
-The bot uses a PostgreSQL database. The schema is defined in [scripts/schema.sql](/scripts/schema.sql).
-
-#### Tables
-
-**`posts`** — stores every post sent across all channels:
-
-| Column           | Type           | Description                               |
-|------------------|----------------|-------------------------------------------|
-| `post_id`        | `int`          | Groups related posts across languages     |
-| `lang`           | `char(2)`      | Language key                              |
-| `msg_id`         | `int`          | Telegram message ID                       |
-| `media_group_id` | `varchar(120)` | Telegram media group ID (for albums)      |
-| `reply_id`       | `int`          | Message ID this post replies to           |
-| `file_type`      | `int`          | `0` = photo, `1` = video, `2` = animation |
-| `file_id`        | `varchar(120)` | Telegram file ID                          |
-| `text`           | `text`         | Post text or caption                      |
-| `spoiler`        | `bool`         | Whether the media has a spoiler overlay   |
-
-**`promos`** — tracks promo participation per user.
-
-**`whitelist`** — stores links/domains allowed in groups.
-
-**`warnings`** — tracks user warning counts per chat.
-
-**`user_stats`** — stores user karma, message counts, and join dates for MNChat.
-
-### Running Locally
-
+### Lokale Entwicklung
 ```bash
-# Install dependencies
-
+# Abhängigkeiten installieren
 pip install -r bot/requirements.txt
 
-# Copy and fill in environment variables
+# .env-Datei erstellen
 cp .env.example .env
 
-# Run the bot
+# Bot starten
 cd bot && python main.py
 ```
 
-### Running with Docker
-
+### Deployment mit Quadlets
 ```bash
-docker compose up --build
+# Quadlet-Datei kopieren
+cp ptb-mn.container ~/.config/containers/systemd/
+
+# .env-Datei im Projektverzeichnis erstellen
+# Beispiel: /home/ubuntu/projects/ptb-mn/.env
+# Erforderliche Variablen:
+# - TOKEN: Telegram Bot Token
+# - DATABASE_URL: PostgreSQL Verbindungs-URL
+# - DEEPL: DeepL API Key
+# - CHANNEL_MEME: Telegram Channel ID für Meme-Kanal
+# - ADMINS: JSON Array von Admin-User-IDs
+
+# Dienst starten
+systemctl --user daemon-reload
+systemctl --user start ptb-mn
+
+# Status überprüfen
+systemctl --user status ptb-mn
+
+# Logs anschauen
+journalctl --user -u ptb-mn -f
 ```
 
-See [compose.yaml](/compose.yaml) for the full Docker Compose configuration.
+### Auto-Updates
+Der Bot nutzt `AutoUpdate=registry` in der Quadlet-Konfiguration. Die Docker-Images werden automatisch von GitHub Packages (GHCR) aktualisiert, wenn neue Versionen verfügbar sind.
 
-## 🤝 Contribute
+## Architektur
 
-Contributions are welcome! Feel free to open an issue clearly describing what should be added or changed.
+### Verzeichnisstruktur
+*   `bot/channel/`: Kernlogik für Kanal-Operationen (Posting, Editieren, Spezial-Handler).
+*   `bot/social/`: Integrationen für Twitter/X und WhatsApp.
+*   `bot/private/`: Private Admin-Befehle und Werbung/Promo-Verwaltung.
+*   `bot/data/`: Gemeinsame Datenbankzugriffe und Sprachressourcen.
+*   `bot/util/`: Hilfsfunktionen für Medien-Downloads und Übersetzungen.
+*   `bot/res/`: Ressourcen-Dateien (Bilder, Flaggen, HTML-Templates).
 
-[bot]: https://t.me/militaernews_posting_bot
-[channel_meme]: https://t.me/MilitaerMemes
-[chat-de]: https://t.me/MNChat
-[chat-en]: https://t.me/MilitaryChatEN
-[channel-de]: https://t.me/MilitaerNews
-[channel-en]: https://t.me/MilitaryNewsEN
-[channel-tr]: https://t.me/MilitaryNewsTR
-[channel-fa]: https://t.me/MilitaryNewsFA
-[channel-ru]: https://t.me/MilitaryNewsRU
-[channel-br]: https://t.me/MilitaryNewsBR
-[channel-es]: https://t.me/MilitaryNewsES
-[channel-fr]: https://t.me/MilitaryNewsFR
-[channel-it]: https://t.me/MilitaryNewsITA
-[channel-ar]: https://t.me/MilitaryNewsAR
-[channel-id]: https://t.me/MilitaryNewsIDN
+### Unterstützte Sprachen
+Der Bot postet automatisch in folgende Sprachen: Deutsch, Englisch, Türkisch, Persisch, Russisch, Portugiesisch, Spanisch, Französisch, Italienisch, Arabisch und Indonesisch.
+
+## Konfiguration
+
+Die Konfiguration erfolgt über Umgebungsvariablen (`.env` Datei):
+
+| Variable             | Beschreibung                                 |
+|----------------------|----------------------------------------------|
+| `TOKEN`              | Telegram Bot Token                           |
+| `DATABASE_URL`       | PostgreSQL Verbindungs-URL                   |
+| `DEEPL`              | DeepL API Key für Übersetzungen              |
+| `CHANNEL_MEME`       | Telegram Channel ID für Meme-Kanal           |
+| `ADMINS`             | JSON Array von Admin-User-IDs                |
+| `CONTAINER`          | `true` wenn im Container ausgeführt          |
+
+## Entwicklung
+
+### Lokale Tests
+```bash
+cd bot
+python -m pytest test/
+```
+
+### Docker-Build
+```bash
+docker build -t ptb-mn:latest .
+docker run -e TOKEN=... -e DATABASE_URL=... ptb-mn:latest
+```
+
+## Lizenz
+Siehe LICENSE Datei im Repository.
