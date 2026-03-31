@@ -12,14 +12,12 @@ from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, 
 from channel.common import edit_channel, post_channel_english
 from channel.meme import register_meme
 from channel.special import breaking_news, announcement, post_info, advertisement
-from channel.crawler import register_crawler
 from channel.text import edit_channel_text, post_channel_text
 from data.lang import GERMAN
 from data.db import init_db
 from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
-from util.media_handler import register_media_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
 from util.error_logger import get_error_logger
@@ -98,18 +96,12 @@ def main():
     # Register core posting pipeline handlers
     register_news(application)
     
-    # Register crawler for external sources
-    register_crawler(application)
-    
     # Register advertisement and promo handlers
     register_advertisement(application)
     register_promo(application)
     
     # Register meme posting handler
     register_meme(application)
-    
-    # Register media downloader for social media content
-    register_media_downloader(application)
 
     # Error handler - logs to both console and Telegram group
     async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
