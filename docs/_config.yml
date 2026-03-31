@@ -6,7 +6,7 @@ show_downloads: false
 
 # Site settings
 url: "https://militaernews.github.io/ptb-mn"
-baseurl: ""
+baseurl: "/ptb-mn"
 
 # Build settings
 markdown: kramdown
