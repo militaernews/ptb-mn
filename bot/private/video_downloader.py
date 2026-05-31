@@ -107,6 +107,14 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         # Cookies bypass YouTube bot-detection ("Sign in to confirm you are not a bot").
         # The file is only passed if it actually exists on disk; other platforms ignore it.
         **({"cookiefile": COOKIES_PATH} if COOKIES_PATH and os.path.isfile(COOKIES_PATH) else {}),
+        # Spoof the Android client to bypass bot-detection on datacenter IPs.
+        # YouTube does not enforce the sign-in check for Android player requests,
+        # making this the most reliable workaround for server-hosted bots.
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["android"],
+            }
+        },
     }
 
     try:
@@ -221,14 +229,11 @@ def register_video_downloader(app: Application) -> None:
     Call in main.py:
         from private.video_downloader import register_video_downloader
         register_video_downloader(application)
-
-
     """
     app.add_handler(
         MessageHandler(
             filters.TEXT & filters.ChatType.PRIVATE & filters.Regex(_VIDEO_URL_RE),
             handle_video_url,
         ),
-
     )
     logger.info("Video downloader handler registered (private chats).")
