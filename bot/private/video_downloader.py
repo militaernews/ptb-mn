@@ -31,7 +31,6 @@ from telegram import Update
 from telegram.constants import ChatAction, ParseMode
 from telegram.ext import Application, ContextTypes, MessageHandler, filters
 
-from settings.config import ADMINS, LOG_GROUP
 from util.error_logger import get_error_logger
 
 logger = logging.getLogger(__name__)
@@ -44,6 +43,12 @@ MAX_FILE_SIZE_BYTES: int = MAX_FILE_SIZE_MB * 1024 * 1024
 
 # Maximum video resolution – higher means larger files and potential Telegram errors
 MAX_HEIGHT: int = 720
+
+# Path to a Netscape-format cookies.txt exported from a logged-in browser.
+# Needed to bypass YouTube's bot-detection ("Sign in to confirm you're not a bot").
+# Mount the file into the container and set this env var, or leave blank to skip.
+# See: https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp
+COOKIES_PATH: Optional[str] = os.getenv("YT_COOKIES_FILE", "/app/secrets/youtube-cookies.txt")
 
 # ─── URL Detection ────────────────────────────────────────────────────────────
 
@@ -97,8 +102,11 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         "merge_output_format": "mp4",
         "quiet": True,
         "no_warnings": True,
-        "noplaylist": True,       # single video only, never entire playlists
+        "noplaylist": True,  # single video only, never entire playlists
         "max_filesize": MAX_FILE_SIZE_BYTES,
+        # Cookies bypass YouTube bot-detection ("Sign in to confirm you are not a bot").
+        # The file is only passed if it actually exists on disk; other platforms ignore it.
+        **({"cookiefile": COOKIES_PATH} if COOKIES_PATH and os.path.isfile(COOKIES_PATH) else {}),
     }
 
     try:
@@ -207,6 +215,15 @@ async def handle_video_url(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 # ─── Registration ─────────────────────────────────────────────────────────────
 
 def register_video_downloader(app: Application) -> None:
+    """
+    Register the video downloader handler for private chats.
+
+    Call in main.py:
+        from private.video_downloader import register_video_downloader
+        register_video_downloader(application)
+
+
+    """
     app.add_handler(
         MessageHandler(
             filters.TEXT & filters.ChatType.PRIVATE & filters.Regex(_VIDEO_URL_RE),
