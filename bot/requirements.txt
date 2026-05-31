@@ -11,7 +11,7 @@ asyncpg==0.31.0
 
 yt-dlp==2026.3.17
 yt-dlp-get-pot
-bgutil-ytdl
+bgutil-ytdlp-pot-provider
 
 # translation
 deep-translator==1.11.4

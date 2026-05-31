@@ -130,15 +130,17 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         "max_filesize": MAX_FILE_SIZE_BYTES,
         "verbose": True,          # full yt-dlp debug output in journald
         **cookies_opt,
-        # Use the web client so that cookies are respected and yt-dlp can solve
-        # YouTube's JS challenge via Node.js (installed in the Docker image).
-        # The android client was patched by YouTube in early 2026 and now returns
-        # LOGIN_REQUIRED on datacenter IPs regardless of cookies.
+        # Use the web client with the bgutil PO token provider.
+        # YouTube now requires a GVS PO Token bound to each video on datacenter IPs.
+        # bgutil-ytdlp-pot-provider runs a local Node.js server (port 4416) that
+        # generates valid PO tokens; yt-dlp-get-pot picks them up automatically.
         "extractor_args": {
             "youtube": {
                 "player_client": ["web"],
             }
         },
+        # Point the get-pot plugin at the local bgutil server started in the container
+        "pot_bgutil_server_url": "http://localhost:4416",
     }
 
     logger.info("yt-dlp opts (excluding cookies content): %s", {
