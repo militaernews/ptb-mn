@@ -31,6 +31,7 @@ from telegram import Update
 from telegram.constants import ChatAction, ParseMode
 from telegram.ext import Application, ContextTypes, MessageHandler, filters
 
+from settings.config import ADMINS, LOG_GROUP
 from util.error_logger import get_error_logger
 
 logger = logging.getLogger(__name__)
@@ -84,10 +85,33 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
     """
     try:
         import yt_dlp
+        logger.info("yt-dlp version: %s", yt_dlp.version.__version__)
     except ImportError:
         return None, (
             "yt-dlp is not installed.\n"
             "Please add <code>yt-dlp</code> to requirements.txt and redeploy."
+        )
+
+    # Log cookies file status so we can confirm it is being picked up
+    if COOKIES_PATH:
+        exists = os.path.isfile(COOKIES_PATH)
+        size = os.path.getsize(COOKIES_PATH) if exists else 0
+        logger.info(
+            "Cookies file: path=%s exists=%s size=%d bytes",
+            COOKIES_PATH, exists, size,
+        )
+    else:
+        logger.info("Cookies file: not configured (YT_COOKIES_FILE not set)")
+
+    cookies_opt = {}
+    if COOKIES_PATH and os.path.isfile(COOKIES_PATH):
+        cookies_opt = {"cookiefile": COOKIES_PATH}
+        logger.info("Passing cookiefile to yt-dlp: %s", COOKIES_PATH)
+    else:
+        logger.warning(
+            "Cookies file not found at '%s' – downloading without authentication. "
+            "YouTube may reject the request on datacenter IPs.",
+            COOKIES_PATH,
         )
 
     ydl_opts = {
@@ -100,13 +124,12 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         ),
         "outtmpl": os.path.join(output_dir, "%(title).80s.%(ext)s"),
         "merge_output_format": "mp4",
-        "quiet": True,
-        "no_warnings": True,
-        "noplaylist": True,  # single video only, never entire playlists
+        "quiet": False,   # set to False so yt-dlp output appears in journald
+        "no_warnings": False,
+        "noplaylist": True,       # single video only, never entire playlists
         "max_filesize": MAX_FILE_SIZE_BYTES,
-        # Cookies bypass YouTube bot-detection ("Sign in to confirm you are not a bot").
-        # The file is only passed if it actually exists on disk; other platforms ignore it.
-        **({"cookiefile": COOKIES_PATH} if COOKIES_PATH and os.path.isfile(COOKIES_PATH) else {}),
+        "verbose": True,          # full yt-dlp debug output in journald
+        **cookies_opt,
         # Spoof the Android client to bypass bot-detection on datacenter IPs.
         # YouTube does not enforce the sign-in check for Android player requests,
         # making this the most reliable workaround for server-hosted bots.
@@ -117,18 +140,29 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         },
     }
 
+    logger.info("yt-dlp opts (excluding cookies content): %s", {
+        k: v for k, v in ydl_opts.items() if k != "cookiefile"
+    })
+
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            logger.info("Starting extraction for URL: %s", url)
             info = ydl.extract_info(url, download=True)
             title = info.get("title", "Video")
+            logger.info("Extraction complete, title: %s", title)
             # Find the downloaded file in the temp directory
-            for f in Path(output_dir).iterdir():
+            files = list(Path(output_dir).iterdir())
+            logger.info("Files in output dir: %s", [str(f) for f in files])
+            for f in files:
                 if f.is_file():
+                    logger.info("Using file: %s (%d bytes)", f, f.stat().st_size)
                     return str(f), title
             return None, "Download finished but file not found."
     except yt_dlp.utils.DownloadError as exc:
+        logger.error("yt-dlp DownloadError: %s", exc)
         return None, str(exc)
     except Exception as exc:
+        logger.exception("Unexpected error during download")
         return None, f"Unexpected error: {exc}"
 
 
