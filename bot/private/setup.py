@@ -91,7 +91,7 @@ async def set_cmd(update: Update, context: CallbackContext):
         with contextlib.suppress(BadRequest):
             await context.bot.set_my_commands(admin_commands, scope=BotCommandScopeChat(chat_id=chat_id))
 
-    await context.bot.set_my_profile_photo(InputProfilePhotoStatic(f"{RES_PATH}/img/profile.jpg"))
+    await context.bot.set_my_profile_photo(InputProfilePhotoStatic(open(f"{RES_PATH}/img/profile.jpg","rb")))
     await context.bot.set_my_name("MN 🔰 Poster")
 
     await update.message.reply_text("Commands & Appearance updated!")
