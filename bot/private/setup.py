@@ -76,49 +76,16 @@ async def set_cmd(update: Update, context: CallbackContext):
     await context.bot.delete_my_commands()
 
     chat_de_commands = [
-        ("cmd", "Übersicht aller Befehle"),
-        ("maps", "Karten Ukraine-Krieg"),
-        ("loss", "Materialverluste in der Ukraine"),
-        ("rules", "Regel der Gruppe"),
-        ("whitelist", "Erlaubte Links"),
-        ("donbas", "14.000 Zivilisten im Donbas"),
-        ("stats", "Statistiken"),
-        ("short", "Abkürzungen"),
-        ("peace", "Russische Kriege"),
-        ("bias", "Ist MN neutral?"),
-        ("sold", "Söldner Vorrausetzungen"),
-        ("genozid", "Kein Genozid der Ukrainer im Donbas"),
-        ("sofa", "Waffensystem des Sofa-Kriegers"),
-        ("bot", "für Trolle"),
-        ("mimimi", "Wenn einer mal wieder heult"),
-        ("duden", "Deutsch. Setzen. Sechs."),
-        ("argu", "Argumentationspyramide"),
-        ("disso", "Kognitive Dissonanz"),
-        ("wissen", "Wissen ist Holschuld"),
-        ("hominem", "Ad hominem"),
-        ("deutsch", "Amtssprache"),
-        ("vs", "Verfassungsschutz"),
-        ("front", "An die Front!"),
-        ("info", "Nutzer-Statistiken anzeigen"),
     ]
     await context.bot.set_my_commands(chat_de_commands)
 
     await context.bot.set_my_commands(chat_de_commands + [
-        ("warn", "Nutzer verwarnen"),
-        ("unwarn", "Warnung abziehen"),
-        ("ban", "Nutzer sperren"),
-        ("report", "Tartaros Antispam melden"),
-        ("bingo", "Spielfeld des Bullshit-Bingos"),
-        ("reset_bingo", "Neue Bingo-Runde")
     ], scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))
 
     admin_commands = chat_de_commands + [
         ("add_advertisement", "Werbung erstellen"),
         ("ai_post", "KI-Post-Assistent starten"),
-        ("compose", "MediaGroup erstellen"),
-        ("whitelist_admin", "Whitelist verwalten"),
-        ("add_whitelist", "Link zur Whitelist hinzufügen"),
-        ("remove_whitelist", "Link von Whitelist entfernen"),
+        ("compose", "MediaGroup erstellen")
     ]
     for chat_id in ADMINS:
         with contextlib.suppress(BadRequest):
