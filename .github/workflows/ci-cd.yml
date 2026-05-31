@@ -12,6 +12,32 @@ jobs:
       contents: read
       packages: write
 
+    env:
+      # Dummy values so config.py can be imported during tests without a real .env
+      TELEGRAM: "0:test"
+      DATABASE_URL: "postgresql://test:test@localhost:5432/test"
+      DATABASE_URL_NN: "postgresql://test:test@localhost:5432/test"
+      DATABASE_URL_TEST: "postgresql://test:test@localhost:5432/test"
+      DEEPL: "test"
+      CHANNEL_MEME: "-1000000000001"
+      CHANNEL_SOURCE: "-1000000000002"
+      LOG_GROUP_ID: "-1000000000003"
+      PROTOCOL_CHAT: "-1000000000004"
+      ADMINS: "[]"
+      OPENROUTER_API_KEY: "test"
+      CONSUMER_KEY_DE: "test"
+      CONSUMER_SECRET_DE: "test"
+      ACCESS_KEY_DE: "test"
+      ACCESS_SECRET_DE: "test"
+      CONSUMER_KEY_EN: "test"
+      CONSUMER_SECRET_EN: "test"
+      ACCESS_KEY_EN: "test"
+      ACCESS_SECRET_EN: "test"
+      BEARER_DE: "test"
+      BEARER_EN: "test"
+      TESTING: "true"
+      RES_PATH: "./res"
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
