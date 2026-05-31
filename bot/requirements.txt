@@ -10,6 +10,8 @@ httpx==0.28.1
 asyncpg==0.31.0
 
 yt-dlp==2026.3.17
+yt-dlp-get-pot
+bgutil-ytdl
 
 # translation
 deep-translator==1.11.4
