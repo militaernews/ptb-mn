@@ -18,6 +18,7 @@ from data.db import init_db
 from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
+from private.video_downloader import register_video_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
 from util.error_logger import get_error_logger
@@ -102,6 +103,8 @@ def main():
     
     # Register meme posting handler
     register_meme(application)
+
+    register_video_downloader(application)
 
     # Error handler - logs to both console and Telegram group
     async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
