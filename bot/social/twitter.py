@@ -22,21 +22,29 @@ def create_instance(consumer_key: str, consumer_secret: str, access_token: str, 
     return api, uploader
 
 
-api_DE, uploader_DE = create_instance(
-    os.getenv("CONSUMER_KEY_DE"),
-    os.getenv("CONSUMER_SECRET_DE"),
-    os.getenv("ACCESS_KEY_DE"),
-    os.getenv("ACCESS_SECRET_DE"),
-)
+# Skip real API instantiation during tests — pytwitter.Api makes network calls
+# and requires correctly formatted credentials even at import time.
+_TESTING = os.getenv("TESTING", "false").lower() == "true"
 
-api_EN, uploader_EN = create_instance(
-    os.getenv("CONSUMER_KEY_EN"),
-    os.getenv("CONSUMER_SECRET_EN"),
-    os.getenv("ACCESS_KEY_EN"),
-    os.getenv("ACCESS_SECRET_EN"),
-)
+if _TESTING:
+    api_DE = api_EN = None
+    uploader_DE = uploader_EN = None
+else:
+    api_DE, uploader_DE = create_instance(
+        os.getenv("CONSUMER_KEY_DE"),
+        os.getenv("CONSUMER_SECRET_DE"),
+        os.getenv("ACCESS_KEY_DE"),
+        os.getenv("ACCESS_SECRET_DE"),
+    )
 
-ACTIVE = True
+    api_EN, uploader_EN = create_instance(
+        os.getenv("CONSUMER_KEY_EN"),
+        os.getenv("CONSUMER_SECRET_EN"),
+        os.getenv("ACCESS_KEY_EN"),
+        os.getenv("ACCESS_SECRET_EN"),
+    )
+
+ACTIVE = not _TESTING
 TWEET_LENGTH = 280
 
 
