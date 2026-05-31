@@ -21,13 +21,13 @@ class TestPostingPipeline:
         try:
             from bot.channel.common import edit_channel, post_channel_english
             from bot.channel.special import breaking_news, announcement
-            from bot.channel.crawler import register_crawler
+            from bot.private.ai_assistant import register_ai_assistant
             from bot.data.lang import GERMAN
             from bot.data.db import init_db
             assert True
         except ImportError as e:
             pytest.fail(f"Failed to import core modules: {e}")
-    
+
     def test_german_channel_config(self):
         """Test that German channel configuration is properly loaded."""
         from bot.data.lang import GERMAN
@@ -35,7 +35,7 @@ class TestPostingPipeline:
         assert hasattr(GERMAN, 'channel_id')
         assert hasattr(GERMAN, 'lang_key')
         assert GERMAN.lang_key == 'de'
-    
+
     def test_patterns_defined(self):
         """Test that message patterns are defined."""
         from bot.util.patterns import (
@@ -48,7 +48,7 @@ class TestPostingPipeline:
         assert ANNOUNCEMENT_PATTERN is not None
         assert BREAKING_PATTERN is not None
         assert INFO_PATTERN is not None
-    
+
     def test_config_loading(self):
         """Test that configuration can be loaded."""
         try:
@@ -59,7 +59,7 @@ class TestPostingPipeline:
         except Exception as e:
             # Config might not be fully set up in test environment
             pytest.skip(f"Config not fully available in test environment: {e}")
-    
+
     @pytest.mark.asyncio
     async def test_logging_setup(self):
         """Test that logging can be set up."""
@@ -71,15 +71,15 @@ class TestPostingPipeline:
 
 class TestMediaHandling:
     """Test cases for media handling functionality."""
-    
+
     def test_media_handler_import(self):
         """Test that media handler can be imported."""
         try:
-            from bot.util.media_handler import register_media_downloader
-            assert register_media_downloader is not None
+            from bot.private.video_downloader import register_video_downloader
+            assert register_video_downloader is not None
         except ImportError as e:
             pytest.fail(f"Failed to import media handler: {e}")
-    
+
     def test_translation_module(self):
         """Test that translation utilities are available."""
         try:
@@ -91,7 +91,7 @@ class TestMediaHandling:
 
 class TestChannelHandlers:
     """Test cases for channel message handlers."""
-    
+
     def test_channel_handlers_import(self):
         """Test that channel handlers can be imported."""
         try:
@@ -101,7 +101,7 @@ class TestChannelHandlers:
             assert all([edit_channel, post_channel_english, edit_channel_text, post_channel_text])
         except ImportError as e:
             pytest.fail(f"Failed to import channel handlers: {e}")
-    
+
     def test_meme_handler_import(self):
         """Test that meme handler can be imported."""
         try:
