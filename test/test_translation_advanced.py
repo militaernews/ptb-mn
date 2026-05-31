@@ -96,15 +96,17 @@ async def test_translate_message_with_internal_link_rewriting():
     original_text = f"See more here: https://t.me/{GERMAN.username}/123"
     expected_translated_text = f"See more here: https://t.me/{LANGUAGES[0].username}/456"
 
-    with patch(
-        "bot.util.translation.translate", new_callable=AsyncMock
-    ) as mock_translate,
-    patch(
-        "bot.util.translation.flag_to_hashtag", side_effect=lambda x, y: x
-    ) as mock_flag_to_hashtag,
-    patch(
-        "bot.util.translation.rewrite_internal_links", new_callable=AsyncMock
-    ) as mock_rewrite_internal_links:
+    with (
+        patch(
+            "bot.util.translation.translate", new_callable=AsyncMock
+        ) as mock_translate,
+        patch(
+            "bot.util.translation.flag_to_hashtag", side_effect=lambda x, y: x
+        ) as mock_flag_to_hashtag,
+        patch(
+            "bot.util.translation.rewrite_internal_links", new_callable=AsyncMock
+        ) as mock_rewrite_internal_links,
+    ):
         mock_translate.return_value = original_text  # Simulate initial translation
         mock_rewrite_internal_links.return_value = expected_translated_text
 
@@ -125,15 +127,17 @@ async def test_translate_message_without_internal_link_rewriting():
     original_text = "Hello world"
     translated_text_mock = "Hallo Welt"
 
-    with patch(
-        "bot.util.translation.translate", new_callable=AsyncMock
-    ) as mock_translate,
-    patch(
-        "bot.util.translation.flag_to_hashtag", side_effect=lambda x, y: x
-    ) as mock_flag_to_hashtag,
-    patch(
-        "bot.util.translation.rewrite_internal_links", new_callable=AsyncMock
-    ) as mock_rewrite_internal_links:
+    with (
+        patch(
+            "bot.util.translation.translate", new_callable=AsyncMock
+        ) as mock_translate,
+        patch(
+            "bot.util.translation.flag_to_hashtag", side_effect=lambda x, y: x
+        ) as mock_flag_to_hashtag,
+        patch(
+            "bot.util.translation.rewrite_internal_links", new_callable=AsyncMock
+        ) as mock_rewrite_internal_links,
+    ):
         mock_translate.return_value = translated_text_mock
 
         result = await translate_message(LANGUAGES[0].lang_key, original_text)

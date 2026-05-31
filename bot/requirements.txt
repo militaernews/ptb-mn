@@ -10,8 +10,8 @@ httpx==0.28.1
 asyncpg==0.31.0
 
 yt-dlp==2026.3.17
-yt-dlp-get-pot
-bgutil-ytdlp-pot-provider
+yt-dlp-get-pot==0.3.0
+bgutil-ytdlp-pot-provider==1.3.1
 
 # translation
 deep-translator==1.11.4
@@ -24,3 +24,4 @@ pywa==3.9.0
 # testing
 pytest==9.0.3
 pytest-asyncio==1.4.0
+pytest-env==1.6.0
