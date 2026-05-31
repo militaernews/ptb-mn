@@ -7,8 +7,7 @@ from ssl import Purpose, CERT_NONE, create_default_context
 from typing import List
 from typing import Optional, Callable, Awaitable
 
-from asyncpg import Pool
-from asyncpg import create_pool, Connection
+from asyncpg import create_pool, Connection, Pool
 from telegram import Message
 import os
 
