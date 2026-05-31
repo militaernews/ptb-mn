@@ -67,10 +67,10 @@ async def test_rewrite_internal_links(
     original_text = f"Check this out: https://t.me/{GERMAN.username}/{de_msg_id}"
     lang_username = LANGUAGES[0].username  # English username
 
-    # Patch at the point where translation.py imports it, not at db.py,
-    # so the @db decorator (which returns conn=None in test mode) is bypassed entirely.
+    # Patch at db.py where the function is defined. The @db decorator passes
+    # conn=None in test mode, so we mock the whole function to skip the DB entirely.
     with patch(
-        "bot.util.translation.get_lang_msg_id_for_de_msg_id", new_callable=AsyncMock
+        "data.db.get_lang_msg_id_for_de_msg_id", new_callable=AsyncMock
     ) as mock_get_lang_msg_id:
         mock_get_lang_msg_id.return_value = expected_lang_msg_id
         result = await rewrite_internal_links(original_text, lang_key, lang_username)

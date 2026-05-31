@@ -151,6 +151,8 @@ async def get_lang_msg_id_for_de_msg_id(de_msg_id: int, lang_key: str, conn: Con
     to the equivalent message in the destination language channel.
     Returns None if no mapping exists (caller should keep the original link).
     """
+    if conn is None:
+        return None
     res = await conn.fetchval(
         "select p.msg_id from posts p "
         "where p.lang=$1 and p.post_id = ("
@@ -295,12 +297,11 @@ async def insert_promo(user_id: int, lang: str, promo_id: int, conn: Connection)
     logging.info(f">> Result: user_id = {res}")
     return res["user_id"]
 
+
 @db
 async def truncate_promo(conn: Connection):
     res = await conn.execute("truncate promos")
     logging.info(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> truncate_promo: {res}")
-
-
 
 
 @db
@@ -325,7 +326,7 @@ async def suggest_insert(source_channel_id: int, source_message_id: int,
 
 @db
 async def suggest_get_message_id(source_channel_id: int, source_message_id: int,
-                                  conn: Connection = None) -> Optional[int]:
+                                 conn: Connection = None) -> Optional[int]:
     """Return the suggest channel message ID for a previously forwarded post."""
     res = await conn.fetchval(
         "select suggest_message_id from suggest_posts "
@@ -336,7 +337,7 @@ async def suggest_get_message_id(source_channel_id: int, source_message_id: int,
 
 @db
 async def suggest_update_text(source_channel_id: int, source_message_id: int,
-                               text: str, conn: Connection = None) -> None:
+                              text: str, conn: Connection = None) -> None:
     """Update the stored text for an already-forwarded suggest post."""
     await conn.execute(
         "update suggest_posts set text=$3 "
@@ -359,18 +360,22 @@ async def get_whitelist(conn: Connection = None) -> List[str]:
     rows = await conn.fetch("select link from whitelist order by created_at desc")
     return [row['link'] for row in rows]
 
+
 @db
 async def add_whitelist(link: str, conn: Connection = None):
     await conn.execute("insert into whitelist(link) values ($1) on conflict (link) do nothing", link)
+
 
 @db
 async def remove_whitelist(link: str, conn: Connection = None):
     await conn.execute("delete from whitelist where link=$1", link)
 
+
 @db
 async def get_warnings(user_id: int, chat_id: int, conn: Connection = None) -> int:
     res = await conn.fetchval("select count from warnings where user_id=$1 and chat_id=$2", user_id, chat_id)
     return res if res is not None else 0
+
 
 @db
 async def increment_warnings(user_id: int, chat_id: int, conn: Connection = None) -> int:
@@ -397,7 +402,8 @@ async def reset_warnings(user_id: int, chat_id: int, conn: Connection = None):
 
 
 @db
-async def update_user_stats(user_id: int, chat_id: int, karma_delta: int = 0, msg_delta: int = 0, conn: Connection = None):
+async def update_user_stats(user_id: int, chat_id: int, karma_delta: int = 0, msg_delta: int = 0,
+                            conn: Connection = None):
     await conn.execute(
         "insert into user_stats(user_id, chat_id, karma, message_count) values ($1, $2, $3, $4) "
         "on conflict (user_id, chat_id) do update set "
@@ -405,6 +411,7 @@ async def update_user_stats(user_id: int, chat_id: int, karma_delta: int = 0, ms
         "message_count = user_stats.message_count + excluded.message_count",
         user_id, chat_id, karma_delta, msg_delta
     )
+
 
 @db
 async def get_user_stats(user_id: int, chat_id: int, conn: Connection = None):
@@ -418,6 +425,7 @@ async def log_user_event(user_id: int, chat_id: int, event_type: str, conn: Conn
         user_id, chat_id, event_type
     )
 
+
 @db
 async def save_message_author(message_id: int, chat_id: int, user_id: int, conn: Connection = None):
     await conn.execute(
@@ -425,6 +433,7 @@ async def save_message_author(message_id: int, chat_id: int, user_id: int, conn:
         "on conflict (message_id, chat_id) do nothing",
         message_id, chat_id, user_id
     )
+
 
 @db
 async def get_message_author(message_id: int, chat_id: int, conn: Connection = None) -> Optional[int]:
@@ -523,7 +532,7 @@ async def init_db():
         try:
             await conn.execute(schema_sql)
             logging.info("Database schema initialized successfully.")
-            
+
             # Seed initial whitelist if empty
             count = await conn.fetchval("select count(*) from whitelist")
             if count == 0:
@@ -541,6 +550,6 @@ async def init_db():
                 for link in initial_links:
                     await conn.execute("insert into whitelist(link) values ($1) on conflict do nothing", link)
                 logging.info("Initial whitelist seeded.")
-                
+
         except Exception as e:
             logging.error(f"Failed to initialize database schema: {e}")
