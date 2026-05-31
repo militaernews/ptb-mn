@@ -130,12 +130,13 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         "max_filesize": MAX_FILE_SIZE_BYTES,
         "verbose": True,          # full yt-dlp debug output in journald
         **cookies_opt,
-        # Spoof the Android client to bypass bot-detection on datacenter IPs.
-        # YouTube does not enforce the sign-in check for Android player requests,
-        # making this the most reliable workaround for server-hosted bots.
+        # Use the web client so that cookies are respected and yt-dlp can solve
+        # YouTube's JS challenge via Node.js (installed in the Docker image).
+        # The android client was patched by YouTube in early 2026 and now returns
+        # LOGIN_REQUIRED on datacenter IPs regardless of cookies.
         "extractor_args": {
             "youtube": {
-                "player_client": ["android"],
+                "player_client": ["web"],
             }
         },
     }
