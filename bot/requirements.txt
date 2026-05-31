@@ -7,7 +7,7 @@ pillow==12.2.0
 regex==2026.5.9
 lxml==6.1.0
 httpx==0.28.1
-ayncpg==0.31.0
+asyncpg==0.31.0
 
 # translation
 deep-translator==1.11.4
