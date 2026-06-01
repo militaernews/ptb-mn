@@ -124,23 +124,20 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         ),
         "outtmpl": os.path.join(output_dir, "%(title).80s.%(ext)s"),
         "merge_output_format": "mp4",
-        "quiet": False,   # set to False so yt-dlp output appears in journald
+        "quiet": False,
         "no_warnings": False,
-        "noplaylist": True,       # single video only, never entire playlists
+        "noplaylist": True,
         "max_filesize": MAX_FILE_SIZE_BYTES,
-        "verbose": True,          # full yt-dlp debug output in journald
+        "verbose": True,
         **cookies_opt,
-        # Use the web client with the bgutil PO token provider.
-        # YouTube now requires a GVS PO Token bound to each video on datacenter IPs.
-        # bgutil-ytdlp-pot-provider runs a local Node.js server (port 4416) that
-        # generates valid PO tokens; yt-dlp-get-pot picks them up automatically.
         "extractor_args": {
             "youtube": {
                 "player_client": ["web"],
-            }
+            },
+            "youtubepot-bgutil": {
+                "base_url": ["http://localhost:4416"],
+            },
         },
-        # Point the get-pot plugin at the local bgutil server started in the container
-        "pot_bgutil_server_url": "http://localhost:4416",
     }
 
     logger.info("yt-dlp opts (excluding cookies content): %s", {
