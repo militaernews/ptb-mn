@@ -132,7 +132,7 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         **cookies_opt,
         "extractor_args": {
             "youtube": {
-                "player_client": ["web"],
+                "player_client": ["tv_embedded"],
             },
             "youtubepot-bgutil": {
                 "base_url": ["http://localhost:4416"],
