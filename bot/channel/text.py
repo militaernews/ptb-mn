@@ -45,9 +45,8 @@ async def post_channel_text(update: Update, context: CallbackContext):
             await log_error(f"tweet text {lang.lang_key}", context, "Twitter", e, update, )
 
     try:
-
-        if len(re.findall(FLAG_EMOJI, text_ger)) == 0:
-            text_ger += GERMAN.footer
+        if FLAG_EMOJI.search(text):
+            text_ger += DIVIDER + GERMAN.footer
         await update.channel_post.edit_text(text_ger)
     except TelegramError as e:
         if not e.message.startswith("Message is not modified"):
@@ -71,7 +70,11 @@ async def edit_channel_text(update: Update, context: CallbackContext):
         ),
     ))
 
-    await update_text(update.edited_channel_post.id, f"{text}{DIVIDER}{GERMAN.footer}")
+    text_ger = flag_to_hashtag(text)
+    if FLAG_EMOJI.search(text):
+        text_ger += DIVIDER + GERMAN.footer
+
+    await update_text(update.edited_channel_post.id, text_ger)
 
     logging.info(f"original caption::: {text}", )
 
