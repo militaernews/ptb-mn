@@ -3,7 +3,6 @@ import sys
 from contextlib import asynccontextmanager
 from functools import wraps
 from os import getenv
-from ssl import Purpose, CERT_NONE, create_default_context
 from typing import List
 from typing import Optional, Callable, Awaitable
 
@@ -14,13 +13,6 @@ import os
 from data.lang import GERMAN
 from data.model import Post, ANIMATION, VIDEO, PHOTO
 from settings.config import DATABASE_URL_NN, DATABASE_URL
-
-
-def get_ssl():
-    ssl_ctx = create_default_context(Purpose.SERVER_AUTH)
-    ssl_ctx.check_hostname = False
-    ssl_ctx.verify_mode = CERT_NONE
-    return ssl_ctx
 
 
 class DBPool:
@@ -346,7 +338,7 @@ async def suggest_update_text(source_channel_id: int, source_message_id: int,
 
 
 async def get_suggested_sources() -> List[int]:
-    pool_nn = await create_pool(DATABASE_URL_NN, ssl=get_ssl())
+    pool_nn = await create_pool(DATABASE_URL_NN)
     async with pool_nn.acquire() as conn:
         res = await conn.fetch("select s.channel_id from sources s where s.is_spread=false;")
 
