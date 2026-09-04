@@ -18,6 +18,7 @@ from data.db import init_db
 from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
+from private.synthesize import register_synthesize
 from private.video_downloader import register_video_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
@@ -105,6 +106,9 @@ def main():
     register_meme(application)
 
     register_video_downloader(application)
+
+    # Combine multiple text/media sources into one post, publish directly to the channel
+    register_synthesize(application)
 
     # Error handler - logs to both console and Telegram group
     async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:

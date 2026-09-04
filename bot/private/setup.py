@@ -84,8 +84,10 @@ async def set_cmd(update: Update, context: CallbackContext):
 
     admin_commands = chat_de_commands + [
         ("add_advertisement", "Werbung erstellen"),
-        ("ai_post", "KI-Post-Assistent starten"),
-        ("compose", "MediaGroup erstellen")
+        # "ai_post" removed: private/ai_assistant.py was never registered in
+        # main.py, so this menu entry advertised a command that did nothing.
+        # /synthesize supersedes what it was trying to do anyway.
+        ("synthesize", "Mehrere Quellen zu einem Post zusammenfassen & im Kanal posten")
     ]
     for chat_id in ADMINS:
         with contextlib.suppress(BadRequest):
