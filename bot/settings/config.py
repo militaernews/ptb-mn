@@ -23,7 +23,7 @@ CHANNEL_SOURCE: Final[int] = int(getenv('CHANNEL_SOURCE'))
 
 LOG_GROUP_ID: Final[int] = int(getenv('LOG_GROUP_ID', -1001338514957))
 LOG_GROUP: Final[int] = LOG_GROUP_ID
-THREAD_ID: Final[int] = int(getenv('THREAD_ID', 2))  # PTB-MN topic
+THREAD_ID: Final[int] = int(getenv('THREAD_ID', 457))  # PTB-MN topic
 PROTOCOL_CHAT: Final[int] = int(getenv('PROTOCOL_CHAT', 0))
 logging.warning(getenv('ADMINS', '[]'))
 ADMINS: Final[List[int]] = loads(getenv('ADMINS', '[]'))
