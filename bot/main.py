@@ -18,6 +18,7 @@ from data.db import init_db
 from private.advertisement import register_advertisement
 from private.promo import register_promo
 from private.setup import set_cmd
+from private.start import register_start
 from private.synthesize import register_synthesize
 from private.video_downloader import register_video_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
@@ -101,7 +102,12 @@ def main():
     # Register advertisement and promo handlers
     register_advertisement(application)
     register_promo(application)
-    
+
+    # Register plain /start (registered after register_promo so the
+    # "/start promo_xx" deep-link regex above still takes precedence) and the
+    # my_chat_member handler that reports missing channel permissions.
+    register_start(application)
+
     # Register meme posting handler
     register_meme(application)
 
