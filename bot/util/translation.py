@@ -32,7 +32,7 @@ from data.lang import GERMAN, LANGUAGES
 from deep_translator import GoogleTranslator
 from deepl import Translator
 from pysbd import Segmenter
-from settings.config import OLLAMA_HOST, OLLAMA_MODEL, RES_PATH
+from settings.config import OLLAMA_HOST, OLLAMA_MODEL, OPENROUTER_API_KEY, RES_PATH
 from social.twitter import TWEET_LENGTH
 from util.helper import sanitize_text
 from util.patterns import HASHTAG, AMP_PATTERN, QUOT_PATTERN
@@ -168,10 +168,8 @@ def translate_argos(text: str, target_lang: str) -> str:
     return argostranslate.translate.translate(text, "de", target_lang)
 
 
-async def translate_ollama(text: str, target_lang: str) -> str:
-    """Last-resort fallback translation via a local Ollama model."""
-    language_name = OLLAMA_LANG_NAMES.get(target_lang, target_lang)
-    prompt = (
+def _translation_prompt(text: str, language_name: str) -> str:
+    return (
         f"Translate the following German text into {language_name}.\n"
         f"Keep every placeholder token of the exact form ║<number>║ exactly as it is, "
         "in the same order and quantity - never translate, remove, or alter them.\n"
@@ -179,13 +177,81 @@ async def translate_ollama(text: str, target_lang: str) -> str:
         f"{text}"
     )
 
+
+async def translate_ollama(text: str, target_lang: str) -> str:
+    """Fallback translation via a local Ollama model."""
+    language_name = OLLAMA_LANG_NAMES.get(target_lang, target_lang)
+
     async with httpx.AsyncClient(timeout=120.0) as client:
         response = await client.post(
             f"{OLLAMA_HOST}/api/generate",
-            json={"model": OLLAMA_MODEL, "prompt": prompt, "stream": False},
+            json={"model": OLLAMA_MODEL, "prompt": _translation_prompt(text, language_name), "stream": False},
         )
         response.raise_for_status()
         return response.json()["response"].strip()
+
+
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+# Free OpenRouter models, tried in order, used only as a last-resort translation
+# fallback once Google, Argos and Ollama have all failed. OpenRouter's free-tier
+# catalog changes over time, so entries here occasionally go stale - that's
+# harmless, a stale model just fails fast and the loop moves to the next one.
+OPENROUTER_TRANSLATE_MODELS = [
+    "google/gemma-4-31b-it:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "nvidia/nemotron-3.5-lightning:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "liquid/lfm-2.5-2.6b:free",
+]
+
+
+async def translate_openrouter(text: str, target_lang: str) -> str:
+    """Last-resort fallback translation via free OpenRouter models."""
+    if not OPENROUTER_API_KEY:
+        raise Exception("OPENROUTER_API_KEY not configured")
+
+    language_name = OLLAMA_LANG_NAMES.get(target_lang, target_lang)
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://github.com/militaernews/ptb-mn",
+        "X-Title": "ptb-mn Translation Fallback",
+    }
+
+    last_error = None
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        for model in OPENROUTER_TRANSLATE_MODELS:
+            try:
+                response = await client.post(
+                    OPENROUTER_URL,
+                    headers=headers,
+                    json={
+                        "model": model,
+                        "messages": [{"role": "user", "content": _translation_prompt(text, language_name)}],
+                        "temperature": 0.2,
+                    },
+                )
+                response.raise_for_status()
+                translated = response.json()["choices"][0]["message"]["content"].strip()
+                if translated:
+                    return translated
+            except Exception as e:
+                last_error = e
+                logging.warning(f"OpenRouter translation via {model} failed for {target_lang}: {e}")
+
+    raise Exception(f"All OpenRouter translation models failed for {target_lang}: {last_error}")
+
+
+def _placeholders_preserved(text: str, tokens: List[str]) -> bool:
+    """Whether every numbered placeholder that protects an HTML tag or flag
+    emoji is still present in *text*. MT engines - especially when pivoting
+    through an intermediate language, as Argos does for every non-English
+    target - can mangle or drop these placeholders instead of leaving them
+    untouched, silently corrupting formatting/hyperlinks/flags. A translation
+    that fails this check is discarded rather than published.
+    """
+    return all(_PLACEHOLDER_TMPL.format(n=i) in text for i in range(len(tokens)))
 
 
 async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
@@ -201,25 +267,51 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     translated_text = None
     try:
         google_translator.target = target_lang
-        translated_text = google_translator.translate(text=text_to_translate)
+        candidate = google_translator.translate(text=text_to_translate)
         # Check for specific Google Translate 500 error message
-        if translated_text and "Error 500 (Server Error)" in translated_text:
+        if candidate and "Error 500 (Server Error)" in candidate:
             logging.error(f"Google Translate returned 500 error for text: {text_to_translate[:100]}...")
-            translated_text = None
+        elif _placeholders_preserved(candidate, tokens):
+            translated_text = candidate
+        else:
+            logging.warning(f"Google Translate dropped formatting placeholders for {target_lang}")
     except Exception as e:
         logging.warning(f"Google Translate failed for {target_lang}: {e}")
-        translated_text = None
 
     if not translated_text:
         try:
-            translated_text = await asyncio.to_thread(translate_argos, text_to_translate, target_lang)
+            candidate = await asyncio.to_thread(translate_argos, text_to_translate, target_lang)
+            if _placeholders_preserved(candidate, tokens):
+                translated_text = candidate
+            else:
+                logging.warning(f"Argos Translate dropped formatting placeholders for {target_lang}")
         except Exception as e:
             logging.warning(f"Argos Translate failed for {target_lang}: {e}")
-            translated_text = None
 
     if not translated_text:
-        # Last resort - let failures propagate so the caller logs them to the bot log group.
-        translated_text = await translate_ollama(text_to_translate, target_lang)
+        try:
+            candidate = await translate_ollama(text_to_translate, target_lang)
+            if _placeholders_preserved(candidate, tokens):
+                translated_text = candidate
+            else:
+                logging.warning(f"Ollama translation dropped formatting placeholders for {target_lang}")
+        except Exception as e:
+            logging.warning(f"Ollama translation failed for {target_lang}: {e}")
+
+    if not translated_text:
+        try:
+            candidate = await translate_openrouter(text_to_translate, target_lang)
+            if _placeholders_preserved(candidate, tokens):
+                translated_text = candidate
+            else:
+                logging.warning(f"OpenRouter translation dropped formatting placeholders for {target_lang}")
+        except Exception as e:
+            logging.warning(f"OpenRouter translation failed for {target_lang}: {e}")
+
+    if not translated_text:
+        # Let the failure propagate so the caller logs it to the bot log group
+        # rather than publishing a corrupted or untranslated post.
+        raise RuntimeError(f"All translation providers failed to produce a usable translation for {target_lang}")
 
     # Restore HTML tags and emojis by index
     translated_text = _restore_tokens(translated_text, tokens)

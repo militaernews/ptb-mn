@@ -100,6 +100,30 @@ async def test_translate_google_500_error_fallback():
 
 
 @pytest.mark.asyncio
+async def test_translate_rejects_fallback_that_drops_formatting_placeholder():
+    original_text = "<b>Hello</b> world!"
+    # Missing the ║0║/║1║ placeholders that protect the <b>/</b> tags - this
+    # happens in practice when Argos pivots through English and mangles them.
+    corrupted_argos_result = "Bonjour le monde!"
+    good_ollama_result = "║0║Bonjour║1║ le monde!"
+
+    with patch("deep_translator.GoogleTranslator.translate", side_effect=Exception("google down")):
+        with patch(
+            "bot.util.translation.translate_argos", return_value=corrupted_argos_result
+        ) as mock_argos:
+            with patch(
+                "bot.util.translation.translate_ollama",
+                new_callable=AsyncMock,
+                return_value=good_ollama_result,
+            ) as mock_ollama:
+                translated_text = await translate("fr", original_text)
+                # The corrupted Argos result must be discarded, not published
+                assert translated_text == "<b>Bonjour</b> le monde!"
+                mock_argos.assert_called_once()
+                mock_ollama.assert_called_once()
+
+
+@pytest.mark.asyncio
 async def test_translate_message_with_internal_link_rewriting():
     original_text = f"See more here: https://t.me/{GERMAN.username}/123"
     expected_translated_text = f"See more here: https://t.me/{LANGUAGES[0].username}/456"
