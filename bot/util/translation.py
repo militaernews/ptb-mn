@@ -19,23 +19,33 @@ them by index afterwards.  This makes restoration order-independent and
 ensures that hyperlinks survive translation intact.
 """
 
+import asyncio
 import logging
 import os
 import re
 from json import loads, load
 from typing import List, Optional, Tuple
 
+import argostranslate.translate
+import httpx
 from data.lang import GERMAN, LANGUAGES
 from deep_translator import GoogleTranslator
-from deepl import QuotaExceededException, Translator
+from deepl import Translator
 from pysbd import Segmenter
-from settings.config import RES_PATH
+from settings.config import OLLAMA_HOST, OLLAMA_MODEL, RES_PATH
 from social.twitter import TWEET_LENGTH
 from util.helper import sanitize_text
 from util.patterns import HASHTAG, AMP_PATTERN, QUOT_PATTERN
 
 deepl_translator = Translator(os.environ['DEEPL'])
 google_translator = GoogleTranslator(source='auto')
+
+# Display names used in the Ollama translation prompt (last-resort fallback)
+OLLAMA_LANG_NAMES = {
+    "en": "English", "tr": "Turkish", "fa": "Persian", "ru": "Russian",
+    "pt": "Portuguese", "es": "Spanish", "fr": "French", "it": "Italian",
+    "ar": "Arabic", "id": "Indonesian",
+}
 
 flags_data = {lang.lang_key: load(open(rf"{RES_PATH}/{lang.lang_key}/flags.json", "r", encoding="utf-8")) for lang in
               [GERMAN] + LANGUAGES}
@@ -148,6 +158,36 @@ def get_hashtag(country_key: str, lang_key: str = GERMAN.lang_key) -> str:
         logging.warning(f"Error when trying to get hashtag --- {e}")
 
 
+def translate_argos(text: str, target_lang: str) -> str:
+    """Offline fallback translation via Argos Translate.
+
+    Argos only ships a direct de->en model; every other target is reached by
+    Argos pivoting through English automatically, as long as both the de->en
+    and en->target packages are installed (see util/argos_setup.py).
+    """
+    return argostranslate.translate.translate(text, "de", target_lang)
+
+
+async def translate_ollama(text: str, target_lang: str) -> str:
+    """Last-resort fallback translation via a local Ollama model."""
+    language_name = OLLAMA_LANG_NAMES.get(target_lang, target_lang)
+    prompt = (
+        f"Translate the following German text into {language_name}.\n"
+        f"Keep every placeholder token of the exact form ║<number>║ exactly as it is, "
+        "in the same order and quantity - never translate, remove, or alter them.\n"
+        "Reply with only the translated text, nothing else - no explanations, no quotes.\n\n"
+        f"{text}"
+    )
+
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        response = await client.post(
+            f"{OLLAMA_HOST}/api/generate",
+            json={"model": OLLAMA_MODEL, "prompt": prompt, "stream": False},
+        )
+        response.raise_for_status()
+        return response.json()["response"].strip()
+
+
 async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
     logging.info("---------------------------- text ----------------------------")
     logging.info(text)
@@ -158,35 +198,28 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     # translator never sees them and cannot corrupt formatting or hyperlinks.
     text_to_translate, tokens = _extract_tokens(sub_text)
 
-    if target_lang == "fa" or target_lang == "ar":  # or "ru"?
-        # I'm uncertain whether replacing emojis for RTL languages like Persian
-        # butchers the order – keeping the same branch as before.
+    translated_text = None
+    try:
         google_translator.target = target_lang
         translated_text = google_translator.translate(text=text_to_translate)
-    else:
-        try:
-            google_translator.target = target_lang
-            translated_text = google_translator.translate(text=text_to_translate)
-            # Check for specific Google Translate 500 error message
-            if translated_text and "Error 500 (Server Error)" in translated_text:
-                logging.error(f"Google Translate returned 500 error for text: {text_to_translate[:100]}...")
-                # Fallback to original text if translation fails with specific error
-                translated_text = text_to_translate
-            # DeepL alternative (kept for reference):
-            # translated_text = deepl_translator.translate_text(
-            #     text_to_translate,
-            #     target_lang=target_lang_deepl if target_lang_deepl is not None else target_lang,
-            #     tag_handling="html",
-            #     preserve_formatting=True,
-            # ).text
+        # Check for specific Google Translate 500 error message
+        if translated_text and "Error 500 (Server Error)" in translated_text:
+            logging.error(f"Google Translate returned 500 error for text: {text_to_translate[:100]}...")
+            translated_text = None
+    except Exception as e:
+        logging.warning(f"Google Translate failed for {target_lang}: {e}")
+        translated_text = None
 
-        except QuotaExceededException:
-            logging.warning("--- Quota exceeded ---")
-            # TODO: switch to other deepl key
-            translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
+    if not translated_text:
+        try:
+            translated_text = await asyncio.to_thread(translate_argos, text_to_translate, target_lang)
         except Exception as e:
-            logging.error(f"--- other error translating --- {e}")
-            translated_text = GoogleTranslator(source='de', target=target_lang).translate(text=text_to_translate)
+            logging.warning(f"Argos Translate failed for {target_lang}: {e}")
+            translated_text = None
+
+    if not translated_text:
+        # Last resort - let failures propagate so the caller logs them to the bot log group.
+        translated_text = await translate_ollama(text_to_translate, target_lang)
 
     # Restore HTML tags and emojis by index
     translated_text = _restore_tokens(translated_text, tokens)

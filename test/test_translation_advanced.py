@@ -82,15 +82,21 @@ async def test_rewrite_internal_links(
 async def test_translate_google_500_error_fallback():
     original_text = "This is a test sentence."
     error_response = "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know."
+    argos_fallback = "Argos translated text"
 
     with patch(
         "deep_translator.GoogleTranslator.translate", return_value=error_response
     ) as mock_google_translate:
         with patch("bot.util.translation.logging.error") as mock_logging_error:
-            translated_text = await translate("en", original_text)
-            assert translated_text == original_text  # Should fall back to original
-            mock_google_translate.assert_called_once_with(text=original_text)
-            mock_logging_error.assert_called_once()
+            with patch(
+                "bot.util.translation.translate_argos", return_value=argos_fallback
+            ) as mock_argos:
+                translated_text = await translate("en", original_text)
+                # Should cascade to the offline Argos Translate fallback
+                assert translated_text == argos_fallback
+                mock_google_translate.assert_called_once_with(text=original_text)
+                mock_logging_error.assert_called_once()
+                mock_argos.assert_called_once_with(original_text, "en")
 
 
 @pytest.mark.asyncio

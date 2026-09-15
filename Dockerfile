@@ -18,6 +18,10 @@ COPY /bot ./bot
 # Install everything in one layer so all plugins land in the same site-packages
 RUN pip install --no-cache-dir -r ./bot/requirements.txt
 
+# Pre-download the Argos Translate language packages so the offline
+# translation fallback has no network dependency at runtime
+RUN cd bot && python util/argos_setup.py
+
 # Verify plugin registration looks correct at build time
 RUN python -c "import yt_dlp_plugins; print('plugins OK')" || true
 

@@ -22,6 +22,7 @@ from private.start import register_start
 from private.synthesize import register_synthesize
 from private.video_downloader import register_video_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
+from util.argos_setup import install_argos_models
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
 from util.error_logger import get_error_logger
 
@@ -124,6 +125,13 @@ def main():
         await error_logger.log_error(context.error, "Error in update handler")
 
     application.add_error_handler(error_handler)
+
+    # Ensure the offline Argos Translate fallback models are installed
+    # (no-op if already baked into the Docker image)
+    try:
+        install_argos_models()
+    except Exception as e:
+        logging.error(f"Could not ensure Argos Translate language packages are installed: {e}")
 
     # Initialize database schema
     import asyncio

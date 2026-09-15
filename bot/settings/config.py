@@ -35,3 +35,7 @@ DIVIDER: Final[str] = "\n"
 
 OPENROUTER_API_KEY: Final[str] = getenv('OPENROUTER_API_KEY')
 
+# Local LLM used as a last-resort translation fallback (see util/translation.py)
+OLLAMA_HOST: Final[str] = getenv('OLLAMA_HOST', 'http://ollama:11434')
+OLLAMA_MODEL: Final[str] = getenv('OLLAMA_MODEL', 'qwen2.5:3b')
+
