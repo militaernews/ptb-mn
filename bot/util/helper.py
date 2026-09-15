@@ -1,6 +1,7 @@
 import logging
 import re
 import subprocess
+from html import escape
 from typing import Final, Optional
 
 from data.db import PHOTO, VIDEO, ANIMATION
@@ -13,6 +14,7 @@ from telegram.helpers import mention_html
 
 CHAT_ID: Final[str] = "chat_id"
 MSG_ID: Final[str] = "msg_id"
+MAX_LOG_MESSAGE_LENGTH: Final[int] = 3900
 
 
 def sanitize_text(text: str = None) -> str:
@@ -193,12 +195,26 @@ async def log_error(action: str, context: CallbackContext, lang: Language | str,
     if isinstance(lang, Language):
         lang = lang.lang_key
 
-    text = f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n\n<code>{e}</code>"
+    # Escape dynamic content - exception messages and Update reprs can contain
+    # "<...>" (e.g. enum reprs like <ChatType.CHANNEL>) that Telegram's HTML
+    # parser rejects as an unsupported tag, which used to make this call itself
+    # raise and silently swallow the error it was trying to report.
+    text = f"<b>⚠️ Error when trying to {action} in Channel {lang}</b>\n\n<code>{escape(str(e))}</code>"
 
     if update is not None:
-        text += f"\n\n<b>Caused by Post</b>\n<code>{repr(update.channel_post)}</code>"
+        text += f"\n\n<b>Caused by Post</b>\n<code>{escape(repr(update.channel_post))}</code>"
 
-    await context.bot.send_message(LOG_GROUP, text)
+    if len(text) > MAX_LOG_MESSAGE_LENGTH:
+        text = text[:MAX_LOG_MESSAGE_LENGTH] + "…</code>"
+
+    try:
+        await context.bot.send_message(LOG_GROUP, text)
+    except Exception as send_error:
+        logging.error(f"log_error: failed to send error report to LOG_GROUP: {send_error}")
+        try:
+            await context.bot.send_message(LOG_GROUP, text, parse_mode=None)
+        except Exception as fallback_error:
+            logging.error(f"log_error: fallback plain-text send also failed: {fallback_error}")
 
 
 async def delete_msg(update: Update):
