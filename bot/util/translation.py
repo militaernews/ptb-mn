@@ -168,13 +168,32 @@ def translate_argos(text: str, target_lang: str) -> str:
     return argostranslate.translate.translate(text, "de", target_lang)
 
 
+_LLM_PLACEHOLDER_RE = re.compile(r'\[\[(\d+)\]\]')
+
+
+def _to_llm_placeholder_format(text: str) -> str:
+    """Small/local LLMs (and some free cloud ones) handle the rare ║N║
+    box-drawing placeholder unreliably - e.g. qwen2.5:3b would either echo
+    the German input back untouched or start mixing in Chinese characters
+    when asked to preserve it. Bracket-style [[N]] placeholders are far more
+    common in LLM training data (software localization/templating) and
+    survive translation reliably, so LLM-based tiers use them instead and
+    convert back to ║N║ afterward for the shared restore step.
+    """
+    return _PLACEHOLDER_RE.sub(lambda m: f"[[{m.group(1)}]]", text)
+
+
+def _from_llm_placeholder_format(text: str) -> str:
+    return _LLM_PLACEHOLDER_RE.sub(lambda m: f"║{m.group(1)}║", text)
+
+
 def _translation_prompt(text: str, language_name: str) -> str:
     return (
         f"Translate the following German text into {language_name}.\n"
-        f"Keep every placeholder token of the exact form ║<number>║ exactly as it is, "
+        f"Keep every placeholder token of the exact form [[number]] exactly as it is, "
         "in the same order and quantity - never translate, remove, or alter them.\n"
         "Reply with only the translated text, nothing else - no explanations, no quotes.\n\n"
-        f"{text}"
+        f"{_to_llm_placeholder_format(text)}"
     )
 
 
@@ -188,7 +207,7 @@ async def translate_ollama(text: str, target_lang: str) -> str:
             json={"model": OLLAMA_MODEL, "prompt": _translation_prompt(text, language_name), "stream": False},
         )
         response.raise_for_status()
-        return response.json()["response"].strip()
+        return _from_llm_placeholder_format(response.json()["response"].strip())
 
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
@@ -235,7 +254,7 @@ async def translate_openrouter(text: str, target_lang: str) -> str:
                 response.raise_for_status()
                 translated = response.json()["choices"][0]["message"]["content"].strip()
                 if translated:
-                    return translated
+                    return _from_llm_placeholder_format(translated)
             except Exception as e:
                 last_error = e
                 logging.warning(f"OpenRouter translation via {model} failed for {target_lang}: {e}")
