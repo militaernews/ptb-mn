@@ -286,6 +286,19 @@ def _placeholders_preserved(text: str, tokens: List[str]) -> bool:
     return all(_PLACEHOLDER_TMPL.format(n=i) in text for i in range(len(tokens)))
 
 
+# None of the 10 target languages (en, tr, fa, ru, pt, es, fr, it, ar, id) use CJK script,
+# so any CJK character in a translation is always contamination, never a legitimate result.
+# Seen in production: the small local Ollama model (qwen2.5:3b) occasionally starts mixing
+# Chinese characters into otherwise-correct translations, e.g. for Indonesian ("Bu是一個...").
+_CJK_RE = re.compile(
+    r'[぀-ヿ㐀-䶿一-鿿가-힯豈-﫿]'
+)
+
+
+def _has_unexpected_cjk(text: str) -> bool:
+    return bool(_CJK_RE.search(text))
+
+
 def _is_untranslated_echo(candidate: str, source_text: str) -> bool:
     """Whether *candidate* is just the (German) source text handed back unchanged.
 
@@ -301,6 +314,8 @@ def _translation_acceptable(candidate: Optional[str], tokens: List[str], source_
     if not candidate:
         return False
     if _is_untranslated_echo(candidate, source_text):
+        return False
+    if _has_unexpected_cjk(candidate):
         return False
     return _placeholders_preserved(candidate, tokens)
 

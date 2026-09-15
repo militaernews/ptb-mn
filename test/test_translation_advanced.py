@@ -164,6 +164,35 @@ async def test_translate_rejects_provider_echoing_german_text_unchanged():
 
 
 @pytest.mark.asyncio
+async def test_translate_rejects_result_contaminated_with_cjk_characters():
+    original_text = "Ini adalah tes."
+    # Seen in production: qwen2.5:3b occasionally mixes Chinese characters into an
+    # otherwise-plausible Indonesian translation instead of staying in Latin script.
+    contaminated_ollama_result = "Ini 是 sebuah tes."
+    good_openrouter_result = "Ini adalah tes yang bagus."
+
+    with patch("deep_translator.GoogleTranslator.translate", side_effect=Exception("google down")):
+        with patch(
+            "bot.util.translation.translate_argos", side_effect=Exception("argos down")
+        ):
+            with patch(
+                "bot.util.translation.translate_ollama",
+                new_callable=AsyncMock,
+                return_value=contaminated_ollama_result,
+            ) as mock_ollama:
+                with patch(
+                    "bot.util.translation.translate_openrouter",
+                    new_callable=AsyncMock,
+                    return_value=good_openrouter_result,
+                ) as mock_openrouter:
+                    translated_text = await translate("id", original_text)
+                    # The CJK-contaminated Ollama result must be discarded, not published
+                    assert translated_text == good_openrouter_result
+                    mock_ollama.assert_called_once()
+                    mock_openrouter.assert_called_once()
+
+
+@pytest.mark.asyncio
 async def test_translate_message_with_internal_link_rewriting():
     original_text = f"See more here: https://t.me/{GERMAN.username}/123"
     expected_translated_text = f"See more here: https://t.me/{LANGUAGES[0].username}/456"
