@@ -24,7 +24,11 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
     logging.info(f"original caption::: {text}", )
 
-    text_ger = flag_to_hashtag(replace_name(text))
+    try:
+        text_ger = flag_to_hashtag(replace_name(text))
+    except Exception as e:
+        await log_error("format German text", context, GERMAN, e, update, )
+        text_ger = text
 
     for lang in LANGUAGES:
         reply_id = await query_replies(update.channel_post.message_id, lang.lang_key)

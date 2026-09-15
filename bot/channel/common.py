@@ -32,9 +32,9 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
         reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
         logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
 
-        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}"
-
         try:
+            caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}"
+
             msg_id: MessageId = await update.channel_post.copy(chat_id=lang.channel_id,
                                                                caption=f"{caption}{DIVIDER}{lang.footer}",
                                                                reply_to_message_id=reply_id)
@@ -44,7 +44,7 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
 
         except  Exception as e:
             await log_error("send single post", context, lang, e, update)
-            pass
+            continue
 
         try:
             tweet_caption = segment_text(PATTERN_HTMLTAG.sub("", caption))
@@ -54,7 +54,11 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
             await log_error(f"tweet {lang.lang_key}", context, "Twitter", e, update, )
             pass
 
-    formatted_text = flag_to_hashtag(replace_name(original_caption))
+    try:
+        formatted_text = flag_to_hashtag(replace_name(original_caption))
+    except Exception as e:
+        await log_error("format German caption", context, GERMAN, e, update, )
+        formatted_text = original_caption
 
     try:
         await update.channel_post.edit_caption(formatted_text + DIVIDER + GERMAN.footer)
@@ -91,9 +95,13 @@ async def post_channel_english(update: Update, context: CallbackContext):
 
     if update.channel_post.caption is not None:
         try:
-            await update.channel_post.edit_caption(
-                flag_to_hashtag(update.channel_post.caption_html_urled) + DIVIDER + GERMAN.footer
-            )
+            formatted_caption = flag_to_hashtag(update.channel_post.caption_html_urled)
+        except Exception as e:
+            await log_error("format German caption", context, GERMAN, e, update, )
+            formatted_caption = update.channel_post.caption_html_urled
+
+        try:
+            await update.channel_post.edit_caption(formatted_caption + DIVIDER + GERMAN.footer)
         except Exception as e:
             await log_error("edit Caption", context, GERMAN, e, update, )
 
@@ -143,15 +151,15 @@ async def share_in_other_channels(context: CallbackContext):
     logging.info(f"------------------------------------------- post_id: {post_id}")
 
     for lang in LANGUAGES:
-        caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}"
-        logging.info(f"caption::::::::::: {caption}")
-        with files[0]._unfrozen():
-            files[0].caption = f"{caption}{DIVIDER}{lang.footer}"
-
-        reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
-        logging.info(f"------------------------------------------- reply_id: {reply_id}")
-
         try:
+            caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}"
+            logging.info(f"caption::::::::::: {caption}")
+            with files[0]._unfrozen():
+                files[0].caption = f"{caption}{DIVIDER}{lang.footer}"
+
+            reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
+            logging.info(f"------------------------------------------- reply_id: {reply_id}")
+
             msgs = await context.bot.send_media_group(
                 chat_id=lang.channel_id,
                 media=files,
@@ -165,6 +173,7 @@ async def share_in_other_channels(context: CallbackContext):
                                      post_id=posts[index].post_id)
         except Exception as e:
             await log_error("send media group", context, lang, e)
+            continue
 
         try:
             await tweet_files(file_ids, context.bot,
