@@ -101,17 +101,43 @@ def _restore_tokens(text: str, tokens: List[str]) -> str:
     return _PLACEHOLDER_RE.sub(_replace, text)
 
 
+_HTML_TAG_PATTERN = re.compile(
+    r'<tg-emoji[^>]+>.*?</tg-emoji>|<[^>]+>',
+    re.IGNORECASE,
+)
+
+
+def _extract_flag_tokens(text: str) -> Tuple[str, List[str]]:
+    """Placeholder-protect only flag emojis (not HTML tags), for non-English targets.
+
+    See _strip_formatting for why HTML tags are stripped outright on those targets - but a
+    single flag emoji is a much simpler token than a run of HTML tags/links, so it doesn't
+    trigger the same "echo the input back untranslated" confusion, and flags need to survive
+    translation intact for flag_to_hashtag() to turn them into a hashtag afterwards.
+    """
+    tokens: List[str] = []
+
+    def _replace(m: re.Match) -> str:
+        idx = len(tokens)
+        tokens.append(m.group(0))
+        return _PLACEHOLDER_TMPL.format(n=idx)
+
+    processed = FLAG_PATTERN.sub(_replace, text)
+    return processed, tokens
+
+
 def _strip_formatting(text: str) -> str:
-    """Remove HTML tags and flag emojis outright instead of placeholder-protecting them.
+    """Remove HTML tags outright instead of placeholder-protecting them.
 
     Placeholder-protecting formatting (see _extract_tokens) works well for English, but in
     practice some translation providers - especially the small/local LLM tiers - get thrown
     off by the "keep this placeholder untouched" instruction on other target languages and
     just echo the German input back untranslated instead. For every target language other
-    than English, formatting is stripped outright before translation, trading inline
-    formatting/hyperlinks for a guaranteed real translation.
+    than English, HTML formatting is stripped outright before translation, trading inline
+    formatting/hyperlinks for a guaranteed real translation. Flag emojis are handled
+    separately by _extract_flag_tokens and are not touched here.
     """
-    return _PROTECT_PATTERN.sub('', text)
+    return _HTML_TAG_PATTERN.sub('', text)
 
 
 def flag_to_hashtag(text: str, lang_key: str = GERMAN.lang_key):
@@ -330,12 +356,15 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     # works reliably for English, but in practice it makes some translation providers -
     # especially the small/local LLM tiers - just echo the German input back untranslated
     # for other target languages instead of translating it. So English keeps full
-    # formatting preservation, while every other target language has formatting stripped
-    # outright before translation (see _strip_formatting).
+    # formatting preservation, while every other target language has HTML formatting
+    # stripped outright before translation (see _strip_formatting) - flag emojis are still
+    # placeholder-protected via _extract_flag_tokens so they (and the hashtag
+    # flag_to_hashtag derives from them) survive translation for every language.
     if target_lang == "en":
         text_to_translate, tokens = _extract_tokens(sub_text)
     else:
-        text_to_translate, tokens = _strip_formatting(sub_text), []
+        flag_protected, tokens = _extract_flag_tokens(sub_text)
+        text_to_translate = _strip_formatting(flag_protected)
 
     translated_text = None
     try:
