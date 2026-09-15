@@ -16,6 +16,11 @@ from util.translation import translate_message, flag_to_hashtag, segment_text
 
 from util.dictionary import replace_name
 
+# See channel/common.py's _live_captions for why this exists: a text post also goes
+# through a per-language translation loop that can take a while, and needs to pick up
+# edits that arrive mid-loop instead of publishing the stale text captured at the start.
+_live_texts: dict[int, str] = {}
+
 
 async def post_channel_text(update: Update, context: CallbackContext):
     text = sanitize_text(update.channel_post.text_html_urled)
@@ -30,24 +35,8 @@ async def post_channel_text(update: Update, context: CallbackContext):
         await log_error("format German text", context, GERMAN, e, update, )
         text_ger = text
 
-    for lang in LANGUAGES:
-        reply_id = await query_replies(update.channel_post.message_id, lang.lang_key)
-
-        try:
-            msg: Message = await context.bot.send_message(
-                chat_id=lang.channel_id,
-                text=f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}",
-                reply_to_message_id=reply_id
-            )
-            await insert_single2(msg, lang.lang_key)
-        except Exception as e:
-            await log_error("send text", context, lang, e, update, )
-
-        try:
-            await tweet_text(segment_text(text_ger), lang.lang_key)
-        except Exception as e:
-            await log_error(f"tweet text {lang.lang_key}", context, "Twitter", e, update, )
-
+    # Add the German footer immediately, before the (potentially slow) per-language
+    # translation loop below, instead of waiting for every other language to be posted.
     try:
         if FLAG_EMOJI.search(text):
             text_ger += DIVIDER + GERMAN.footer
@@ -60,6 +49,31 @@ async def post_channel_text(update: Update, context: CallbackContext):
         await tweet_text(segment_text(text_ger))
     except Exception as e:
         await log_error("tweet text DE", context, "Twitter", e, update, )
+
+    _live_texts[update.channel_post.id] = text
+    try:
+        for lang in LANGUAGES:
+            reply_id = await query_replies(update.channel_post.message_id, lang.lang_key)
+
+            current_text = _live_texts.get(update.channel_post.id, text)
+
+            try:
+                msg: Message = await context.bot.send_message(
+                    chat_id=lang.channel_id,
+                    text=f"{await translate_message(lang.lang_key, current_text, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}",
+                    reply_to_message_id=reply_id
+                )
+                await insert_single2(msg, lang.lang_key)
+            except Exception as e:
+                await log_error("send text", context, lang, e, update, )
+
+            try:
+                await tweet_text(segment_text(text_ger), lang.lang_key)
+            except Exception as e:
+                await log_error(f"tweet text {lang.lang_key}", context, "Twitter", e, update, )
+    finally:
+        _live_texts.pop(update.channel_post.id, None)
+
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
 
@@ -77,6 +91,13 @@ async def edit_channel_text(update: Update, context: CallbackContext):
     text_ger = flag_to_hashtag(text)
     if FLAG_EMOJI.search(text):
         text_ger += DIVIDER + GERMAN.footer
+
+    if update.edited_channel_post.id in _live_texts:
+        _live_texts[update.edited_channel_post.id] = text
+        logging.info(
+            f"Post {update.edited_channel_post.id} is still being distributed; "
+            "queued text update for remaining languages"
+        )
 
     await update_text(update.edited_channel_post.id, text_ger)
 

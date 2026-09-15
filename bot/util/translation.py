@@ -101,6 +101,19 @@ def _restore_tokens(text: str, tokens: List[str]) -> str:
     return _PLACEHOLDER_RE.sub(_replace, text)
 
 
+def _strip_formatting(text: str) -> str:
+    """Remove HTML tags and flag emojis outright instead of placeholder-protecting them.
+
+    Placeholder-protecting formatting (see _extract_tokens) works well for English, but in
+    practice some translation providers - especially the small/local LLM tiers - get thrown
+    off by the "keep this placeholder untouched" instruction on other target languages and
+    just echo the German input back untranslated instead. For every target language other
+    than English, formatting is stripped outright before translation, trading inline
+    formatting/hyperlinks for a guaranteed real translation.
+    """
+    return _PROTECT_PATTERN.sub('', text)
+
+
 def flag_to_hashtag(text: str, lang_key: str = GERMAN.lang_key):
     if not HASHTAG.search(text):
         flags_in_caption = set(FLAG_PATTERN.findall(text))
@@ -273,15 +286,41 @@ def _placeholders_preserved(text: str, tokens: List[str]) -> bool:
     return all(_PLACEHOLDER_TMPL.format(n=i) in text for i in range(len(tokens)))
 
 
+def _is_untranslated_echo(candidate: str, source_text: str) -> bool:
+    """Whether *candidate* is just the (German) source text handed back unchanged.
+
+    Some providers, when confused (e.g. by formatting placeholders they were told not to
+    touch), play it safe and return the input verbatim instead of translating it. That's
+    worse than an outright failure since it looks superficially like a valid result, so it
+    has to be detected and rejected explicitly rather than published as a "translation".
+    """
+    return candidate.strip().casefold() == source_text.strip().casefold()
+
+
+def _translation_acceptable(candidate: Optional[str], tokens: List[str], source_text: str) -> bool:
+    if not candidate:
+        return False
+    if _is_untranslated_echo(candidate, source_text):
+        return False
+    return _placeholders_preserved(candidate, tokens)
+
+
 async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
     logging.info("---------------------------- text ----------------------------")
     logging.info(text)
 
     sub_text = sanitize_text(text)
 
-    # Extract HTML tags and flag emojis as numbered placeholders so the
-    # translator never sees them and cannot corrupt formatting or hyperlinks.
-    text_to_translate, tokens = _extract_tokens(sub_text)
+    # Placeholder-protecting formatting (numbered ║N║ tokens for HTML tags/flag emojis)
+    # works reliably for English, but in practice it makes some translation providers -
+    # especially the small/local LLM tiers - just echo the German input back untranslated
+    # for other target languages instead of translating it. So English keeps full
+    # formatting preservation, while every other target language has formatting stripped
+    # outright before translation (see _strip_formatting).
+    if target_lang == "en":
+        text_to_translate, tokens = _extract_tokens(sub_text)
+    else:
+        text_to_translate, tokens = _strip_formatting(sub_text), []
 
     translated_text = None
     try:
@@ -290,40 +329,40 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
         # Check for specific Google Translate 500 error message
         if candidate and "Error 500 (Server Error)" in candidate:
             logging.error(f"Google Translate returned 500 error for text: {text_to_translate[:100]}...")
-        elif _placeholders_preserved(candidate, tokens):
+        elif _translation_acceptable(candidate, tokens, text_to_translate):
             translated_text = candidate
         else:
-            logging.warning(f"Google Translate dropped formatting placeholders for {target_lang}")
+            logging.warning(f"Google Translate returned an unusable result for {target_lang}")
     except Exception as e:
         logging.warning(f"Google Translate failed for {target_lang}: {e}")
 
     if not translated_text:
         try:
             candidate = await asyncio.to_thread(translate_argos, text_to_translate, target_lang)
-            if _placeholders_preserved(candidate, tokens):
+            if _translation_acceptable(candidate, tokens, text_to_translate):
                 translated_text = candidate
             else:
-                logging.warning(f"Argos Translate dropped formatting placeholders for {target_lang}")
+                logging.warning(f"Argos Translate returned an unusable result for {target_lang}")
         except Exception as e:
             logging.warning(f"Argos Translate failed for {target_lang}: {e}")
 
     if not translated_text:
         try:
             candidate = await translate_ollama(text_to_translate, target_lang)
-            if _placeholders_preserved(candidate, tokens):
+            if _translation_acceptable(candidate, tokens, text_to_translate):
                 translated_text = candidate
             else:
-                logging.warning(f"Ollama translation dropped formatting placeholders for {target_lang}")
+                logging.warning(f"Ollama translation returned an unusable result for {target_lang}")
         except Exception as e:
             logging.warning(f"Ollama translation failed for {target_lang}: {e}")
 
     if not translated_text:
         try:
             candidate = await translate_openrouter(text_to_translate, target_lang)
-            if _placeholders_preserved(candidate, tokens):
+            if _translation_acceptable(candidate, tokens, text_to_translate):
                 translated_text = candidate
             else:
-                logging.warning(f"OpenRouter translation dropped formatting placeholders for {target_lang}")
+                logging.warning(f"OpenRouter translation returned an unusable result for {target_lang}")
         except Exception as e:
             logging.warning(f"OpenRouter translation failed for {target_lang}: {e}")
 

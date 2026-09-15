@@ -116,9 +116,49 @@ async def test_translate_rejects_fallback_that_drops_formatting_placeholder():
                 new_callable=AsyncMock,
                 return_value=good_ollama_result,
             ) as mock_ollama:
-                translated_text = await translate("fr", original_text)
+                # English keeps full placeholder-protected formatting.
+                translated_text = await translate("en", original_text)
                 # The corrupted Argos result must be discarded, not published
                 assert translated_text == "<b>Bonjour</b> le monde!"
+                mock_argos.assert_called_once()
+                mock_ollama.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_translate_strips_formatting_for_non_english_targets():
+    original_text = "<b>Hallo</b> Welt!"
+    stripped_text = "Hallo Welt!"
+    real_translation = "Bonjour le monde!"
+
+    with patch("deep_translator.GoogleTranslator.translate", side_effect=Exception("google down")):
+        with patch(
+            "bot.util.translation.translate_argos", return_value=real_translation
+        ) as mock_argos:
+            translated_text = await translate("fr", original_text)
+            # Formatting is stripped outright (not placeholder-protected) for non-English
+            # targets, so the tags never reach the translator and aren't restored either.
+            assert translated_text == real_translation
+            mock_argos.assert_called_once_with(stripped_text, "fr")
+
+
+@pytest.mark.asyncio
+async def test_translate_rejects_provider_echoing_german_text_unchanged():
+    original_text = "<b>Hallo</b> Welt!"
+    stripped_text = "Hallo Welt!"
+    real_translation = "Bonjour le monde!"
+
+    with patch("deep_translator.GoogleTranslator.translate", side_effect=Exception("google down")):
+        with patch(
+            "bot.util.translation.translate_argos", return_value=stripped_text
+        ) as mock_argos:
+            with patch(
+                "bot.util.translation.translate_ollama",
+                new_callable=AsyncMock,
+                return_value=real_translation,
+            ) as mock_ollama:
+                translated_text = await translate("fr", original_text)
+                # Argos echoing the German text back unchanged must be rejected, not published
+                assert translated_text == real_translation
                 mock_argos.assert_called_once()
                 mock_ollama.assert_called_once()
 

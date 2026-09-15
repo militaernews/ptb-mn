@@ -1,6 +1,6 @@
 import logging
 from re import sub, findall
-from typing import List
+from typing import Dict, List
 
 from data.db import (insert_single3, insert_single2, query_replies3,
                      get_post_id, query_files, get_post_id2, query_replies4, get_msg_id, get_file_id,
@@ -19,6 +19,18 @@ from util.helper import log_error, get_tg_file_id
 from util.patterns import HASHTAG, WHITESPACE, PATTERN_HTMLTAG
 from util.translation import flag_to_hashtag, translate_message, segment_text
 
+# Tracks the "live" (most recently edited) caption/text for a post that is still being
+# distributed across language channels, keyed by the German source message id (single
+# posts) or media_group_id (media groups). Posting a single item to ~10 language channels
+# means running the translation fallback cascade ~10 times, which can take a while - if the
+# original German post is edited while that's still in progress, edit_channel() below can
+# only patch languages that have already been posted (they have a msg_id in the DB);
+# languages further down the loop would otherwise still go out with the stale caption
+# captured when the loop started. edit_channel() updates this dict for any post it finds
+# still in flight here, and the loop re-reads it on every iteration instead of using a
+# single captured variable.
+_live_captions: Dict[int | str, str] = {}
+
 
 # TODO: make method more generic
 async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE, de_post_id: int):
@@ -26,34 +38,8 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     original_caption = update.channel_post.caption_html_urled
     file_ids = [get_tg_file_id(update)]
 
-    for lang in LANGUAGES:
-        logging.info(lang)
-
-        reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
-        logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
-
-        try:
-            caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}"
-
-            msg_id: MessageId = await update.channel_post.copy(chat_id=lang.channel_id,
-                                                               caption=f"{caption}{DIVIDER}{lang.footer}",
-                                                               reply_to_message_id=reply_id)
-            logging.info(f"---------- MSG ID ::::::::: {msg_id}")
-            await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
-                                 post_id=de_post_id)
-
-        except  Exception as e:
-            await log_error("send single post", context, lang, e, update)
-            continue
-
-        try:
-            tweet_caption = segment_text(PATTERN_HTMLTAG.sub("", caption))
-
-            await tweet_files(file_ids, context.bot, tweet_caption, lang.lang_key)
-        except Exception as e:
-            await log_error(f"tweet {lang.lang_key}", context, "Twitter", e, update, )
-            pass
-
+    # Add the German footer immediately, before the (potentially slow) per-language
+    # translation loop below, instead of waiting for every other language to be posted.
     try:
         formatted_text = flag_to_hashtag(replace_name(original_caption))
     except Exception as e:
@@ -77,6 +63,40 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
     except Exception as e:
         await log_error("tweet DE", context, "Twitter", e, update, )
         pass
+
+    _live_captions[update.channel_post.id] = original_caption
+    try:
+        for lang in LANGUAGES:
+            logging.info(lang)
+
+            reply_id = await query_replies4(update.channel_post, lang.lang_key)  # query_replies3(post_id, lang.lang_key)
+            logging.info(f"--- SINGLE --- {post_id, reply_id, lang.lang_key}")
+
+            current_caption = _live_captions.get(update.channel_post.id, original_caption)
+
+            try:
+                caption = f"{await translate_message(lang.lang_key, current_caption, lang.lang_key_deepl, lang_username=lang.username)}"
+
+                msg_id: MessageId = await update.channel_post.copy(chat_id=lang.channel_id,
+                                                                   caption=f"{caption}{DIVIDER}{lang.footer}",
+                                                                   reply_to_message_id=reply_id)
+                logging.info(f"---------- MSG ID ::::::::: {msg_id}")
+                await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
+                                     post_id=de_post_id)
+
+            except  Exception as e:
+                await log_error("send single post", context, lang, e, update)
+                continue
+
+            try:
+                tweet_caption = segment_text(PATTERN_HTMLTAG.sub("", caption))
+
+                await tweet_files(file_ids, context.bot, tweet_caption, lang.lang_key)
+            except Exception as e:
+                await log_error(f"tweet {lang.lang_key}", context, "Twitter", e, update, )
+                pass
+    finally:
+        _live_captions.pop(update.channel_post.id, None)
 
     await handle_url(update, context)  # TODO: maybe extend to breaking and media_group
 
@@ -150,37 +170,43 @@ async def share_in_other_channels(context: CallbackContext):
     post_id = await get_post_id2(context.job.data)  # not mediagroupid??
     logging.info(f"------------------------------------------- post_id: {post_id}")
 
-    for lang in LANGUAGES:
-        try:
-            caption = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}"
-            logging.info(f"caption::::::::::: {caption}")
-            with files[0]._unfrozen():
-                files[0].caption = f"{caption}{DIVIDER}{lang.footer}"
+    live_key = context.job.name
+    _live_captions[live_key] = original_caption
+    try:
+        for lang in LANGUAGES:
+            current_caption = _live_captions.get(live_key, original_caption)
+            try:
+                caption = f"{await translate_message(lang.lang_key, current_caption, lang.lang_key_deepl, lang_username=lang.username)}"
+                logging.info(f"caption::::::::::: {caption}")
+                with files[0]._unfrozen():
+                    files[0].caption = f"{caption}{DIVIDER}{lang.footer}"
 
-            reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
-            logging.info(f"------------------------------------------- reply_id: {reply_id}")
+                reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
+                logging.info(f"------------------------------------------- reply_id: {reply_id}")
 
-            msgs = await context.bot.send_media_group(
-                chat_id=lang.channel_id,
-                media=files,
-                reply_to_message_id=reply_id
-            )
+                msgs = await context.bot.send_media_group(
+                    chat_id=lang.channel_id,
+                    media=files,
+                    reply_to_message_id=reply_id
+                )
 
-            logging.info(msgs)
+                logging.info(msgs)
 
-            for index, msg in enumerate(msgs):
-                await insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
-                                     post_id=posts[index].post_id)
-        except Exception as e:
-            await log_error("send media group", context, lang, e)
-            continue
+                for index, msg in enumerate(msgs):
+                    await insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
+                                         post_id=posts[index].post_id)
+            except Exception as e:
+                await log_error("send media group", context, lang, e)
+                continue
 
-        try:
-            await tweet_files(file_ids, context.bot,
-                              segment_text(PATTERN_HTMLTAG.sub("", caption)),
-                              lang.lang_key)
-        except Exception as e:
-            await log_error(f"tweet multiple {lang.lang_key}", context, "Twitter", e)
+            try:
+                await tweet_files(file_ids, context.bot,
+                                  segment_text(PATTERN_HTMLTAG.sub("", caption)),
+                                  lang.lang_key)
+            except Exception as e:
+                await log_error(f"tweet multiple {lang.lang_key}", context, "Twitter", e)
+    finally:
+        original_caption = _live_captions.pop(live_key, original_caption)
 
     logging.info("----- done -----")
 
@@ -205,6 +231,15 @@ async def edit_channel(update: Update, context: CallbackContext):
         )
     else:
         original_caption = None
+
+    # If this post is still being distributed to the other language channels (single post:
+    # keyed by its own id; media group: keyed by media_group_id), push the edit into the
+    # shared live-caption store so languages not yet posted pick up the new text instead of
+    # the stale one captured when the distribution loop started.
+    live_key = edited.media_group_id if edited.media_group_id is not None else edited.id
+    if original_caption is not None and live_key in _live_captions:
+        _live_captions[live_key] = original_caption
+        logging.info(f"Post {live_key} is still being distributed; queued caption update for remaining languages")
 
     # Determine the new file from the edited post
     if len(edited.photo) > 0:
