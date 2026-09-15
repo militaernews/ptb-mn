@@ -1,6 +1,8 @@
+import asyncio
 import logging
+from collections import defaultdict
 from re import sub, findall
-from typing import Dict, List
+from typing import DefaultDict, Dict, List
 
 from data.db import (insert_single3, insert_single2, query_replies3,
                      get_post_id, query_files, get_post_id2, query_replies4, get_msg_id, get_file_id,
@@ -30,6 +32,22 @@ from util.translation import flag_to_hashtag, translate_message, segment_text
 # still in flight here, and the loop re-reads it on every iteration instead of using a
 # single captured variable.
 _live_captions: Dict[int | str, str] = {}
+
+# One lock per post (same key space as _live_captions above), held only around a single
+# language's actual translate+send/edit step. Without this, an in-flight distribution loop
+# and a just-arrived edit can both be mid-write to the same language channel message at the
+# same time (e.g. post_channel_single copying the message for "tr" while edit_channel is
+# simultaneously calling edit_message_caption on that same not-yet-fully-inserted message).
+# Scoping the lock to one language at a time - rather than the whole loop - means an edit
+# only ever waits for the language currently in progress, not the full ~10-language batch.
+_post_locks: DefaultDict[int | str, asyncio.Lock] = defaultdict(asyncio.Lock)
+
+# How long to wait after an edit before actually translating and applying it. Editors often
+# fix a typo, notice another mistake, and edit again seconds later - without this, every one
+# of those edits would independently run the full per-language translation cascade. Any edit
+# that arrives while a debounced job for the same post is still pending cancels and replaces
+# it, so only the final version in a quick burst gets translated.
+EDIT_DEBOUNCE_SECONDS = 3
 
 
 # TODO: make method more generic
@@ -75,14 +93,15 @@ async def post_channel_single(update: Update, context: ContextTypes.DEFAULT_TYPE
             current_caption = _live_captions.get(update.channel_post.id, original_caption)
 
             try:
-                caption = f"{await translate_message(lang.lang_key, current_caption, lang.lang_key_deepl, lang_username=lang.username)}"
+                async with _post_locks[update.channel_post.id]:
+                    caption = f"{await translate_message(lang.lang_key, current_caption, lang.lang_key_deepl, lang_username=lang.username)}"
 
-                msg_id: MessageId = await update.channel_post.copy(chat_id=lang.channel_id,
-                                                                   caption=f"{caption}{DIVIDER}{lang.footer}",
-                                                                   reply_to_message_id=reply_id)
-                logging.info(f"---------- MSG ID ::::::::: {msg_id}")
-                await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
-                                     post_id=de_post_id)
+                    msg_id: MessageId = await update.channel_post.copy(chat_id=lang.channel_id,
+                                                                       caption=f"{caption}{DIVIDER}{lang.footer}",
+                                                                       reply_to_message_id=reply_id)
+                    logging.info(f"---------- MSG ID ::::::::: {msg_id}")
+                    await insert_single3(msg_id.message_id, reply_id, update.channel_post, lang_key=lang.lang_key,
+                                         post_id=de_post_id)
 
             except  Exception as e:
                 await log_error("send single post", context, lang, e, update)
@@ -176,25 +195,26 @@ async def share_in_other_channels(context: CallbackContext):
         for lang in LANGUAGES:
             current_caption = _live_captions.get(live_key, original_caption)
             try:
-                caption = f"{await translate_message(lang.lang_key, current_caption, lang.lang_key_deepl, lang_username=lang.username)}"
-                logging.info(f"caption::::::::::: {caption}")
-                with files[0]._unfrozen():
-                    files[0].caption = f"{caption}{DIVIDER}{lang.footer}"
+                async with _post_locks[live_key]:
+                    caption = f"{await translate_message(lang.lang_key, current_caption, lang.lang_key_deepl, lang_username=lang.username)}"
+                    logging.info(f"caption::::::::::: {caption}")
+                    with files[0]._unfrozen():
+                        files[0].caption = f"{caption}{DIVIDER}{lang.footer}"
 
-                reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
-                logging.info(f"------------------------------------------- reply_id: {reply_id}")
+                    reply_id = await query_replies3(posts[0].post_id, lang.lang_key)
+                    logging.info(f"------------------------------------------- reply_id: {reply_id}")
 
-                msgs = await context.bot.send_media_group(
-                    chat_id=lang.channel_id,
-                    media=files,
-                    reply_to_message_id=reply_id
-                )
+                    msgs = await context.bot.send_media_group(
+                        chat_id=lang.channel_id,
+                        media=files,
+                        reply_to_message_id=reply_id
+                    )
 
-                logging.info(msgs)
+                    logging.info(msgs)
 
-                for index, msg in enumerate(msgs):
-                    await insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
-                                         post_id=posts[index].post_id)
+                    for index, msg in enumerate(msgs):
+                        await insert_single3(msg.id, reply_id, msg, msg.media_group_id, lang_key=lang.lang_key,
+                                             post_id=posts[index].post_id)
             except Exception as e:
                 await log_error("send media group", context, lang, e)
                 continue
@@ -219,6 +239,18 @@ async def share_in_other_channels(context: CallbackContext):
 
 
 async def edit_channel(update: Update, context: CallbackContext):
+    """Debounce entry point: collapse a quick burst of edits into a single translation pass."""
+    edited = update.edited_channel_post
+    job_name = f"edit-{edited.media_group_id or edited.id}"
+
+    for job in context.job_queue.get_jobs_by_name(job_name):
+        job.schedule_removal()
+
+    context.job_queue.run_once(_apply_channel_edit, EDIT_DEBOUNCE_SECONDS, data=update, name=job_name)
+
+
+async def _apply_channel_edit(context: CallbackContext):
+    update: Update = context.job.data
     edited = update.edited_channel_post
 
     if edited.caption is not None:
@@ -282,42 +314,43 @@ async def edit_channel(update: Update, context: CallbackContext):
         if msg_id is None:
             continue
 
-        try:
-            if original_caption is not None:
-                translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}"
-            else:
-                translated_text = None
-
-            if input_media is not None:
-                with input_media._unfrozen():
-                    input_media.caption = translated_text
-
-            msg = await context.bot.edit_message_caption(
-                chat_id=lang.channel_id,
-                message_id=msg_id,
-                caption=translated_text
-            )
-
-        except TelegramError as e:
-            if not e.message.startswith("Message is not modified"):
-                await log_error("edit Caption", context, lang, e, update)
-
-        if file_changed and input_media is not None and (
-            original_caption is None or GERMAN.breaking not in original_caption
-        ):
+        async with _post_locks[live_key]:
             try:
-                logging.info(f"- edit file -------------------------------------------------- {input_media}")
-                msg = await context.bot.edit_message_media(
-                    input_media,
+                if original_caption is not None:
+                    translated_text = f"{await translate_message(lang.lang_key, original_caption, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}"
+                else:
+                    translated_text = None
+
+                if input_media is not None:
+                    with input_media._unfrozen():
+                        input_media.caption = translated_text
+
+                msg = await context.bot.edit_message_caption(
                     chat_id=lang.channel_id,
-                    message_id=msg_id
+                    message_id=msg_id,
+                    caption=translated_text
                 )
+
             except TelegramError as e:
                 if not e.message.startswith("Message is not modified"):
-                    await log_error("edit Media", context, lang, e, update)
+                    await log_error("edit Caption", context, lang, e, update)
 
-        if msg is not None:
-            await update_post(msg, lang.lang_key)
+            if file_changed and input_media is not None and (
+                original_caption is None or GERMAN.breaking not in original_caption
+            ):
+                try:
+                    logging.info(f"- edit file -------------------------------------------------- {input_media}")
+                    msg = await context.bot.edit_message_media(
+                        input_media,
+                        chat_id=lang.channel_id,
+                        message_id=msg_id
+                    )
+                except TelegramError as e:
+                    if not e.message.startswith("Message is not modified"):
+                        await log_error("edit Media", context, lang, e, update)
+
+            if msg is not None:
+                await update_post(msg, lang.lang_key)
 
     try:
         # not sure if this will cause eternal triggering, hopefully not

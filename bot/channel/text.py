@@ -1,5 +1,8 @@
+import asyncio
 import logging
 import re
+from collections import defaultdict
+from typing import DefaultDict
 
 from telegram import Update, Message
 from telegram.error import TelegramError
@@ -16,10 +19,15 @@ from util.translation import translate_message, flag_to_hashtag, segment_text
 
 from util.dictionary import replace_name
 
-# See channel/common.py's _live_captions for why this exists: a text post also goes
-# through a per-language translation loop that can take a while, and needs to pick up
-# edits that arrive mid-loop instead of publishing the stale text captured at the start.
+# See channel/common.py's _live_captions/_post_locks/EDIT_DEBOUNCE_SECONDS for why these
+# exist: a text post also goes through a per-language translation loop that can take a
+# while, and needs to (a) pick up edits that arrive mid-loop instead of publishing the
+# stale text captured at the start, (b) not race an edit's writes against that loop's
+# writes to the same language channel message, and (c) collapse a quick burst of edits
+# into a single translation pass instead of one per edit.
 _live_texts: dict[int, str] = {}
+_post_locks: DefaultDict[int, asyncio.Lock] = defaultdict(asyncio.Lock)
+EDIT_DEBOUNCE_SECONDS = 3
 
 
 async def post_channel_text(update: Update, context: CallbackContext):
@@ -58,12 +66,13 @@ async def post_channel_text(update: Update, context: CallbackContext):
             current_text = _live_texts.get(update.channel_post.id, text)
 
             try:
-                msg: Message = await context.bot.send_message(
-                    chat_id=lang.channel_id,
-                    text=f"{await translate_message(lang.lang_key, current_text, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}",
-                    reply_to_message_id=reply_id
-                )
-                await insert_single2(msg, lang.lang_key)
+                async with _post_locks[update.channel_post.id]:
+                    msg: Message = await context.bot.send_message(
+                        chat_id=lang.channel_id,
+                        text=f"{await translate_message(lang.lang_key, current_text, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}",
+                        reply_to_message_id=reply_id
+                    )
+                    await insert_single2(msg, lang.lang_key)
             except Exception as e:
                 await log_error("send text", context, lang, e, update, )
 
@@ -78,7 +87,18 @@ async def post_channel_text(update: Update, context: CallbackContext):
 
 
 async def edit_channel_text(update: Update, context: CallbackContext):
-    text =replace_name( re.sub(
+    """Debounce entry point: collapse a quick burst of edits into a single translation pass."""
+    job_name = f"edit-text-{update.edited_channel_post.id}"
+
+    for job in context.job_queue.get_jobs_by_name(job_name):
+        job.schedule_removal()
+
+    context.job_queue.run_once(_apply_channel_edit_text, EDIT_DEBOUNCE_SECONDS, data=update, name=job_name)
+
+
+async def _apply_channel_edit_text(context: CallbackContext):
+    update: Update = context.job.data
+    text = replace_name(re.sub(
         WHITESPACE,
         "",
         re.sub(
@@ -104,16 +124,17 @@ async def edit_channel_text(update: Update, context: CallbackContext):
     logging.info(f"original caption::: {text}", )
 
     for lang in LANGUAGES:
-        try:
-            translated_text = f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}"
-            msg_id = await get_msg_id(update.edited_channel_post.id, lang.lang_key)
-            await context.bot.edit_message_text(
-                text=translated_text,
-                chat_id=lang.channel_id,
-                message_id=msg_id
-            )
+        async with _post_locks[update.edited_channel_post.id]:
+            try:
+                translated_text = f"{await translate_message(lang.lang_key, text, lang.lang_key_deepl, lang_username=lang.username)}{DIVIDER}{lang.footer}"
+                msg_id = await get_msg_id(update.edited_channel_post.id, lang.lang_key)
+                await context.bot.edit_message_text(
+                    text=translated_text,
+                    chat_id=lang.channel_id,
+                    message_id=msg_id
+                )
 
-            await update_text(msg_id, translated_text, lang.lang_key)
-        except TelegramError as e:
-            if not e.message.startswith("Message is not modified"):
-                await log_error("edit text", context, lang, e, update, )
+                await update_text(msg_id, translated_text, lang.lang_key)
+            except TelegramError as e:
+                if not e.message.startswith("Message is not modified"):
+                    await log_error("edit text", context, lang, e, update, )
