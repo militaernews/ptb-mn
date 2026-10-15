@@ -435,6 +435,18 @@ async def get_message_author(message_id: int, chat_id: int, conn: Connection = N
     )
 
 
+@db
+async def handoff_get_pending(conn: Connection = None) -> List[int]:
+    rows = await conn.fetch(
+        "select message_id from channel_handoff where processed_at is null order by created_at")
+    return [row["message_id"] for row in rows]
+
+
+@db
+async def handoff_mark_processed(message_id: int, conn: Connection = None) -> None:
+    await conn.execute("update channel_handoff set processed_at=now() where message_id=$1", message_id)
+
+
 async def init_db():
     """Initialize the database schema if tables don't exist."""
     pool = await DBPool.get_pool()
@@ -517,6 +529,15 @@ async def init_db():
         user_id bigint not null,
         created_at timestamptz not null default now(),
         primary key (message_id, chat_id)
+    );
+
+    -- GERMAN-channel posts published by other bots (ptb-suggest), which this
+    -- bot never receives as updates - see channel/handoff.py.
+    create table if not exists channel_handoff
+    (
+        message_id   int primary key,
+        created_at   timestamptz not null default now(),
+        processed_at timestamptz
     );
     """
 

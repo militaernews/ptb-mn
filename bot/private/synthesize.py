@@ -6,10 +6,10 @@ Ported from ptb-suggest's private/ai_assistant.py (same TITEL:/TEXT: parsing,
 flag/word-count enforcement, pysbd sentence-splitting into a 2-paragraph/
 5-sentence body). The key difference: ptb-suggest only ever hands the result
 back to an admin for manual/placeholder publishing, while here "publish" is
-real - posting to GERMAN.channel_id feeds straight into main.py's existing
-news_post pipeline (register_news), which already translates/cross-posts/
-tweets/indexes anything that lands in that channel, whether typed by a human
-admin or sent by the bot itself.
+real - the post goes to GERMAN.channel_id and is then fed explicitly into
+main.py's news_post pipeline (register_news), which translates/cross-posts/
+tweets/indexes it like a post typed by a human admin. (Telegram doesn't send
+a bot updates for its own messages, so it wouldn't get there by itself.)
 """
 import logging
 import re
@@ -34,6 +34,7 @@ from telegram.constants import ChatAction
 from httpx import AsyncClient
 from pysbd import Segmenter
 
+from channel.handoff import process_channel_post
 from data.lang import GERMAN
 from settings.config import ADMINS, OPENROUTER_API_KEY
 from util.translation import FLAG_PATTERN
@@ -345,13 +346,22 @@ async def publish_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
                     kwargs["caption"] = post["html"]
                     kwargs["parse_mode"] = "HTML"
                 media_group.append(cls(**kwargs))
-            await context.bot.send_media_group(chat_id=GERMAN.channel_id, media=media_group)
+            sent = list(await context.bot.send_media_group(chat_id=GERMAN.channel_id, media=media_group))
         else:
-            await context.bot.send_message(chat_id=GERMAN.channel_id, text=post["html"], parse_mode="HTML")
+            sent = [await context.bot.send_message(chat_id=GERMAN.channel_id, text=post["html"], parse_mode="HTML")]
     except Exception as e:
         logger.error(f"[synthesize] Failed to publish to channel: {e}")
         await query.edit_message_text(f"❌ Veröffentlichung fehlgeschlagen: {e}")
         return ConversationHandler.END
+
+    # Telegram doesn't send a bot updates for its own messages, so hand them to
+    # the news pipeline explicitly. As a task: this handler still holds the
+    # update slot that process_update would wait for.
+    async def _run_pipeline():
+        for message in sent:
+            await process_channel_post(context.application, message)
+
+    context.application.create_task(_run_pipeline())
 
     await query.edit_message_text("✅ Im Kanal veröffentlicht!")
     logger.info(f"[synthesize] Published post to channel {GERMAN.channel_id}")
