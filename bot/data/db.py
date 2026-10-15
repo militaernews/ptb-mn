@@ -436,10 +436,10 @@ async def get_message_author(message_id: int, chat_id: int, conn: Connection = N
 
 
 @db
-async def handoff_get_pending(conn: Connection = None) -> List[int]:
+async def handoff_get_pending(conn: Connection = None) -> List[dict]:
     rows = await conn.fetch(
-        "select message_id from channel_handoff where processed_at is null order by created_at")
-    return [row["message_id"] for row in rows]
+        "select message_id, media_group_id from channel_handoff where processed_at is null order by message_id")
+    return [dict(row) for row in rows]
 
 
 @db
@@ -539,6 +539,7 @@ async def init_db():
         created_at   timestamptz not null default now(),
         processed_at timestamptz
     );
+    alter table channel_handoff add column if not exists media_group_id text;
     """
 
     async with pool.acquire() as conn:

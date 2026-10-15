@@ -12,6 +12,7 @@ regular handlers via process_update - exactly as if it had arrived as an
 update.
 """
 import logging
+from typing import Optional
 
 from telegram import Message, Update
 from telegram.error import TelegramError
@@ -37,7 +38,8 @@ async def process_channel_post(application: Application, message: Message) -> No
     await application.process_update(Update(update_id=0, channel_post=message))
 
 
-async def _rebuild_channel_post(context: ContextTypes.DEFAULT_TYPE, message_id: int) -> Message:
+async def _rebuild_channel_post(context: ContextTypes.DEFAULT_TYPE, message_id: int,
+                                media_group_id: Optional[str]) -> Message:
     forwarded = await context.bot.forward_message(
         chat_id=LOG_GROUP_ID,
         message_thread_id=THREAD_ID,
@@ -54,6 +56,11 @@ async def _rebuild_channel_post(context: ContextTypes.DEFAULT_TYPE, message_id: 
         data["chat"] = origin.chat.to_dict()
         data["sender_chat"] = origin.chat.to_dict()
         data["date"] = int(origin.date.timestamp())
+        # A single forwarded album item isn't part of an album anymore - restore
+        # the original grouping so post_channel_english re-posts it as one album.
+        data.pop("media_group_id", None)
+        if media_group_id:
+            data["media_group_id"] = media_group_id
         return Message.de_json(data, context.bot)
     finally:
         try:
@@ -63,12 +70,13 @@ async def _rebuild_channel_post(context: ContextTypes.DEFAULT_TYPE, message_id: 
 
 
 async def process_handoffs(context: ContextTypes.DEFAULT_TYPE) -> None:
-    for message_id in await handoff_get_pending():
+    for pending in await handoff_get_pending():
+        message_id = pending["message_id"]
         # Mark first so a post that keeps failing doesn't get re-run (and
         # re-translated/cross-posted) every POLL_INTERVAL_SECONDS.
         await handoff_mark_processed(message_id)
         try:
-            message = await _rebuild_channel_post(context, message_id)
+            message = await _rebuild_channel_post(context, message_id, pending["media_group_id"])
             await process_channel_post(context.application, message)
             logger.info(f"[handoff] Processed channel post {message_id}")
         except Exception as e:
