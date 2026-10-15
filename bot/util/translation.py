@@ -423,11 +423,11 @@ async def _translate_first_acceptable(text: str, target_lang: str, accept: Calla
     return None
 
 
-# A line formatted as a whole - e.g. "🇨🇷🔒 <b>Titel</b>" or "<a href=…>Quelle</a>":
+# A line formatted as a whole - e.g. "🇨🇷🔒 <b>Titel</b>", "<blockquote>Zitat</blockquote>" or "<a href=…>Quelle</a>":
 # leading emojis/flag placeholders, one tag around the rest, trailing punctuation.
 _WRAPPED_LINE_RE = re.compile(
     r'^(?P<pre>(?:║\d+║|[^\w<])*)'
-    r'(?P<open><(?P<tag>b|strong|i|em|u|ins|s|strike|del|code|tg-spoiler|a)(?:\s[^>]*)?>)'
+    r'(?P<open><(?P<tag>b|strong|i|em|u|ins|s|strike|del|code|tg-spoiler|blockquote|a)(?:\s[^>]*)?>)'
     r'(?P<inner>.*)'
     r'(?P<close></(?P=tag)>)'
     r'(?P<post>[\s.,:;!?…]*)$',

@@ -218,6 +218,17 @@ async def test_translate_keeps_whole_line_formatting_for_non_english_targets():
 
 
 @pytest.mark.asyncio
+async def test_translate_keeps_blockquote_lines_for_non_english_targets():
+    source = "<b>Titel der Meldung</b>\n\n<blockquote>Wir werden entschlossen auf jeden weiteren Angriff reagieren.</blockquote>"
+    translated = "Título de la noticia\n\nResponderemos con decisión a cualquier nuevo ataque."
+
+    with patch("deep_translator.GoogleTranslator.translate", return_value=translated):
+        assert await translate("es", source) == (
+            "<b>Título de la noticia</b>\n\n<blockquote>Responderemos con decisión a cualquier nuevo ataque.</blockquote>"
+        )
+
+
+@pytest.mark.asyncio
 async def test_translate_rejects_result_leaving_the_title_german():
     # Seen in production: the body got translated, the (bold) title stayed German.
     title_left_german = POST_ES_PLAIN.replace(POST_ES_PLAIN.split("\n")[0], POST_DE_PLAIN.split("\n")[0])
