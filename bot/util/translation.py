@@ -23,8 +23,9 @@ import asyncio
 import logging
 import os
 import re
+from difflib import SequenceMatcher
 from json import loads, load
-from typing import List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple
 
 import argostranslate.translate
 import httpx
@@ -346,69 +347,193 @@ def _translation_acceptable(candidate: Optional[str], tokens: List[str], source_
     return _placeholders_preserved(candidate, tokens)
 
 
-async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
-    logging.info("---------------------------- text ----------------------------")
-    logging.info(text)
+def _content_lines(text: str) -> List[str]:
+    return [line for line in text.split("\n") if line.strip()]
 
-    sub_text = sanitize_text(text)
 
-    # Placeholder-protecting formatting (numbered ║N║ tokens for HTML tags/flag emojis)
-    # works reliably for English, but in practice it makes some translation providers -
-    # especially the small/local LLM tiers - just echo the German input back untranslated
-    # for other target languages instead of translating it. So English keeps full
-    # formatting preservation, while every other target language has HTML formatting
-    # stripped outright before translation (see _strip_formatting) - flag emojis are still
-    # placeholder-protected via _extract_flag_tokens so they (and the hashtag
-    # flag_to_hashtag derives from them) survive translation for every language.
-    if target_lang == "en":
-        text_to_translate, tokens = _extract_tokens(sub_text)
-    else:
-        flag_protected, tokens = _extract_flag_tokens(sub_text)
-        text_to_translate = _strip_formatting(flag_protected)
+_LETTER_RE = re.compile(r'[^\W\d_]')
+_ECHO_MIN_WORDS = 4
+_ECHO_SIMILARITY = 0.9
+_MIN_LENGTH_RATIO = 0.5
 
-    translated_text = None
+
+def _is_echo_line(source_line: str, candidate_line: str) -> bool:
+    """Whether a translated line is (nearly) the German source line - e.g. a
+    title the provider skipped while translating the rest, or a line with just
+    an article changed. Short lines are exempt, they may legitimately stay the
+    same (names, places).
+    """
+    source_plain = _PLACEHOLDER_RE.sub("", source_line).strip().casefold()
+    if len(source_plain.split()) < _ECHO_MIN_WORDS:
+        return False
+    candidate_plain = _PLACEHOLDER_RE.sub("", candidate_line).strip().casefold()
+    return SequenceMatcher(None, source_plain, candidate_plain).ratio() >= _ECHO_SIMILARITY
+
+
+def _structure_preserved(candidate: str, source: str) -> bool:
+    """Whether a translation of a multi-line post kept its shape: same number of
+    lines (a provider dropping the whole body after the title has been seen in
+    production), not drastically shorter, and no line left in German.
+    """
+    source_lines = _content_lines(source)
+    candidate_lines = _content_lines(candidate)
+    if len(source_lines) != len(candidate_lines):
+        return False
+    if len(candidate.strip()) < _MIN_LENGTH_RATIO * len(source.strip()):
+        return False
+    return not any(_is_echo_line(s, c) for s, c in zip(source_lines, candidate_lines))
+
+
+def _placeholders_kept(candidate: str, source: str) -> bool:
+    return set(_PLACEHOLDER_RE.findall(source)) <= set(_PLACEHOLDER_RE.findall(candidate))
+
+
+async def _translate_first_acceptable(text: str, target_lang: str, accept: Callable[[str], bool]) -> Optional[str]:
+    """Try the providers in order (Google, then the offline Argos, the local
+    Ollama model and free OpenRouter models as fallbacks) and return the first
+    translation `accept` approves of, or None.
+    """
     try:
         google_translator.target = target_lang
-        candidate = google_translator.translate(text=text_to_translate)
+        candidate = google_translator.translate(text=text)
         # Check for specific Google Translate 500 error message
         if candidate and "Error 500 (Server Error)" in candidate:
-            logging.error(f"Google Translate returned 500 error for text: {text_to_translate[:100]}...")
-        elif _translation_acceptable(candidate, tokens, text_to_translate):
-            translated_text = candidate
+            logging.error(f"Google Translate returned 500 error for text: {text[:100]}...")
+        elif candidate and accept(candidate):
+            return candidate
         else:
             logging.warning(f"Google Translate returned an unusable result for {target_lang}")
     except Exception as e:
         logging.warning(f"Google Translate failed for {target_lang}: {e}")
 
-    if not translated_text:
+    fallbacks = (
+        ("Argos Translate", lambda: asyncio.to_thread(translate_argos, text, target_lang)),
+        ("Ollama translation", lambda: translate_ollama(text, target_lang)),
+        ("OpenRouter translation", lambda: translate_openrouter(text, target_lang)),
+    )
+    for name, run in fallbacks:
         try:
-            candidate = await asyncio.to_thread(translate_argos, text_to_translate, target_lang)
-            if _translation_acceptable(candidate, tokens, text_to_translate):
-                translated_text = candidate
-            else:
-                logging.warning(f"Argos Translate returned an unusable result for {target_lang}")
+            candidate = await run()
+            if candidate and accept(candidate):
+                return candidate
+            logging.warning(f"{name} returned an unusable result for {target_lang}")
         except Exception as e:
-            logging.warning(f"Argos Translate failed for {target_lang}: {e}")
+            logging.warning(f"{name} failed for {target_lang}: {e}")
 
-    if not translated_text:
-        try:
-            candidate = await translate_ollama(text_to_translate, target_lang)
-            if _translation_acceptable(candidate, tokens, text_to_translate):
-                translated_text = candidate
-            else:
-                logging.warning(f"Ollama translation returned an unusable result for {target_lang}")
-        except Exception as e:
-            logging.warning(f"Ollama translation failed for {target_lang}: {e}")
+    return None
 
-    if not translated_text:
-        try:
-            candidate = await translate_openrouter(text_to_translate, target_lang)
-            if _translation_acceptable(candidate, tokens, text_to_translate):
-                translated_text = candidate
-            else:
-                logging.warning(f"OpenRouter translation returned an unusable result for {target_lang}")
-        except Exception as e:
-            logging.warning(f"OpenRouter translation failed for {target_lang}: {e}")
+
+# A line formatted as a whole - e.g. "🇨🇷🔒 <b>Titel</b>" or "<a href=…>Quelle</a>":
+# leading emojis/flag placeholders, one tag around the rest, trailing punctuation.
+_WRAPPED_LINE_RE = re.compile(
+    r'^(?P<pre>(?:║\d+║|[^\w<])*)'
+    r'(?P<open><(?P<tag>b|strong|i|em|u|ins|s|strike|del|code|tg-spoiler|a)(?:\s[^>]*)?>)'
+    r'(?P<inner>.*)'
+    r'(?P<close></(?P=tag)>)'
+    r'(?P<post>[\s.,:;!?…]*)$',
+    re.IGNORECASE,
+)
+_LEADING_SYMBOLS_RE = re.compile(r'^(?:║\d+║|[^\w<])*')
+_TRAILING_PUNCTUATION_RE = re.compile(r'[\s.,:;!?…]*$')
+
+
+def _wrapped_line(line: str) -> Optional[re.Match]:
+    match = _WRAPPED_LINE_RE.match(line)
+    if match is None or match.group("close") in match.group("inner"):
+        return None  # e.g. "<b>A</b> text <b>B</b>" - not one tag around the whole line
+    return match
+
+
+def _plain_line(line: str) -> str:
+    """The text of a line as sent to the translator - formatting stripped."""
+    match = _wrapped_line(line)
+    if match is None:
+        return _strip_formatting(line)
+    return f"{match.group('pre')}{_strip_formatting(match.group('inner'))}{match.group('post')}"
+
+
+def _rewrap_line(source_line: str, translated_line: str) -> str:
+    """Put a whole-line formatting (bold title, link, …) of `source_line` back
+    around its translation, keeping leading emojis and trailing punctuation
+    outside of it like in the source.
+    """
+    match = _wrapped_line(source_line)
+    if match is None:
+        return translated_line
+
+    pre, core, post = "", translated_line, ""
+    if match.group("pre").strip():
+        pre_end = _LEADING_SYMBOLS_RE.match(core).end()
+        pre, core = core[:pre_end], core[pre_end:]
+    if match.group("post").strip():
+        post_start = _TRAILING_PUNCTUATION_RE.search(core).start()
+        core, post = core[:post_start], core[post_start:]
+    return f"{pre}{match.group('open')}{core}{match.group('close')}{post}"
+
+
+async def _translate_by_lines(flag_protected: str, target_lang: str) -> Optional[str]:
+    """Translate with all formatting stripped except for lines formatted as a
+    whole, which get their formatting re-applied around the translated line.
+    Tries the post as a whole first, then line by line if no provider returns
+    a translation that keeps the post's line structure.
+    """
+    source_lines = flag_protected.split("\n")
+    plain_lines = [_plain_line(line) for line in source_lines]
+    plain_text = "\n".join(plain_lines)
+
+    whole = await _translate_first_acceptable(
+        plain_text, target_lang,
+        lambda c: _placeholders_kept(c, plain_text) and not _is_untranslated_echo(c, plain_text)
+                  and not _has_unexpected_cjk(c) and _structure_preserved(c, plain_text),
+    )
+    if whole is not None:
+        translated_lines = iter(_content_lines(whole))
+        translated = [next(translated_lines) if plain.strip() else plain for plain in plain_lines]
+    else:
+        logging.warning(f"No whole-post translation kept the structure for {target_lang}, translating line by line")
+        translated = []
+        for plain in plain_lines:
+            if not _LETTER_RE.search(_PLACEHOLDER_RE.sub("", plain)):
+                translated.append(plain)  # blank, or just emojis/flags/punctuation
+                continue
+            line = await _translate_first_acceptable(
+                plain, target_lang,
+                lambda c, plain=plain: _placeholders_kept(c, plain) and not _has_unexpected_cjk(c)
+                                       and len(_content_lines(c)) == 1 and not _is_echo_line(plain, c),
+            )
+            if line is None:
+                return None
+            translated.append(line.strip())
+
+    return "\n".join(_rewrap_line(source, line) for source, line in zip(source_lines, translated))
+
+
+async def translate(target_lang: str, text: str, target_lang_deepl: str = None) -> str:
+    logging.info("---------------------------- text ----------------------------")
+    logging.info(text)
+
+    sub_text = sanitize_text(text)
+    translated_text = None
+
+    # Placeholder-protecting all formatting (numbered ║N║ tokens for HTML tags/flag
+    # emojis) works reliably for English, so English keeps inline formatting and links.
+    # For other target languages it makes some providers - especially the small/local
+    # LLM tiers - echo the German input back untranslated, so there formatting is
+    # stripped before translation, except that lines formatted as a whole (titles,
+    # link lines) get it re-applied afterwards (see _translate_by_lines). Flag emojis
+    # are placeholder-protected in both cases so they (and the hashtag flag_to_hashtag
+    # derives from them) survive translation.
+    if target_lang == "en":
+        text_to_translate, tokens = _extract_tokens(sub_text)
+        translated_text = await _translate_first_acceptable(
+            text_to_translate, target_lang,
+            lambda c: _translation_acceptable(c, tokens, text_to_translate)
+                      and _structure_preserved(c, text_to_translate),
+        )
+
+    if translated_text is None:
+        flag_protected, tokens = _extract_flag_tokens(sub_text)
+        translated_text = await _translate_by_lines(flag_protected, target_lang)
 
     if not translated_text:
         # Let the failure propagate so the caller logs it to the bot log group
@@ -421,7 +546,7 @@ async def translate(target_lang: str, text: str, target_lang_deepl: str = None) 
     translated_text = AMP_PATTERN.sub(r"&", translated_text)
     translated_text = QUOT_PATTERN.sub(r'"', translated_text)
 
-    logging.info(f"translated text ----------------- {text, tokens, sub_text, text_to_translate, translated_text}")
+    logging.info(f"translated text ----------------- {text, tokens, sub_text, translated_text}")
     return translated_text
 
 

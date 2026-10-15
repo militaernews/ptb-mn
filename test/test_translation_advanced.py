@@ -192,6 +192,80 @@ async def test_translate_rejects_result_contaminated_with_cjk_characters():
                     mock_openrouter.assert_called_once()
 
 
+POST_DE = (
+    "🇨🇷🔒 <b>Costa Rica eröffnet Mega-Hochsicherheitsgefängnis nach Vorbild El Salvadors</b>\n\n"
+    "Costa Ricas Präsidentin hat ein neues Hochsicherheitsgefängnis mit einer Kapazität von 5.100 Insassen eingeweiht."
+)
+POST_DE_PLAIN = (
+    "║0║🔒 Costa Rica eröffnet Mega-Hochsicherheitsgefängnis nach Vorbild El Salvadors\n\n"
+    "Costa Ricas Präsidentin hat ein neues Hochsicherheitsgefängnis mit einer Kapazität von 5.100 Insassen eingeweiht."
+)
+POST_ES_PLAIN = (
+    "║0║🔒 Costa Rica inaugura una megacárcel de máxima seguridad según el modelo de El Salvador\n\n"
+    "La presidenta de Costa Rica inauguró una nueva cárcel de máxima seguridad con capacidad para 5.100 reclusos."
+)
+
+
+@pytest.mark.asyncio
+async def test_translate_keeps_whole_line_formatting_for_non_english_targets():
+    with patch("deep_translator.GoogleTranslator.translate", return_value=POST_ES_PLAIN) as mock_google:
+        translated_text = await translate("es", POST_DE)
+        mock_google.assert_called_once_with(text=POST_DE_PLAIN)
+        # The bold title is re-applied around the translated title, emojis stay outside
+        assert translated_text.startswith(
+            "🇨🇷🔒 <b>Costa Rica inaugura una megacárcel de máxima seguridad según el modelo de El Salvador</b>\n\n"
+        )
+
+
+@pytest.mark.asyncio
+async def test_translate_rejects_result_leaving_the_title_german():
+    # Seen in production: the body got translated, the (bold) title stayed German.
+    title_left_german = POST_ES_PLAIN.replace(POST_ES_PLAIN.split("\n")[0], POST_DE_PLAIN.split("\n")[0])
+
+    with patch("deep_translator.GoogleTranslator.translate", return_value=title_left_german):
+        with patch("bot.util.translation.translate_argos", return_value=POST_ES_PLAIN) as mock_argos:
+            translated_text = await translate("es", POST_DE)
+            assert "<b>Costa Rica inaugura" in translated_text
+            mock_argos.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_translate_rejects_result_dropping_the_body():
+    # Seen in production on English: only the title came back, the body was gone.
+    title_only = "║0║🔒 ║1║Costa Rica opens mega high-security prison modelled on El Salvador║2║"
+    full = title_only + "\n\nCosta Rica's president has inaugurated a new prison for 5,100 inmates."
+
+    with patch("deep_translator.GoogleTranslator.translate", return_value=title_only):
+        with patch("bot.util.translation.translate_argos", return_value=full):
+            translated_text = await translate("en", POST_DE)
+            assert translated_text.endswith("a new prison for 5,100 inmates.")
+            assert "<b>Costa Rica opens" in translated_text
+
+
+@pytest.mark.asyncio
+async def test_translate_falls_back_to_line_by_line():
+    # No provider keeps the post's line structure as a whole -> translate per line.
+    lines = {
+        "║0║🔒 Costa Rica eröffnet Mega-Hochsicherheitsgefängnis nach Vorbild El Salvadors":
+            "║0║🔒 Costa Rica inaugura una megacárcel de máxima seguridad",
+        POST_DE_PLAIN.split("\n")[2]: "La presidenta de Costa Rica inauguró una nueva cárcel.",
+    }
+
+    def google(text):
+        return lines.get(text, "una sola línea")  # whole-post request comes back merged
+
+    with patch("deep_translator.GoogleTranslator.translate", side_effect=google):
+        with patch("bot.util.translation.translate_argos", side_effect=Exception("argos down")):
+            with patch("bot.util.translation.translate_ollama", new_callable=AsyncMock, side_effect=Exception("down")):
+                with patch("bot.util.translation.translate_openrouter", new_callable=AsyncMock,
+                           side_effect=Exception("down")):
+                    translated_text = await translate("es", POST_DE)
+                    assert translated_text == (
+                        "🇨🇷🔒 <b>Costa Rica inaugura una megacárcel de máxima seguridad</b>\n\n"
+                        "La presidenta de Costa Rica inauguró una nueva cárcel."
+                    )
+
+
 @pytest.mark.asyncio
 async def test_translate_message_with_internal_link_rewriting():
     original_text = f"See more here: https://t.me/{GERMAN.username}/123"
