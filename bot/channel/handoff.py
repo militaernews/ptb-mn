@@ -6,8 +6,8 @@ channel.
 Telegram never delivers a bot's messages to other bots, so those posts never
 reach register_news's handlers on their own. ptb-suggest instead records the
 channel message ID in the shared channel_handoff table; this job picks it up,
-forwards the post into the log group to get a Message (with file IDs this bot
-can reuse), rebuilds it as the original channel post and feeds it through the
+briefly forwards the post into the internal CHANNEL_SOURCE to get a Message
+(with file IDs this bot can reuse), rebuilds it as the original channel post and feeds it through the
 regular handlers via process_update - exactly as if it had arrived as an
 update.
 """
@@ -20,7 +20,7 @@ from telegram.ext import Application, ContextTypes
 
 from data.db import handoff_get_pending, handoff_mark_processed
 from data.lang import GERMAN
-from settings.config import LOG_GROUP_ID, THREAD_ID
+from settings.config import CHANNEL_SOURCE
 from util.error_logger import get_error_logger
 
 logger = logging.getLogger(__name__)
@@ -41,8 +41,7 @@ async def process_channel_post(application: Application, message: Message) -> No
 async def _rebuild_channel_post(context: ContextTypes.DEFAULT_TYPE, message_id: int,
                                 media_group_id: Optional[str]) -> Message:
     forwarded = await context.bot.forward_message(
-        chat_id=LOG_GROUP_ID,
-        message_thread_id=THREAD_ID,
+        chat_id=CHANNEL_SOURCE,
         from_chat_id=GERMAN.channel_id,
         message_id=message_id,
         disable_notification=True,
