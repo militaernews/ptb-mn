@@ -23,6 +23,7 @@ import asyncio
 import logging
 import os
 import re
+import time
 from difflib import SequenceMatcher
 from json import loads, load
 from typing import Callable, List, Optional, Tuple
@@ -30,7 +31,6 @@ from typing import Callable, List, Optional, Tuple
 import argostranslate.translate
 import httpx
 from data.lang import GERMAN, LANGUAGES
-from deep_translator import GoogleTranslator
 from deepl import Translator
 from pysbd import Segmenter
 from settings.config import OLLAMA_HOST, OLLAMA_MODEL, OPENROUTER_API_KEY, RES_PATH
@@ -39,7 +39,6 @@ from util.helper import sanitize_text
 from util.patterns import HASHTAG, AMP_PATTERN, QUOT_PATTERN
 
 deepl_translator = Translator(os.environ['DEEPL'])
-google_translator = GoogleTranslator(source='auto')
 
 # Display names used in the Ollama translation prompt (last-resort fallback)
 OLLAMA_LANG_NAMES = {
@@ -198,6 +197,48 @@ def get_hashtag(country_key: str, lang_key: str = GERMAN.lang_key) -> str:
         logging.warning(f"Error when trying to get hashtag --- {e}")
 
 
+GOOGLE_TRANSLATE_URL = "https://translate.googleapis.com/translate_a/single"
+GOOGLE_TIMEOUT_SECONDS = 20.0
+# After Google answers 429, skip it for a while instead of hammering it on
+# every line of every language - that only prolongs the block.
+GOOGLE_COOLDOWN_SECONDS = 10 * 60
+_google_blocked_until = 0.0
+
+
+async def translate_google(text: str, target_lang: str) -> str:
+    """Translation via Google's JSON endpoint (the one the Google Translate
+    browser extension uses). Async with a timeout - deep_translator's scraper
+    used blocking requests without one, freezing the whole bot whenever Google
+    was slow, and its endpoint gets rate-limited far more often.
+    """
+    global _google_blocked_until
+    if time.monotonic() < _google_blocked_until:
+        raise Exception("rate-limited, cooling down")
+
+    async with httpx.AsyncClient(timeout=GOOGLE_TIMEOUT_SECONDS) as client:
+        response = await client.post(
+            GOOGLE_TRANSLATE_URL,
+            params={"client": "gtx", "sl": "auto", "tl": target_lang, "dt": "t"},
+            data={"q": text},
+        )
+    if response.status_code == 429:
+        _google_blocked_until = time.monotonic() + GOOGLE_COOLDOWN_SECONDS
+    response.raise_for_status()
+    # [[["translated part", "source part", ...], ...], ...] - one entry per sentence
+    return "".join(segment[0] for segment in response.json()[0] if segment[0])
+
+
+ARGOS_TIMEOUT_SECONDS = 90.0
+# Argos is CPU- and memory-heavy (it loads a model pair per language), so
+# never run more than one translation at a time.
+_argos_lock = asyncio.Lock()
+
+
+async def translate_argos_async(text: str, target_lang: str) -> str:
+    async with _argos_lock:
+        return await asyncio.wait_for(asyncio.to_thread(translate_argos, text, target_lang), ARGOS_TIMEOUT_SECONDS)
+
+
 def translate_argos(text: str, target_lang: str) -> str:
     """Offline fallback translation via Argos Translate.
 
@@ -291,6 +332,10 @@ async def translate_openrouter(text: str, target_lang: str) -> str:
                         "temperature": 0.2,
                     },
                 )
+                if response.status_code in (401, 403):
+                    # The key itself is rejected - every other model would fail the same way
+                    last_error = f"OPENROUTER_API_KEY rejected ({response.status_code})"
+                    break
                 response.raise_for_status()
                 translated = response.json()["choices"][0]["message"]["content"].strip()
                 if translated:
@@ -393,25 +438,13 @@ async def _translate_first_acceptable(text: str, target_lang: str, accept: Calla
     Ollama model and free OpenRouter models as fallbacks) and return the first
     translation `accept` approves of, or None.
     """
-    try:
-        google_translator.target = target_lang
-        candidate = google_translator.translate(text=text)
-        # Check for specific Google Translate 500 error message
-        if candidate and "Error 500 (Server Error)" in candidate:
-            logging.error(f"Google Translate returned 500 error for text: {text[:100]}...")
-        elif candidate and accept(candidate):
-            return candidate
-        else:
-            logging.warning(f"Google Translate returned an unusable result for {target_lang}")
-    except Exception as e:
-        logging.warning(f"Google Translate failed for {target_lang}: {e}")
-
-    fallbacks = (
-        ("Argos Translate", lambda: asyncio.to_thread(translate_argos, text, target_lang)),
+    providers = (
+        ("Google Translate", lambda: translate_google(text, target_lang)),
+        ("Argos Translate", lambda: translate_argos_async(text, target_lang)),
         ("Ollama translation", lambda: translate_ollama(text, target_lang)),
         ("OpenRouter translation", lambda: translate_openrouter(text, target_lang)),
     )
-    for name, run in fallbacks:
+    for name, run in providers:
         try:
             candidate = await run()
             if candidate and accept(candidate):

@@ -79,24 +79,44 @@ async def test_rewrite_internal_links(
 
 
 @pytest.mark.asyncio
-async def test_translate_google_500_error_fallback():
+async def test_translate_google_error_fallback():
     original_text = "This is a test sentence."
-    error_response = "Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know."
     argos_fallback = "Argos translated text"
 
     with patch(
-        "deep_translator.GoogleTranslator.translate", return_value=error_response
+        "bot.util.translation.translate_google", new_callable=AsyncMock,
+        side_effect=Exception("500 Internal Server Error"),
     ) as mock_google_translate:
-        with patch("bot.util.translation.logging.error") as mock_logging_error:
-            with patch(
-                "bot.util.translation.translate_argos", return_value=argos_fallback
-            ) as mock_argos:
-                translated_text = await translate("en", original_text)
-                # Should cascade to the offline Argos Translate fallback
-                assert translated_text == argos_fallback
-                mock_google_translate.assert_called_once_with(text=original_text)
-                mock_logging_error.assert_called_once()
-                mock_argos.assert_called_once_with(original_text, "en")
+        with patch(
+            "bot.util.translation.translate_argos", return_value=argos_fallback
+        ) as mock_argos:
+            translated_text = await translate("en", original_text)
+            # Should cascade to the offline Argos Translate fallback
+            assert translated_text == argos_fallback
+            mock_google_translate.assert_called_once_with(original_text, "en")
+            mock_argos.assert_called_once_with(original_text, "en")
+
+
+@pytest.mark.asyncio
+async def test_translate_google_parses_segments_and_cools_down_after_429():
+    import httpx
+    import bot.util.translation as translation
+
+    def handler(request):
+        if request.url.params["tl"] == "fa":
+            return httpx.Response(429)
+        return httpx.Response(200, json=[[["Hello. ", "Hallo. ", None], ["World", "Welt", None], [None, None]]])
+
+    real_client = httpx.AsyncClient
+    with patch.object(translation, "_google_blocked_until", 0.0), \
+            patch("bot.util.translation.httpx.AsyncClient",
+                  lambda **kw: real_client(transport=httpx.MockTransport(handler), **kw)):
+        assert await translation.translate_google("Hallo. Welt", "en") == "Hello. World"
+        with pytest.raises(httpx.HTTPStatusError):
+            await translation.translate_google("Hallo", "fa")
+        # Blocked now - not even tried for other languages until the cooldown ends
+        with pytest.raises(Exception, match="cooling down"):
+            await translation.translate_google("Hallo. Welt", "en")
 
 
 @pytest.mark.asyncio
@@ -107,7 +127,7 @@ async def test_translate_rejects_fallback_that_drops_formatting_placeholder():
     corrupted_argos_result = "Bonjour le monde!"
     good_ollama_result = "║0║Bonjour║1║ le monde!"
 
-    with patch("deep_translator.GoogleTranslator.translate", side_effect=Exception("google down")):
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, side_effect=Exception("google down")):
         with patch(
             "bot.util.translation.translate_argos", return_value=corrupted_argos_result
         ) as mock_argos:
@@ -130,7 +150,7 @@ async def test_translate_strips_formatting_for_non_english_targets():
     stripped_text = "Hallo Welt!"
     real_translation = "Bonjour le monde!"
 
-    with patch("deep_translator.GoogleTranslator.translate", side_effect=Exception("google down")):
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, side_effect=Exception("google down")):
         with patch(
             "bot.util.translation.translate_argos", return_value=real_translation
         ) as mock_argos:
@@ -147,7 +167,7 @@ async def test_translate_rejects_provider_echoing_german_text_unchanged():
     stripped_text = "Hallo Welt!"
     real_translation = "Bonjour le monde!"
 
-    with patch("deep_translator.GoogleTranslator.translate", side_effect=Exception("google down")):
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, side_effect=Exception("google down")):
         with patch(
             "bot.util.translation.translate_argos", return_value=stripped_text
         ) as mock_argos:
@@ -171,7 +191,7 @@ async def test_translate_rejects_result_contaminated_with_cjk_characters():
     contaminated_ollama_result = "Ini 是 sebuah tes."
     good_openrouter_result = "Ini adalah tes yang bagus."
 
-    with patch("deep_translator.GoogleTranslator.translate", side_effect=Exception("google down")):
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, side_effect=Exception("google down")):
         with patch(
             "bot.util.translation.translate_argos", side_effect=Exception("argos down")
         ):
@@ -208,9 +228,9 @@ POST_ES_PLAIN = (
 
 @pytest.mark.asyncio
 async def test_translate_keeps_whole_line_formatting_for_non_english_targets():
-    with patch("deep_translator.GoogleTranslator.translate", return_value=POST_ES_PLAIN) as mock_google:
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, return_value=POST_ES_PLAIN) as mock_google:
         translated_text = await translate("es", POST_DE)
-        mock_google.assert_called_once_with(text=POST_DE_PLAIN)
+        mock_google.assert_called_once_with(POST_DE_PLAIN, "es")
         # The bold title is re-applied around the translated title, emojis stay outside
         assert translated_text.startswith(
             "🇨🇷🔒 <b>Costa Rica inaugura una megacárcel de máxima seguridad según el modelo de El Salvador</b>\n\n"
@@ -222,7 +242,7 @@ async def test_translate_keeps_blockquote_lines_for_non_english_targets():
     source = "<b>Titel der Meldung</b>\n\n<blockquote>Wir werden entschlossen auf jeden weiteren Angriff reagieren.</blockquote>"
     translated = "Título de la noticia\n\nResponderemos con decisión a cualquier nuevo ataque."
 
-    with patch("deep_translator.GoogleTranslator.translate", return_value=translated):
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, return_value=translated):
         assert await translate("es", source) == (
             "<b>Título de la noticia</b>\n\n<blockquote>Responderemos con decisión a cualquier nuevo ataque.</blockquote>"
         )
@@ -233,7 +253,7 @@ async def test_translate_rejects_result_leaving_the_title_german():
     # Seen in production: the body got translated, the (bold) title stayed German.
     title_left_german = POST_ES_PLAIN.replace(POST_ES_PLAIN.split("\n")[0], POST_DE_PLAIN.split("\n")[0])
 
-    with patch("deep_translator.GoogleTranslator.translate", return_value=title_left_german):
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, return_value=title_left_german):
         with patch("bot.util.translation.translate_argos", return_value=POST_ES_PLAIN) as mock_argos:
             translated_text = await translate("es", POST_DE)
             assert "<b>Costa Rica inaugura" in translated_text
@@ -246,7 +266,7 @@ async def test_translate_rejects_result_dropping_the_body():
     title_only = "║0║🔒 ║1║Costa Rica opens mega high-security prison modelled on El Salvador║2║"
     full = title_only + "\n\nCosta Rica's president has inaugurated a new prison for 5,100 inmates."
 
-    with patch("deep_translator.GoogleTranslator.translate", return_value=title_only):
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, return_value=title_only):
         with patch("bot.util.translation.translate_argos", return_value=full):
             translated_text = await translate("en", POST_DE)
             assert translated_text.endswith("a new prison for 5,100 inmates.")
@@ -262,10 +282,10 @@ async def test_translate_falls_back_to_line_by_line():
         POST_DE_PLAIN.split("\n")[2]: "La presidenta de Costa Rica inauguró una nueva cárcel.",
     }
 
-    def google(text):
+    def google(text, target_lang):
         return lines.get(text, "una sola línea")  # whole-post request comes back merged
 
-    with patch("deep_translator.GoogleTranslator.translate", side_effect=google):
+    with patch("bot.util.translation.translate_google", new_callable=AsyncMock, side_effect=google):
         with patch("bot.util.translation.translate_argos", side_effect=Exception("argos down")):
             with patch("bot.util.translation.translate_ollama", new_callable=AsyncMock, side_effect=Exception("down")):
                 with patch("bot.util.translation.translate_openrouter", new_callable=AsyncMock,
