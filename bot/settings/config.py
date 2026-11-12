@@ -18,7 +18,6 @@ CONTAINER: Final[bool] = str(getenv('CONTAINER', 'False')).lower() == 'true'
 
 RES_PATH: Final[str] = getenv("RES_PATH", "./res")
 
-CHANNEL_MEME: Final[int] = int(getenv('CHANNEL_MEME'))
 CHANNEL_SOURCE: Final[int] = int(getenv('CHANNEL_SOURCE'))
 
 LOG_GROUP_ID: Final[int] = int(getenv('LOG_GROUP_ID', -1001338514957))

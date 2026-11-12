@@ -3,11 +3,11 @@ import logging
 from json import loads
 from typing import Dict
 
-from telegram import Update, BotCommandScopeChatAdministrators, BotCommandScopeChat, InputProfilePhotoStatic
+from telegram import Update, BotCommandScopeChat, InputProfilePhotoStatic
 from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
-from data.lang import LANGUAGES, GERMAN
+from data.lang import LANGUAGES
 from settings.config import ADMINS, LOG_GROUP, RES_PATH
 
 
@@ -75,16 +75,7 @@ async def repair_saved_post(update: Update, context: CallbackContext):
 async def set_cmd(update: Update, context: CallbackContext):
     await context.bot.delete_my_commands()
 
-    chat_de_commands = [
-    ]
-    await context.bot.set_my_commands(chat_de_commands)
-
-    try:
-        await context.bot.set_my_commands(chat_de_commands, scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))
-    except BadRequest as e:
-        logging.warning(f"Could not set commands for admins of German chat {GERMAN.chat_id}: {e.message}")
-
-    admin_commands = chat_de_commands + [
+    admin_commands = [
         ("add_advertisement", "Werbung erstellen"),
         # "ai_post" removed: private/ai_assistant.py was never registered in
         # main.py, so this menu entry advertised a command that did nothing.

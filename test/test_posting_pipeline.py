@@ -102,14 +102,6 @@ class TestChannelHandlers:
         except ImportError as e:
             pytest.fail(f"Failed to import channel handlers: {e}")
 
-    def test_meme_handler_import(self):
-        """Test that meme handler can be imported."""
-        try:
-            from bot.channel.meme import register_meme
-            assert register_meme is not None
-        except ImportError as e:
-            pytest.fail(f"Failed to import meme handler: {e}")
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

@@ -11,7 +11,6 @@ from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, 
 
 from channel.common import edit_channel, post_channel_english
 from channel.handoff import register_handoff
-from channel.meme import register_meme
 from channel.special import breaking_news, announcement, post_info, advertisement
 from channel.text import edit_channel_text, post_channel_text
 from data.lang import GERMAN
@@ -112,9 +111,6 @@ def main():
     # "/start promo_xx" deep-link regex above still takes precedence) and the
     # my_chat_member handler that reports missing channel permissions.
     register_start(application)
-
-    # Register meme posting handler
-    register_meme(application)
 
     register_video_downloader(application)
 
