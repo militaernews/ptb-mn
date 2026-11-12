@@ -79,8 +79,10 @@ async def set_cmd(update: Update, context: CallbackContext):
     ]
     await context.bot.set_my_commands(chat_de_commands)
 
-    await context.bot.set_my_commands(chat_de_commands + [
-    ], scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))
+    try:
+        await context.bot.set_my_commands(chat_de_commands, scope=BotCommandScopeChatAdministrators(GERMAN.chat_id))
+    except BadRequest as e:
+        logging.warning(f"Could not set commands for admins of German chat {GERMAN.chat_id}: {e.message}")
 
     admin_commands = chat_de_commands + [
         ("add_advertisement", "Werbung erstellen"),
