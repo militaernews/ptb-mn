@@ -34,7 +34,7 @@ def visible_length(html_text: str) -> int:
 
 
 def text_limit(media: AdMedia) -> int:
-    return MessageLimit.TEXT_LENGTH if media is None else MessageLimit.CAPTION_LENGTH
+    return MessageLimit.MAX_TEXT_LENGTH if media is None else MessageLimit.CAPTION_LENGTH
 
 
 def ad_button(text: Optional[str], url: Optional[str]) -> Optional[InlineKeyboardMarkup]:
