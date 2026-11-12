@@ -37,6 +37,7 @@ from pysbd import Segmenter
 from channel.handoff import process_channel_post
 from data.lang import GERMAN
 from settings.config import ADMINS, OPENROUTER_API_KEY
+from util.amounts import NUMBER_RULE, abbreviate_amounts
 from util.translation import FLAG_PATTERN
 
 logger = logging.getLogger(__name__)
@@ -81,7 +82,7 @@ Fasse die folgenden Nachrichtenausschnitte (Texte und/oder Bildunterschriften) a
 verschiedenen Quellen zu einem einzigen Kanal-Post zusammen.
 
 REGELN:
-1. Alles auf Deutsch, sachlich, keine Spekulation, keine Redundanzen zwischen den Quellen.
+1. Alles auf Deutsch, sachlich, keine Spekulation, keine Redundanzen zwischen den Quellen. {NUMBER_RULE}
 2. Der Titel beginnt mit den zum Inhalt passenden Länder-Flaggen-Emojis (z.B. 🇷🇺🇺🇦), gefolgt von maximal {MAX_TITLE_WORDS} prägnanten Wörtern. Kein Satzzeichen am Ende des Titels.
 3. Der Fließtext besteht aus genau {BODY_SENTENCES} sachlichen, vollständigen Sätzen.
 
@@ -108,7 +109,7 @@ TEXT: <Fließtext mit genau {BODY_SENTENCES} Sätzen>"""
         title_text = " ".join(title_words[:MAX_TITLE_WORDS]).strip(" .")
         if not title_text:
             return None
-        title = f"{flags} {title_text}".strip() if flags else title_text
+        title = abbreviate_amounts(f"{flags} {title_text}".strip() if flags else title_text)
 
         body_raw = re.sub(r'\s+', ' ', text_match.group(1)).strip()
         sentences = [s.strip() for s in Segmenter(language="de", clean=False).segment(body_raw) if s.strip()]
@@ -123,7 +124,7 @@ TEXT: <Fließtext mit genau {BODY_SENTENCES} Sätzen>"""
         else:
             split_at = min(3, len(sentences) - 1) if len(sentences) >= 5 else -(-len(sentences) // 2)
             paragraphs = [" ".join(sentences[:split_at]), " ".join(sentences[split_at:])]
-        body = "\n\n".join(p for p in paragraphs if p)
+        body = abbreviate_amounts("\n\n".join(p for p in paragraphs if p))
 
         return {"title": title, "body": body, "html": f"<b>{title}</b>\n\n{body}"}
 
