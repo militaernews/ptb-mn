@@ -43,7 +43,7 @@ cp ptb-mn.container ~/.config/containers/systemd/
 # - DATABASE_URL: PostgreSQL Verbindungs-URL
 # - DEEPL: DeepL API Key
 # - CHANNEL_MEME: Telegram Channel ID für Meme-Kanal
-# - ADMINS: JSON Array von Admin-User-IDs
+# - ADMINS: Admin-User-IDs, kommagetrennt (z. B. 1,2; ein JSON-Array geht weiterhin)
 
 # Dienst starten
 systemctl --user daemon-reload
@@ -82,7 +82,7 @@ Die Konfiguration erfolgt über Umgebungsvariablen (`.env` Datei):
 | `DATABASE_URL`       | PostgreSQL Verbindungs-URL                   |
 | `DEEPL`              | DeepL API Key für Übersetzungen              |
 | `CHANNEL_MEME`       | Telegram Channel ID für Meme-Kanal           |
-| `ADMINS`             | JSON Array von Admin-User-IDs                |
+| `ADMINS`             | Admin-User-IDs, kommagetrennt (JSON-Array geht weiterhin) |
 | `CONTAINER`          | `true` wenn im Container ausgeführt          |
 
 ## Entwicklung

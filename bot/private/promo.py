@@ -5,6 +5,7 @@ import telegram
 from data.db import insert_promo, truncate_promo
 from data.lang import LANG_DICT
 from settings.config import ADMINS, RES_PATH
+from util.strings import STRINGS
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ChatMemberOwner, \
     ChatMemberAdministrator, ChatMemberMember
 from telegram.ext import CallbackContext, Application, filters, MessageHandler, CallbackQueryHandler, CommandHandler
@@ -167,7 +168,7 @@ async def verify_promo(update: Update, context: CallbackContext):
 
 async def clear_promo(update: Update, context: CallbackContext):
     await truncate_promo()
-    await update.message.reply_text("cleared promos. you can now start a new promo with /promo.")
+    await update.message.reply_text(STRINGS(STRINGS.lang_of(update.effective_user), "promo.cleared"))
 
 
 def register_promo(app: Application):

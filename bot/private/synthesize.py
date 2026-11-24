@@ -38,6 +38,7 @@ from channel.handoff import process_channel_post
 from data.lang import GERMAN
 from settings.config import ADMINS, OPENROUTER_API_KEY
 from util.amounts import NUMBER_RULE, abbreviate_amounts
+from util.strings import STRINGS
 from util.translation import FLAG_PATTERN
 
 logger = logging.getLogger(__name__)
@@ -200,18 +201,12 @@ TEXT: <Fließtext mit genau {BODY_SENTENCES} Sätzen>"""
 
 async def start_synthesis(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Start the synthesize workflow."""
+    lang = STRINGS.lang_of(update.effective_user)
     if update.effective_user.id not in ADMINS:
-        await update.message.reply_text("❌ Du hast keine Berechtigung für diesen Befehl.")
+        await update.message.reply_text(STRINGS(lang, "synth.no_permission"))
         return ConversationHandler.END
 
-    await update.message.reply_text(
-        "📰 <b>Synthese-Assistent</b>\n\n"
-        "Sende mir Text-Ausschnitte und/oder bis zu "
-        f"{MAX_MEDIA} Bilder/Videos (Bildunterschriften werden mit übernommen). "
-        "Am Ende kannst du den fertigen Post direkt im Kanal veröffentlichen.\n\n"
-        "Wenn du fertig bist, sende /done. Mit /cancel kannst du abbrechen.",
-        parse_mode="HTML"
-    )
+    await update.message.reply_text(STRINGS(lang, "synth.intro", max=MAX_MEDIA), parse_mode="HTML")
     context.user_data["synth_snippets"] = []
     context.user_data["synth_media"] = []
     return COLLECTING_SOURCES
@@ -223,50 +218,49 @@ async def collect_snippet(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     media = context.user_data.setdefault("synth_media", [])
 
     message = update.message
+    lang = STRINGS.lang_of(update.effective_user)
     note = None
 
     if message.photo or message.video:
         if len(media) >= MAX_MEDIA:
-            await message.reply_text(f"⚠️ Maximal {MAX_MEDIA} Medien pro Album. Dieses wurde ignoriert.")
+            await message.reply_text(STRINGS(lang, "synth.too_many_media", max=MAX_MEDIA))
         else:
             if message.photo:
                 media.append({"type": "photo", "file_id": message.photo[-1].file_id})
             else:
                 media.append({"type": "video", "file_id": message.video.file_id})
-            note = f"🖼️ Medium #{len(media)} empfangen"
+            note = STRINGS(lang, "synth.media_received", number=len(media))
         if message.caption:
             snippets.append(message.caption)
     elif message.text and not message.text.startswith("/"):
         snippets.append(message.text)
-        note = f"✅ Ausschnitt #{len(snippets)} empfangen ({len(message.text)} Zeichen)"
+        note = STRINGS(lang, "synth.snippet_received", number=len(snippets), length=len(message.text))
 
     if note:
         await message.reply_text(
-            f"{note}.\n"
-            f"📎 {len(media)} Medien, {len(snippets)} Text(e)/Bildunterschrift(en) gesammelt.\n"
-            f"Weitere senden oder /done zum Starten.",
+            STRINGS(lang, "synth.collected", note=note, media=len(media), texts=len(snippets)),
             parse_mode="HTML"
         )
 
     return COLLECTING_SOURCES
 
 
-def _review_keyboard() -> InlineKeyboardMarkup:
+def _review_keyboard(lang: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("📤 Im Kanal veröffentlichen", callback_data="synth_publish")],
+        [InlineKeyboardButton(STRINGS(lang, "synth.button_publish"), callback_data="synth_publish")],
         [
-            InlineKeyboardButton("✏️ Bearbeiten", callback_data="synth_edit"),
-            InlineKeyboardButton("🚫 Verwerfen", callback_data="synth_discard"),
+            InlineKeyboardButton(STRINGS(lang, "synth.button_edit"), callback_data="synth_edit"),
+            InlineKeyboardButton(STRINGS(lang, "synth.button_discard"), callback_data="synth_discard"),
         ],
     ])
 
 
-async def _show_preview(message, post: Dict[str, str], media: List[dict]):
-    label = f"📝 <b>Vorschau</b> ({len(media)} Medien):" if media else "📝 <b>Vorschau:</b>"
+async def _show_preview(message, post: Dict[str, str], media: List[dict], lang: str):
+    label = STRINGS(lang, "synth.preview_media", count=len(media)) if media else STRINGS(lang, "synth.preview")
     await message.reply_text(
         f"{label}\n\n{post['html']}",
         parse_mode="HTML",
-        reply_markup=_review_keyboard(),
+        reply_markup=_review_keyboard(lang),
     )
 
 
@@ -274,38 +268,29 @@ async def process_synthesis(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     """Synthesize the collected snippets/media into one post and show a preview."""
     snippets = context.user_data.get("synth_snippets", [])
     media = context.user_data.get("synth_media", [])
+    lang = STRINGS.lang_of(update.effective_user)
 
     if not snippets:
-        await update.message.reply_text(
-            "❌ Kein Text und keine Bildunterschrift gefunden. Sende mindestens einen "
-            "Ausschnitt oder ein Bild/Video mit Bildunterschrift. Abbruch."
-        )
+        await update.message.reply_text(STRINGS(lang, "synth.no_text"))
         return ConversationHandler.END
 
-    await update.message.reply_text("⏳ Synthetisiere Post... Bitte warten.")
+    await update.message.reply_text(STRINGS(lang, "synth.working"))
     await update.message.chat.send_chat_action(ChatAction.TYPING)
 
     post = await PostSynthesizer().synthesize(snippets)
     if not post:
-        await update.message.reply_text(
-            "❌ <b>Fehler bei der Synthese</b>\n\n"
-            "Alle verfügbaren Modelle sind fehlgeschlagen. Bitte versuche es später erneut.",
-            parse_mode="HTML"
-        )
+        await update.message.reply_text(STRINGS(lang, "synth.failed"), parse_mode="HTML")
         return ConversationHandler.END
 
     context.user_data["synth_post"] = post
-    await _show_preview(update.message, post, media)
+    await _show_preview(update.message, post, media, lang)
     return REVIEWING
 
 
 async def request_edit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
     await query.answer()
-    await query.edit_message_text(
-        "✏️ Sende den neuen Text (Titel + Fließtext, HTML erlaubt). Mit /cancel abbrechen.",
-        parse_mode="HTML"
-    )
+    await query.edit_message_text(STRINGS(STRINGS.lang_of(query.from_user), "synth.edit_prompt"), parse_mode="HTML")
     return EDITING
 
 
@@ -318,7 +303,7 @@ async def collect_edit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     context.user_data["synth_post"] = post
 
     media = context.user_data.get("synth_media", [])
-    await _show_preview(update.message, post, media)
+    await _show_preview(update.message, post, media, STRINGS.lang_of(update.effective_user))
     return REVIEWING
 
 
@@ -329,12 +314,13 @@ async def publish_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     """
     query = update.callback_query
     await query.answer()
+    lang = STRINGS.lang_of(query.from_user)
 
     post = context.user_data.get("synth_post")
     media = context.user_data.get("synth_media", [])
 
     if not post:
-        await query.edit_message_text("❌ Kein synthetisierter Post gefunden. Bitte mit /synthesize neu starten.")
+        await query.edit_message_text(STRINGS(lang, "synth.no_post"))
         return ConversationHandler.END
 
     try:
@@ -352,7 +338,7 @@ async def publish_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
             sent = [await context.bot.send_message(chat_id=GERMAN.channel_id, text=post["html"], parse_mode="HTML")]
     except Exception as e:
         logger.error(f"[synthesize] Failed to publish to channel: {e}")
-        await query.edit_message_text(f"❌ Veröffentlichung fehlgeschlagen: {e}")
+        await query.edit_message_text(STRINGS(lang, "synth.publish_failed", error=e))
         return ConversationHandler.END
 
     # Telegram doesn't send a bot updates for its own messages, so hand them to
@@ -364,7 +350,7 @@ async def publish_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 
     context.application.create_task(_run_pipeline())
 
-    await query.edit_message_text("✅ Im Kanal veröffentlicht!")
+    await query.edit_message_text(STRINGS(lang, "synth.published"))
     logger.info(f"[synthesize] Published post to channel {GERMAN.channel_id}")
     context.user_data.pop("synth_snippets", None)
     context.user_data.pop("synth_media", None)
@@ -375,7 +361,7 @@ async def publish_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 async def discard_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
     await query.answer()
-    await query.edit_message_text("🚫 Post verworfen.")
+    await query.edit_message_text(STRINGS(STRINGS.lang_of(query.from_user), "synth.discarded"))
     context.user_data.pop("synth_snippets", None)
     context.user_data.pop("synth_media", None)
     context.user_data.pop("synth_post", None)
@@ -384,7 +370,7 @@ async def discard_post(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 
 async def cancel_synthesis(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancel the synthesize workflow."""
-    await update.message.reply_text("🚫 Synthese-Assistent abgebrochen.")
+    await update.message.reply_text(STRINGS(STRINGS.lang_of(update.effective_user), "synth.cancelled"))
     context.user_data.pop("synth_snippets", None)
     context.user_data.pop("synth_media", None)
     context.user_data.pop("synth_post", None)

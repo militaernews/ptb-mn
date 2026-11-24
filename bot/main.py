@@ -1,13 +1,12 @@
 import logging
 import re
 from datetime import datetime
-from os import path, makedirs
-from typing import Final
 
+from ptbkit import setup_logging
 from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
 from telegram.ext import MessageHandler, Defaults, ApplicationBuilder, filters, CommandHandler, PicklePersistence, \
-    Application, ContextTypes
+    Application
 
 from channel.common import edit_channel, post_channel_english
 from channel.handoff import register_handoff
@@ -24,30 +23,13 @@ from private.video_downloader import register_video_downloader
 from settings.config import ADMINS, TOKEN, CONTAINER
 from util.argos_setup import install_argos_models
 from util.patterns import ADVERTISEMENT_PATTERN, ANNOUNCEMENT_PATTERN, BREAKING_PATTERN, INFO_PATTERN
-from util.error_logger import get_error_logger
+from util.reporting import REPORTER
 
 
 def add_logging():
-    if CONTAINER:
-        logging.basicConfig(
-            format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
-            encoding="utf-8",
-            level=logging.INFO,
-            datefmt='%Y-%m-%d %H:%M:%S',
-            handlers=[logging.StreamHandler()]
-        )
-    else:
-        log_filename: Final[str] = rf"../logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
-        makedirs(path.dirname(log_filename), exist_ok=True)
-        logging.basicConfig(
-            format="%(asctime)s %(levelname)-5s %(funcName)-20s [%(filename)s:%(lineno)d]: %(message)s",
-            encoding="utf-8",
-            filename=log_filename,
-            level=logging.INFO,
-            datefmt='%Y-%m-%d %H:%M:%S',
-        )
-
-    logging.getLogger("httpx").setLevel(logging.WARNING)
+    # Outside containers the log also goes to a file per run
+    log_file = None if CONTAINER else f"../logs/{datetime.now().strftime('%Y-%m-%d/%H-%M-%S')}.log"
+    setup_logging(file=log_file)
 
 
 def register_news(application: Application):
@@ -117,14 +99,8 @@ def main():
     # Combine multiple text/media sources into one post, publish directly to the channel
     register_synthesize(application)
 
-    # Error handler - logs to both console and Telegram group
-    async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logging.error("Exception while handling an update:", exc_info=context.error)
-        # Also log to Telegram group
-        error_logger = get_error_logger()
-        await error_logger.log_error(context.error, "Error in update handler")
-
-    application.add_error_handler(error_handler)
+    # Error handler - logs to both console and the log group topic
+    application.add_error_handler(REPORTER.handler())
 
     # Ensure the offline Argos Translate fallback models are installed
     # (no-op if already baked into the Docker image)

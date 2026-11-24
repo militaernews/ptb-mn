@@ -9,6 +9,9 @@ from telegram.ext import CallbackContext
 
 from data.lang import LANGUAGES
 from settings.config import ADMINS, LOG_GROUP, RES_PATH
+from util.strings import STRINGS
+
+ADMIN_COMMANDS = ("add_advertisement", "synthesize")
 
 
 async def repair_json(update: Update, context: CallbackContext):
@@ -75,18 +78,18 @@ async def repair_saved_post(update: Update, context: CallbackContext):
 async def set_cmd(update: Update, context: CallbackContext):
     await context.bot.delete_my_commands()
 
-    admin_commands = [
-        ("add_advertisement", "Werbung erstellen"),
-        # "ai_post" removed: private/ai_assistant.py was never registered in
-        # main.py, so this menu entry advertised a command that did nothing.
-        # /synthesize supersedes what it was trying to do anyway.
-        ("synthesize", "Mehrere Quellen zu einem Post zusammenfassen & im Kanal posten")
-    ]
+    # "ai_post" removed: private/ai_assistant.py was never registered in
+    # main.py, so this menu entry advertised a command that did nothing.
+    # /synthesize supersedes what it was trying to do anyway.
     for chat_id in ADMINS:
-        with contextlib.suppress(BadRequest):
-            await context.bot.set_my_commands(admin_commands, scope=BotCommandScopeChat(chat_id=chat_id))
+        for lang in STRINGS.languages:
+            commands = [(name, STRINGS(lang, f"command.{name}")) for name in ADMIN_COMMANDS]
+            with contextlib.suppress(BadRequest):
+                await context.bot.set_my_commands(
+                    commands, scope=BotCommandScopeChat(chat_id=chat_id),
+                    language_code=None if lang == STRINGS.default else lang)
 
     await context.bot.set_my_profile_photo(InputProfilePhotoStatic(open(f"{RES_PATH}/img/profile.jpg","rb")))
     await context.bot.set_my_name("MN 🔰 Poster")
 
-    await update.message.reply_text("Commands & Appearance updated!")
+    await update.message.reply_text(STRINGS(STRINGS.lang_of(update.effective_user), "setcmd.done"))

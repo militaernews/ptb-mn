@@ -10,6 +10,7 @@ from telegram.ext import CommandHandler, ConversationHandler, filters, MessageHa
 
 from data.lang import GERMAN, LANGUAGES
 from settings.config import ADMINS
+from util.strings import STRINGS
 from util.translation import translate
 
 ADVERTISEMENT_MEDIA: Final[str] = "new_ADVERTISEMENT_MEDIA"
@@ -25,6 +26,10 @@ NEEDS_MEDIA, NEEDS_TEXT, NEEDS_BUTTON, NEEDS_URL, SAVE_ADVERTISEMENT = range(5)
 AdMedia = Union[Animation, Sequence[PhotoSize], Video, None]
 
 _HTML_TAG = re.compile(r"<[^>]+>")
+
+
+def lang_of(update: Update) -> str:
+    return STRINGS.lang_of(update.effective_user)
 
 
 def visible_length(html_text: str) -> int:
@@ -55,7 +60,7 @@ async def send_ad(bot: Bot, chat_id: int, media: AdMedia, text: str,
 
 
 async def cancel(update: Update, _: CallbackContext) -> int:
-    await update.message.reply_text("Werbung verworfen.")
+    await update.message.reply_text(STRINGS(lang_of(update), "ad.cancelled"))
     return ConversationHandler.END
 
 
@@ -65,24 +70,20 @@ async def add_advertisement(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     context.chat_data[ADVERTISEMENT_BUTTON] = None
     context.chat_data[ADVERTISEMENT_URL] = None
 
-    await update.message.reply_text(
-        "Werbung erstellen.\n\nSende mir nun ein Bild oder Video.\n\nWenn du nur einen Text haben möchtest, dann drücke /skip.\n\nDen ganzen Vorgang kannst du mit /cancel abbrechen.")
+    await update.message.reply_text(STRINGS(lang_of(update), "ad.start"))
     return NEEDS_MEDIA
 
 
 async def add_advertisement_media(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.chat_data[ADVERTISEMENT_MEDIA] = update.message.effective_attachment
 
-    await update.message.reply_text(
-        "Sende mir nun den Text der in der Werbung vorkommen soll."
-        f"\n\nMit Bild/Video darf er höchstens {MessageLimit.CAPTION_LENGTH} Zeichen lang sein.")
+    await update.message.reply_text(STRINGS(lang_of(update), "ad.ask_text_media", limit=MessageLimit.CAPTION_LENGTH))
 
     return NEEDS_TEXT
 
 
 async def skip_media(update: Update, _: CallbackContext) -> int:
-    await update.message.reply_text(
-        "Media hinzufügen übersprungen!\n\nSende mir nun den Text der in der Werbung vorkommen soll.")
+    await update.message.reply_text(STRINGS(lang_of(update), "ad.media_skipped"))
 
     return NEEDS_TEXT
 
@@ -93,40 +94,38 @@ async def add_advertisement_text(update: Update, context: CallbackContext) -> in
     length = visible_length(text)
 
     if length > limit:
-        await update.message.reply_text(
-            f"Der Text ist {length} Zeichen lang, erlaubt sind höchstens {limit}."
-            "\n\nBitte kürze ihn und sende ihn erneut, oder brich mit /cancel ab.")
+        await update.message.reply_text(STRINGS(lang_of(update), "ad.text_too_long", length=length, limit=limit))
         return NEEDS_TEXT
 
     context.chat_data[ADVERTISEMENT_TEXT] = text
 
-    await update.message.reply_text(
-        "Sende mir nun den Text der auf dem Button unterhalb der Nachricht angezeigt werden soll.\n\nWenn die Werbung keinen Button haben soll, dann drücke /skip.")
+    await update.message.reply_text(STRINGS(lang_of(update), "ad.ask_button"))
 
     return NEEDS_BUTTON
 
 
 async def send_preview(update: Update, context: CallbackContext):
+    lang = lang_of(update)
     button = ad_button(context.chat_data[ADVERTISEMENT_BUTTON], context.chat_data[ADVERTISEMENT_URL])
 
     try:
         await send_ad(context.bot, update.effective_chat.id, context.chat_data[ADVERTISEMENT_MEDIA],
                       context.chat_data[ADVERTISEMENT_TEXT], button)
     except Exception as e:
-        await update.message.reply_text("Fehler beim Senden der Vorschau! Beginne von vorn mit /cancel."
-                                        f"\n\n<code>{html.escape(str(e))}</code>")
+        await update.message.reply_text(STRINGS(lang, "ad.preview_failed", error=html.escape(str(e))))
         return
 
     await update.message.reply_text(
-        "Passt das soweit? Wo soll die Werbung gepostet werden?\n\nVerwerfen und von vorn beginnen mit /cancel.",
+        STRINGS(lang, "ad.ask_target"),
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton(f"Nur @{GERMAN.username}", callback_data=SAVE_GERMAN_ONLY)],
-            [InlineKeyboardButton("Alle Kanäle (übersetzt)", callback_data=SAVE_ALL_CHANNELS)],
+            [InlineKeyboardButton(STRINGS(lang, "ad.target_german", channel=GERMAN.username),
+                                  callback_data=SAVE_GERMAN_ONLY)],
+            [InlineKeyboardButton(STRINGS(lang, "ad.target_all"), callback_data=SAVE_ALL_CHANNELS)],
         ]))
 
 
 async def skip_button(update: Update, context: CallbackContext) -> int:
-    await update.message.reply_text("Button hinzufügen übersprungen!")
+    await update.message.reply_text(STRINGS(lang_of(update), "ad.button_skipped"))
     await send_preview(update, context)
 
     return SAVE_ADVERTISEMENT
@@ -135,7 +134,7 @@ async def skip_button(update: Update, context: CallbackContext) -> int:
 async def add_advertisement_button(update: Update, context: CallbackContext) -> int:
     context.chat_data[ADVERTISEMENT_BUTTON] = update.message.text
 
-    await update.message.reply_text("Sende mir nun die URL auf die der Button verlinken soll.")
+    await update.message.reply_text(STRINGS(lang_of(update), "ad.ask_url"))
 
     return NEEDS_URL
 
@@ -163,6 +162,7 @@ async def save_button(update: Update, context: CallbackContext) -> int:
 
 async def publish_advertisement(update: Update, context: CallbackContext, all_channels: bool):
     chat_id = update.effective_chat.id
+    lang = lang_of(update)
     media: AdMedia = context.chat_data[ADVERTISEMENT_MEDIA]
     text = context.chat_data[ADVERTISEMENT_TEXT]
     button_text = context.chat_data[ADVERTISEMENT_BUTTON]
@@ -173,19 +173,20 @@ async def publish_advertisement(update: Update, context: CallbackContext, all_ch
         await msg.pin()
     except Exception as e:
         logging.exception("Posting advertisement to German channel failed")
-        await context.bot.send_message(chat_id, f"❌ Fehler beim Posten in @{GERMAN.username}:"
-                                                f"\n<code>{html.escape(str(e))}</code>")
+        await context.bot.send_message(chat_id, STRINGS(lang, "ad.post_failed", channel=GERMAN.username,
+                                                        error=html.escape(str(e))))
         return
 
-    await context.bot.send_message(chat_id, f"✅ Werbung in @{GERMAN.username} gepostet und angepinnt.")
+    await context.bot.send_message(chat_id, STRINGS(lang, "ad.posted", channel=GERMAN.username))
 
     if all_channels:
-        await advertise_in_other_channels(context, chat_id, media, text, button_text, url)
+        await advertise_in_other_channels(context, chat_id, lang, media, text, button_text, url)
 
 
-async def advertise_in_other_channels(context: CallbackContext, report_chat_id: int, media: AdMedia, text: str,
+async def advertise_in_other_channels(context: CallbackContext, report_chat_id: int, lang: str, media: AdMedia,
+                                      text: str,
                                       button_text: Optional[str], url: Optional[str]):
-    await context.bot.send_message(report_chat_id, "Übersetze und poste in die anderen Kanäle…")
+    await context.bot.send_message(report_chat_id, STRINGS(lang, "ad.translating"))
     results = []
 
     for language in LANGUAGES:
@@ -195,7 +196,8 @@ async def advertise_in_other_channels(context: CallbackContext, report_chat_id: 
             length = visible_length(translated_text)
             limit = text_limit(media)
             if length > limit:
-                results.append(f"⚠️ @{language.username}: Übersetzung zu lang ({length}/{limit} Zeichen), nicht gepostet")
+                results.append(STRINGS(lang, "ad.result_too_long", channel=language.username, length=length,
+                                       limit=limit))
                 continue
 
             translated_button = None
@@ -208,10 +210,10 @@ async def advertise_in_other_channels(context: CallbackContext, report_chat_id: 
 
             msg = await send_ad(context.bot, language.channel_id, media, translated_text, translated_button)
             await msg.pin()
-            results.append(f"✅ @{language.username}")
+            results.append(STRINGS(lang, "ad.result_posted", channel=language.username))
         except Exception as e:
             logging.exception(f"Posting advertisement to {language.lang_key} failed")
-            results.append(f"❌ @{language.username}: <code>{html.escape(str(e))}</code>")
+            results.append(STRINGS(lang, "ad.result_failed", channel=language.username, error=html.escape(str(e))))
 
     await context.bot.send_message(report_chat_id, "\n".join(results))
 

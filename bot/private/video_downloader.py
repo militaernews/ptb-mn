@@ -32,7 +32,8 @@ from telegram.constants import ChatAction, ParseMode
 from telegram.ext import Application, ContextTypes, MessageHandler, filters
 
 from settings.config import ADMINS, LOG_GROUP
-from util.error_logger import get_error_logger
+from util.reporting import REPORTER
+from util.strings import STRINGS
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +77,7 @@ def _find_url(text: str) -> Optional[str]:
 
 # ─── Download Logic ───────────────────────────────────────────────────────────
 
-async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
+async def _download(url: str, output_dir: str, lang: str = STRINGS.default) -> tuple[Optional[str], str]:
     """
     Download a video with yt-dlp into output_dir.
 
@@ -87,10 +88,7 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
         import yt_dlp
         logger.info("yt-dlp version: %s", yt_dlp.version.__version__)
     except ImportError:
-        return None, (
-            "yt-dlp is not installed.\n"
-            "Please add <code>yt-dlp</code> to requirements.txt and redeploy."
-        )
+        return None, STRINGS(lang, "video.not_installed")
 
     # Log cookies file status so we can confirm it is being picked up
     if COOKIES_PATH:
@@ -157,13 +155,13 @@ async def _download(url: str, output_dir: str) -> tuple[Optional[str], str]:
                 if f.is_file():
                     logger.info("Using file: %s (%d bytes)", f, f.stat().st_size)
                     return str(f), title
-            return None, "Download finished but file not found."
+            return None, STRINGS(lang, "video.file_not_found")
     except yt_dlp.utils.DownloadError as exc:
         logger.error("yt-dlp DownloadError: %s", exc)
         return None, str(exc)
     except Exception as exc:
         logger.exception("Unexpected error during download")
-        return None, f"Unexpected error: {exc}"
+        return None, STRINGS(lang, "video.unexpected_error", error=exc)
 
 
 # ─── Telegram Handler ─────────────────────────────────────────────────────────
@@ -187,6 +185,7 @@ async def handle_video_url(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         return  # guard against filter false-positives
 
     user = message.from_user
+    lang = STRINGS.lang_of(user)
     logger.info(
         "Video download requested by %s (id=%s): %s",
         user.username or user.first_name,
@@ -196,18 +195,18 @@ async def handle_video_url(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     # Acknowledge the request right away so the user knows something is happening
     status = await message.reply_text(
-        f"⬇️ <b>Downloading video…</b>\n<code>{url}</code>",
+        STRINGS(lang, "video.downloading", url=url),
         parse_mode=ParseMode.HTML,
     )
     await message.chat.send_chat_action(ChatAction.UPLOAD_VIDEO)
 
     with tempfile.TemporaryDirectory() as tmp:
-        filepath, title_or_err = await _download(url, tmp)
+        filepath, title_or_err = await _download(url, tmp, lang)
 
         if filepath is None:
             logger.warning("Download failed for %s: %s", url, title_or_err)
             await status.edit_text(
-                f"❌ <b>Download failed</b>\n\n<code>{title_or_err}</code>",
+                STRINGS(lang, "video.download_failed", error=title_or_err),
                 parse_mode=ParseMode.HTML,
             )
             return
@@ -217,14 +216,12 @@ async def handle_video_url(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
         if size_bytes > MAX_FILE_SIZE_BYTES:
             await status.edit_text(
-                f"❌ <b>File too large for Telegram</b>\n\n"
-                f"{size_mb:.1f} MB &gt; {MAX_FILE_SIZE_MB} MB limit.\n"
-                f"Try a shorter clip.",
+                STRINGS(lang, "video.too_large", size=f"{size_mb:.1f}", limit=MAX_FILE_SIZE_MB),
                 parse_mode=ParseMode.HTML,
             )
             return
 
-        await status.edit_text("📤 <b>Sending video…</b>", parse_mode=ParseMode.HTML)
+        await status.edit_text(STRINGS(lang, "video.sending"), parse_mode=ParseMode.HTML)
         await message.chat.send_chat_action(ChatAction.UPLOAD_VIDEO)
 
         try:
@@ -243,15 +240,11 @@ async def handle_video_url(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         except Exception as exc:
             logger.error("Sending failed: %s", exc)
             await status.edit_text(
-                f"❌ <b>Sending failed</b>\n\n<code>{exc}</code>",
+                STRINGS(lang, "video.send_failed", error=exc),
                 parse_mode=ParseMode.HTML,
             )
-            # Report into the project's existing error infrastructure
-            try:
-                error_logger = get_error_logger()
-                await error_logger.log_error(exc, f"video_downloader – send to user {user.id}")
-            except Exception:
-                pass
+            # Report into the project's existing error infrastructure (never raises)
+            await REPORTER.report(context.bot, exc, f"video_downloader – send to user {user.id}")
 
 
 # ─── Registration ─────────────────────────────────────────────────────────────

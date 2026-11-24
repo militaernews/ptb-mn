@@ -5,16 +5,14 @@ from telegram.ext import Application, CommandHandler, ChatMemberHandler, Context
 from telegram.helpers import mention_html
 
 from settings.config import ADMINS, LOG_GROUP, THREAD_ID
+from util.strings import STRINGS
 
 REQUIRED_CHANNEL_PERMISSIONS = ("post_messages", "edit_messages")
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Start command handler for users who message the bot directly."""
-    await update.message.reply_text(
-        "🤖 Ich veröffentliche automatisch Beiträge in den MilitaerNews-Kanälen und habe "
-        "keine interaktiven Befehle für den privaten Chat."
-    )
+    await update.message.reply_text(STRINGS(STRINGS.lang_of(update.effective_user), "start.text"))
 
 
 async def handle_my_chat_member(update: Update, context: ContextTypes.DEFAULT_TYPE):

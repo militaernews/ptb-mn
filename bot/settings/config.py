@@ -1,9 +1,8 @@
-import logging
-from json import loads
 from os import getenv, environ
-from typing import Final, List
+from typing import Final, FrozenSet
 
 from dotenv import load_dotenv
+from ptbkit import admin_ids
 
 load_dotenv()
 
@@ -24,8 +23,8 @@ LOG_GROUP_ID: Final[int] = int(getenv('LOG_GROUP_ID', -1001338514957))
 LOG_GROUP: Final[int] = LOG_GROUP_ID
 THREAD_ID: Final[int] = int(getenv('THREAD_ID', 457))  # PTB-MN topic
 PROTOCOL_CHAT: Final[int] = int(getenv('PROTOCOL_CHAT', 0))
-logging.warning(getenv('ADMINS', '[]'))
-ADMINS: Final[List[int]] = loads(getenv('ADMINS', '[]'))
+# Comma-separated ids; the older JSON array form ([1, 2]) still works
+ADMINS: Final[FrozenSet[int]] = admin_ids(getenv('ADMINS', '').strip().strip('[]'))
 
 WARN_LIMIT: Final[int] = 3
 MSG_REMOVAL_PERIOD: Final[int] = 1200

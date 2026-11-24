@@ -21,7 +21,7 @@ from telegram.ext import Application, ContextTypes
 from data.db import handoff_get_pending, handoff_mark_processed
 from data.lang import GERMAN
 from settings.config import CHANNEL_SOURCE
-from util.error_logger import get_error_logger
+from util.reporting import REPORTER
 
 logger = logging.getLogger(__name__)
 
@@ -80,7 +80,7 @@ async def process_handoffs(context: ContextTypes.DEFAULT_TYPE) -> None:
             logger.info(f"[handoff] Processed channel post {message_id}")
         except Exception as e:
             logger.error(f"[handoff] Failed to process channel post {message_id}: {e}")
-            await get_error_logger().log_error(e, f"[handoff] channel post {message_id}")
+            await REPORTER.report(context.bot, e, f"[handoff] channel post {message_id}")
 
 
 def register_handoff(application: Application) -> None:
