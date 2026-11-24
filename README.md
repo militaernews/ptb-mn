@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="brand/avatar.jpg" alt="Avatar of @MNPostingBot" width="160" height="160">
+</p>
+
 # PTB-MN: Posting-Pipeline-Bot
 
 Der **PTB-MN Bot** ist das Herzstück der Nachrichtenverbreitung im MilitärNews-System. Er automatisiert den Prozess des Postens und Editierens von Inhalten in den MilitärNews-Kanälen und synchronisiert diese über mehrere Sprachkanäle hinweg.
