@@ -1,107 +1,79 @@
 <p align="center">
-  <img src="brand/avatar.jpg" alt="Avatar of @MNPostingBot" width="160" height="160">
+  <img src="bot/res/img/profile.jpg" alt="Avatar of @MNPostingBot" width="160" height="160">
 </p>
 
-# PTB-MN: Posting-Pipeline-Bot
+# PTB-MN: posting pipeline bot
 
-Der **PTB-MN Bot** ist das Herzstück der Nachrichtenverbreitung im MilitärNews-System. Er automatisiert den Prozess des Postens und Editierens von Inhalten in den MilitärNews-Kanälen und synchronisiert diese über mehrere Sprachkanäle hinweg.
+**PTB-MN** is the core of MilitärNews' news distribution. It posts and edits content in the MilitärNews channels and keeps the posts in sync across all language channels.
 
-## Kernfunktionen
+📖 Manual for editors: [militaernews.github.io/ptb-mn](https://militaernews.github.io/ptb-mn/) (German)
 
-Der Bot konzentriert sich ausschließlich auf die Kern-Posting-Pipeline:
+## Features
 
-*   **Automatisches Posten:** Verarbeitet und veröffentlicht Nachrichtenartikel und Medien in den Hauptkanälen.
-*   **Multi-Sprachen-Synchronisation:** Übersetzt Posts automatisch in 10+ Sprachen und verteilt sie auf entsprechende Kanäle.
-*   **Editier-Synchronisation:** Stellt sicher, dass Änderungen an Quell-Posts auch in den veröffentlichten Kanal-Posts widergespiegelt werden.
-*   **Breaking News & Announcements:** Spezialbehandlung für Eilmeldungen und Ankündigungen mit entsprechenden Formatierungen.
-*   **Medien-Handling:** Automatischer Download und Verarbeitung von Bildern und Videos aus sozialen Netzwerken (Twitter/X, Instagram, YouTube).
-*   **Crawler-Integration:** Sammelt automatisch Informationen aus vordefinierten externen Quellen.
-*   **Promotion & Werbung:** Steuert die Veröffentlichung von Werbeinhalten und Promo-Aktionen.
-*   **Meme-Posting:** Automatisches Posten von Memes in den Meme-Kanal.
+The bot covers the core posting pipeline:
 
-## Installation & Deployment
+* **Automatic posting:** processes news posts and media and publishes them to the main channels.
+* **Multi-language sync:** translates every post into 10+ languages and sends it to the matching channel (DeepL, with Google Translate, the offline Argos Translate and a local Ollama model as fallbacks).
+* **Edit sync:** edits to a source post are applied to every published copy.
+* **Breaking news & announcements:** special formatting for breaking news and announcements.
+* **Media handling:** downloads images and videos from social networks (Twitter/X, Instagram, YouTube).
+* **Promotion:** publishes promotional posts and partner adverts.
+* **Memes:** posts memes to the meme channel.
+* **Private chat:** admin tools such as `/synthesize`, in English or German depending on the user's Telegram language.
 
-Dieser Bot ist für den Betrieb als **Quadlet-Container** mit automatischen Updates über die GitHub Container Registry (GHCR) optimiert.
+## Running it
 
-### Lokale Entwicklung
+The bot runs as a container. GitHub Actions builds `ghcr.io/militaernews/ptb-mn:latest` on every push to `main`; `ptb-mn.container` is a Podman Quadlet unit for it with `AutoUpdate=registry`, so the server picks up new images automatically.
+
+### Local development
 ```bash
-# Abhängigkeiten installieren
 pip install -r bot/requirements.txt
-
-# .env-Datei erstellen
-cp .env.example .env
-
-# Bot starten
+cp .env.example .env   # then fill in the values
 cd bot && python main.py
 ```
 
-### Deployment mit Quadlets
+### With Quadlet
 ```bash
-# Quadlet-Datei kopieren
 cp ptb-mn.container ~/.config/containers/systemd/
-
-# .env-Datei im Projektverzeichnis erstellen
-# Beispiel: /home/ubuntu/projects/ptb-mn/.env
-# Erforderliche Variablen:
-# - TOKEN: Telegram Bot Token
-# - DATABASE_URL: PostgreSQL Verbindungs-URL
-# - DEEPL: DeepL API Key
-# - CHANNEL_MEME: Telegram Channel ID für Meme-Kanal
-# - ADMINS: Admin-User-IDs, kommagetrennt (z. B. 1,2; ein JSON-Array geht weiterhin)
-
-# Dienst starten
+# put the .env next to the checkout (see Configuration)
 systemctl --user daemon-reload
 systemctl --user start ptb-mn
-
-# Status überprüfen
-systemctl --user status ptb-mn
-
-# Logs anschauen
 journalctl --user -u ptb-mn -f
 ```
 
-### Auto-Updates
-Der Bot nutzt `AutoUpdate=registry` in der Quadlet-Konfiguration. Die Docker-Images werden automatisch von GitHub Packages (GHCR) aktualisiert, wenn neue Versionen verfügbar sind.
+## Configuration
 
-## Architektur
+Environment variables (`.env`):
 
-### Verzeichnisstruktur
-*   `bot/channel/`: Kernlogik für Kanal-Operationen (Posting, Editieren, Spezial-Handler).
-*   `bot/social/`: Integrationen für Twitter/X und WhatsApp.
-*   `bot/private/`: Private Admin-Befehle und Werbung/Promo-Verwaltung.
-*   `bot/data/`: Gemeinsame Datenbankzugriffe und Sprachressourcen.
-*   `bot/util/`: Hilfsfunktionen für Medien-Downloads und Übersetzungen.
-*   `bot/res/`: Ressourcen-Dateien (Bilder, Flaggen, HTML-Templates).
+| Variable | Description |
+|---|---|
+| `TELEGRAM` | Telegram bot token |
+| `DATABASE_URL` | PostgreSQL connection URL |
+| `DEEPL` | DeepL API key for translations |
+| `CHANNEL_SOURCE` | Channel the posts are written in |
+| `CHANNEL_MEME` | Meme channel id |
+| `ADMINS` | Admin user ids, comma-separated (a JSON array works too) |
+| `LOG_GROUP_ID`, `THREAD_ID` | Group and topic for error reports (ptb-kit `ErrorReporter`) |
+| `OPENROUTER_API_KEY` | OpenRouter key for the AI assistant |
+| `OLLAMA_HOST`, `OLLAMA_MODEL` | Local Ollama server, last-resort translation fallback |
+| `CONTAINER` | `true` when running in the container |
 
-### Unterstützte Sprachen
-Der Bot postet automatisch in folgende Sprachen: Deutsch, Englisch, Türkisch, Persisch, Russisch, Portugiesisch, Spanisch, Französisch, Italienisch, Arabisch und Indonesisch.
+## Structure
 
-## Konfiguration
+* `bot/channel/`: channel logic (posting, editing, special handlers).
+* `bot/social/`: Twitter/X and WhatsApp integrations.
+* `bot/private/`: admin commands, adverts and promotion.
+* `bot/data/`: database access and the language channels.
+* `bot/util/`: media downloads, translation and helpers.
+* `bot/res/`: images (the bot's avatar is `res/img/profile.jpg`, set with `/set_cmd`), flags, templates and `strings/<lang>.json` for the private-chat texts ([ptb-kit](https://github.com/militaernews/ptb-kit) `Strings`).
+* `docs/`: the editors' manual, published with GitHub Pages.
 
-Die Konfiguration erfolgt über Umgebungsvariablen (`.env` Datei):
+### Languages
+Posts go out in German, English, Turkish, Persian, Russian, Portuguese, Spanish, French, Italian, Arabic and Indonesian.
 
-| Variable             | Beschreibung                                 |
-|----------------------|----------------------------------------------|
-| `TOKEN`              | Telegram Bot Token                           |
-| `DATABASE_URL`       | PostgreSQL Verbindungs-URL                   |
-| `DEEPL`              | DeepL API Key für Übersetzungen              |
-| `CHANNEL_MEME`       | Telegram Channel ID für Meme-Kanal           |
-| `ADMINS`             | Admin-User-IDs, kommagetrennt (JSON-Array geht weiterhin) |
-| `CONTAINER`          | `true` wenn im Container ausgeführt          |
+## Development
 
-## Entwicklung
-
-### Lokale Tests
 ```bash
-cd bot
 python -m pytest test/
-```
-
-### Docker-Build
-```bash
 docker build -t ptb-mn:latest .
-docker run -e TOKEN=... -e DATABASE_URL=... ptb-mn:latest
 ```
-
-## Lizenz
-Siehe LICENSE Datei im Repository.
